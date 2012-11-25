@@ -3,22 +3,31 @@
 
 #include "NetworkException.h"
 #include <SFML/System/Unicode.hpp>
+#include <vector>
 
 namespace Network
 {
-#define MAX_BUFFER_SIZE 512
-
+#define INITIAL_BUFFER_SIZE 512
+#define MAX_TICK_FOR_KEEPALIVE 1200
 class NetworkSession
 {
 public:
 	NetworkSession(int socket);
 	virtual ~NetworkSession();
 
-	void MarkReceiveData();
+	void ReceiveInBuffer() throw (NetworkException);
 	void ReceiveData() throw (NetworkException);
 
 	void handleKeepAlive() throw (NetworkException);
 	void handleHandShake() throw (NetworkException);
+
+	void updateTick(uint32_t tick)
+	{
+		if (lastKeepAliveTick - tick > MAX_TICK_FOR_KEEPALIVE)
+		{
+			// Disconnect
+		}
+	}
 private:
 	void readData(int length, char* data) throw (NetworkException);
 	char readByte() throw (NetworkException);
@@ -26,10 +35,12 @@ private:
 	int readInt() throw (NetworkException);
 	std::wstring readString(int maxSize) throw (NetworkException);
 
-
 	int socket;
-	char buffer[MAX_BUFFER_SIZE];
-	bool hasReceiveData;
+	std::vector<char> buffer;
+	int lastKeepAliveTick;
+	uint32_t startPosInBuffer;
+	uint32_t bufferSize;
+	uint32_t maxBufferSize;
 };
 }
 

@@ -9,7 +9,7 @@
 namespace Network
 {
 NetworkSession::NetworkSession(int socket) :
-		socket(socket), hasReceiveData(false)
+		socket(socket), buffer(INITIAL_BUFFER_SIZE),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0)
 {
 
 }
@@ -18,27 +18,45 @@ NetworkSession::~NetworkSession()
 {
 }
 
-void NetworkSession::MarkReceiveData()
+void NetworkSession::ReceiveInBuffer() throw (NetworkException)
 {
-	hasReceiveData = true;
+	int count = 0;
+	startPosInBuffer = 0;
+	bufferSize = 0;
+	do
+	{
+		if (maxBufferSize < bufferSize + INITIAL_BUFFER_SIZE)
+			buffer.resize(maxBufferSize + INITIAL_BUFFER_SIZE);
+		count = read(socket, &(buffer[startPosInBuffer]), INITIAL_BUFFER_SIZE);
+		if (count == -1)
+		{
+			throw NetworkException("Read == -1");
+		}
+		bufferSize += count;
+	}
+	while (count == INITIAL_BUFFER_SIZE);
 }
-
 void NetworkSession::ReceiveData() throw (NetworkException)
 {
-	unsigned char packetId = readByte();
-	const OpcodeHandler& handler = opcodeTable[packetId];
-	std::cout << "Receive packet:"<< opcodeTable[packetId].name << " " << ((int)(packetId)&0xff) << std::endl;
-	if (handler.state == STATE_NEVER)
+	ReceiveInBuffer();
+	while (startPosInBuffer < bufferSize)
 	{
-		throw NetworkException("Receive bad packet id");
+		unsigned char packetId = readByte();
+		const OpcodeHandler& handler = opcodeTable[packetId];
+		std::cout << "Receive packet:"<< opcodeTable[packetId].name << " " << ((int)(packetId)&0xff) << std::endl;
+		if (handler.state == STATE_NEVER)
+		{
+			throw NetworkException("Receive bad packet id");
+		}
+		(this->*handler.handler) ();
 	}
-	(this->*handler.handler) ();
 }
 
 void NetworkSession::readData(int length, char* data) throw (NetworkException)
 {
 	int count;
-	count = read(socket, buffer, length); //TODO: Bufferisé
+	startPosInBuffer = 0;
+	count = read(socket, &(buffer[0]), length);
 
 	if (count == -1)
 		throw NetworkException("Error while reading data");
@@ -50,26 +68,33 @@ void NetworkSession::readData(int length, char* data) throw (NetworkException)
 
 char NetworkSession::readByte() throw (NetworkException)
 {
-	readData(1,buffer);
-	return buffer[0];
+	if (1 + startPosInBuffer > bufferSize)
+		throw NetworkException("1 + startPosInBuffer > bufferSize");
+
+	return buffer[startPosInBuffer++];
 }
 
 short NetworkSession::readShort() throw (NetworkException)
 {
+	if (2 + startPosInBuffer > bufferSize)
+		throw NetworkException("2 + startPosInBuffer > bufferSize");
 	short result = 0;
-	readData(2,buffer);
-	result =  (short(buffer[0])<<8 & 0xFF00) |
-			(short(buffer[1]) & 0x00FF);
+	result =  (short(buffer[startPosInBuffer])<<8 & 0xFF00) |
+			(short(buffer[startPosInBuffer + 1]) & 0x00FF);
+	startPosInBuffer += 2;
 	return result;
 }
 int NetworkSession::readInt() throw (NetworkException)
 {
+	if (4 + startPosInBuffer > bufferSize)
+		throw NetworkException("4 + startPosInBuffer > bufferSize");
+
 	int result = 0;
-	readData(4,buffer);
-	result = buffer[0] << 24;
-	result += buffer[1] << 16;
-	result += buffer[2] << 8;
-	result += buffer[3];
+	result = buffer[startPosInBuffer] << 24;
+	result += buffer[startPosInBuffer + 1] << 16;
+	result += buffer[startPosInBuffer + 2] << 8;
+	result += buffer[startPosInBuffer + 3];
+	startPosInBuffer += 4;
 	return result;
 }
 
@@ -82,22 +107,24 @@ std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)
 	if (length > maxSize)
 		throw NetworkException("String length > maxSize");
 
-	if (length * 2 > MAX_BUFFER_SIZE)
-		throw NetworkException("String length > MAX_BUFFER_SIZE");
+	if (length + startPosInBuffer > bufferSize)
+		throw NetworkException("String length < 0");
 
-	readData(length * 2, buffer);
 	wchar_t utf16Text[length];
 	for (int i = 0; i < length; i++)
-		utf16Text[i] = (short(buffer[i * 2]) << 8 & 0xFF00)
-				| (short(buffer[i * 2 + 1]) & 0x00FF);
-	std::wstring utf16RealText (utf16Text,length);
+		utf16Text[i] = (short(buffer[startPosInBuffer + (i * 2)]) << 8 & 0xFF00)
+				| (short(buffer[startPosInBuffer + (i * 2 + 1)]) & 0x00FF);
+	std::wstring utf16RealText(utf16Text, length);
 
+	startPosInBuffer += length * 2;
 	return utf16RealText;
 }
 
 
 void NetworkSession::handleKeepAlive() throw (NetworkException)
 {
+	int value = readInt();
+	std::cout << "KeepAlive:" << value << std::endl;
 }
 
 void NetworkSession::handleHandShake() throw (NetworkException)

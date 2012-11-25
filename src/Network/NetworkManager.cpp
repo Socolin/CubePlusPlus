@@ -194,12 +194,23 @@ void NetworkManager::ReceiveData()
 
 			NetworkSession* session = sessionList[events[i].data.fd];
 
-			try
+			if (events[i].events & EPOLLIN)
 			{
-				session->ReceiveData();
-			} catch (NetworkException &e)
+				try
+				{
+					session->ReceiveData();
+				} catch (NetworkException &e)
+				{
+					std::cerr << "Client network err:" << e.what() << std::endl;
+					OnDisconnectClient(events[i].data.fd);
+				}
+			}
+			else if (events[i].events & EPOLLRDHUP)
 			{
-				std::cerr << "Client network err:" << e.what() << std::endl;
+				OnDisconnectClient(events[i].data.fd);
+			}
+			else if (events[i].events & EPOLLERR)
+			{
 				OnDisconnectClient(events[i].data.fd);
 			}
 
