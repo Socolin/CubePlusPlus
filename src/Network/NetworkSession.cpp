@@ -34,7 +34,9 @@ void NetworkSession::ReceiveInBuffer() throw (NetworkException)
 	do
 	{
 		if (maxBufferSize < bufferSize + INITIAL_BUFFER_SIZE)
+		{
 			buffer.resize(maxBufferSize + INITIAL_BUFFER_SIZE);
+		}
 		count = read(socket, &(buffer[startPosInBuffer]), INITIAL_BUFFER_SIZE);
 		if (count == -1)
 		{
@@ -66,20 +68,6 @@ void NetworkSession::ReceiveData() throw (NetworkException)
 		}
 		(this->*handler.handler) ();
 	}
-}
-
-void NetworkSession::readData(int length, char* data) throw (NetworkException)
-{
-	int count;
-	startPosInBuffer = 0;
-	count = read(socket, &(buffer[0]), length);
-
-	if (count == -1)
-		throw NetworkException("Error while reading data");
-	if (count == 0)
-		throw NetworkException("Disconnect");
-	if (count < length)
-		throw NetworkException("Not enough data");
 }
 
 char NetworkSession::readByte() throw (NetworkException)
@@ -132,18 +120,12 @@ void NetworkSession::SendPacket(NetworkPacket& packet)
 {
 	if (cryptedMode)
 	{
-		CryptoPP::StringSource((byte*)&packet.getPacketData()[0], packet.getPacketSize(),true, cfbEncryptor);
+		cfbEncryptor->Put((byte*)&packet.getPacketData()[0], packet.getPacketSize());
 	}
 	else
 	{
 		send(socket, &packet.getPacketData()[0], packet.getPacketSize(), 0);
 	}
-}
-
-void NetworkSession::handleClientStatuses() throw (NetworkException)
-{
-	byte payload = readByte();
-	std::cout << "payload:" << payload;
 }
 
 std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)

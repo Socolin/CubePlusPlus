@@ -50,6 +50,15 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 	SendPacket(packet);
 }
 
+void NetworkSession::handleClientStatuses() throw (NetworkException)
+{
+	char payload = readByte();
+	DEBUG_CHAR(payload)
+	NetworkPacket packet;
+	packet << (unsigned char)OP_SPAWN_POSITION << (int)0 << (int)100 << (int)0;
+	SendPacket(packet);
+
+}
 void NetworkSession::handleEncryptionKeyRequest() throw (NetworkException)
 {
 	short r = readShort();
