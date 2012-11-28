@@ -6,6 +6,10 @@
 #include <iostream>
 #include <unistd.h>
 #include <sys/socket.h>
+
+#include <cryptopp/filters.h>
+#include <cryptopp/osrng.h>
+#include <cryptopp/files.h>
 #include "Opcode.h"
 
 namespace Network
@@ -190,7 +194,7 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 	DEBUG_STR(userName)
 	DEBUG_STR(serverHost)
 
-	unsigned char packetId = 0xfd;
+	unsigned char packetId = OP_ENCRYPTION_KEY_REQUEST;
 
 	std::wstring serverId(L"-");
 
@@ -205,18 +209,49 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 	SendPacket(packet);
 }
 
+void NetworkSession::handleEncryptionKeyRequest() throw (NetworkException)
+{
+	short r = readShort();
+	std::cout << "receive short:" << r << std::endl;
+	r = readShort();
+	std::cout << "receive short:" << r << std::endl;
+}
 void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 {
 	sharedSecretKey = readBuffer();
-	std::cout << "receive short:" << sharedSecretKey.second;
+	std::cout << "receive short:" << sharedSecretKey.second << std::endl;
 	if (sharedSecretKey.second != 128)
 		throw NetworkException("sharedSecretKey.second != 128");
 
 	// TODO: check it
 	buffer_t verifyToken = readBuffer();
-	std::cout << "receive short:" << verifyToken.second;
+	std::cout << "receive short:" << verifyToken.second << std::endl;
 	if (verifyToken.second != 128)
 		throw NetworkException("verifyToken.second != 128");
+
+
+	NetworkEncryption* encrypt = NetworkEncryption::GetInstance();
+
+	CryptoPP::RSAES<CryptoPP::PKCS1v15>::Decryptor rsaDecryptor(*encrypt->getPrivateKey());
+
+	std::string sEncryptedSharedSecret(sharedSecretKey.first,sharedSecretKey.second);
+	std::string sDecryptedSharedSecret ("");
+
+	try
+	{
+		CryptoPP::StringSource StrSrc(
+				sEncryptedSharedSecret,
+				true,
+				new CryptoPP::PK_DecryptorFilter(encrypt->getAutoSeed(), rsaDecryptor, new CryptoPP::StringSink(sDecryptedSharedSecret))
+		);
+
+	} catch (CryptoPP::Exception)
+	{
+		std::cout << "Houston we have a problem\n";
+	}
+
+	if (sDecryptedSharedSecret.length() != 16)
+		throw NetworkException("sharedSecretKey.second != 128");
 
 	NetworkPacket packet(5);
 	unsigned char packetId = OP_ENCRYPTION_KEY_RESPONSE;
@@ -226,15 +261,12 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 
 	cryptedMode = true;
 
-	NetworkEncryption* encrypt = NetworkEncryption::GetInstance();
-//	encrypt->getPublicKey()->
-
-	memcpy(aesDecryptBuffer,sharedSecretKey.first,sharedSecretKey.second);
-	aesDecryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption((byte*)sharedSecretKey.first,(unsigned int)16,aesDecryptBuffer,1);
+	memcpy(aesDecryptBuffer,sDecryptedSharedSecret.c_str(),16);
+	aesDecryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption((byte*)sDecryptedSharedSecret.c_str(),(unsigned int)16,aesDecryptBuffer,1);
 	cfbDecryptor = new CryptoPP::StreamTransformationFilter(*aesDecryptor, new CryptoPP::StringSink(sDecryptOutput));
 
-	memcpy(aesEncryptBuffer,sharedSecretKey.first,sharedSecretKey.second);
-	aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)sharedSecretKey.first,(unsigned int)16,aesEncryptBuffer,1);
+	memcpy(aesEncryptBuffer,sDecryptedSharedSecret.c_str(),16);
+	aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)sDecryptedSharedSecret.c_str(),(unsigned int)16,aesEncryptBuffer,1);
 	cfbEncryptor = new CryptoPP::StreamTransformationFilter(*aesEncryptor, new CryptoPP::SocketSink(socket));
 }
 }

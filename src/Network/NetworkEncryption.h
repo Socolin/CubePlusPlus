@@ -19,9 +19,19 @@ public:
 		return certificate;
 	}
 
-	const CryptoPP::RSA::PublicKey*& getPublicKey() const
+	const CryptoPP::RSA::PublicKey* getPublicKey() const
 	{
 		return publicKey;
+	}
+
+	const CryptoPP::RSA::PrivateKey* getPrivateKey() const
+	{
+		return privateKey;
+	}
+
+	CryptoPP::AutoSeededRandomPool& getAutoSeed()
+	{
+		return autoSeed;
 	}
 
 private:
