@@ -23,6 +23,7 @@ NetworkManager::NetworkManager()
 	s = 0;
 	efd = 0;
 	events = NULL;
+	event = epoll_event{0,epoll_data_t{0}};
 }
 
 NetworkManager::~NetworkManager()
@@ -120,7 +121,7 @@ void NetworkManager::ReceiveData()
 	/* The event loop */
 	int n, i;
 
-	n = epoll_wait(efd, events, MAXEVENTS, -1);
+	n = epoll_wait(efd, events, MAXEVENTS, 10);
 	for (i = 0; i < n; i++)
 	{
 		if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP)
@@ -255,9 +256,13 @@ void NetworkManager::OnNewClient(int socket)
 void NetworkManager::OnDisconnectClient(int socket)
 {
 	close(socket);
+	epoll_ctl(efd, EPOLL_CTL_DEL, socket, &event);
 	auto sessionItr = sessionList.find(socket);
-	sessionList.erase(sessionItr);
-	delete sessionItr->second;
+	if (sessionItr != sessionList.end())
+	{
+		delete sessionItr->second;
+		sessionList.erase(sessionItr);
+	}
 }
 
 

@@ -8,7 +8,6 @@
 #include "NetworkPacket.h"
 
 #include <cstring>
-#include <sys/socket.h>
 
 namespace Network
 {
@@ -112,9 +111,14 @@ NetworkPacket& NetworkPacket::operator <<(std::wstring& value)
 	return *this;
 }
 
-void NetworkPacket::SendPacket(int socket)
+NetworkPacket& NetworkPacket::operator <<(const std::pair<char*, short>& pair)
 {
-	send(socket, &packetData[0], packetSize, 0);
+	short value = pair.second;
+	tmpBuffer[0] = (value >> 8) & 0xff;
+	tmpBuffer[1] = value & 0xff;
+	append(tmpBuffer, 2);
+	append(pair.first, pair.second);
+	return *this;
 }
 
 } /* namespace Network */

@@ -1,21 +1,30 @@
 #include "NetworkSession.h"
 #include "NetworkException.h"
 #include "NetworkPacket.h"
+#include "NetworkEncryption.h"
 
 #include <iostream>
 #include <unistd.h>
+#include <sys/socket.h>
 #include "Opcode.h"
 
 namespace Network
 {
 NetworkSession::NetworkSession(int socket) :
-		socket(socket), buffer(INITIAL_BUFFER_SIZE),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0)
+		socket(socket), buffer(INITIAL_BUFFER_SIZE),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),cfbDecryptor(NULL),cfbEncryptor(NULL),aesDecryptor(NULL),aesEncryptor(NULL)
 {
 
 }
 
 NetworkSession::~NetworkSession()
 {
+	if (cryptedMode)
+	{
+		delete cfbDecryptor;
+		delete cfbEncryptor;
+		delete aesDecryptor;
+		delete aesEncryptor;
+	}
 }
 
 void NetworkSession::ReceiveInBuffer() throw (NetworkException)
@@ -35,6 +44,14 @@ void NetworkSession::ReceiveInBuffer() throw (NetworkException)
 		bufferSize += count;
 	}
 	while (count == INITIAL_BUFFER_SIZE);
+
+	if (cryptedMode && bufferSize > 0)
+	{
+		cfbDecryptor->Put((byte*) &(buffer[0]), bufferSize);
+		cfbDecryptor->MessageEnd();
+
+		memcpy(&(buffer[0]),sDecryptOutput.c_str(),bufferSize);
+	}
 }
 void NetworkSession::ReceiveData() throw (NetworkException)
 {
@@ -97,6 +114,38 @@ int NetworkSession::readInt() throw (NetworkException)
 	startPosInBuffer += 4;
 	return result;
 }
+buffer_t NetworkSession::readBuffer() throw (NetworkException)
+{
+	unsigned short len;
+	len = readShort();
+	if (len + startPosInBuffer > bufferSize)
+		throw NetworkException("length + startPosInBuffer > bufferSize");
+
+	char* bufferData = new char[len];
+	memcpy(bufferData,&buffer[startPosInBuffer],len);
+
+	startPosInBuffer += len;
+
+	return std::make_pair(bufferData, len);
+}
+
+void NetworkSession::SendPacket(NetworkPacket& packet)
+{
+	if (cryptedMode)
+	{
+		CryptoPP::StringSource((byte*)&packet.getPacketData()[0], packet.getPacketSize(),true, cfbEncryptor);
+	}
+	else
+	{
+		send(socket, &packet.getPacketData()[0], packet.getPacketSize(), 0);
+	}
+}
+
+void NetworkSession::handleClientStatuses() throw (NetworkException)
+{
+	byte payload = readByte();
+	std::cout << "payload:" << payload;
+}
 
 std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)
 {
@@ -120,6 +169,7 @@ std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)
 	return utf16RealText;
 }
 
+#define DEBUG_STR(str) std::wcout << L"DEBUG: str: size:"<< str.length() << L" value:\"" << str << L"\"" << std::endl;
 
 void NetworkSession::handleKeepAlive() throw (NetworkException)
 {
@@ -129,15 +179,62 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
 
 void NetworkSession::handleHandShake() throw (NetworkException)
 {
-	std::wstring value = readString(512);
+	unsigned char protocolVersion = readByte();
+	if (protocolVersion != CURRENT_VERSION_PROTOCOL)
+		throw NetworkException("Bad protocol version, use 1.4.5");
 
-	std::wcout << L"str: size:"<< value.length() << L" value:\"" << value << L"\"" << std::endl;
+	std::wstring userName = readString(16);
+	std::wstring serverHost = readString(512);
+	readInt();
+
+	DEBUG_STR(userName)
+	DEBUG_STR(serverHost)
+
+	unsigned char packetId = 0xfd;
+
+	std::wstring serverId(L"-");
+
+	NetworkEncryption* encrypt = NetworkEncryption::GetInstance();
+	const std::pair<char*, short>& certificate = encrypt->GetCertificate();
+
+	int rnd = rand();
+	const std::pair<char*, short> token = std::make_pair((char*)&rnd, (short)4);
 
 	NetworkPacket packet;
-	std::wstring str(L"-");
-	unsigned char packetId = 2;
-	packet << packetId << str;
-	packet.SendPacket(socket);
+	packet << packetId << serverId << certificate << token;
+	SendPacket(packet);
 }
 
+void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
+{
+	sharedSecretKey = readBuffer();
+	std::cout << "receive short:" << sharedSecretKey.second;
+	if (sharedSecretKey.second != 128)
+		throw NetworkException("sharedSecretKey.second != 128");
+
+	// TODO: check it
+	buffer_t verifyToken = readBuffer();
+	std::cout << "receive short:" << verifyToken.second;
+	if (verifyToken.second != 128)
+		throw NetworkException("verifyToken.second != 128");
+
+	NetworkPacket packet(5);
+	unsigned char packetId = OP_ENCRYPTION_KEY_RESPONSE;
+	short zero = 0;
+	packet << packetId << zero << zero;
+	SendPacket(packet);
+
+	cryptedMode = true;
+
+	NetworkEncryption* encrypt = NetworkEncryption::GetInstance();
+//	encrypt->getPublicKey()->
+
+	memcpy(aesDecryptBuffer,sharedSecretKey.first,sharedSecretKey.second);
+	aesDecryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption((byte*)sharedSecretKey.first,(unsigned int)16,aesDecryptBuffer,1);
+	cfbDecryptor = new CryptoPP::StreamTransformationFilter(*aesDecryptor, new CryptoPP::StringSink(sDecryptOutput));
+
+	memcpy(aesEncryptBuffer,sharedSecretKey.first,sharedSecretKey.second);
+	aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)sharedSecretKey.first,(unsigned int)16,aesEncryptBuffer,1);
+	cfbEncryptor = new CryptoPP::StreamTransformationFilter(*aesEncryptor, new CryptoPP::SocketSink(socket));
+}
 }

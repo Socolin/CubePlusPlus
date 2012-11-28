@@ -11,9 +11,11 @@
 #include <iostream>
 #include <vector>
 
-namespace Network {
+namespace Network
+{
 
-class NetworkPacket {
+class NetworkPacket
+{
 public:
 	NetworkPacket();
 	NetworkPacket(size_t size);
@@ -30,8 +32,21 @@ public:
 	NetworkPacket& operator <<(float& value);
 	NetworkPacket& operator <<(double& value);
 	NetworkPacket& operator <<(std::wstring& value);
+	NetworkPacket& operator <<(const std::pair<char*, short>&);
 
 	void SendPacket(int socket);
+
+	const std::vector<char>& getPacketData() const
+	{
+		return packetData;
+	}
+
+	size_t getPacketSize() const
+	{
+		return packetSize;
+	}
+
+
 private:
 	size_t bufferSize;
 	std::vector<char> packetData;
