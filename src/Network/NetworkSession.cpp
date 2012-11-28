@@ -1,5 +1,6 @@
 #include "NetworkSession.h"
 #include "NetworkException.h"
+#include "NetworkExceptionData.h"
 #include "NetworkPacket.h"
 
 #include <iostream>
@@ -29,29 +30,36 @@ NetworkSession::~NetworkSession()
 void NetworkSession::ReceiveInBuffer() throw (NetworkException)
 {
 	int count = 0;
-	startPosInBuffer = 0;
-	bufferSize = 0;
+	if (startPosInBuffer == bufferSize)
+	{
+		startPosInBuffer = 0;
+		bufferSize = 0;
+	}
+	int currentPosInBuffer = bufferSize;
 	do
 	{
 		if (maxBufferSize < bufferSize + INITIAL_BUFFER_SIZE)
 		{
 			buffer.resize(maxBufferSize + INITIAL_BUFFER_SIZE);
 		}
-		count = read(socket, &(buffer[startPosInBuffer]), INITIAL_BUFFER_SIZE);
+		count = read(socket, &(buffer[bufferSize]), INITIAL_BUFFER_SIZE);
 		if (count == -1)
 		{
+			if (errno == EAGAIN)
+				continue;
 			throw NetworkException("Read == -1");
 		}
+		std::cout << "read:" << count << std::endl;
 		bufferSize += count;
 	}
 	while (count == INITIAL_BUFFER_SIZE);
 
-	if (cryptedMode && bufferSize > 0)
+	if (cryptedMode && bufferSize - currentPosInBuffer > 0)
 	{
-		cfbDecryptor->Put((byte*) &(buffer[0]), bufferSize);
+		cfbDecryptor->Put((byte*) &(buffer[currentPosInBuffer]), bufferSize - currentPosInBuffer);
 		cfbDecryptor->MessageEnd();
 
-		memcpy(&(buffer[0]),sDecryptOutput.c_str(),bufferSize);
+		memcpy(&(buffer[currentPosInBuffer]),sDecryptOutput.c_str(),bufferSize - currentPosInBuffer);
 	}
 }
 void NetworkSession::ReceiveData() throw (NetworkException)
@@ -59,21 +67,30 @@ void NetworkSession::ReceiveData() throw (NetworkException)
 	ReceiveInBuffer();
 	while (startPosInBuffer < bufferSize)
 	{
-		unsigned char packetId = readByte();
-		const OpcodeHandler& handler = opcodeTable[packetId];
-		std::cout << "Receive packet:"<< opcodeTable[packetId].name << " " << ((int)(packetId)&0xff) << std::endl;
-		if (handler.state == STATE_NEVER)
+		uint32_t backupStartPos = startPosInBuffer;
+		try
 		{
-			throw NetworkException("Receive bad packet id");
+			unsigned char packetId = readByte();
+			const OpcodeHandler& handler = opcodeTable[packetId];
+			std::cout << "Receive packet:"<< opcodeTable[packetId].name << " " << ((int)(packetId)&0xff) << std::endl;
+			if (handler.state == STATE_NEVER)
+			{
+				throw NetworkException("Receive bad packet id");
+			}
+			(this->*handler.handler) ();
 		}
-		(this->*handler.handler) ();
+		catch (NetworkExceptionData& e)
+		{
+			startPosInBuffer = backupStartPos;
+			break;
+		}
 	}
 }
 
 char NetworkSession::readByte() throw (NetworkException)
 {
 	if (1 + startPosInBuffer > bufferSize)
-		throw NetworkException("1 + startPosInBuffer > bufferSize");
+		throw NetworkExceptionData("1 + startPosInBuffer > bufferSize");
 
 	return buffer[startPosInBuffer++];
 }
@@ -81,7 +98,7 @@ char NetworkSession::readByte() throw (NetworkException)
 short NetworkSession::readShort() throw (NetworkException)
 {
 	if (2 + startPosInBuffer > bufferSize)
-		throw NetworkException("2 + startPosInBuffer > bufferSize");
+		throw NetworkExceptionData("2 + startPosInBuffer > bufferSize");
 	short result = 0;
 	result =  (short(buffer[startPosInBuffer])<<8 & 0xFF00) |
 			(short(buffer[startPosInBuffer + 1]) & 0x00FF);
@@ -91,7 +108,7 @@ short NetworkSession::readShort() throw (NetworkException)
 int NetworkSession::readInt() throw (NetworkException)
 {
 	if (4 + startPosInBuffer > bufferSize)
-		throw NetworkException("4 + startPosInBuffer > bufferSize");
+		throw NetworkExceptionData("4 + startPosInBuffer > bufferSize");
 
 	int result = 0;
 	result = buffer[startPosInBuffer] << 24;
@@ -106,7 +123,7 @@ buffer_t NetworkSession::readBuffer() throw (NetworkException)
 	unsigned short len;
 	len = readShort();
 	if (len + startPosInBuffer > bufferSize)
-		throw NetworkException("length + startPosInBuffer > bufferSize");
+		throw NetworkExceptionData("length + startPosInBuffer > bufferSize");
 
 	char* bufferData = new char[len];
 	memcpy(bufferData,&buffer[startPosInBuffer],len);

@@ -50,13 +50,32 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 	SendPacket(packet);
 }
 
+void NetworkSession::handleClientSettings() throw (NetworkException)
+{
+	std::wstring locale = readString(16);
+	char viewDistance = readByte();
+	char chatFlag = readByte();
+	char difficulty = readByte();
+	bool showCape = readByte();
+	DEBUG_STR(locale)
+	DEBUG_CHAR(viewDistance)
+	DEBUG_CHAR(chatFlag)
+	DEBUG_CHAR(difficulty)
+	DEBUG_CHAR(showCape)
+
+}
 void NetworkSession::handleClientStatuses() throw (NetworkException)
 {
 	char payload = readByte();
 	DEBUG_CHAR(payload)
 	NetworkPacket packet;
-	packet << (unsigned char)OP_SPAWN_POSITION << (int)0 << (int)100 << (int)0;
+	std::wstring levelType(L"flat");
+	packet << (unsigned char)OP_LOGIN_REQUEST << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
 	SendPacket(packet);
+
+	NetworkPacket packetSpawn;
+	packetSpawn << (unsigned char)OP_SPAWN_POSITION << (int)0 << (int)0 << (int)0;
+	SendPacket(packetSpawn);
 
 }
 void NetworkSession::handleEncryptionKeyRequest() throw (NetworkException)

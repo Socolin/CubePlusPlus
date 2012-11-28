@@ -36,6 +36,7 @@ public:
 	void handleHandShake() throw (NetworkException);
 	void handleEncryptionKeyRequest() throw (NetworkException);
 	void handleEncryptionKeyResponse() throw (NetworkException);
+	void handleClientSettings () throw (NetworkException);
 	void handleClientStatuses () throw (NetworkException);
 	void handlePing () throw (NetworkException);
 

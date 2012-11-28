@@ -121,7 +121,7 @@ void NetworkManager::ReceiveData()
 	/* The event loop */
 	int n, i;
 
-	n = epoll_wait(efd, events, MAXEVENTS, 10);
+	n = epoll_wait(efd, events, MAXEVENTS, -1);
 	for (i = 0; i < n; i++)
 	{
 		if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP)
