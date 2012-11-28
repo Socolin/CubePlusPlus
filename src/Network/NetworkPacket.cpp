@@ -37,23 +37,23 @@ void NetworkPacket::append(const void* data, std::size_t dataSize)
 	packetSize += dataSize;
 }
 
-NetworkPacket& NetworkPacket::operator <<(bool& value)
+NetworkPacket& NetworkPacket::operator <<(bool value)
 {
 	append(&value, 1);
 	return *this;
 }
-NetworkPacket& NetworkPacket::operator <<(char& value)
+NetworkPacket& NetworkPacket::operator <<(char value)
 {
 	append(&value, 1);
 	return *this;
 }
-NetworkPacket& NetworkPacket::operator <<(unsigned char& value)
+NetworkPacket& NetworkPacket::operator <<(unsigned char value)
 {
 	append(&value, 1);
 	return *this;
 }
 
-NetworkPacket& NetworkPacket::operator <<(short & value)
+NetworkPacket& NetworkPacket::operator <<(short value)
 {
 	tmpBuffer[0] = (value >> 8) & 0xff;
 	tmpBuffer[1] = value & 0xff;
@@ -61,7 +61,7 @@ NetworkPacket& NetworkPacket::operator <<(short & value)
 	return *this;
 }
 
-NetworkPacket& NetworkPacket::operator <<(int& value)
+NetworkPacket& NetworkPacket::operator <<(int value)
 {
 	tmpBuffer[0] = (value >> 24) & 0xff;
 	tmpBuffer[1] = (value >> 16) & 0xff;
@@ -71,7 +71,7 @@ NetworkPacket& NetworkPacket::operator <<(int& value)
 	return *this;
 }
 
-NetworkPacket& NetworkPacket::operator <<(long & value)
+NetworkPacket& NetworkPacket::operator <<(long value)
 {
 	tmpBuffer[0] = (value >> 56) & 0xff;
 	tmpBuffer[1] = (value >> 48) & 0xff;
@@ -85,12 +85,12 @@ NetworkPacket& NetworkPacket::operator <<(long & value)
 	return *this;
 }
 
-NetworkPacket& NetworkPacket::operator <<(float& value)
+NetworkPacket& NetworkPacket::operator <<(float value)
 {
 	return *this;
 }
 
-NetworkPacket& NetworkPacket::operator <<(double& value)
+NetworkPacket& NetworkPacket::operator <<(double value)
 {
 	return *this;
 }

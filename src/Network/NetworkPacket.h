@@ -23,14 +23,14 @@ public:
 
 	void append(const void* data, std::size_t size);
 
-	NetworkPacket& operator <<(bool& value);
-	NetworkPacket& operator <<(char& value);
-	NetworkPacket& operator <<(unsigned char& value);
-	NetworkPacket& operator <<(short& value);
-	NetworkPacket& operator <<(int& value);
-	NetworkPacket& operator <<(long& value);
-	NetworkPacket& operator <<(float& value);
-	NetworkPacket& operator <<(double& value);
+	NetworkPacket& operator <<(bool value);
+	NetworkPacket& operator <<(char value);
+	NetworkPacket& operator <<(unsigned char value);
+	NetworkPacket& operator <<(short value);
+	NetworkPacket& operator <<(int value);
+	NetworkPacket& operator <<(long value);
+	NetworkPacket& operator <<(float value);
+	NetworkPacket& operator <<(double value);
 	NetworkPacket& operator <<(std::wstring& value);
 	NetworkPacket& operator <<(const std::pair<char*, short>&);
 

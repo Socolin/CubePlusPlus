@@ -37,6 +37,7 @@ public:
 	void handleEncryptionKeyRequest() throw (NetworkException);
 	void handleEncryptionKeyResponse() throw (NetworkException);
 	void handleClientStatuses () throw (NetworkException);
+	void handlePing () throw (NetworkException);
 
 	void updateTick(uint32_t tick)
 	{
@@ -60,7 +61,6 @@ private:
 	uint32_t bufferSize;
 	uint32_t maxBufferSize;
 	bool cryptedMode;
-	buffer_t sharedSecretKey;
 
 	// Décodage
 	CryptoPP::RSAES<CryptoPP::PKCS1v15>::Decryptor rsaDecryptor;
