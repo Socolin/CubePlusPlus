@@ -98,12 +98,9 @@ private:
 	CryptoPP::RSAES<CryptoPP::PKCS1v15>::Decryptor rsaDecryptor;
 	CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption* aesDecryptor;
 	byte aesDecryptBuffer[CryptoPP::AES::BLOCKSIZE];
-	CryptoPP::StreamTransformationFilter* cfbDecryptor;
-	std::string sDecryptOutput;
 
 	// Encodage
 	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption* aesEncryptor;
-	CryptoPP::StreamTransformationFilter* cfbEncryptor;
 	byte aesEncryptBuffer[CryptoPP::AES::BLOCKSIZE];
 };
 }

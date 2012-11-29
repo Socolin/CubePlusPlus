@@ -175,11 +175,9 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 
 	memcpy(aesDecryptBuffer,sDecryptedSharedSecret.c_str(),16);
 	aesDecryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption((byte*)sDecryptedSharedSecret.c_str(),(unsigned int)16,aesDecryptBuffer,1);
-	cfbDecryptor = new CryptoPP::StreamTransformationFilter(*aesDecryptor, new CryptoPP::StringSink(sDecryptOutput));
 
 	memcpy(aesEncryptBuffer,sDecryptedSharedSecret.c_str(),16);
 	aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)sDecryptedSharedSecret.c_str(),(unsigned int)16,aesEncryptBuffer,1);
-	cfbEncryptor = new CryptoPP::StreamTransformationFilter(*aesEncryptor, new CryptoPP::SocketSink(socket));
 }
 void NetworkSession::handlePing() throw (NetworkException)
 {

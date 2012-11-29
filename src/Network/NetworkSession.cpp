@@ -11,7 +11,7 @@
 namespace Network
 {
 NetworkSession::NetworkSession(int socket) :
-		socket(socket), buffer(INITIAL_BUFFER_SIZE),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),cfbDecryptor(NULL),cfbEncryptor(NULL),aesDecryptor(NULL),aesEncryptor(NULL),state(STATE_NOTLOGGED)
+		socket(socket), buffer(INITIAL_BUFFER_SIZE),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),aesDecryptor(NULL),aesEncryptor(NULL),state(STATE_NOTLOGGED)
 {
 
 }
@@ -20,8 +20,6 @@ NetworkSession::~NetworkSession()
 {
 	if (cryptedMode)
 	{
-		delete cfbDecryptor;
-		delete cfbEncryptor;
 		delete aesDecryptor;
 		delete aesEncryptor;
 	}
