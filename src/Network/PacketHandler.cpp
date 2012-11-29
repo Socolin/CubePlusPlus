@@ -49,6 +49,12 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 	packet << packetId << serverId << certificate << token;
 	SendPacket(packet);
 }
+void NetworkSession::handleUseEntity() throw (NetworkException)
+{
+	readInt();
+	readInt();
+	readByte();
+}
 
 void NetworkSession::handleClientSettings() throw (NetworkException)
 {
