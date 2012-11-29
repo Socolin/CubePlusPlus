@@ -11,7 +11,7 @@
 namespace Network
 {
 NetworkSession::NetworkSession(int socket) :
-		socket(socket), buffer(INITIAL_BUFFER_SIZE),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),cfbDecryptor(NULL),cfbEncryptor(NULL),aesDecryptor(NULL),aesEncryptor(NULL)
+		socket(socket), buffer(INITIAL_BUFFER_SIZE),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),cfbDecryptor(NULL),cfbEncryptor(NULL),aesDecryptor(NULL),aesEncryptor(NULL),state(STATE_NOTLOGGED)
 {
 
 }
@@ -49,17 +49,14 @@ void NetworkSession::ReceiveInBuffer() throw (NetworkException)
 				continue;
 			throw NetworkException("Read == -1");
 		}
-		std::cout << "read:" << count << std::endl;
+		//std::cout << "read:" << count << std::endl;
 		bufferSize += count;
 	}
 	while (count == INITIAL_BUFFER_SIZE);
 
 	if (cryptedMode && bufferSize - currentPosInBuffer > 0)
 	{
-		cfbDecryptor->Put((byte*) &(buffer[currentPosInBuffer]), bufferSize - currentPosInBuffer);
-		cfbDecryptor->MessageEnd();
-
-		memcpy(&(buffer[currentPosInBuffer]),sDecryptOutput.c_str(),bufferSize - currentPosInBuffer);
+		aesDecryptor->ProcessData((byte*) &(buffer[currentPosInBuffer]),(byte*) &(buffer[currentPosInBuffer]), bufferSize - currentPosInBuffer);
 	}
 }
 void NetworkSession::ReceiveData() throw (NetworkException)
@@ -72,7 +69,7 @@ void NetworkSession::ReceiveData() throw (NetworkException)
 		{
 			unsigned char packetId = readByte();
 			const OpcodeHandler& handler = opcodeTable[packetId];
-			std::cout << "Receive packet:"<< opcodeTable[packetId].name << " " << ((int)(packetId)&0xff) << std::endl;
+			std::cout << "Receive packet:"<< opcodeTable[packetId].name << " 0x" << std::hex <<  ((int)(packetId)&0xff)  <<std::dec << std::endl;
 			if (handler.state == STATE_NEVER)
 			{
 				throw NetworkException("Receive bad packet id");
@@ -84,6 +81,7 @@ void NetworkSession::ReceiveData() throw (NetworkException)
 			startPosInBuffer = backupStartPos;
 			break;
 		}
+		std::cout << "packetSize: " << (startPosInBuffer - backupStartPos) << std::endl;
 	}
 }
 
@@ -105,6 +103,18 @@ short NetworkSession::readShort() throw (NetworkException)
 	startPosInBuffer += 2;
 	return result;
 }
+float NetworkSession::readFloat() throw (NetworkException)
+{
+	IntToFloat dbl;
+	dbl.i = readInt();
+	return dbl.f;
+}
+double NetworkSession::readDouble() throw (NetworkException)
+{
+	LongToDouble dbl;
+	dbl.i = readLong();
+	return dbl.f;
+}
 int NetworkSession::readInt() throw (NetworkException)
 {
 	if (4 + startPosInBuffer > bufferSize)
@@ -116,6 +126,23 @@ int NetworkSession::readInt() throw (NetworkException)
 	result += buffer[startPosInBuffer + 2] << 8;
 	result += buffer[startPosInBuffer + 3];
 	startPosInBuffer += 4;
+	return result;
+}
+long NetworkSession::readLong() throw (NetworkException)
+{
+	if (8 + startPosInBuffer > bufferSize)
+		throw NetworkExceptionData("8 + startPosInBuffer > bufferSize");
+
+	long result = 0;
+	result = ((long)buffer[startPosInBuffer]) << 56;
+	result += ((long)buffer[startPosInBuffer + 1]) << 48;
+	result += ((long)buffer[startPosInBuffer + 2]) << 40;
+	result += ((long)buffer[startPosInBuffer + 3]) << 32;
+	result += buffer[startPosInBuffer + 4] << 24;
+	result += buffer[startPosInBuffer + 5] << 16;
+	result += buffer[startPosInBuffer + 6] << 8;
+	result += buffer[startPosInBuffer + 7];
+	startPosInBuffer += 8;
 	return result;
 }
 buffer_t NetworkSession::readBuffer() throw (NetworkException)
@@ -137,12 +164,9 @@ void NetworkSession::SendPacket(NetworkPacket& packet)
 {
 	if (cryptedMode)
 	{
-		cfbEncryptor->Put((byte*)&packet.getPacketData()[0], packet.getPacketSize());
+		aesEncryptor->ProcessData((byte*)&packet.getPacketData()[0],(byte*)&packet.getPacketData()[0],packet.getPacketSize());
 	}
-	else
-	{
-		send(socket, &packet.getPacketData()[0], packet.getPacketSize(), 0);
-	}
+	send(socket, &packet.getPacketData()[0], packet.getPacketSize(), 0);
 }
 
 std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)

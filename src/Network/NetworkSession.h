@@ -15,6 +15,28 @@ namespace Network
 #define MAX_TICK_FOR_KEEPALIVE 1200
 #define CURRENT_VERSION_PROTOCOL 49
 
+enum eSessionState
+{
+	STATE_NEVER,
+	STATE_EVERYTIME,
+	STATE_NOTLOGGED,
+	STATE_LOGGING,
+	STATE_LOGGED,
+	STATE_INGAME
+};
+
+typedef union
+{
+	int i;
+	float f;
+} IntToFloat;
+
+typedef union
+{
+	long i;
+	double f;
+} LongToDouble;
+
 typedef std::pair<char*, unsigned short> buffer_t;
 class NetworkPacket;
 class NetworkSession
@@ -34,7 +56,11 @@ public:
 
 	void handleKeepAlive() throw (NetworkException);
 	void handleHandShake() throw (NetworkException);
+	void handleChatMessage() throw (NetworkException);
 	void handleUseEntity() throw (NetworkException);
+	void handlePlayerPosition() throw (NetworkException);
+	void handlePlayerLook() throw (NetworkException);
+	void handlePlayerPositionAndLook() throw (NetworkException);
 	void handleEncryptionKeyRequest() throw (NetworkException);
 	void handleEncryptionKeyResponse() throw (NetworkException);
 	void handleClientSettings () throw (NetworkException);
@@ -53,8 +79,11 @@ private:
 	char readByte() throw (NetworkException);
 	short readShort() throw (NetworkException);
 	int readInt() throw (NetworkException);
+	long readLong() throw (NetworkException);
 	buffer_t readBuffer() throw (NetworkException);
 	std::wstring readString(int maxSize) throw (NetworkException);
+	float readFloat() throw (NetworkException);
+	double readDouble() throw (NetworkException);
 
 	int socket;
 	std::vector<char> buffer;
@@ -63,6 +92,7 @@ private:
 	uint32_t bufferSize;
 	uint32_t maxBufferSize;
 	bool cryptedMode;
+	eSessionState state;
 
 	// Décodage
 	CryptoPP::RSAES<CryptoPP::PKCS1v15>::Decryptor rsaDecryptor;

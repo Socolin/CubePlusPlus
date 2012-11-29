@@ -7,6 +7,7 @@
 #include <cryptopp/filters.h>
 #include <cryptopp/osrng.h>
 #include <cryptopp/files.h>
+#include <cryptopp/cryptlib.h>
 
 #define DEBUG_STR(str) std::wcout << L"DEBUG: str: size:"<< str.length() << L" value:\"" << str << L"\"" << std::endl;
 #define DEBUG_SHORT(value) std::cout << "short:" << value << std::endl;
@@ -21,7 +22,11 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
 	int value = readInt();
 	DEBUG_INT(value)
 }
-
+void NetworkSession::handleChatMessage() throw (NetworkException)
+{
+	std::wstring message = readString(100);
+	DEBUG_STR(message)
+}
 void NetworkSession::handleHandShake() throw (NetworkException)
 {
 	unsigned char protocolVersion = readByte();
@@ -55,6 +60,30 @@ void NetworkSession::handleUseEntity() throw (NetworkException)
 	readInt();
 	readByte();
 }
+void NetworkSession::handlePlayerPosition() throw (NetworkException)
+{
+	readDouble();
+	readDouble();
+	readDouble();
+	readDouble();
+	readByte();
+}
+void NetworkSession::handlePlayerLook() throw (NetworkException)
+{
+	readFloat();
+	readFloat();
+	readByte();
+}
+void NetworkSession::handlePlayerPositionAndLook() throw (NetworkException)
+{
+	readDouble();
+	readDouble();
+	readDouble();
+	readDouble();
+	readFloat();
+	readFloat();
+	readByte();
+}
 
 void NetworkSession::handleClientSettings() throw (NetworkException)
 {
@@ -75,8 +104,9 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 	char payload = readByte();
 	DEBUG_CHAR(payload)
 
-	if (payload == 0)
+	if (payload == 0 && state != STATE_INGAME)
 	{
+		state = STATE_INGAME;
 		NetworkPacket packet;
 		std::wstring levelType(L"flat");
 		packet << (unsigned char)OP_LOGIN_REQUEST << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;

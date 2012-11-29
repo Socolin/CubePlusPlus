@@ -5,15 +5,6 @@
 
 namespace Network
 {
-enum eSessionState
-{
-	STATE_NEVER,
-	STATE_EVERYTIME,
-	STATE_NOTLOGGED,
-	STATE_LOGGING,
-	STATE_LOGGED,
-	STATE_INGAME
-};
 
 enum eOpcode
 {
