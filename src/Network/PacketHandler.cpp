@@ -68,22 +68,28 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 {
 	char payload = readByte();
 	DEBUG_CHAR(payload)
-	NetworkPacket packet;
-	std::wstring levelType(L"flat");
-	packet << (unsigned char)OP_LOGIN_REQUEST << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
-	SendPacket(packet);
 
-	NetworkPacket packetSpawn;
-	packetSpawn << (unsigned char)OP_SPAWN_POSITION << (int)0 << (int)0 << (int)0;
-	SendPacket(packetSpawn);
+	if (payload == 0)
+	{
+		NetworkPacket packet;
+		std::wstring levelType(L"flat");
+		packet << (unsigned char)OP_LOGIN_REQUEST << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
+		SendPacket(packet);
 
+		NetworkPacket packetSpawn;
+		packetSpawn << (unsigned char)OP_SPAWN_POSITION << (int)0 << (int)0 << (int)0;
+		SendPacket(packetSpawn);
+	}
 }
 void NetworkSession::handleEncryptionKeyRequest() throw (NetworkException)
 {
-	short r = readShort();
-	DEBUG_SHORT(r)
-	r = readShort();
-	DEBUG_SHORT(r)
+	short size1 = readShort();
+	short size2 = readShort();
+
+	if (size1 != 0 || size2 != 0)
+		throw NetworkSession("handleEncryptionKeyRequest");
+	DEBUG_SHORT(size1)
+	DEBUG_SHORT(size2)
 }
 
 void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
