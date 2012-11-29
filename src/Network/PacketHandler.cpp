@@ -93,7 +93,7 @@ void NetworkSession::handleEncryptionKeyRequest() throw (NetworkException)
 	short size2 = readShort();
 
 	if (size1 != 0 || size2 != 0)
-		throw NetworkSession("handleEncryptionKeyRequest");
+		throw NetworkException("handleEncryptionKeyRequest");
 	DEBUG_SHORT(size1)
 	DEBUG_SHORT(size2)
 }
