@@ -61,10 +61,25 @@ public:
 	void handlePlayerPosition() throw (NetworkException);
 	void handlePlayerLook() throw (NetworkException);
 	void handlePlayerPositionAndLook() throw (NetworkException);
-	void handleEncryptionKeyRequest() throw (NetworkException);
-	void handleEncryptionKeyResponse() throw (NetworkException);
+	void handlePlayerDigging() throw (NetworkException);
+	void handlePlayerBlockPlacement() throw (NetworkException);
+	void handleHeldItemChange() throw (NetworkException);
+	void handleAnimation() throw (NetworkException);
+	void handleEntityAction() throw (NetworkException);
+	void handleCloseWindow() throw (NetworkException);
+	void handleClickWindow() throw (NetworkException);
+	void handleConfirmTransaction() throw (NetworkException);
+	void handleCreativeInventoryAction() throw (NetworkException);
+	void handleEnchantItem() throw (NetworkException);
+	void handleUpdateSign() throw (NetworkException);
+	void handlePlayerAbilities() throw (NetworkException);
+	void handleTabComplete() throw (NetworkException);
 	void handleClientSettings () throw (NetworkException);
 	void handleClientStatuses () throw (NetworkException);
+	void handlePluginMessage () throw (NetworkException);
+	void handleEncryptionKeyRequest() throw (NetworkException);
+	void handleEncryptionKeyResponse() throw (NetworkException);
+	void handleDisconnect() throw (NetworkException);
 	void handlePing () throw (NetworkException);
 
 	void updateTick(uint32_t tick)

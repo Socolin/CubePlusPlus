@@ -85,6 +85,128 @@ void NetworkSession::handlePlayerPositionAndLook() throw (NetworkException)
 	readByte();
 }
 
+void NetworkSession::handlePlayerDigging() throw (NetworkException)
+{
+	readByte();
+	readInt();
+	readByte();
+	readInt();
+	readByte();
+}
+
+void NetworkSession::handlePlayerBlockPlacement() throw (NetworkException)
+{
+	readInt();
+	readByte();
+	readInt();
+
+	short blockId = readShort();
+	if (blockId != -1)
+	{
+		readByte();
+		readShort();
+		short nbtDataLength = readShort();
+		if (nbtDataLength != -1)
+		{
+			for (int i = 0; i < nbtDataLength; i++)
+				readByte();
+		}
+	}
+
+
+	readByte();
+	readByte();
+	readByte();
+}
+void NetworkSession::handleHeldItemChange() throw (NetworkException)
+{
+	readShort();
+}
+void NetworkSession::handleAnimation() throw (NetworkException)
+{
+	readInt();
+	readByte();
+}
+void NetworkSession::handleEntityAction() throw (NetworkException)
+{
+	readInt();
+	readByte();
+}
+void NetworkSession::handleCloseWindow() throw (NetworkException)
+{
+	readByte();
+}
+void NetworkSession::handleClickWindow() throw (NetworkException)
+{
+	readByte();
+	readShort();
+	readByte();
+	readShort();
+	readByte();
+	short blockId = readShort();
+	if (blockId != -1)
+	{
+		readByte();
+		readShort();
+		short nbtDataLength = readShort();
+		if (nbtDataLength != -1)
+		{
+			for (int i = 0; i < nbtDataLength; i++)
+				readByte();
+		}
+	}
+
+
+}
+void NetworkSession::handleConfirmTransaction() throw (NetworkException)
+{
+	readByte();
+	readShort();
+	readByte();
+}
+void NetworkSession::handleEnchantItem() throw (NetworkException)
+{
+	readByte();
+	readByte();
+}
+void NetworkSession::handleUpdateSign() throw (NetworkException)
+{
+	readInt();
+	readByte();
+	readInt();
+	readString(15);
+	readString(15);
+	readString(15);
+	readString(15);
+}
+void NetworkSession::handlePlayerAbilities() throw (NetworkException)
+{
+	readByte();
+	readByte();
+	readByte();
+}
+void NetworkSession::handleTabComplete() throw (NetworkException)
+{
+	readByte();
+	readByte();
+	readByte();
+}
+void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
+{
+	readShort();
+	short blockId = readShort();
+	if (blockId != -1)
+	{
+		readByte();
+		readShort();
+		short nbtDataLength = readShort();
+		if (nbtDataLength != -1)
+		{
+			for (int i = 0; i < nbtDataLength; i++)
+				readByte();
+		}
+	}
+}
 void NetworkSession::handleClientSettings() throw (NetworkException)
 {
 	std::wstring locale = readString(16);
@@ -112,10 +234,20 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 		packet << (unsigned char)OP_LOGIN_REQUEST << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
 		SendPacket(packet);
 
+
+		NetworkPacket packetInitialPosition;
+		packetInitialPosition << (unsigned char)OP_PLAYER_POSITION_AND_LOOK << (double)0 << (double)0  << (double)0 << (double)0 << (float)0 << (float)0 << (char)0;
+		SendPacket(packetInitialPosition);
+
 		NetworkPacket packetSpawn;
 		packetSpawn << (unsigned char)OP_SPAWN_POSITION << (int)0 << (int)0 << (int)0;
 		SendPacket(packetSpawn);
 	}
+}
+void NetworkSession::handlePluginMessage() throw (NetworkException)
+{
+	readString(128);
+	readBuffer();
 }
 void NetworkSession::handleEncryptionKeyRequest() throw (NetworkException)
 {
@@ -188,5 +320,9 @@ void NetworkSession::handlePing() throw (NetworkException)
 	std::wstring kickReason(L"Test");
 	packet << (unsigned char)OP_KICK  << kickReason;
 	SendPacket(packet);
+}
+void NetworkSession::handleDisconnect() throw (NetworkException)
+{
+	readString(128);
 }
 }
