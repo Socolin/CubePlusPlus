@@ -235,6 +235,10 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 		SendPacket(packet);
 
 
+		NetworkPacket packetRespawn;
+		packetRespawn << (unsigned char)OP_RESPAWN << (int)0 << (char)0 << (char)1 << (short) 256 << levelType;
+		SendPacket(packetRespawn);
+
 		NetworkPacket packetInitialPosition;
 		packetInitialPosition << (unsigned char)OP_PLAYER_POSITION_AND_LOOK << (double)0 << (double)0  << (double)0 << (double)0 << (float)0 << (float)0 << (char)0;
 		SendPacket(packetInitialPosition);
@@ -242,6 +246,11 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 		NetworkPacket packetSpawn;
 		packetSpawn << (unsigned char)OP_SPAWN_POSITION << (int)0 << (int)0 << (int)0;
 		SendPacket(packetSpawn);
+
+
+		NetworkPacket packetPlayer;
+		packetPlayer << (unsigned char)OP_PLAYER << (char) 1;
+		SendPacket(packetPlayer);
 	}
 }
 void NetworkSession::handlePluginMessage() throw (NetworkException)

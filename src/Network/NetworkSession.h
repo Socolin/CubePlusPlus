@@ -102,12 +102,12 @@ private:
 
 	int socket;
 	std::vector<char> buffer;
+	eSessionState state;
 	int lastKeepAliveTick;
 	uint32_t startPosInBuffer;
 	uint32_t bufferSize;
 	uint32_t maxBufferSize;
 	bool cryptedMode;
-	eSessionState state;
 
 	// Décodage
 	CryptoPP::RSAES<CryptoPP::PKCS1v15>::Decryptor rsaDecryptor;

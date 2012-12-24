@@ -17,6 +17,7 @@ class NetworkExceptionData : public NetworkException
 {
 public:
 	NetworkExceptionData(const char* message);
+
 };
 
 } /* namespace Network */

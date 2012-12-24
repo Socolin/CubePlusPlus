@@ -11,7 +11,7 @@
 namespace Network
 {
 NetworkSession::NetworkSession(int socket) :
-		socket(socket), buffer(INITIAL_BUFFER_SIZE),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),aesDecryptor(NULL),aesEncryptor(NULL),state(STATE_NOTLOGGED)
+		socket(socket), buffer(INITIAL_BUFFER_SIZE),state(STATE_NOTLOGGED),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),aesDecryptor(NULL),aesEncryptor(NULL)
 {
 
 }
