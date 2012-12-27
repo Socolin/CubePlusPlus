@@ -9,16 +9,21 @@
 #include <cryptopp/aes.h>
 #include <cryptopp/socketft.h>
 
+namespace World
+{
+class EntityPlayer;
+}
+
 namespace Network
 {
 #define INITIAL_BUFFER_SIZE 512
 #define MAX_TICK_FOR_KEEPALIVE 1200
 #define CURRENT_VERSION_PROTOCOL 49
 
-enum eSessionState
+enum eSessionState // TODO: use flag
 {
 	STATE_NEVER,
-	STATE_EVERYTIME,
+	STATE_EVERYTIME, //TODO: remove this
 	STATE_NOTLOGGED,
 	STATE_LOGGING,
 	STATE_LOGGED,
@@ -48,16 +53,19 @@ public:
 	void ReceiveInBuffer() throw (NetworkException);
 	void ReceiveData() throw (NetworkException);
 
-	void SendPacket(NetworkPacket& packet);
+	void SendPacket(const NetworkPacket& packet) const;
 
 	void handleBadPacket() throw (NetworkException)
 	{
 	}
 
+	void disconnect();
+
 	void handleKeepAlive() throw (NetworkException);
 	void handleHandShake() throw (NetworkException);
 	void handleChatMessage() throw (NetworkException);
 	void handleUseEntity() throw (NetworkException);
+	void handlePlayer() throw (NetworkException);
 	void handlePlayerPosition() throw (NetworkException);
 	void handlePlayerLook() throw (NetworkException);
 	void handlePlayerPositionAndLook() throw (NetworkException);
@@ -117,6 +125,9 @@ private:
 	// Encodage
 	CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption* aesEncryptor;
 	byte aesEncryptBuffer[CryptoPP::AES::BLOCKSIZE];
+
+	std::wstring username;
+	World::EntityPlayer* player;
 };
 }
 

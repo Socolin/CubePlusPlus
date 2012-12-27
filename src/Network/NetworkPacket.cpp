@@ -17,10 +17,15 @@ NetworkPacket::NetworkPacket() :
 {
 
 }
-NetworkPacket::NetworkPacket(size_t minSize) :
+NetworkPacket::NetworkPacket(unsigned char opcode) :
+		bufferSize(32), packetData(32), packetSize(0)
+{
+	append(&opcode, 1);
+}
+NetworkPacket::NetworkPacket(unsigned char opcode, size_t minSize) :
 		bufferSize(minSize), packetData(minSize), packetSize(0)
 {
-
+	append(&opcode, 1);
 }
 NetworkPacket::~NetworkPacket()
 {
@@ -81,18 +86,22 @@ NetworkPacket& NetworkPacket::operator <<(long value)
 	tmpBuffer[5] = (value >> 16) & 0xff;
 	tmpBuffer[6] = (value >> 8) & 0xff;
 	tmpBuffer[7] = value & 0xff;
-	append(tmpBuffer, 4);
+	append(tmpBuffer, 8);
 	return *this;
 }
 
 NetworkPacket& NetworkPacket::operator <<(float value)
 {
-	return *this;
+	IntToFloat conv;
+	conv.f = value;
+	return (*this << conv.i);
 }
 
 NetworkPacket& NetworkPacket::operator <<(double value)
 {
-	return *this;
+	LongToDouble conv;
+	conv.f = value;
+	return (*this << conv.i);
 }
 
 NetworkPacket& NetworkPacket::operator <<(std::wstring& value)

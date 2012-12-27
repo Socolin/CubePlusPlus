@@ -8,10 +8,13 @@
 #include <sys/socket.h>
 #include "Opcode.h"
 
+#include "World/WorldManager.h"
+#include "Entity/EntityPlayer.h"
+
 namespace Network
 {
 NetworkSession::NetworkSession(int socket) :
-		socket(socket), buffer(INITIAL_BUFFER_SIZE),state(STATE_NOTLOGGED),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),aesDecryptor(NULL),aesEncryptor(NULL)
+		socket(socket), buffer(INITIAL_BUFFER_SIZE),state(STATE_NOTLOGGED),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),aesDecryptor(NULL),aesEncryptor(NULL),player(NULL)
 {
 
 }
@@ -22,6 +25,10 @@ NetworkSession::~NetworkSession()
 	{
 		delete aesDecryptor;
 		delete aesEncryptor;
+	}
+	if (player)
+	{
+		delete player;
 	}
 }
 
@@ -67,7 +74,7 @@ void NetworkSession::ReceiveData() throw (NetworkException)
 		{
 			unsigned char packetId = readByte();
 			const OpcodeHandler& handler = opcodeTable[packetId];
-			std::cout << "Receive packet:"<< opcodeTable[packetId].name << " 0x" << std::hex <<  ((int)(packetId)&0xff)  <<std::dec << std::endl;
+			//std::cout << "Receive packet:"<< opcodeTable[packetId].name << " 0x" << std::hex <<  ((int)(packetId)&0xff)  <<std::dec << std::endl;
 			if (handler.state == STATE_NEVER)
 			{
 				throw NetworkException("Receive bad packet id");
@@ -79,7 +86,7 @@ void NetworkSession::ReceiveData() throw (NetworkException)
 			startPosInBuffer = backupStartPos;
 			break;
 		}
-		std::cout << "packetSize: " << (startPosInBuffer - backupStartPos) << std::endl;
+		//std::cout << "packetSize: " << (startPosInBuffer - backupStartPos) << std::endl;
 	}
 }
 
@@ -107,6 +114,17 @@ float NetworkSession::readFloat() throw (NetworkException)
 	dbl.i = readInt();
 	return dbl.f;
 }
+
+void NetworkSession::disconnect()
+{
+	if (player != NULL)
+	{
+		World::WorldManager* worldManager = World::WorldManager::GetInstance();
+		worldManager->RemovePlayer(player);
+		player = NULL;
+	}
+}
+
 double NetworkSession::readDouble() throw (NetworkException)
 {
 	LongToDouble dbl;
@@ -158,7 +176,7 @@ buffer_t NetworkSession::readBuffer() throw (NetworkException)
 	return std::make_pair(bufferData, len);
 }
 
-void NetworkSession::SendPacket(NetworkPacket& packet)
+void NetworkSession::SendPacket(const NetworkPacket& packet) const
 {
 	if (cryptedMode)
 	{

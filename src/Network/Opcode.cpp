@@ -11,7 +11,7 @@ void initOpcode()
 	opcodeTable[OP_HANDSHAKE] = OpcodeHandler("HANDSHAKE", STATE_NOTLOGGED, &NetworkSession::handleHandShake);
 	opcodeTable[OP_CHAT_MESSAGE] = OpcodeHandler("CHAT_MESSAGE", STATE_INGAME, &NetworkSession::handleChatMessage);
 	opcodeTable[OP_USE_ENTITY] = OpcodeHandler("USE_ENTITY", STATE_INGAME, &NetworkSession::handleUseEntity);
-	opcodeTable[OP_PLAYER] = OpcodeHandler("PLAYER", STATE_INGAME, &NetworkSession::handlePlayerPosition);
+	opcodeTable[OP_PLAYER] = OpcodeHandler("PLAYER", STATE_INGAME, &NetworkSession::handlePlayer);
 	opcodeTable[OP_PLAYER_POSITION] = OpcodeHandler("PLAYER_POSITION", STATE_INGAME, &NetworkSession::handlePlayerPosition);
 	opcodeTable[OP_PLAYER_LOOK] = OpcodeHandler("PLAYER_LOOK", STATE_INGAME, &NetworkSession::handlePlayerLook);
 	opcodeTable[OP_PLAYER_POSITION_AND_LOOK] = OpcodeHandler("POSITION_AND_LOOK", STATE_INGAME, &NetworkSession::handlePlayerPositionAndLook);

@@ -9,6 +9,9 @@
 #include <cryptopp/files.h>
 #include <cryptopp/cryptlib.h>
 
+#include "World/WorldManager.h"
+#include "Entity/EntityPlayer.h"
+
 #define DEBUG_STR(str) std::wcout << L"DEBUG: str: size:"<< str.length() << L" value:\"" << str << L"\"" << std::endl;
 #define DEBUG_SHORT(value) std::cout << "short:" << value << std::endl;
 #define DEBUG_INT(value) std::cout << "int:" << value << std::endl;
@@ -33,14 +36,12 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 	if (protocolVersion != CURRENT_VERSION_PROTOCOL)
 		throw NetworkException("Bad protocol version, use 1.4.5");
 
-	std::wstring userName = readString(16);
+	username = readString(16);
 	std::wstring serverHost = readString(512);
 	readInt();
 
-	DEBUG_STR(userName)
+	DEBUG_STR(username)
 	DEBUG_STR(serverHost)
-
-	unsigned char packetId = OP_ENCRYPTION_KEY_REQUEST;
 
 	std::wstring serverId(L"-");
 
@@ -50,8 +51,8 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 	int rnd = rand();
 	const std::pair<char*, short> token = std::make_pair((char*)&rnd, (short)4);
 
-	NetworkPacket packet;
-	packet << packetId << serverId << certificate << token;
+	NetworkPacket packet(OP_ENCRYPTION_KEY_REQUEST);
+	packet << serverId << certificate << token;
 	SendPacket(packet);
 }
 void NetworkSession::handleUseEntity() throw (NetworkException)
@@ -60,19 +61,25 @@ void NetworkSession::handleUseEntity() throw (NetworkException)
 	readInt();
 	readByte();
 }
+void NetworkSession::handlePlayer() throw (NetworkException)
+{
+	readByte();
+}
 void NetworkSession::handlePlayerPosition() throw (NetworkException)
 {
-	readDouble();
-	readDouble();
-	readDouble();
-	readDouble();
+	double newX = readDouble();
+	double newY = readDouble();
+	/*double Stance = */readDouble();
+	double newZ = readDouble();
 	readByte();
+	player->MoveTo(newX, newY, newZ);
 }
 void NetworkSession::handlePlayerLook() throw (NetworkException)
 {
-	readFloat();
-	readFloat();
+	double newYaw = readFloat();
+	double newPitch = readFloat();
 	readByte();
+	player->Rotate(newYaw, newPitch);
 }
 void NetworkSession::handlePlayerPositionAndLook() throw (NetworkException)
 {
@@ -229,28 +236,13 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 	if (payload == 0 && state != STATE_INGAME)
 	{
 		state = STATE_INGAME;
-		NetworkPacket packet;
+		NetworkPacket packet(OP_LOGIN_REQUEST);
 		std::wstring levelType(L"flat");
-		packet << (unsigned char)OP_LOGIN_REQUEST << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
+		packet  << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
 		SendPacket(packet);
 
-
-		NetworkPacket packetRespawn;
-		packetRespawn << (unsigned char)OP_RESPAWN << (int)0 << (char)0 << (char)1 << (short) 256 << levelType;
-		SendPacket(packetRespawn);
-
-		NetworkPacket packetInitialPosition;
-		packetInitialPosition << (unsigned char)OP_PLAYER_POSITION_AND_LOOK << (double)0 << (double)0  << (double)0 << (double)0 << (float)0 << (float)0 << (char)0;
-		SendPacket(packetInitialPosition);
-
-		NetworkPacket packetSpawn;
-		packetSpawn << (unsigned char)OP_SPAWN_POSITION << (int)0 << (int)0 << (int)0;
-		SendPacket(packetSpawn);
-
-
-		NetworkPacket packetPlayer;
-		packetPlayer << (unsigned char)OP_PLAYER << (char) 1;
-		SendPacket(packetPlayer);
+		World::WorldManager* worldManager = World::WorldManager::GetInstance();
+		player = worldManager->LoadAndJoinWorld(username, this);
 	}
 }
 void NetworkSession::handlePluginMessage() throw (NetworkException)
@@ -306,10 +298,9 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 	if (sDecryptedSharedSecret.length() != 16)
 		throw NetworkException("sharedSecretKey.second != 128");
 
-	NetworkPacket packet(5);
-	unsigned char packetId = OP_ENCRYPTION_KEY_RESPONSE;
+	NetworkPacket packet(OP_ENCRYPTION_KEY_RESPONSE, 5);
 	short zero = 0;
-	packet << packetId << zero << zero;
+	packet << zero << zero;
 	SendPacket(packet);
 
 	cryptedMode = true;
@@ -325,13 +316,14 @@ void NetworkSession::handlePing() throw (NetworkException)
 	char magic = readByte();
 	DEBUG_CHAR(magic)
 
-	NetworkPacket packet;
+	NetworkPacket packet(OP_KICK);
 	std::wstring kickReason(L"Test");
-	packet << (unsigned char)OP_KICK  << kickReason;
+	packet << kickReason;
 	SendPacket(packet);
 }
 void NetworkSession::handleDisconnect() throw (NetworkException)
 {
 	readString(128);
+	disconnect();
 }
 }

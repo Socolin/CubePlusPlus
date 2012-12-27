@@ -12,45 +12,70 @@
 namespace World
 {
 
-Chunk::Chunk()
+Chunk::Chunk(int x, int y) :
+        posX(x), posY(y), refCount(0), loaded(false)
 {
-	for (int i = 0; i < CHUNK_DATA_COUNT; i++)
-		datas[i] = NULL;
+    for (int i = 0; i < CHUNK_DATA_COUNT; i++)
+        datas[i] = NULL;
 }
 
 Chunk::~Chunk()
 {
-	for (int i = 0; i < CHUNK_DATA_COUNT; i++)
-	{
-		if (datas[i] != NULL)
-		{
-			if (datas[i]->addData != NULL)
-				delete datas[i]->addData;
-			delete datas[i];
-		}
-	}
+    for (int i = 0; i < CHUNK_DATA_COUNT; i++)
+    {
+        if (datas[i] != NULL)
+        {
+            if (datas[i]->addData != NULL)
+                delete datas[i]->addData;
+            delete datas[i];
+        }
+    }
 }
 
-int Chunk::getBlockAt(int x, int y, int z)
+void Chunk::Load()
 {
-	int chunkDataId = (y & 0xff) << 4;
-	ChunkData* data = datas[chunkDataId];
-	if (data != NULL)
-	{
-		int subChunkCoordX = x & 0xf;
-		int subChunkCoordY = y & 0xf;
-		int subChunkCoordZ = z & 0xf;
-		if (data->addData != NULL)
-		{
-			int cellId = ((subChunkCoordY) << 8 | (subChunkCoordZ) << 4 | (subChunkCoordX));
-			return data->blocks[cellId] | (data->addData[cellId << 2] & 0xf << ((subChunkCoordX & 0x1) << 2));
-		}
-		else
-		{
-			return data->blocks[(subChunkCoordY) << 8 | (subChunkCoordZ) << 4 | (subChunkCoordX)];
-		}
-	}
-	return 0;
+    {
+        ChunkData* chunkData = new ChunkData();
+        unsigned char* data = chunkData->blocks;
+        for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
+        {
+            *data = 1;
+            data++;
+        }
+        data = chunkData->metadata;
+        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+        {
+            *data = 0;
+            data++;
+        }
+        chunkData->addData = NULL;
+        datas[0] = chunkData;
+    }
+    for (int i = 0; i < CHUNK_DATA_COUNT; i++)
+    {
+        ChunkData* chunkData = new ChunkData();
+        unsigned char* data = chunkData->blocks;
+        for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
+        {
+            *data = 0;
+            data++;
+        }
+        data = chunkData->metadata;
+        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+        {
+            *data = 0;
+            data++;
+        }
+        chunkData->addData = NULL;
+        datas[i] = chunkData;
+    }
+    loaded = true;
+}
+
+void Chunk::UpdateTick()
+{
+    if (!loaded)
+        return;
 }
 
 } /* namespace Network */

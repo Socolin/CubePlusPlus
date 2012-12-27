@@ -111,6 +111,78 @@ Server/fast:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/build
 .PHONY : Server/fast
 
+src/Entity/Entity.o: src/Entity/Entity.cpp.o
+.PHONY : src/Entity/Entity.o
+
+# target to build an object file
+src/Entity/Entity.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/Entity.cpp.o
+.PHONY : src/Entity/Entity.cpp.o
+
+src/Entity/Entity.i: src/Entity/Entity.cpp.i
+.PHONY : src/Entity/Entity.i
+
+# target to preprocess a source file
+src/Entity/Entity.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/Entity.cpp.i
+.PHONY : src/Entity/Entity.cpp.i
+
+src/Entity/Entity.s: src/Entity/Entity.cpp.s
+.PHONY : src/Entity/Entity.s
+
+# target to generate assembly for a file
+src/Entity/Entity.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/Entity.cpp.s
+.PHONY : src/Entity/Entity.cpp.s
+
+src/Entity/EntityPlayer.o: src/Entity/EntityPlayer.cpp.o
+.PHONY : src/Entity/EntityPlayer.o
+
+# target to build an object file
+src/Entity/EntityPlayer.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/EntityPlayer.cpp.o
+.PHONY : src/Entity/EntityPlayer.cpp.o
+
+src/Entity/EntityPlayer.i: src/Entity/EntityPlayer.cpp.i
+.PHONY : src/Entity/EntityPlayer.i
+
+# target to preprocess a source file
+src/Entity/EntityPlayer.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/EntityPlayer.cpp.i
+.PHONY : src/Entity/EntityPlayer.cpp.i
+
+src/Entity/EntityPlayer.s: src/Entity/EntityPlayer.cpp.s
+.PHONY : src/Entity/EntityPlayer.s
+
+# target to generate assembly for a file
+src/Entity/EntityPlayer.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/EntityPlayer.cpp.s
+.PHONY : src/Entity/EntityPlayer.cpp.s
+
+src/Entity/LivingEntity.o: src/Entity/LivingEntity.cpp.o
+.PHONY : src/Entity/LivingEntity.o
+
+# target to build an object file
+src/Entity/LivingEntity.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/LivingEntity.cpp.o
+.PHONY : src/Entity/LivingEntity.cpp.o
+
+src/Entity/LivingEntity.i: src/Entity/LivingEntity.cpp.i
+.PHONY : src/Entity/LivingEntity.i
+
+# target to preprocess a source file
+src/Entity/LivingEntity.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/LivingEntity.cpp.i
+.PHONY : src/Entity/LivingEntity.cpp.i
+
+src/Entity/LivingEntity.s: src/Entity/LivingEntity.cpp.s
+.PHONY : src/Entity/LivingEntity.s
+
+# target to generate assembly for a file
+src/Entity/LivingEntity.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/LivingEntity.cpp.s
+.PHONY : src/Entity/LivingEntity.cpp.s
+
 src/Entity/Position.o: src/Entity/Position.cpp.o
 .PHONY : src/Entity/Position.o
 
@@ -375,6 +447,30 @@ src/World/Chunk.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/Chunk.cpp.s
 .PHONY : src/World/Chunk.cpp.s
 
+src/World/VirtualChunk.o: src/World/VirtualChunk.cpp.o
+.PHONY : src/World/VirtualChunk.o
+
+# target to build an object file
+src/World/VirtualChunk.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/VirtualChunk.cpp.o
+.PHONY : src/World/VirtualChunk.cpp.o
+
+src/World/VirtualChunk.i: src/World/VirtualChunk.cpp.i
+.PHONY : src/World/VirtualChunk.i
+
+# target to preprocess a source file
+src/World/VirtualChunk.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/VirtualChunk.cpp.i
+.PHONY : src/World/VirtualChunk.cpp.i
+
+src/World/VirtualChunk.s: src/World/VirtualChunk.cpp.s
+.PHONY : src/World/VirtualChunk.s
+
+# target to generate assembly for a file
+src/World/VirtualChunk.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/VirtualChunk.cpp.s
+.PHONY : src/World/VirtualChunk.cpp.s
+
 src/World/World.o: src/World/World.cpp.o
 .PHONY : src/World/World.o
 
@@ -399,6 +495,30 @@ src/World/World.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/World.cpp.s
 .PHONY : src/World/World.cpp.s
 
+src/World/WorldManager.o: src/World/WorldManager.cpp.o
+.PHONY : src/World/WorldManager.o
+
+# target to build an object file
+src/World/WorldManager.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/WorldManager.cpp.o
+.PHONY : src/World/WorldManager.cpp.o
+
+src/World/WorldManager.i: src/World/WorldManager.cpp.i
+.PHONY : src/World/WorldManager.i
+
+# target to preprocess a source file
+src/World/WorldManager.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/WorldManager.cpp.i
+.PHONY : src/World/WorldManager.cpp.i
+
+src/World/WorldManager.s: src/World/WorldManager.cpp.s
+.PHONY : src/World/WorldManager.s
+
+# target to generate assembly for a file
+src/World/WorldManager.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/WorldManager.cpp.s
+.PHONY : src/World/WorldManager.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -408,6 +528,15 @@ help:
 	@echo "... Server"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... src/Entity/Entity.o"
+	@echo "... src/Entity/Entity.i"
+	@echo "... src/Entity/Entity.s"
+	@echo "... src/Entity/EntityPlayer.o"
+	@echo "... src/Entity/EntityPlayer.i"
+	@echo "... src/Entity/EntityPlayer.s"
+	@echo "... src/Entity/LivingEntity.o"
+	@echo "... src/Entity/LivingEntity.i"
+	@echo "... src/Entity/LivingEntity.s"
 	@echo "... src/Entity/Position.o"
 	@echo "... src/Entity/Position.i"
 	@echo "... src/Entity/Position.s"
@@ -441,9 +570,15 @@ help:
 	@echo "... src/World/Chunk.o"
 	@echo "... src/World/Chunk.i"
 	@echo "... src/World/Chunk.s"
+	@echo "... src/World/VirtualChunk.o"
+	@echo "... src/World/VirtualChunk.i"
+	@echo "... src/World/VirtualChunk.s"
 	@echo "... src/World/World.o"
 	@echo "... src/World/World.i"
 	@echo "... src/World/World.s"
+	@echo "... src/World/WorldManager.o"
+	@echo "... src/World/WorldManager.i"
+	@echo "... src/World/WorldManager.s"
 .PHONY : help
 
 

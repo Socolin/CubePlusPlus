@@ -7,11 +7,11 @@
 
 #include "Position.h"
 
-namespace Entity
+namespace World
 {
 
-Position::Position()
-	: x(0), y(0), z(0)
+Position::Position() :
+        x(0), y(0), z(0)
 {
 }
 

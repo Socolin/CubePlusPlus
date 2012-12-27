@@ -16,9 +16,22 @@ namespace Network
 
 class NetworkPacket
 {
+	typedef union
+	{
+		int i;
+		float f;
+	} IntToFloat;
+
+	typedef union
+	{
+		long i;
+		double f;
+	} LongToDouble;
+
 public:
 	NetworkPacket();
-	NetworkPacket(size_t size);
+	NetworkPacket(unsigned char opcode);
+	NetworkPacket(unsigned char opcode, size_t size);
 	virtual ~NetworkPacket();
 
 	void append(const void* data, std::size_t size);
@@ -45,7 +58,6 @@ public:
 	{
 		return packetSize;
 	}
-
 
 private:
 	size_t bufferSize;
