@@ -23,7 +23,11 @@ namespace Network
 void NetworkSession::handleKeepAlive() throw (NetworkException)
 {
 	int value = readInt();
-	DEBUG_INT(value)
+	if (value != lastKeepAliveId)
+	{
+	    disconnect();
+	}
+	lastKeepAliveId = 0;
 }
 void NetworkSession::handleChatMessage() throw (NetworkException)
 {
@@ -83,13 +87,15 @@ void NetworkSession::handlePlayerLook() throw (NetworkException)
 }
 void NetworkSession::handlePlayerPositionAndLook() throw (NetworkException)
 {
-	readDouble();
-	readDouble();
-	readDouble();
-	readDouble();
-	readFloat();
-	readFloat();
-	readByte();
+    double newX = readDouble();
+    double newY = readDouble();
+    /*double Stance = */readDouble();
+    double newZ = readDouble();
+    double newYaw = readFloat();
+    double newPitch = readFloat();
+    readByte();
+    player->Rotate(newYaw, newPitch);
+    player->MoveTo(newX, newY, newZ);
 }
 
 void NetworkSession::handlePlayerDigging() throw (NetworkException)
@@ -325,5 +331,31 @@ void NetworkSession::handleDisconnect() throw (NetworkException)
 {
 	readString(128);
 	disconnect();
+}
+
+void NetworkSession::UpdateTick()
+{
+    if (lastKeepAliveId != 0)
+    {
+        lastKeepAliveTick--;
+        if (lastKeepAliveTick <= 0)
+        {
+            disconnect();
+        }
+    }
+    else
+    {
+        lastSendKeepAliveTick--;
+        if (lastSendKeepAliveTick > INTERVAL_SEND_KEEPALIVE)
+        {
+            lastKeepAliveTick = MAX_TICK_FOR_KEEPALIVE;
+            lastSendKeepAliveTick = INTERVAL_SEND_KEEPALIVE;
+            lastKeepAliveId = rand();
+            lastKeepAliveId |= 0x1; // always != 0
+            NetworkPacket keepAlivePacket(OP_KEEPALIVE);
+            keepAlivePacket << lastKeepAliveId;
+            SendPacket(keepAlivePacket);
+        }
+    }
 }
 }

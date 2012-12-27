@@ -10,7 +10,7 @@ namespace World
 {
 
 World::World() :
-        viewDistance(10), currentEntityId(1)
+        viewDistance(10), currentEntityId(10)
 {
 }
 

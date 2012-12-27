@@ -47,8 +47,6 @@ public:
 	NetworkPacket& operator <<(std::wstring& value);
 	NetworkPacket& operator <<(const std::pair<char*, short>&);
 
-	void SendPacket(int socket);
-
 	const std::vector<char>& getPacketData() const
 	{
 		return packetData;
@@ -58,6 +56,8 @@ public:
 	{
 		return packetSize;
 	}
+
+	void dump();
 
 private:
 	size_t bufferSize;

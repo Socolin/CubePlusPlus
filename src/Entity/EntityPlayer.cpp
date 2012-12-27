@@ -26,6 +26,10 @@ void EntityPlayer::AddChunkToSend(int x, int z)
 
 void EntityPlayer::UpdateTick()
 {
+    if (session != NULL)
+    {
+        session->UpdateTick();
+    }
 }
 
 void EntityPlayer::Respawn(double x, double y, double z)
@@ -96,8 +100,7 @@ void EntityPlayer::Send(const Network::NetworkPacket& packet) const
 
 void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
 {
-    // Voir si avec les int il faut pas envoyé le packet de déplacement pour l'arondi
-    packet << (unsigned char) Network::OP_SPAWN_NAMED_ENTITY << entityId << name << (int)x << (int)y << (int)z << (char) (yaw / 256.f * 360.f) << (char) (yaw / 256.f * 360.f) << (unsigned short) 0 /* Current item*/;
+    packet << (unsigned char) Network::OP_SPAWN_NAMED_ENTITY << entityId << name << networkX << networkY << networkZ << (char)  (yaw * 256.f / 360.f) << (char)  (pitch * 256.f / 360.f) << (unsigned short) 0 /* Current item*/;
     // Metadata
     packet << (char)0 << (char)0 << (unsigned char)127; // TODO: classe metadata
 }

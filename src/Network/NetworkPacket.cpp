@@ -130,4 +130,18 @@ NetworkPacket& NetworkPacket::operator <<(const std::pair<char*, short>& pair)
 	return *this;
 }
 
+void NetworkPacket::dump()
+{
+    std::cout << "PACKET DUMP: size:" << packetSize << std::endl;
+    std::cout << std::hex;
+    for (size_t i = 0; i < packetSize; i++)
+    {
+        int toPrint = ((int)packetData[i])&0xff;
+        std::cout << toPrint << " ";
+        if (i % 16 == 15)
+            std::cout << std::endl;
+    }
+    std::cout << std::dec << std::endl;
+}
+
 } /* namespace Network */

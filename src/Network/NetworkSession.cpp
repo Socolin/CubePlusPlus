@@ -14,7 +14,8 @@
 namespace Network
 {
 NetworkSession::NetworkSession(int socket) :
-		socket(socket), buffer(INITIAL_BUFFER_SIZE),state(STATE_NOTLOGGED),lastKeepAliveTick(0),startPosInBuffer(0),bufferSize(0),maxBufferSize(0),cryptedMode(false),aesDecryptor(NULL),aesEncryptor(NULL),player(NULL)
+		socket(socket), buffer(INITIAL_BUFFER_SIZE),state(STATE_NOTLOGGED),lastKeepAliveTick(0),startPosInBuffer(0)
+        ,bufferSize(0),maxBufferSize(0),cryptedMode(false),aesDecryptor(NULL),aesEncryptor(NULL),player(NULL),lastSendKeepAliveTick(0),lastKeepAliveId(0)
 {
 
 }
@@ -117,11 +118,14 @@ float NetworkSession::readFloat() throw (NetworkException)
 
 void NetworkSession::disconnect()
 {
+    std::cout << "Disconnect player" << std::endl;
 	if (player != NULL)
 	{
 		World::WorldManager* worldManager = World::WorldManager::GetInstance();
 		worldManager->RemovePlayer(player);
 		player = NULL;
+		// kick packet
+		close(socket);
 	}
 }
 
@@ -137,10 +141,10 @@ int NetworkSession::readInt() throw (NetworkException)
 		throw NetworkExceptionData("4 + startPosInBuffer > bufferSize");
 
 	int result = 0;
-	result = buffer[startPosInBuffer] << 24;
-	result += buffer[startPosInBuffer + 1] << 16;
-	result += buffer[startPosInBuffer + 2] << 8;
-	result += buffer[startPosInBuffer + 3];
+	result = (((int)buffer[startPosInBuffer]) & 0xff) << 24;
+	result += (((int)buffer[startPosInBuffer + 1]) & 0xff)  << 16;
+	result += (((int)buffer[startPosInBuffer + 2]) & 0xff)  << 8;
+	result += (((int)buffer[startPosInBuffer + 3] & 0xff));
 	startPosInBuffer += 4;
 	return result;
 }
@@ -150,14 +154,16 @@ long NetworkSession::readLong() throw (NetworkException)
 		throw NetworkExceptionData("8 + startPosInBuffer > bufferSize");
 
 	long result = 0;
-	result = ((long)buffer[startPosInBuffer]) << 56;
-	result += ((long)buffer[startPosInBuffer + 1]) << 48;
-	result += ((long)buffer[startPosInBuffer + 2]) << 40;
-	result += ((long)buffer[startPosInBuffer + 3]) << 32;
-	result += buffer[startPosInBuffer + 4] << 24;
-	result += buffer[startPosInBuffer + 5] << 16;
-	result += buffer[startPosInBuffer + 6] << 8;
-	result += buffer[startPosInBuffer + 7];
+
+    result = (((long)buffer[startPosInBuffer]) & 0xff) << 56;
+    result += (((long)buffer[startPosInBuffer + 1]) & 0xff) << 48;
+    result += (((long)buffer[startPosInBuffer + 2]) & 0xff) << 40;
+    result += (((long)buffer[startPosInBuffer + 3] & 0xff)) << 32;
+    result += (((long)buffer[startPosInBuffer + 4] & 0xff)) << 24;
+    result += (((long)buffer[startPosInBuffer + 5] & 0xff)) << 16;
+    result += (((long)buffer[startPosInBuffer + 6] & 0xff)) << 8;
+    result += (((long)buffer[startPosInBuffer + 7] & 0xff));
+
 	startPosInBuffer += 8;
 	return result;
 }
@@ -180,9 +186,22 @@ void NetworkSession::SendPacket(const NetworkPacket& packet) const
 {
 	if (cryptedMode)
 	{
-		aesEncryptor->ProcessData((byte*)&packet.getPacketData()[0],(byte*)&packet.getPacketData()[0],packet.getPacketSize());
+        size_t sendSize = 0;
+        size_t x = 512;
+	    size_t y = packet.getPacketSize();
+	    sendSize = y ^ ((x ^ y) & -(x < y)); // min(x, y)
+	    while (sendSize > 0)
+	    {
+            aesEncryptor->ProcessData((byte*)sendBuffer,(byte*)&packet.getPacketData()[0],packet.getPacketSize());
+            send(socket, sendBuffer, sendSize, 0);
+            y -= sendSize;
+            sendSize = y ^ ((x ^ y) & -(x < y)); // min(x, y)
+	    }
 	}
-	send(socket, &packet.getPacketData()[0], packet.getPacketSize(), 0);
+	else
+	{
+	    send(socket, &packet.getPacketData()[0], packet.getPacketSize(), 0);
+	}
 }
 
 std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)

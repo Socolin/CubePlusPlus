@@ -28,6 +28,7 @@ public:
 
     void Rotate(float yaw, float pitch);
     void MoveTo(double x, double y, double z);
+    void StopMoving();
     void Teleport(double x, double y, double z, float yaw, float pitch);
     void GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet);
     virtual void GetDestroyPacket(Network::NetworkPacket& packet);
@@ -39,9 +40,14 @@ protected:
     float pitch;
     bool hasMove;
     bool hasRotate;
-    double oldX;
-    double oldY;
-    double oldZ;
+    bool isMoving;
+    bool stopMoving;
+    double motionX;
+    double motionY;
+    double motionZ;
+    int networkX;
+    int networkY;
+    int networkZ;
 };
 
 } /* namespace Network */

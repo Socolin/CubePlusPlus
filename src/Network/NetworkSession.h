@@ -17,7 +17,8 @@ class EntityPlayer;
 namespace Network
 {
 #define INITIAL_BUFFER_SIZE 512
-#define MAX_TICK_FOR_KEEPALIVE 1200
+#define MAX_TICK_FOR_KEEPALIVE 1200 * 1000
+#define INTERVAL_SEND_KEEPALIVE 20
 #define CURRENT_VERSION_PROTOCOL 49
 
 enum eSessionState // TODO: use flag
@@ -90,13 +91,7 @@ public:
 	void handleDisconnect() throw (NetworkException);
 	void handlePing () throw (NetworkException);
 
-	void updateTick(uint32_t tick)
-	{
-		if (lastKeepAliveTick - tick > MAX_TICK_FOR_KEEPALIVE)
-		{
-			// Disconnect
-		}
-	}
+	void UpdateTick();
 private:
 	void readData(int length, char* data) throw (NetworkException);
 	char readByte() throw (NetworkException);
@@ -128,6 +123,10 @@ private:
 
 	std::wstring username;
 	World::EntityPlayer* player;
+
+	unsigned char sendBuffer[512];
+	size_t lastSendKeepAliveTick;
+	int lastKeepAliveId;
 };
 }
 
