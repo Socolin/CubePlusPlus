@@ -75,9 +75,9 @@ void Entity::Teleport(double x, double y, double z, float yaw, float pitch)
 
 void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
 {
-    int newNetworkX = ((int) x) * 32;
-    int newNetworkY = ((int) y) * 32;
-    int newNetworkZ = ((int) z) * 32;
+    int newNetworkX = (int) (x * 32);
+    int newNetworkY = (int) (y * 32);
+    int newNetworkZ = (int) (z * 32);
     if (hasMove && hasRotate)
     {
         int dx = newNetworkX - networkX;

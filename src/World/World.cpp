@@ -12,9 +12,6 @@ namespace World
 World::World() :
         viewDistance(10), currentEntityId(10)
 {
-    for (int x = -1; x <= 1; x++)
-    for (int z = -1; z <= 1; z++)
-        std::cout << x  << " " << z << " " << CHUNK_KEY(x, z) << std::endl;
 }
 
 World::~World()
