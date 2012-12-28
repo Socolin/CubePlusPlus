@@ -6,7 +6,7 @@
 #include <set>
 #include "Chunk.h"
 
-#define CHUNK_KEY(X,Z) ((long)X << 32 |(long) Z)
+#define CHUNK_KEY(X,Z) ((((long)X << 32) & 0xffffffff00000000)| ((long)Z & 0x00000000ffffffff))
 
 namespace World
 {

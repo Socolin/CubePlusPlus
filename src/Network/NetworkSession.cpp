@@ -116,7 +116,7 @@ float NetworkSession::readFloat() throw (NetworkException)
 	return dbl.f;
 }
 
-void NetworkSession::disconnect()
+void NetworkSession::disconnect(/*TODO: reason*/)
 {
     std::cout << "Disconnect player" << std::endl;
 	if (player != NULL)
@@ -124,7 +124,7 @@ void NetworkSession::disconnect()
 		World::WorldManager* worldManager = World::WorldManager::GetInstance();
 		worldManager->RemovePlayer(player);
 		player = NULL;
-		// kick packet
+		// TODO: kick packet
 		close(socket);
 	}
 }

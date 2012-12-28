@@ -5,6 +5,8 @@
 #include "Network/NetworkSession.h"
 #include "Network/NetworkPacket.h"
 #include "Network/Opcode.h"
+#include "World/VirtualChunk.h"
+#include "World/World.h"
 
 namespace World
 {
@@ -103,6 +105,14 @@ void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
     packet << (unsigned char) Network::OP_SPAWN_NAMED_ENTITY << entityId << name << networkX << networkY << networkZ << (char)  (yaw * 256.f / 360.f) << (char)  (pitch * 256.f / 360.f) << (unsigned short) 0 /* Current item*/;
     // Metadata
     packet << (char)0 << (char)0 << (unsigned char)127; // TODO: classe metadata
+}
+
+void EntityPlayer::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
+{
+    VirtualChunk *oldVChunk = world->GetVirtualChunk(virtualChunkX, virtualChunkZ);
+    oldVChunk->RemovePlayerByMoving(this, newVirtualChunkX, newVirtualChunkZ);
+    VirtualChunk *vChunk = world->GetVirtualChunk(newVirtualChunkX, newVirtualChunkZ);
+    vChunk->AddPlayerByMoving(this, virtualChunkX, virtualChunkZ);
 }
 
 } /* namespace World */

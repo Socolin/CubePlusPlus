@@ -7,15 +7,23 @@
 
 #include "Entity.h"
 
-#include "World/World.h"
 #include "Network/Opcode.h"
 #include "Network/NetworkPacket.h"
+#include "World/VirtualChunk.h"
+#include "World/World.h"
 
 namespace World
 {
 
 Entity::Entity(double x, double y, double z) :
-        Position(x, y, z), world(0), entityId(0), yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false), stopMoving(false), motionX(0), motionY(0), motionZ(0), networkX(((int) x) * 32), networkY(((int) y) * 32), networkZ(((int) z) * 32)
+        Position(x, y, z), world(0), entityId(0), yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false), stopMoving(false), motionX(0), motionY(0), motionZ(0)
+        , networkX(((int) x) * 32)
+        , networkY(((int) y) * 32)
+        , networkZ(((int) z) * 32)
+        , virtualChunkX(((int)x) >> 7)
+        , virtualChunkZ(((int)z) >> 7)
+        , chunkX(((int)x) >> 4)
+        , chunkZ(((int)z) >> 4)
 {
 
 }
@@ -41,13 +49,23 @@ void Entity::Rotate(float yaw, float pitch)
 void Entity::MoveTo(double x, double y, double z)
 {
     motionX = x - this->x;
-    motionX = y - this->y;
-    motionX = z - this->z;
+    motionY = y - this->y;
+    motionZ = z - this->z;
     this->x = x;
     this->y = y;
     this->z = z;
     hasMove = true;
     isMoving = true;
+    int newVirtualChunkX = ((int) x) >> 7;
+    int newVirtualChunkZ = ((int) z) >> 7;
+
+    if (newVirtualChunkX != virtualChunkX || newVirtualChunkZ != virtualChunkZ)
+    {
+        moveToVirtualChunk(newVirtualChunkX, newVirtualChunkZ);
+    }
+
+    virtualChunkX = newVirtualChunkX;
+    virtualChunkZ = newVirtualChunkZ;
 }
 
 void Entity::Teleport(double x, double y, double z, float yaw, float pitch)
@@ -137,6 +155,18 @@ void Entity::StopMoving()
 void Entity::GetDestroyPacket(Network::NetworkPacket& packet)
 {
     packet << (unsigned char) Network::OP_DESTROY_ENTITY << (char) 1 << entityId;
+}
+
+void Entity::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
+{
+    VirtualChunk *oldVChunk = world->GetVirtualChunk(virtualChunkX, virtualChunkZ);
+    oldVChunk->RemoveEntityByMoving(this, newVirtualChunkX, newVirtualChunkZ);
+    VirtualChunk *vChunk = world->GetVirtualChunk(newVirtualChunkX, newVirtualChunkZ);
+    vChunk->AddEntityByMoving(this, virtualChunkX, virtualChunkZ);
+}
+
+void Entity::moveToChunk(int newChunkX, int newChunkZ)
+{
 }
 
 } /* namespace Network */

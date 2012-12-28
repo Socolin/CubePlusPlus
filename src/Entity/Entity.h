@@ -33,6 +33,8 @@ public:
     void GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet);
     virtual void GetDestroyPacket(Network::NetworkPacket& packet);
     virtual void GetCreatePacket(Network::NetworkPacket& packet) = 0;
+    virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
+    virtual void moveToChunk(int newChunkX, int newChunkZ);
 protected:
     World* world;
     int entityId;
@@ -48,6 +50,10 @@ protected:
     int networkX;
     int networkY;
     int networkZ;
+    int virtualChunkX;
+    int virtualChunkZ;
+    int chunkX;
+    int chunkZ;
 };
 
 } /* namespace Network */
