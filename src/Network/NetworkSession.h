@@ -21,14 +21,15 @@ namespace Network
 #define INTERVAL_SEND_KEEPALIVE 20
 #define CURRENT_VERSION_PROTOCOL 49
 
-enum eSessionState // TODO: use flag
+enum eSessionState
 {
-	STATE_NEVER,
-	STATE_EVERYTIME, //TODO: remove this
-	STATE_NOTLOGGED,
-	STATE_LOGGING,
-	STATE_LOGGED,
-	STATE_INGAME
+	STATE_NEVER     = 0x0,
+	STATE_NOTLOGGED = 0x1,
+	STATE_LOGGING   = 0x2,
+	STATE_LOGGED    = 0x4,
+	STATE_INGAME    = 0x8,
+
+	STATE_EVERYTIME = STATE_NOTLOGGED | STATE_LOGGING | STATE_LOGGED | STATE_INGAME
 };
 
 typedef union
@@ -91,6 +92,12 @@ public:
 	void handleDisconnect() throw (NetworkException);
 	void handlePing () throw (NetworkException);
 
+	inline void SendUpdateTime(long currentTick, long ageOfWorld);
+	inline void SendSetExperience(short level, short totalXP, float pct);
+	inline void SendUpdateHealth(short health, short food, float foodSaturation);
+	inline void SendSetPositionAndLook(double x, double y, double stance, double z, float yaw, float pitch, bool onGround);
+	inline void SendSetAbilities(char walkingSpeed, char flyingSpeed, char abilityFlag);
+
 	void UpdateTick();
 private:
 	void readData(int length, char* data) throw (NetworkException);
@@ -129,5 +136,7 @@ private:
 	int lastKeepAliveId;
 };
 }
+
+#include "NetworkSession.hxx"
 
 #endif /* NETWORKSESSION_H_ */

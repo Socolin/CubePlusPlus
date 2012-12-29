@@ -4,7 +4,7 @@
 
 #include "Network/NetworkSession.h"
 #include "Network/NetworkPacket.h"
-#include "Network/Opcode.h"
+#include "Network/OpcodeList.h"
 #include "World/VirtualChunk.h"
 #include "World/World.h"
 
@@ -51,45 +51,21 @@ void EntityPlayer::JoinWorld()
     packetRespawn << (int) 0 << (int) 100 << (int) 0;
     session->SendPacket(packetRespawn);
 
-    Network::NetworkPacket packetAbilities(Network::OP_PLAYER_ABILITIES);
-    unsigned char abilityFlag = 0;
-    abilityFlag |= 0x1; // Damage disable
-    abilityFlag |= 0x2; // Flying
-    abilityFlag |= 0x4; // Can Fly
-    abilityFlag |= 0x8; // Creative mode
-    unsigned char walkingSpeed = 12;
-    unsigned char flyingSpeed = 25;
-    packetAbilities << abilityFlag << walkingSpeed << flyingSpeed;
-    session->SendPacket(packetAbilities);
+    session->SendSetAbilities(DEFAULT_WALKING_SPEED, DEFAULT_FLYING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
 
-    Network::NetworkPacket packetUpdateTime(Network::OP_TIME_UPDATE);
-    packetUpdateTime << (long) 0 << (long) 0;
-    session->SendPacket(packetUpdateTime);
+    session->SendUpdateTime(0, 0);
 
-    Network::NetworkPacket packetPositionAndLook(Network::OP_PLAYER_POSITION_AND_LOOK);
-    packetPositionAndLook << x << y << (y + 1.62) << z << (float) 0.f << (float) 0.f << false;
-    session->SendPacket(packetPositionAndLook);
+    session->SendSetPositionAndLook(x, y, y + 1.62, z, 0.f, 0.f, false);
 
-    Network::NetworkPacket packetUpdateHealth(Network::OP_UPDATE_HEALTH);
-    short health = 20;
-    short food = 20;
-    float foodSaturation = 5.f;
-    packetUpdateHealth << health << food << foodSaturation;
-    session->SendPacket(packetUpdateHealth);
+    session->SendUpdateHealth(20,20,5.f);
 
-    Network::NetworkPacket packetUpdateExperience(Network::OP_SET_EXPERIENCE);
-    float experienceBar = 0.5f;
-    short level = 5;
-    short totalXP = 130;
-    packetUpdateExperience << experienceBar << level << totalXP;
-    session->SendPacket(packetUpdateExperience);
+    session->SendSetExperience(0, 0.f, 0);
 
     Network::NetworkPacket packetSetInventory(Network::OP_SET_WINDOW_ITEMS);
     unsigned char windowId = 0; // 0 = player inventory
     short countItem = 0;
     packetSetInventory << windowId << countItem;
     session->SendPacket(packetSetInventory);
-
 }
 
 void EntityPlayer::Send(const Network::NetworkPacket& packet) const

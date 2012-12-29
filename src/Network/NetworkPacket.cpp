@@ -100,8 +100,8 @@ NetworkPacket& NetworkPacket::operator <<(float value)
 NetworkPacket& NetworkPacket::operator <<(double value)
 {
 	LongToDouble conv;
-	conv.f = value;
-	return (*this << conv.i);
+	conv.d = value;
+	return (*this << conv.l);
 }
 
 NetworkPacket& NetworkPacket::operator <<(std::wstring& value)

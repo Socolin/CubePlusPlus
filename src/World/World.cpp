@@ -73,12 +73,12 @@ void World::RemoveEntity(Entity* entity)
     virtualChunk->RemoveEntity(entity);
 }
 
-void World::RemovePlayer(EntityPlayer* entity)
+void World::RemovePlayer(EntityPlayer* player)
 {
-    entity->setWorld(NULL, 0);
-    playerList.erase(entity);
-    int chunkX = ((int) entity->x) >> 4;
-    int chunkZ = ((int) entity->z) >> 4;
+    player->setWorld(NULL, 0);
+    playerList.erase(player);
+    int chunkX = ((int) player->x) >> 4;
+    int chunkZ = ((int) player->z) >> 4;
     int maxChunkX = chunkX + viewDistance;
     int maxChunkZ = chunkZ + viewDistance;
 
@@ -89,8 +89,8 @@ void World::RemovePlayer(EntityPlayer* entity)
             chunk->RemoveRefCount();
         }
 
-    VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 7, ((int) entity->z) >> 7);
-    virtualChunk->RemovePlayer(entity);
+    VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
+    virtualChunk->RemovePlayer(player);
 }
 
 Chunk* World::LoadChunk(int x, int z)

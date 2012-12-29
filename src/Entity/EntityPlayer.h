@@ -13,9 +13,17 @@ class NetworkSession;
 
 namespace World
 {
-
+#define DEFAULT_WALKING_SPEED 12
+#define DEFAULT_FLYING_SPEED 25
 class EntityPlayer: public LivingEntity
 {
+    enum PlayerAbilities
+    {
+        DAMAGE_DISABLE = 0X1,
+        FLYING = 0X2,
+        CAN_FLY = 0X4,
+        CREATIVE_MODE = 0X8
+    };
 public:
     EntityPlayer(double x, double y, double z, const std::wstring& name, Network::NetworkSession* session);
     virtual ~EntityPlayer();

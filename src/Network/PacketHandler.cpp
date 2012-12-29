@@ -239,7 +239,7 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 	char payload = readByte();
 	DEBUG_CHAR(payload)
 
-	if (payload == 0 && state != STATE_INGAME)
+	if (payload == 0 && (state & STATE_INGAME) == 0)
 	{
 		state = STATE_INGAME;
 		NetworkPacket packet(OP_LOGIN_REQUEST);
@@ -316,6 +316,8 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 
 	memcpy(aesEncryptBuffer,sDecryptedSharedSecret.c_str(),16);
 	aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)sDecryptedSharedSecret.c_str(),(unsigned int)16,aesEncryptBuffer,1);
+
+	state = STATE_LOGGING;
 }
 void NetworkSession::handlePing() throw (NetworkException)
 {

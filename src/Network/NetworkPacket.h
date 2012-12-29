@@ -24,8 +24,8 @@ class NetworkPacket
 
 	typedef union
 	{
-		long i;
-		double f;
+		long l;
+		double d;
 	} LongToDouble;
 
 public:
@@ -34,6 +34,7 @@ public:
 	NetworkPacket(unsigned char opcode, size_t size);
 	virtual ~NetworkPacket();
 
+    // Mettre en inline ?
 	void append(const void* data, std::size_t size);
 
 	NetworkPacket& operator <<(bool value);
