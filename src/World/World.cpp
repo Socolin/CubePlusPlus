@@ -4,13 +4,15 @@
 
 #include "Chunk.h"
 #include "Entity/EntityPlayer.h"
+#include "Network/NetworkPacket.h"
+#include "Network/OpcodeList.h"
 #include "VirtualChunk.h"
 
 namespace World
 {
 
 World::World() :
-        viewDistance(10), currentEntityId(10)
+        viewDistance(10), currentEntityId(10), ageOfWorld(0), currentTime(0)
 {
 }
 
@@ -29,10 +31,7 @@ void World::UpdateTick()
     {
         chunk.second->UpdateTick();
     }
-    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
-    {
-        chunk.second->SendUpdate();
-    }
+    UpdateTime();
 }
 
 void World::AddEntity(Entity* entity)
@@ -105,6 +104,26 @@ VirtualChunk* World::CreateVirtualChunk(int x, int z)
 {
     VirtualChunk* vChunk = new VirtualChunk(x, z, this);
     return vChunk;
+}
+
+void World::SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const
+{
+    for (EntityPlayer* plr : playerList)
+    {
+        plr->Send(packet);
+    }
+}
+
+void World::UpdateTime()
+{
+    ageOfWorld++;
+    currentTime++;
+    if (currentTime % 20 == 0)
+    {
+        Network::NetworkPacket updateTimePacket(Network::OP_TIME_UPDATE);
+        updateTimePacket << ageOfWorld << currentTime;
+        SendPacketToPlayerInWorld(updateTimePacket);
+    }
 }
 
 } /* namespace World */

@@ -8,6 +8,10 @@
 
 #define CHUNK_KEY(X,Z) ((((long)X << 32) & 0xffffffff00000000)| ((long)Z & 0x00000000ffffffff))
 
+namespace Network
+{
+class NetworkPacket;
+}
 namespace World
 {
 
@@ -53,12 +57,17 @@ public:
         return it->second;
     }
 
+    void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
+private:
+    void UpdateTime();
 private:
     std::unordered_map<long, Chunk*> chunkMap;
     std::unordered_map<long, VirtualChunk*> virtualChunkMap;
     std::set<EntityPlayer*> playerList;
     int viewDistance; // In chunk
     int currentEntityId;
+    long ageOfWorld;
+    long currentTime;
 };
 
 } /* namespace World */
