@@ -40,4 +40,10 @@ add_executable(
 target_link_libraries(
 	Server
 	cryptopp
+	config++
+)
+configure_file(
+	server.cfg
+    ${EXECUTABLE_OUTPUT_PATH}/server.cfg
+	COPYONLY
 )

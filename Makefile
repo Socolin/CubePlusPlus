@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/bertrand/Minefield/cpp/Server
+CMAKE_SOURCE_DIR = /home/poogly/Documents/mcpp/mcpp
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/bertrand/Minefield/cpp/Server
+CMAKE_BINARY_DIR = /home/poogly/Documents/mcpp/mcpp
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/bertrand/Minefield/cpp/Server/CMakeFiles /home/bertrand/Minefield/cpp/Server/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/poogly/Documents/mcpp/mcpp/CMakeFiles /home/poogly/Documents/mcpp/mcpp/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/bertrand/Minefield/cpp/Server/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/poogly/Documents/mcpp/mcpp/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -110,6 +110,30 @@ Server: cmake_check_build_system
 Server/fast:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/build
 .PHONY : Server/fast
+
+src/Config/Config.o: src/Config/Config.cpp.o
+.PHONY : src/Config/Config.o
+
+# target to build an object file
+src/Config/Config.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Config/Config.cpp.o
+.PHONY : src/Config/Config.cpp.o
+
+src/Config/Config.i: src/Config/Config.cpp.i
+.PHONY : src/Config/Config.i
+
+# target to preprocess a source file
+src/Config/Config.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Config/Config.cpp.i
+.PHONY : src/Config/Config.cpp.i
+
+src/Config/Config.s: src/Config/Config.cpp.s
+.PHONY : src/Config/Config.s
+
+# target to generate assembly for a file
+src/Config/Config.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Config/Config.cpp.s
+.PHONY : src/Config/Config.cpp.s
 
 src/Entity/Entity.o: src/Entity/Entity.cpp.o
 .PHONY : src/Entity/Entity.o
@@ -528,6 +552,9 @@ help:
 	@echo "... Server"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... src/Config/Config.o"
+	@echo "... src/Config/Config.i"
+	@echo "... src/Config/Config.s"
 	@echo "... src/Entity/Entity.o"
 	@echo "... src/Entity/Entity.i"
 	@echo "... src/Entity/Entity.s"

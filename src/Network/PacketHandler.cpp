@@ -2,8 +2,10 @@
 #include "NetworkPacket.h"
 #include "NetworkEncryption.h"
 #include "Opcode.h"
+#include "../Config/Config.h"
 
 #include <iostream>
+#include <sstream>
 #include <cryptopp/filters.h>
 #include <cryptopp/osrng.h>
 #include <cryptopp/files.h>
@@ -324,9 +326,45 @@ void NetworkSession::handlePing() throw (NetworkException)
 	char magic = readByte();
 	DEBUG_CHAR(magic)
 
-	NetworkPacket packet(OP_KICK);
-	std::wstring kickReason(L"Test");
-	packet << kickReason;
+	std::string motd;
+	(Config::Config::getConfig()).lookupValue("server.general.motd", motd);
+	int maxplayers = 0;
+	(Config::Config::getConfig()).lookupValue("server.general.maxplayers", maxplayers);
+	std::ostringstream oss;
+	oss << maxplayers;
+	std::string str_maxplayers = oss.str();
+
+	std::wstring answer(L"\u00a7\u0031\u0001");
+	answer += CURRENT_VERSION_PROTOCOL_WSTR;
+	answer += L"\u00001.4.5\u0000";
+	std::copy(motd.begin(), motd.end(), std::back_inserter(answer));
+	answer += L"\u000020\u0000";
+	std::copy(str_maxplayers.begin(), str_maxplayers.end(), std::back_inserter(answer));
+
+	NetworkPacket packet;
+	packet << (unsigned char)OP_KICK;
+
+	short strLenght = answer.size();
+	unsigned char tmpBuffer[2];
+	tmpBuffer[0] = (strLenght >> 8) & 0xff;
+	tmpBuffer[1] = strLenght & 0xff;
+	packet.append(tmpBuffer, 2);
+	const wchar_t* datastr = answer.c_str();
+	for (short i = 0; i < strLenght; i++)
+	{
+		if(datastr[i] == 1)
+		{
+			tmpBuffer[0] = 0;
+			tmpBuffer[1] = 0;
+		}
+		else
+		{
+			tmpBuffer[0] = (datastr[i] >> 8) & 0xff;
+			tmpBuffer[1] = datastr[i] & 0xff;
+		}
+		packet.append(tmpBuffer, 2);
+	}
+
 	SendPacket(packet);
 }
 void NetworkSession::handleDisconnect() throw (NetworkException)
