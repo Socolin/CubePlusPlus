@@ -118,7 +118,7 @@ void NetworkSession::handlePlayerBlockPlacement() throw (NetworkException)
 	readInt();
 	readByte();
 	readInt();
-
+	readByte();
 	short blockId = readShort();
 	if (blockId != -1)
 	{
