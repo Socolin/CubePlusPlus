@@ -37,6 +37,8 @@ public:
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
 
     void Kick();
+
+    const std::wstring& GetUsername();
 private:
     std::wstring name;
     std::vector<std::pair<int, int> > chunkToSend;

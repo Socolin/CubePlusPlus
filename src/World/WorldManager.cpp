@@ -2,8 +2,10 @@
 
 #include <iostream>
 
-#include "World.h"
 #include "Entity/EntityPlayer.h"
+#include "Network/NetworkPacket.h"
+#include "Network/OpcodeList.h"
+#include "World.h"
 
 namespace World
 {
@@ -38,6 +40,17 @@ bool WorldManager::IsRunning()
     return isRunning;
 }
 
+void WorldManager::HandleChatMessage(EntityPlayer* player, std::wstring& message)
+{
+    bool isCanceled = chatManager.HandleChatMessage(player, message);
+    if (!isCanceled)
+    {
+        Network::NetworkPacket packetChatMessage(Network::OP_CHAT_MESSAGE);
+        packetChatMessage << message;
+        SendToAllPlayer(packetChatMessage);
+    }
+}
+
 WorldManager::WorldManager() :
         world(NULL), isRunning(true)
 {
@@ -68,6 +81,13 @@ void WorldManager::Stop()
         EntityPlayer* toKick = *itrPlr;
         itrPlr++;
         toKick->Kick();
+    }
+}
+void WorldManager::SendToAllPlayer(Network::NetworkPacket& packet)
+{
+    for (EntityPlayer* plr : playerList)
+    {
+        plr->Send(packet);
     }
 }
 

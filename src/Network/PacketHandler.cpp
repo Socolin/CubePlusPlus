@@ -34,11 +34,7 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
 void NetworkSession::handleChatMessage() throw (NetworkException)
 {
 	std::wstring message = readString(100);
-	DEBUG_STR(message)
-	if (message == L"stop")
-	{
-	    World::WorldManager::GetInstance()->Stop();
-	}
+	World::WorldManager::GetInstance()->HandleChatMessage(player, message);
 }
 void NetworkSession::handleHandShake() throw (NetworkException)
 {

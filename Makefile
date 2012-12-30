@@ -111,6 +111,30 @@ Server/fast:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/build
 .PHONY : Server/fast
 
+src/Chat/ChatManager.o: src/Chat/ChatManager.cpp.o
+.PHONY : src/Chat/ChatManager.o
+
+# target to build an object file
+src/Chat/ChatManager.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Chat/ChatManager.cpp.o
+.PHONY : src/Chat/ChatManager.cpp.o
+
+src/Chat/ChatManager.i: src/Chat/ChatManager.cpp.i
+.PHONY : src/Chat/ChatManager.i
+
+# target to preprocess a source file
+src/Chat/ChatManager.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Chat/ChatManager.cpp.i
+.PHONY : src/Chat/ChatManager.cpp.i
+
+src/Chat/ChatManager.s: src/Chat/ChatManager.cpp.s
+.PHONY : src/Chat/ChatManager.s
+
+# target to generate assembly for a file
+src/Chat/ChatManager.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Chat/ChatManager.cpp.s
+.PHONY : src/Chat/ChatManager.cpp.s
+
 src/Config/Config.o: src/Config/Config.cpp.o
 .PHONY : src/Config/Config.o
 
@@ -552,6 +576,9 @@ help:
 	@echo "... Server"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... src/Chat/ChatManager.o"
+	@echo "... src/Chat/ChatManager.i"
+	@echo "... src/Chat/ChatManager.s"
 	@echo "... src/Config/Config.o"
 	@echo "... src/Config/Config.i"
 	@echo "... src/Config/Config.s"

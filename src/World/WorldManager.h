@@ -3,9 +3,13 @@
 
 #include <string>
 #include <set>
+
+#include "Chat/ChatManager.h"
+
 namespace Network
 {
 class NetworkSession;
+class NetworkPacket;
 }
 
 namespace World
@@ -26,9 +30,13 @@ public:
     EntityPlayer* LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session);
     void RemovePlayer(EntityPlayer* player);
 
+    void HandleChatMessage(EntityPlayer* player, std::wstring& message);
+
     void Stop();
     bool IsRunning();
+    void SendToAllPlayer(Network::NetworkPacket& packet);
 private:
+    Chat::ChatManager chatManager;
     WorldManager();
     std::set<EntityPlayer*> playerList;
     static WorldManager* instance;

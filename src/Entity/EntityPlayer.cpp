@@ -97,4 +97,9 @@ void EntityPlayer::Kick()
     session->disconnect();
 }
 
+const std::wstring& EntityPlayer::GetUsername()
+{
+    return name;
+}
+
 } /* namespace World */
