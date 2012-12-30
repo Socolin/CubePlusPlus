@@ -9,7 +9,8 @@ int main(void)
 {
     Network::initOpcode();
     Network::NetworkManager manager;
-    World::WorldManager::GetInstance()->Init();
+    World::WorldManager* worldManager = World::WorldManager::GetInstance();
+    worldManager->Init();
     int port = 25565;
 
     if((Config::Config::getConfig()).lookupValue("server.network.port", port))
@@ -22,12 +23,14 @@ int main(void)
         std::cerr << "Not started" << std::endl;
         return 1;
     }
-    while (1)
+
+    while (worldManager->IsRunning())
     {
         manager.ReceiveData();
-        World::WorldManager::GetInstance()->UpdateTick();
+        worldManager->UpdateTick();
         usleep(1);
     }
+    delete worldManager;
     return 0;
 }
 

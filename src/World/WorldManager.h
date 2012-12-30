@@ -2,7 +2,7 @@
 #define WORLDMANAGER_H_
 
 #include <string>
-
+#include <set>
 namespace Network
 {
 class NetworkSession;
@@ -25,10 +25,15 @@ public:
 
     EntityPlayer* LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session);
     void RemovePlayer(EntityPlayer* player);
+
+    void Stop();
+    bool IsRunning();
 private:
     WorldManager();
+    std::set<EntityPlayer*> playerList;
     static WorldManager* instance;
     World* world;
+    bool isRunning;
 };
 
 } /* namespace World */

@@ -34,23 +34,6 @@ Chunk::~Chunk()
 
 void Chunk::Load()
 {
-    {
-        ChunkData* chunkData = new ChunkData();
-        unsigned char* data = chunkData->blocks;
-        for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
-        {
-            *data = 1;
-            data++;
-        }
-        data = chunkData->metadata;
-        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
-        {
-            *data = 0;
-            data++;
-        }
-        chunkData->addData = NULL;
-        datas[0] = chunkData;
-    }
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
         ChunkData* chunkData = new ChunkData();
@@ -69,6 +52,23 @@ void Chunk::Load()
         chunkData->addData = NULL;
         datas[i] = chunkData;
     }
+    {
+        ChunkData* chunkData =  datas[0];
+        unsigned char* data = chunkData->blocks;
+        for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
+        {
+            *data = 1;
+            data++;
+        }
+        data = chunkData->metadata;
+        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+        {
+            *data = 0;
+            data++;
+        }
+        chunkData->addData = NULL;
+        datas[0] = chunkData;
+    }
     loaded = true;
 }
 
@@ -76,6 +76,10 @@ void Chunk::UpdateTick()
 {
     if (!loaded)
         return;
+}
+
+void Chunk::Unload()
+{
 }
 
 } /* namespace Network */

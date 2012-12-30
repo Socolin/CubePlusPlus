@@ -39,6 +39,8 @@ public:
     void RemovePlayerByMoving(EntityPlayer* player, int newChunkX, int newChunkZ);
     void AddEntityByMoving(Entity* entity, int prevChunkX, int prevChunkZ);
     void RemoveEntityByMoving(Entity* entity, int newChunkX, int newChunkZ);
+
+    void Unload();
 private:
     const int posX;
     const int posZ;

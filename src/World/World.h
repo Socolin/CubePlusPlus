@@ -58,6 +58,8 @@ public:
     }
 
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
+
+    void Unload();
 private:
     void UpdateTime();
 private:

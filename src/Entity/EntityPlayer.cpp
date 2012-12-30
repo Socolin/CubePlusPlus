@@ -91,4 +91,10 @@ void EntityPlayer::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ
     vChunk->AddPlayerByMoving(this, virtualChunkX, virtualChunkZ);
 }
 
+void EntityPlayer::Kick()
+{
+    // TODO packet kick
+    session->disconnect();
+}
+
 } /* namespace World */

@@ -35,6 +35,8 @@ public:
     void Send(const Network::NetworkPacket& packet) const;
     virtual void GetCreatePacket(Network::NetworkPacket& packet);
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
+
+    void Kick();
 private:
     std::wstring name;
     std::vector<std::pair<int, int> > chunkToSend;

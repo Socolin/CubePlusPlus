@@ -35,6 +35,10 @@ void NetworkSession::handleChatMessage() throw (NetworkException)
 {
 	std::wstring message = readString(100);
 	DEBUG_STR(message)
+	if (message == L"stop")
+	{
+	    World::WorldManager::GetInstance()->Stop();
+	}
 }
 void NetworkSession::handleHandShake() throw (NetworkException)
 {
@@ -243,7 +247,6 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 
 	if (payload == 0 && (state & STATE_INGAME) == 0)
 	{
-		state = STATE_INGAME;
 		NetworkPacket packet(OP_LOGIN_REQUEST);
 		std::wstring levelType(L"flat");
 		packet  << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
@@ -251,6 +254,10 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 
 		World::WorldManager* worldManager = World::WorldManager::GetInstance();
 		player = worldManager->LoadAndJoinWorld(username, this);
+		if (player != NULL)
+	        state = STATE_INGAME;
+		else
+		    disconnect();
 	}
 }
 void NetworkSession::handlePluginMessage() throw (NetworkException)
@@ -275,13 +282,20 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 	sharedSecretKey = readBuffer();
 	DEBUG_SHORT(sharedSecretKey.second)
 	if (sharedSecretKey.second != 128)
+	{
+	    delete sharedSecretKey.first;
 		throw NetworkException("sharedSecretKey.second != 128");
+	}
 
 	// TODO: check it
 	buffer_t verifyToken = readBuffer();
 	DEBUG_SHORT(verifyToken.second)
 	if (verifyToken.second != 128)
+    {
+        delete sharedSecretKey.first;
+        delete verifyToken.first;
 		throw NetworkException("verifyToken.second != 128");
+    }
 
 	NetworkEncryption* encrypt = NetworkEncryption::GetInstance();
 
@@ -300,11 +314,15 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 
 	} catch (CryptoPP::Exception&)
 	{
-		std::cout << "Houston we have a problem\n";
+	    throw NetworkException("PK_DecryptorFilter");
 	}
 
 	if (sDecryptedSharedSecret.length() != 16)
+    {
+        delete sharedSecretKey.first;
+        delete verifyToken.first;
 		throw NetworkException("sharedSecretKey.second != 128");
+    }
 
 	NetworkPacket packet(OP_ENCRYPTION_KEY_RESPONSE, 5);
 	short zero = 0;
@@ -320,6 +338,9 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 	aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)sDecryptedSharedSecret.c_str(),(unsigned int)16,aesEncryptBuffer,1);
 
 	state = STATE_LOGGING;
+
+    delete[] sharedSecretKey.first;
+    delete[] verifyToken.first;
 }
 void NetworkSession::handlePing() throw (NetworkException)
 {

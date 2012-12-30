@@ -330,4 +330,8 @@ void VirtualChunk::RemoveEntityByMoving(Entity* entity, int newChunkX, int newCh
     entityList.erase(entity);
 }
 
+void VirtualChunk::Unload()
+{
+}
+
 } /* namespace World */

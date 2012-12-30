@@ -31,6 +31,11 @@ void World::UpdateTick()
     {
         chunk.second->UpdateTick();
     }
+    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+    {
+        chunk.second->SendUpdate();
+    }
+
     UpdateTime();
 }
 
@@ -111,6 +116,20 @@ void World::SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) cons
     for (EntityPlayer* plr : playerList)
     {
         plr->Send(packet);
+    }
+}
+
+void World::Unload()
+{
+    for (std::pair<long, Chunk*> chunk : chunkMap)
+    {
+        chunk.second->Unload();
+        delete chunk.second;
+    }
+    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+    {
+        chunk.second->Unload();
+        delete chunk.second;
     }
 }
 

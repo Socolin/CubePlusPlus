@@ -25,6 +25,7 @@ namespace Network
 enum eSessionState
 {
 	STATE_NEVER     = 0x0,
+	STATE_DISCONECT = 0x0,
 	STATE_NOTLOGGED = 0x1,
 	STATE_LOGGING   = 0x2,
 	STATE_LOGGED    = 0x4,
@@ -100,6 +101,7 @@ public:
 	inline void SendSetAbilities(char walkingSpeed, char flyingSpeed, char abilityFlag);
 
 	void UpdateTick();
+	inline bool isDisconnected() { return state == STATE_DISCONECT; }
 private:
 	void readData(int length, char* data) throw (NetworkException);
 	char readByte() throw (NetworkException);

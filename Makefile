@@ -39,10 +39,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/poogly/Documents/mcpp/mcpp
+CMAKE_SOURCE_DIR = /home/bertrand/Minefield/cpp/Server
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/poogly/Documents/mcpp/mcpp
+CMAKE_BINARY_DIR = /home/bertrand/Minefield/cpp/Server
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -69,9 +69,9 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/poogly/Documents/mcpp/mcpp/CMakeFiles /home/poogly/Documents/mcpp/mcpp/CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/bertrand/Minefield/cpp/Server/CMakeFiles /home/bertrand/Minefield/cpp/Server/CMakeFiles/progress.marks
 	$(MAKE) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/poogly/Documents/mcpp/mcpp/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/bertrand/Minefield/cpp/Server/CMakeFiles 0
 .PHONY : all
 
 # The main clean target

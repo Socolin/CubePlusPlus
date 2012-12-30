@@ -45,15 +45,16 @@ public:
     }
 
     void Load();
-    void AddRefCount()
+    inline void AddRefCount()
     {
         refCount++;
     }
-    void RemoveRefCount()
+    inline void RemoveRefCount()
     {
         refCount--;
     }
     void UpdateTick();
+    void Unload();
 private:
     typedef struct
     {

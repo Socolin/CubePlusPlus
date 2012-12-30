@@ -47,6 +47,7 @@ void NetworkSession::ReceiveInBuffer() throw (NetworkException)
 		if (maxBufferSize < bufferSize + INITIAL_BUFFER_SIZE)
 		{
 			buffer.resize(maxBufferSize + INITIAL_BUFFER_SIZE);
+			maxBufferSize += INITIAL_BUFFER_SIZE;
 		}
 		count = read(socket, &(buffer[bufferSize]), INITIAL_BUFFER_SIZE);
 		if (count == -1)
@@ -81,7 +82,12 @@ void NetworkSession::ReceiveData() throw (NetworkException)
 			    (this->*handler.handler) ();
 			}
 			else
-				throw NetworkException("Receive bad packet id");
+			{
+			    if (isDisconnected())
+			        return;
+			    else
+			        throw NetworkException("Receive bad packet id");
+			}
 		}
 		catch (NetworkExceptionData& e)
 		{
@@ -125,9 +131,8 @@ void NetworkSession::disconnect(/*TODO: reason*/)
 		World::WorldManager* worldManager = World::WorldManager::GetInstance();
 		worldManager->RemovePlayer(player);
 		player = NULL;
-		// TODO: kick packet
-		close(socket);
 	}
+	state = STATE_DISCONECT;
 }
 
 double NetworkSession::readDouble() throw (NetworkException)

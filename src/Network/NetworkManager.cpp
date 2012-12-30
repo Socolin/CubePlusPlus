@@ -28,6 +28,11 @@ NetworkManager::NetworkManager()
 
 NetworkManager::~NetworkManager()
 {
+    free(events);
+    for (auto sessionItr : sessionList)
+    {
+        delete sessionItr.second;
+    }
 }
 
 static int create_and_bind(unsigned short port)
@@ -197,14 +202,21 @@ void NetworkManager::ReceiveData()
 
 			if (events[i].events & EPOLLIN)
 			{
-				try
-				{
-					session->ReceiveData();
-				} catch (NetworkException &e)
-				{
-					std::cerr << "Client network err:" << e.what() << std::endl;
-					OnDisconnectClient(events[i].data.fd);
-				}
+			    if (session->isDisconnected())
+			    {
+			        OnDisconnectClient(events[i].data.fd);
+			    }
+			    else
+			    {
+                    try
+                    {
+                        session->ReceiveData();
+                    } catch (NetworkException &e)
+                    {
+                        std::cerr << "Client network err:" << e.what() << std::endl;
+                        OnDisconnectClient(events[i].data.fd);
+                    }
+			    }
 			}
 			else if (events[i].events & EPOLLRDHUP)
 			{
