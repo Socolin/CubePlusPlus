@@ -4,7 +4,7 @@
 #include "LivingEntity.h"
 
 #include <string>
-#include <vector>
+#include <queue>
 
 namespace Network
 {
@@ -41,7 +41,7 @@ public:
     const std::wstring& GetUsername();
 private:
     std::wstring name;
-    std::vector<std::pair<int, int> > chunkToSend;
+    std::queue<std::pair<int, int> > chunkToSend;
     Network::NetworkSession* session;
 };
 

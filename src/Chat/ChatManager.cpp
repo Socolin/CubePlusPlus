@@ -30,6 +30,8 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
         World::WorldManager::GetInstance()->Stop();
         isCanceled = true;
     }
+    if (isCanceled)
+        return true;
 
     std::wostringstream formatedMessage;
     formatedMessage << L"<" << player->GetUsername() << L"> " << message;

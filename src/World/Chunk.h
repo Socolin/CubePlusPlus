@@ -2,12 +2,15 @@
 #define CHUNK_H_
 
 #include <set>
+#include <iostream>
 
-#define CHUNK_DATA_COUNT 8
-#define CHUNK_BLOCK_COUNT 16 * 16 * 16
+#define CHUNK_SURFACE 256
+#define CHUNK_DATA_COUNT 16
+#define CHUNK_BLOCK_COUNT (16 * 16 * 16)
 #define CHUNK_BLOCK_NIBBLE_SIZE CHUNK_BLOCK_COUNT / 2
 
-#include <iostream>
+#include "Network/NetworkPacket.h"
+
 namespace World
 {
 
@@ -55,21 +58,28 @@ public:
     }
     void UpdateTick();
     void Unload();
+
+    const Network::NetworkPacket& GetPacket() const;
+
 private:
     typedef struct
     {
         unsigned char blocks[CHUNK_BLOCK_COUNT];
         unsigned char metadata[CHUNK_BLOCK_NIBBLE_SIZE];
+        unsigned char blocklight[CHUNK_BLOCK_NIBBLE_SIZE];
+        unsigned char skyLight[CHUNK_BLOCK_NIBBLE_SIZE];
         unsigned char* addData;
     } ChunkData;
 
     ChunkData* datas[CHUNK_DATA_COUNT];
-
     int posX;
-    int posY;
+    int posZ;
     int refCount;
-
     bool loaded;
+    Network::NetworkPacket cachePacket;
+    unsigned short flagSectionExists;
+    unsigned short flagSectionUseAdd;
+    unsigned char biomeData[CHUNK_SURFACE];
 };
 
 } /* namespace Network */

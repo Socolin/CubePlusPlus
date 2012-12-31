@@ -27,7 +27,7 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
 	int value = readInt();
 	if (value != lastKeepAliveId)
 	{
-	    disconnect();
+	    disconnect("bad keepalive message");
 	}
 	lastKeepAliveId = 0;
 }
@@ -111,10 +111,12 @@ void NetworkSession::handlePlayerDigging() throw (NetworkException)
 
 void NetworkSession::handlePlayerBlockPlacement() throw (NetworkException)
 {
-	readInt();
-	readByte();
-	readInt();
-	readByte();
+	int x = readInt();
+	int y = readByte();
+	int z = readInt();
+	int face = readByte();
+
+	// Metadata
 	short blockId = readShort();
 	if (blockId != -1)
 	{
@@ -129,9 +131,10 @@ void NetworkSession::handlePlayerBlockPlacement() throw (NetworkException)
 	}
 
 
-	readByte();
-	readByte();
-	readByte();
+	char CursorpositionX = readByte();
+	char CursorpositionY = readByte();
+	char CursorpositionZ = readByte();
+	std::cout << "handlePlayerBlockPlacement x:" << x << " y:"<< y << " z:" << z << " face:" << face << " blockId:" << blockId << std::endl;
 }
 void NetworkSession::handleHeldItemChange() throw (NetworkException)
 {
@@ -253,7 +256,7 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 		if (player != NULL)
 	        state = STATE_INGAME;
 		else
-		    disconnect();
+		    disconnect("Bad state handleClientStatuses");
 	}
 }
 void NetworkSession::handlePluginMessage() throw (NetworkException)
@@ -387,7 +390,7 @@ void NetworkSession::handlePing() throw (NetworkException)
 void NetworkSession::handleDisconnect() throw (NetworkException)
 {
 	readString(128);
-	disconnect();
+	disconnect("ask by client");
 }
 
 void NetworkSession::UpdateTick()
@@ -397,7 +400,7 @@ void NetworkSession::UpdateTick()
         lastKeepAliveTick--;
         if (lastKeepAliveTick <= 0)
         {
-            disconnect();
+            disconnect("time out");
         }
     }
     else

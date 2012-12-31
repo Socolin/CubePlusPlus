@@ -133,6 +133,14 @@ void World::Unload()
     }
 }
 
+void World::RequestChunk(EntityPlayer* player, std::pair<int, int> chunkCoord)
+{
+    Chunk* chunk = GetChunk(chunkCoord.first, chunkCoord.second);
+    const Network::NetworkPacket& packet = chunk->GetPacket();
+    //packet.dump();
+    player->Send(packet);
+}
+
 void World::UpdateTime()
 {
     ageOfWorld++;

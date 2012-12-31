@@ -96,6 +96,7 @@ void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
             {
                 packet << (unsigned char) Network::OP_ENTITY_LOOK_AND_RELATIVE_MOVE << entityId << (char) dx << (char) dy << (char) dz << (char) (yaw * 256.f / 360.f) << (char) (pitch * 256.f / 360.f);
                 packet << (unsigned char) Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
+                packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << (short)(motionX * 32000) << (short)(motionY * 32000) << (short)(motionZ * 32000);
                 networkX = newNetworkX;
                 networkY = newNetworkY;
                 networkZ = newNetworkZ;
@@ -111,7 +112,6 @@ void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
         int dz = newNetworkZ - networkZ;
         if (dx > 128 || dy > 128 || dz > 128 || dx < -128 || dy < -128 || dz < -128)
         {
-            packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << ((short) motionX * 32000) << ((short) motionY * 32000) << ((short) motionZ * 32000);
             packet << (unsigned char) Network::OP_ENTITY_TELEPORT << entityId << newNetworkX << newNetworkY << newNetworkZ << (char) (yaw * 256.f / 360.f) << (char) (pitch * 256.f / 360.f);
             networkX = newNetworkX;
             networkY = newNetworkY;
@@ -122,6 +122,7 @@ void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
             if (dx > 4 || dy > 4 || dz > 4 || dx < -4 || dy < -4 || dz < -4)
             {
                 packet << (unsigned char) Network::OP_ENTITY_RELATIVE_MOVE << entityId << (char) dx << (char) dy << (char) dz;
+                packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << (short)(motionX * 32000) << (short)(motionY * 32000) << (short)(motionZ * 32000);
                 networkX = newNetworkX;
                 networkY = newNetworkY;
                 networkZ = newNetworkZ;
@@ -137,6 +138,7 @@ void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
     {
         packet << (unsigned char) Network::OP_ENTITY_LOOK << entityId << ((char) (yaw * 256.f / 360.f)) << ((char) (pitch * 256.f / 360.f));
         packet << (unsigned char) Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
+        packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << (short) 0 << (short) 0 << (short) 0;
         hasRotate = false;
     }
     if (stopMoving)

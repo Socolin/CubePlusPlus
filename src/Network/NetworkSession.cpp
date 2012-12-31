@@ -123,9 +123,9 @@ float NetworkSession::readFloat() throw (NetworkException)
 	return dbl.f;
 }
 
-void NetworkSession::disconnect(/*TODO: reason*/)
+void NetworkSession::disconnect(const char* reason)
 {
-    std::cout << "Disconnect player" << std::endl;
+    std::cout << "Disconnect player: "<< reason << std::endl;
 	if (player != NULL)
 	{
 		World::WorldManager* worldManager = World::WorldManager::GetInstance();
@@ -190,6 +190,7 @@ buffer_t NetworkSession::readBuffer() throw (NetworkException)
 
 void NetworkSession::SendPacket(const NetworkPacket& packet) const
 {
+    //packet.dump();
 	if (cryptedMode)
 	{
         size_t sendSize = 0;
@@ -219,8 +220,8 @@ std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)
 	if (length > maxSize)
 		throw NetworkException("String length > maxSize");
 
-	if (length + startPosInBuffer > bufferSize)
-		throw NetworkException("String length < 0");
+	if ((length * 2) + startPosInBuffer > bufferSize)
+		throw NetworkExceptionData("String length < 0");
 
 	wchar_t utf16Text[length];
 	for (int i = 0; i < length; i++)

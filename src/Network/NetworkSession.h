@@ -17,7 +17,7 @@ class EntityPlayer;
 namespace Network
 {
 #define INITIAL_BUFFER_SIZE 512
-#define MAX_TICK_FOR_KEEPALIVE 1200 * 1000
+#define MAX_TICK_FOR_KEEPALIVE 1200 * 10000
 #define INTERVAL_SEND_KEEPALIVE 20
 #define CURRENT_VERSION_PROTOCOL 49
 #define CURRENT_VERSION_PROTOCOL_WSTR L"49"
@@ -63,7 +63,7 @@ public:
 	{
 	}
 
-	void disconnect();
+	void disconnect(const char* reason = "unk");
 
 	void handleKeepAlive() throw (NetworkException);
 	void handleHandShake() throw (NetworkException);

@@ -23,14 +23,22 @@ EntityPlayer::~EntityPlayer()
 
 void EntityPlayer::AddChunkToSend(int x, int z)
 {
-    chunkToSend.push_back(std::make_pair(x, z));
+    chunkToSend.push(std::pair<int, int>(x, z));
 }
 
 void EntityPlayer::UpdateTick()
 {
-    if (session != NULL)
+    if (world != NULL)
     {
-        session->UpdateTick();
+        if (session != NULL)
+        {
+            session->UpdateTick();
+        }
+        if (!chunkToSend.empty())
+        {
+            world->RequestChunk(this, chunkToSend.front());
+            chunkToSend.pop();
+        }
     }
 }
 
@@ -94,7 +102,9 @@ void EntityPlayer::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ
 void EntityPlayer::Kick()
 {
     // TODO packet kick
-    session->disconnect();
+    if (session != NULL)
+        session->disconnect("kick");
+    session = NULL;
 }
 
 const std::wstring& EntityPlayer::GetUsername()

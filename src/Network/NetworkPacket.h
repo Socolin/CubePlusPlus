@@ -9,7 +9,9 @@
 #define NETWORKPACKET_H_
 
 #include <iostream>
+#include <sstream>
 #include <vector>
+#include <boost/iostreams/filtering_streambuf.hpp>
 
 namespace Network
 {
@@ -41,6 +43,7 @@ public:
 	NetworkPacket& operator <<(char value);
 	NetworkPacket& operator <<(unsigned char value);
 	NetworkPacket& operator <<(short value);
+	NetworkPacket& operator <<(unsigned short value);
 	NetworkPacket& operator <<(int value);
 	NetworkPacket& operator <<(long value);
 	NetworkPacket& operator <<(float value);
@@ -58,13 +61,22 @@ public:
 		return packetSize;
 	}
 
-	void dump();
+	void Reset()
+	{
+	    packetSize = 1;
+	}
 
+	void dump() const;
+
+	void startWriteCompressedData();
+	void endWriteCompressedData();
+	void appendCompress(char* buffer, size_t size);
 private:
 	size_t bufferSize;
 	std::vector<char> packetData;
 	size_t packetSize;
 	char tmpBuffer[8]; // Buffer pour permettre d'écrire tout les type d'int sans avoir à réalouer de la place à chaque fois
+	int startCompressOffset;
 };
 
 } /* namespace Network */

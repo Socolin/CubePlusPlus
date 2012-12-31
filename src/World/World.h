@@ -60,6 +60,7 @@ public:
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 
     void Unload();
+    void RequestChunk(EntityPlayer* player, std::pair<int, int>);
 private:
     void UpdateTime();
 private:

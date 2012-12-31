@@ -272,7 +272,8 @@ void NetworkManager::OnDisconnectClient(int socket)
 	auto sessionItr = sessionList.find(socket);
 	if (sessionItr != sessionList.end())
 	{
-		sessionItr->second->disconnect();
+	    if (!sessionItr->second->isDisconnected())
+	        sessionItr->second->disconnect("OnDisconnectClient");
 		delete sessionItr->second;
 		sessionList.erase(sessionItr);
 	}
