@@ -37,6 +37,7 @@ void EntityPlayer::UpdateTick()
         }
         if (!chunkToSend.empty())
         {
+            // TODO: add check distance world->viewdistance
             world->RequestChunk(this, chunkToSend.front());
             chunkToSend.pop();
         }
@@ -98,6 +99,38 @@ void EntityPlayer::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ
     oldVChunk->RemovePlayerByMoving(this, newVirtualChunkX, newVirtualChunkZ);
     VirtualChunk *vChunk = world->GetVirtualChunk(newVirtualChunkX, newVirtualChunkZ);
     vChunk->AddPlayerByMoving(this, virtualChunkX, virtualChunkZ);
+}
+void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
+{
+    int viewDistance = world->getViewDistance();
+    if (newChunkX != chunkX)
+    {
+        int offsetX = newChunkX - chunkX;
+        int xRemove = chunkX - viewDistance * offsetX;
+        int xAdd = newChunkX + viewDistance * offsetX;
+        for (int z = chunkZ - viewDistance; z <= chunkZ + viewDistance; z++)
+        {
+            Chunk* chunk = world->GetChunk(xAdd, z);
+            chunk->AddPlayer(this);
+            AddChunkToSend(xAdd, z);
+            chunk = world->GetChunk(xRemove, z);
+            chunk->RemovePlayer(this);
+        }
+    }
+    if (newChunkZ != chunkZ) // Déplacement sur l'axe Z
+    {
+        int offsetZ = newChunkZ - chunkZ;
+        int zRemove = chunkZ - viewDistance * offsetZ;
+        int zAdd = newChunkZ + viewDistance * offsetZ;
+        for (int x = chunkX - viewDistance; x <= chunkX + viewDistance; x++)
+        {
+            Chunk* chunk = world->GetChunk(zAdd, x);
+            chunk->AddPlayer(this);
+            AddChunkToSend(x, zAdd);
+            chunk = world->GetChunk(zRemove, x);
+            chunk->RemovePlayer(this);
+        }
+    }
 }
 
 void EntityPlayer::Kick()

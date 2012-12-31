@@ -71,6 +71,7 @@ public:
 
     void Unload();
     void RequestChunk(EntityPlayer* player, std::pair<int, int>);
+    int getViewDistance();
 private:
     void UpdateTime();
 private:

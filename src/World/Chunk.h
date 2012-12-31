@@ -52,27 +52,36 @@ public:
     inline void SetBlockAt(int x, int y, int z, int blockID)
     {
         ChunkData* data = datas[y >> 4];
-        if (data != NULL)
+        if (data == NULL)
         {
-            if (data->addData != NULL)
+            data = new ChunkData();
+            data->clear();
+            flagSectionExists |= (1 << (y >> 4));
+            datas[y >> 4] = data;
+        }
+        if (blockID > 255)
+        {
+            if (data->addData == NULL)
             {
-                int cellId = ((y & 0xf) << 8 | z << 4 | x);
-                data->blocks[cellId] = blockID & 0xff;
+                data->addData = new unsigned char[CHUNK_BLOCK_NIBBLE_SIZE];
+            }
+            int cellId = ((y & 0xf) << 8 | z << 4 | x);
+            data->blocks[cellId] = blockID & 0xff;
 
-                unsigned char currentData = data->addData[cellId >> 1];
-                if ((x & 0x1) == 0)
-                {
-                    data->addData[cellId >> 1] = (currentData & 0xf0) | ((blockID >> 8) & 0xf);
-                }
-                else
-                {
-                    data->addData[cellId >> 1] = (currentData & 0xf) | (((blockID >> 8) & 0xf) << 4);
-                }
+            unsigned char currentData = data->addData[cellId >> 1];
+            if ((x & 0x1) == 0)
+            {
+                data->addData[cellId >> 1] = (currentData & 0xf0) | ((blockID >> 8) & 0xf);
             }
             else
             {
-                data->blocks[(y & 0xf) << 8 | z << 4 | x] = blockID & 0xff;
+                data->addData[cellId >> 1] = (currentData & 0xf) | (((blockID >> 8) & 0xf) << 4);
             }
+            flagSectionUseAdd |= (1 << (y >> 4));
+        }
+        else
+        {
+            data->blocks[(y & 0xf) << 8 | z << 4 | x] = blockID & 0xff;
         }
     }
     inline void SetDataAt(int x, int y, int z, unsigned char newData)
@@ -115,6 +124,35 @@ private:
         unsigned char blocklight[CHUNK_BLOCK_NIBBLE_SIZE];
         unsigned char skyLight[CHUNK_BLOCK_NIBBLE_SIZE];
         unsigned char* addData;
+
+        void clear()
+        {
+            unsigned char* data = blocks;
+            for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
+            {
+                *data = 0;
+                data++;
+            }
+            data = metadata;
+            for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+            {
+                *data = 0;
+                data++;
+            }
+            data = blocklight;
+            for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+            {
+                *data = 0;
+                data++;
+            }
+            data = skyLight;
+            for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+            {
+                *data = 0xff;
+                data++;
+            }
+            addData = NULL;
+        }
     } ChunkData;
 
     ChunkData* datas[CHUNK_DATA_COUNT];

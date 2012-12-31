@@ -40,20 +40,28 @@ void Chunk::Load()
 {
     flagSectionExists = 0;
     flagSectionUseAdd = 0;
-    for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
-        flagSectionExists |= (1 << i);
+        unsigned char* data = biomeData;
+        for (int i = 0; i < CHUNK_SURFACE; i++)
+        {
+            *data = 0;
+            data++;
+        }
+    }
+    {
         ChunkData* chunkData = new ChunkData();
         unsigned char* data = chunkData->blocks;
         for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
         {
-            *data = 0;
+            *data = 35;
             data++;
         }
         data = chunkData->metadata;
         for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
         {
-            *data = 0;
+            *data = (i * 2 )% 16;
+            *data |= (((i * 2) + 1) % 16) << 4;
+
             data++;
         }
         data = chunkData->blocklight;
@@ -69,38 +77,12 @@ void Chunk::Load()
             data++;
         }
         chunkData->addData = NULL;
-        datas[i] = chunkData;
+        datas[0] = chunkData;
+        flagSectionExists |= 1;
     }
 
     {
-        unsigned char* data = biomeData;
-        for (int i = 0; i < CHUNK_SURFACE; i++)
-        {
-            *data = 0;
-            data++;
-        }
-    }
-    {
-        ChunkData* chunkData =  datas[0];
-        unsigned char* data = chunkData->blocks;
-        for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
-        {
-            *data = 35;
-            data++;
-        }
-        data = chunkData->metadata;
-        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
-        {
-            *data = (i * 2 )% 16;
-            *data |= (((i * 2) + 1) % 16) << 4;
-
-            data++;
-        }
-        chunkData->addData = NULL;
-    }
-
-    {
-        ChunkData* chunkData =  datas[1];
+        ChunkData* chunkData = new ChunkData();
         unsigned char* data = chunkData->blocks;
         for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
         {
@@ -114,7 +96,21 @@ void Chunk::Load()
 
             data++;
         }
+        data = chunkData->blocklight;
+        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+        {
+            *data = 0;
+            data++;
+        }
+        data = chunkData->skyLight;
+        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+        {
+            *data = 0xff;
+            data++;
+        }
         chunkData->addData = NULL;
+        datas[1] = chunkData;
+        flagSectionExists |= (1 << 1);
     }
     loaded = true;
 }
@@ -159,22 +155,26 @@ void Chunk::GeneratePacket()
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
        ChunkData* chunkData =  datas[i];
-       cachePacket.appendCompress((char*)chunkData->blocks,CHUNK_BLOCK_COUNT);
+       if (chunkData != NULL)
+           cachePacket.appendCompress((char*)chunkData->blocks,CHUNK_BLOCK_COUNT);
     }
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
        ChunkData* chunkData =  datas[i];
-       cachePacket.appendCompress((char*)chunkData->metadata,CHUNK_BLOCK_NIBBLE_SIZE);
+       if (chunkData != NULL)
+           cachePacket.appendCompress((char*)chunkData->metadata,CHUNK_BLOCK_NIBBLE_SIZE);
     }
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
        ChunkData* chunkData =  datas[i];
-       cachePacket.appendCompress((char*)chunkData->blocklight,CHUNK_BLOCK_NIBBLE_SIZE);
+       if (chunkData != NULL)
+           cachePacket.appendCompress((char*)chunkData->blocklight,CHUNK_BLOCK_NIBBLE_SIZE);
     }
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
        ChunkData* chunkData =  datas[i];
-       cachePacket.appendCompress((char*)chunkData->skyLight,CHUNK_BLOCK_NIBBLE_SIZE);
+       if (chunkData != NULL)
+           cachePacket.appendCompress((char*)chunkData->skyLight,CHUNK_BLOCK_NIBBLE_SIZE);
     }
 
     cachePacket.appendCompress((char*)biomeData,CHUNK_SURFACE);

@@ -145,6 +145,11 @@ void World::RequestChunk(EntityPlayer* player, std::pair<int, int> chunkCoord)
     player->Send(packet);
 }
 
+int World::getViewDistance()
+{
+    return viewDistance;
+}
+
 void World::UpdateTime()
 {
     ageOfWorld++;

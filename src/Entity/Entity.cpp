@@ -48,6 +48,14 @@ void Entity::Rotate(float yaw, float pitch)
 
 void Entity::MoveTo(double x, double y, double z)
 {
+    int newChunkX = ((int) x) >> 4;
+    int newChunkZ = ((int) z) >> 4;
+    Chunk* chunk = world->GetChunkIfLoaded(newChunkX, newChunkZ);
+    if (chunk == NULL)
+    {
+        Teleport(this->x, this->y, this->z, this->yaw, this->pitch);
+        return;
+    }
     motionX = x - this->x;
     motionY = y - this->y;
     motionZ = z - this->z;
@@ -64,8 +72,15 @@ void Entity::MoveTo(double x, double y, double z)
         moveToVirtualChunk(newVirtualChunkX, newVirtualChunkZ);
     }
 
+    if (newChunkX != chunkX || newChunkZ != chunkZ)
+    {
+        moveToChunk(newChunkX, newChunkZ);
+    }
+
     virtualChunkX = newVirtualChunkX;
     virtualChunkZ = newVirtualChunkZ;
+    chunkX = newChunkX;
+    chunkZ = newChunkZ;
 }
 
 void Entity::Teleport(double x, double y, double z, float yaw, float pitch)

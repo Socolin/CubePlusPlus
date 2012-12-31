@@ -36,6 +36,7 @@ public:
     void Send(const Network::NetworkPacket& packet) const;
     virtual void GetCreatePacket(Network::NetworkPacket& packet);
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
+    virtual void moveToChunk(int newChunkX, int newChunkZ);
 
     void Kick();
 
