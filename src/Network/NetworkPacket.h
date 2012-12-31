@@ -45,6 +45,7 @@ public:
 	NetworkPacket& operator <<(short value);
 	NetworkPacket& operator <<(unsigned short value);
 	NetworkPacket& operator <<(int value);
+	NetworkPacket& operator <<(unsigned int value);
 	NetworkPacket& operator <<(long value);
 	NetworkPacket& operator <<(float value);
 	NetworkPacket& operator <<(double value);
@@ -71,6 +72,9 @@ public:
 	void startWriteCompressedData();
 	void endWriteCompressedData();
 	void appendCompress(char* buffer, size_t size);
+
+	void UpdateAt(int offset, short value);
+	void UpdateAt(int offset, int value);
 private:
 	size_t bufferSize;
 	std::vector<char> packetData;

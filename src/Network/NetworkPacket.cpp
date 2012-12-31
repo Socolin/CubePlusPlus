@@ -85,6 +85,16 @@ NetworkPacket& NetworkPacket::operator <<(int value)
     return *this;
 }
 
+NetworkPacket& NetworkPacket::operator <<(unsigned int value)
+{
+    tmpBuffer[0] = (value >> 24) & 0xff;
+    tmpBuffer[1] = (value >> 16) & 0xff;
+    tmpBuffer[2] = (value >> 8) & 0xff;
+    tmpBuffer[3] = value & 0xff;
+    append(tmpBuffer, 4);
+    return *this;
+}
+
 NetworkPacket& NetworkPacket::operator <<(long value)
 {
     tmpBuffer[0] = (value >> 56) & 0xff;
@@ -234,6 +244,22 @@ void NetworkPacket::endWriteCompressedData()
 void NetworkPacket::appendCompress(char* buffer, size_t size)
 {
     append(buffer, size);
+}
+
+void NetworkPacket::UpdateAt(int offset, int value)
+{
+    tmpBuffer[0] = (value >> 24) & 0xff;
+    tmpBuffer[1] = (value >> 16) & 0xff;
+    tmpBuffer[2] = (value >> 8) & 0xff;
+    tmpBuffer[3] = value & 0xff;
+    std::memcpy(&packetData[offset], tmpBuffer, 4);
+}
+
+void NetworkPacket::UpdateAt(int offset, short value)
+{
+    tmpBuffer[0] = (value >> 8) & 0xff;
+    tmpBuffer[1] = value & 0xff;
+    std::memcpy(&packetData[offset], tmpBuffer, 2);
 }
 
 } /* namespace Network */

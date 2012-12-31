@@ -45,6 +45,16 @@ public:
         return it->second;
     }
 
+    inline Chunk* GetChunkIfLoaded(int x, int z)
+    {
+        auto it = chunkMap.find(CHUNK_KEY(x,z));
+        if (it == chunkMap.end())
+        {
+            return NULL;
+        }
+        return it->second;
+    }
+
     inline VirtualChunk* GetVirtualChunk(int x, int z)
     {
         auto it = virtualChunkMap.find(CHUNK_KEY(x,z));

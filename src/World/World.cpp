@@ -35,6 +35,10 @@ void World::UpdateTick()
     {
         chunk.second->SendUpdate();
     }
+    for (std::pair<long, Chunk*> chunk : chunkMap)
+    {
+        chunk.second->SendUpdate();
+    }
 
     UpdateTime();
 }
@@ -46,12 +50,12 @@ void World::AddEntity(Entity* entity)
     virtualChunk->AddEntity(entity);
 }
 
-void World::AddPlayer(EntityPlayer* entity)
+void World::AddPlayer(EntityPlayer* player)
 {
-    entity->setWorld(this, currentEntityId++);
-    playerList.insert(entity);
-    int chunkX = ((int) entity->x) >> 4;
-    int chunkZ = ((int) entity->z) >> 4;
+    player->setWorld(this, currentEntityId++);
+    playerList.insert(player);
+    int chunkX = ((int) player->x) >> 4;
+    int chunkZ = ((int) player->z) >> 4;
     int maxChunkX = chunkX + viewDistance;
     int maxChunkZ = chunkZ + viewDistance;
 
@@ -59,14 +63,14 @@ void World::AddPlayer(EntityPlayer* entity)
         for (int z = chunkZ - viewDistance; z <= maxChunkZ; z++)
         {
             Chunk* chunk = GetChunk(x, z);
-            chunk->AddRefCount();
-            entity->AddChunkToSend(x, z);
+            chunk->AddPlayer(player);
+            player->AddChunkToSend(x, z);
         }
 
-    VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 8, ((int) entity->z) >> 8);
-    virtualChunk->AddPlayer(entity);
+    VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 8, ((int) player->z) >> 8);
+    virtualChunk->AddPlayer(player);
 
-    entity->JoinWorld();
+    player->JoinWorld();
 
 }
 
@@ -79,7 +83,6 @@ void World::RemoveEntity(Entity* entity)
 
 void World::RemovePlayer(EntityPlayer* player)
 {
-    player->setWorld(NULL, 0);
     playerList.erase(player);
     int chunkX = ((int) player->x) >> 4;
     int chunkZ = ((int) player->z) >> 4;
@@ -90,11 +93,12 @@ void World::RemovePlayer(EntityPlayer* player)
         for (int z = chunkZ - viewDistance; z <= maxChunkZ; z++)
         {
             Chunk* chunk = GetChunk(x, z);
-            chunk->RemoveRefCount();
+            chunk->RemovePlayer(player);
         }
 
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->RemovePlayer(player);
+    player->setWorld(NULL, 0);
 }
 
 Chunk* World::LoadChunk(int x, int z)

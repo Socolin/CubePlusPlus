@@ -76,7 +76,8 @@ void NetworkSession::ReceiveData() throw (NetworkException)
 		{
 			unsigned char packetId = readByte();
 			const OpcodeHandler& handler = opcodeTable[packetId];
-			//std::cout << "Receive packet:"<< opcodeTable[packetId].name << " 0x" << std::hex <<  ((int)(packetId)&0xff)  <<std::dec << std::endl;
+			if (handler.debug)
+			    std::cout << "Receive packet:"<< opcodeTable[packetId].name << " 0x" << std::hex <<  ((int)(packetId)&0xff)  <<std::dec << std::endl;
 			if ((handler.state & state) != 0)
 			{
 			    (this->*handler.handler) ();

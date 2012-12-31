@@ -13,12 +13,16 @@ namespace World
 {
 class EntityPlayer;
 }
+namespace Inventory
+{
+class ItemStack;
+}
 
 namespace Network
 {
 #define INITIAL_BUFFER_SIZE 512
 #define MAX_TICK_FOR_KEEPALIVE 1200 * 10000
-#define INTERVAL_SEND_KEEPALIVE 20
+#define INTERVAL_SEND_KEEPALIVE 20 * 1000
 #define CURRENT_VERSION_PROTOCOL 49
 #define CURRENT_VERSION_PROTOCOL_WSTR L"49"
 
@@ -112,6 +116,7 @@ private:
 	std::wstring readString(int maxSize) throw (NetworkException);
 	float readFloat() throw (NetworkException);
 	double readDouble() throw (NetworkException);
+	void readSlot(Inventory::ItemStack& ItemStack)  throw (NetworkException);;
 
 	int socket;
 	std::vector<char> buffer;

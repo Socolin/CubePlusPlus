@@ -2,6 +2,7 @@
 #define ENTITYPLAYER_H_
 
 #include "LivingEntity.h"
+#include "Inventory/InventoryPlayer.h"
 
 #include <string>
 #include <queue>
@@ -39,10 +40,14 @@ public:
     void Kick();
 
     const std::wstring& GetUsername();
+    Inventory::InventoryPlayer& GetInventory();
+    void PlaceBlock(int x, unsigned char y, int z, char face, char CursorpositionX, char CursorpositionY,char CursorpositionZ);
+    void DigBlock(int state, int x, unsigned char y, int z, char face);
 private:
     std::wstring name;
     std::queue<std::pair<int, int> > chunkToSend;
     Network::NetworkSession* session;
+    Inventory::InventoryPlayer inventory;
 };
 
 } /* namespace World */

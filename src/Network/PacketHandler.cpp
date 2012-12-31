@@ -25,8 +25,11 @@ namespace Network
 void NetworkSession::handleKeepAlive() throw (NetworkException)
 {
 	int value = readInt();
+	if (value == 0)
+	    return;
 	if (value != lastKeepAliveId)
 	{
+	    std::cout << lastKeepAliveId << " " << value << std::endl;
 	    disconnect("bad keepalive message");
 	}
 	lastKeepAliveId = 0;
@@ -102,21 +105,23 @@ void NetworkSession::handlePlayerPositionAndLook() throw (NetworkException)
 
 void NetworkSession::handlePlayerDigging() throw (NetworkException)
 {
-	readByte();
-	readInt();
-	readByte();
-	readInt();
-	readByte();
+	char state = readByte();
+	int x = readInt();
+	unsigned char y = readByte();
+	int z = readInt();
+	char face = readByte();
+    std::cout << "handlePlayerBlockPlacement state:" << (int)state << " x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << std::endl;
+    player->DigBlock(state, x, y, z, face);
 }
 
 void NetworkSession::handlePlayerBlockPlacement() throw (NetworkException)
 {
 	int x = readInt();
-	int y = readByte();
+	unsigned char y = readByte();
 	int z = readInt();
-	int face = readByte();
+	char face = readByte();
 
-	// Metadata
+	// Metadata, not used
 	short blockId = readShort();
 	if (blockId != -1)
 	{
@@ -134,11 +139,20 @@ void NetworkSession::handlePlayerBlockPlacement() throw (NetworkException)
 	char CursorpositionX = readByte();
 	char CursorpositionY = readByte();
 	char CursorpositionZ = readByte();
-	std::cout << "handlePlayerBlockPlacement x:" << x << " y:"<< y << " z:" << z << " face:" << face << " blockId:" << blockId << std::endl;
+	std::cout << "handlePlayerBlockPlacement x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << " blockId:" << blockId
+	        << " cx:" << (int)CursorpositionX
+	        << " cy:" << (int)CursorpositionY
+	        << " cz:" << (int)CursorpositionZ
+	        << std::endl;
+
+    player->PlaceBlock(x, y, z, face, CursorpositionX, CursorpositionY, CursorpositionZ);
 }
 void NetworkSession::handleHeldItemChange() throw (NetworkException)
 {
-	readShort();
+	int slotId = readShort();
+	if (slotId > 8 || slotId < 0)
+	    throw NetworkException("handleHeldItemChange: SlotID > 8 || < 0");
+	player->GetInventory().setHandSlot(slotId);
 }
 void NetworkSession::handleAnimation() throw (NetworkException)
 {
@@ -209,21 +223,35 @@ void NetworkSession::handleTabComplete() throw (NetworkException)
 	readByte();
 	readByte();
 }
+void NetworkSession::readSlot(Inventory::ItemStack& itemStack) throw (NetworkException)
+{
+    short blockId = readShort();
+    if (blockId < -1)
+        throw NetworkException("readSlot bad blockID");
+    if (blockId != -1)
+    {
+        int data = readByte();
+        int count = readShort();
+        short nbtDataLength = readShort();
+        if (nbtDataLength != -1)
+        {
+            for (int i = 0; i < nbtDataLength; i++)
+                readByte();
+        }
+        itemStack.setItem(blockId, data, count);
+    }
+    else
+    {
+        itemStack.setItem(blockId, 0, 0);
+    }
+}
 void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
 {
-	readShort();
-	short blockId = readShort();
-	if (blockId != -1)
-	{
-		readByte();
-		readShort();
-		short nbtDataLength = readShort();
-		if (nbtDataLength != -1)
-		{
-			for (int i = 0; i < nbtDataLength; i++)
-				readByte();
-		}
-	}
+	short slotId = readShort();
+	if (slotId < 0 || slotId > 44)
+	    throw NetworkException("handleCreativeInventoryAction: slotId < 0 || slotId > 44");
+
+	readSlot(player->GetInventory().GetSlot(slotId));
 }
 void NetworkSession::handleClientSettings() throw (NetworkException)
 {

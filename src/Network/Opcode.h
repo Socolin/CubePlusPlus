@@ -15,12 +15,21 @@ struct OpcodeHandler
 		name = "UNK_OPCODE";
 		state = STATE_NEVER;
 		handler = NULL;
+		debug = true;
 	}
 	OpcodeHandler(char const* name,int state,void (NetworkSession::*handler)())
 	{
 		this->name = name;
 		this->state = state;
 		this->handler = handler;
+		debug = true;
+	}
+	OpcodeHandler(char const* name,int state,void (NetworkSession::*handler)(), bool debug)
+	{
+		this->name = name;
+		this->state = state;
+		this->handler = handler;
+		this->debug = debug;
 	}
 	/// Nom de l'opcode
 	char const* name;
@@ -28,6 +37,8 @@ struct OpcodeHandler
 	int state;
 	/// Méthode associé a l'opcode
 	void (NetworkSession::*handler)() throw (NetworkException);
+
+	bool debug;
 };
 
 extern OpcodeHandler opcodeTable[TOTAL_OPCODE_COUNT];

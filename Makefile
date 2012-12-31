@@ -255,6 +255,78 @@ src/Entity/Position.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/Position.cpp.s
 .PHONY : src/Entity/Position.cpp.s
 
+src/Inventory/Inventory.o: src/Inventory/Inventory.cpp.o
+.PHONY : src/Inventory/Inventory.o
+
+# target to build an object file
+src/Inventory/Inventory.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Inventory.cpp.o
+.PHONY : src/Inventory/Inventory.cpp.o
+
+src/Inventory/Inventory.i: src/Inventory/Inventory.cpp.i
+.PHONY : src/Inventory/Inventory.i
+
+# target to preprocess a source file
+src/Inventory/Inventory.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Inventory.cpp.i
+.PHONY : src/Inventory/Inventory.cpp.i
+
+src/Inventory/Inventory.s: src/Inventory/Inventory.cpp.s
+.PHONY : src/Inventory/Inventory.s
+
+# target to generate assembly for a file
+src/Inventory/Inventory.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Inventory.cpp.s
+.PHONY : src/Inventory/Inventory.cpp.s
+
+src/Inventory/InventoryPlayer.o: src/Inventory/InventoryPlayer.cpp.o
+.PHONY : src/Inventory/InventoryPlayer.o
+
+# target to build an object file
+src/Inventory/InventoryPlayer.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/InventoryPlayer.cpp.o
+.PHONY : src/Inventory/InventoryPlayer.cpp.o
+
+src/Inventory/InventoryPlayer.i: src/Inventory/InventoryPlayer.cpp.i
+.PHONY : src/Inventory/InventoryPlayer.i
+
+# target to preprocess a source file
+src/Inventory/InventoryPlayer.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/InventoryPlayer.cpp.i
+.PHONY : src/Inventory/InventoryPlayer.cpp.i
+
+src/Inventory/InventoryPlayer.s: src/Inventory/InventoryPlayer.cpp.s
+.PHONY : src/Inventory/InventoryPlayer.s
+
+# target to generate assembly for a file
+src/Inventory/InventoryPlayer.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/InventoryPlayer.cpp.s
+.PHONY : src/Inventory/InventoryPlayer.cpp.s
+
+src/Inventory/ItemStack.o: src/Inventory/ItemStack.cpp.o
+.PHONY : src/Inventory/ItemStack.o
+
+# target to build an object file
+src/Inventory/ItemStack.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/ItemStack.cpp.o
+.PHONY : src/Inventory/ItemStack.cpp.o
+
+src/Inventory/ItemStack.i: src/Inventory/ItemStack.cpp.i
+.PHONY : src/Inventory/ItemStack.i
+
+# target to preprocess a source file
+src/Inventory/ItemStack.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/ItemStack.cpp.i
+.PHONY : src/Inventory/ItemStack.cpp.i
+
+src/Inventory/ItemStack.s: src/Inventory/ItemStack.cpp.s
+.PHONY : src/Inventory/ItemStack.s
+
+# target to generate assembly for a file
+src/Inventory/ItemStack.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/ItemStack.cpp.s
+.PHONY : src/Inventory/ItemStack.cpp.s
+
 src/Main/Server.o: src/Main/Server.cpp.o
 .PHONY : src/Main/Server.o
 
@@ -594,6 +666,15 @@ help:
 	@echo "... src/Entity/Position.o"
 	@echo "... src/Entity/Position.i"
 	@echo "... src/Entity/Position.s"
+	@echo "... src/Inventory/Inventory.o"
+	@echo "... src/Inventory/Inventory.i"
+	@echo "... src/Inventory/Inventory.s"
+	@echo "... src/Inventory/InventoryPlayer.o"
+	@echo "... src/Inventory/InventoryPlayer.i"
+	@echo "... src/Inventory/InventoryPlayer.s"
+	@echo "... src/Inventory/ItemStack.o"
+	@echo "... src/Inventory/ItemStack.i"
+	@echo "... src/Inventory/ItemStack.s"
 	@echo "... src/Main/Server.o"
 	@echo "... src/Main/Server.i"
 	@echo "... src/Main/Server.s"

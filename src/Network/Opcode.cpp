@@ -7,14 +7,14 @@ namespace Network
 OpcodeHandler opcodeTable[TOTAL_OPCODE_COUNT];
 void initOpcode()
 {
-	opcodeTable[OP_KEEPALIVE] = OpcodeHandler("KEEP_ALIVE", STATE_EVERYTIME, &NetworkSession::handleKeepAlive);
+	opcodeTable[OP_KEEPALIVE] = OpcodeHandler("KEEP_ALIVE", STATE_EVERYTIME, &NetworkSession::handleKeepAlive, false);
 	opcodeTable[OP_HANDSHAKE] = OpcodeHandler("HANDSHAKE", STATE_NOTLOGGED, &NetworkSession::handleHandShake);
 	opcodeTable[OP_CHAT_MESSAGE] = OpcodeHandler("CHAT_MESSAGE", STATE_INGAME, &NetworkSession::handleChatMessage);
 	opcodeTable[OP_USE_ENTITY] = OpcodeHandler("USE_ENTITY", STATE_INGAME, &NetworkSession::handleUseEntity);
-	opcodeTable[OP_PLAYER] = OpcodeHandler("PLAYER", STATE_INGAME, &NetworkSession::handlePlayer);
-	opcodeTable[OP_PLAYER_POSITION] = OpcodeHandler("PLAYER_POSITION", STATE_INGAME, &NetworkSession::handlePlayerPosition);
-	opcodeTable[OP_PLAYER_LOOK] = OpcodeHandler("PLAYER_LOOK", STATE_INGAME, &NetworkSession::handlePlayerLook);
-	opcodeTable[OP_PLAYER_POSITION_AND_LOOK] = OpcodeHandler("POSITION_AND_LOOK", STATE_INGAME, &NetworkSession::handlePlayerPositionAndLook);
+	opcodeTable[OP_PLAYER] = OpcodeHandler("PLAYER", STATE_INGAME, &NetworkSession::handlePlayer, false);
+	opcodeTable[OP_PLAYER_POSITION] = OpcodeHandler("PLAYER_POSITION", STATE_INGAME, &NetworkSession::handlePlayerPosition, false);
+	opcodeTable[OP_PLAYER_LOOK] = OpcodeHandler("PLAYER_LOOK", STATE_INGAME, &NetworkSession::handlePlayerLook, false);
+	opcodeTable[OP_PLAYER_POSITION_AND_LOOK] = OpcodeHandler("POSITION_AND_LOOK", STATE_INGAME, &NetworkSession::handlePlayerPositionAndLook, false);
 	opcodeTable[OP_PLAYER_DIGGING] = OpcodeHandler("PLAYER_DIGGING", STATE_INGAME, &NetworkSession::handlePlayerDigging);
 	opcodeTable[OP_PLAYER_BLOCK_PLACEMENT] = OpcodeHandler("PLAYER_BLOCK_PLACEMENT", STATE_INGAME, &NetworkSession::handlePlayerBlockPlacement);
 	opcodeTable[OP_HELD_ITEM_CHANGE] = OpcodeHandler("HELD_ITEM_CHANGE", STATE_INGAME, &NetworkSession::handleHeldItemChange);

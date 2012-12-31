@@ -2,6 +2,7 @@
 
 #include <algorithm>
 
+#include "Block/BlockConstants.h"
 #include "Network/NetworkSession.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
@@ -104,12 +105,56 @@ void EntityPlayer::Kick()
     // TODO packet kick
     if (session != NULL)
         session->disconnect("kick");
-    session = NULL;
 }
 
 const std::wstring& EntityPlayer::GetUsername()
 {
     return name;
+}
+
+Inventory::InventoryPlayer& EntityPlayer::GetInventory()
+{
+    return inventory;
+}
+void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
+{
+    if (state == 0)
+    {
+        Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
+        chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+    }
+}
+void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+{
+    Inventory::ItemStack& item = inventory.GetItemInHand();
+    switch (face)
+    {
+    case FACE_BOTTOM: // -Y
+        y--;
+        break;
+    case FACE_TOP: // +Y
+        y++;
+        break;
+    case FACE_NORTH: // -Z
+        z--;
+        break;
+    case FACE_SOUTH: // +Z
+        z++;
+        break;
+    case FACE_WEST: // -X
+        x--;
+        break;
+    case FACE_EAST: // +X
+        x++;
+        break;
+    };
+
+    // TODO check 6 block in range
+    if (item.getItemId() > 0)
+    {
+        Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
+        chunk->ChangeBlock(x & 0xf, y, z & 0xf, item.getItemId(), item.getItemData());
+    }
 }
 
 } /* namespace World */
