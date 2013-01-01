@@ -140,9 +140,9 @@ void Chunk::ChangeBlock(int x, unsigned char y, int z, int blockID, int blockDat
     unsigned int dataChange = 0;
     dataChange |= blockData       & 0x0000000f;
     dataChange |= (blockID << 4)  & 0x0000fff0;
-    dataChange |= (y << 16)       & 0x00ff0000;
-    dataChange |= (z << 24)       & 0x0f000000;
-    dataChange |= (x << 28)       & 0xf0000000;
+    dataChange |= ((int)y << 16)  & 0x00ff0000;
+    dataChange |= ((z & 0xf) << 24)       & 0x0f000000;
+    dataChange |= ((x & 0xf) << 28)       & 0xf0000000;
     blockChangePacket << dataChange;
     countChange++;
 }
@@ -176,7 +176,12 @@ void Chunk::GeneratePacket()
        if (chunkData != NULL)
            cachePacket.appendCompress((char*)chunkData->skyLight,CHUNK_BLOCK_NIBBLE_SIZE);
     }
-
+    for (int i = 0; i < CHUNK_DATA_COUNT; i++)
+    {
+       ChunkData* chunkData =  datas[i];
+       if (chunkData != NULL && chunkData->addData != NULL)
+           cachePacket.appendCompress((char*)chunkData->addData,CHUNK_BLOCK_NIBBLE_SIZE);
+    }
     cachePacket.appendCompress((char*)biomeData,CHUNK_SURFACE);
 
     //cachePacket.dump();

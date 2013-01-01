@@ -32,7 +32,7 @@ void WorldManager::RemovePlayer(EntityPlayer* player)
 {
     world->RemovePlayer(player);
     playerList.erase(player);
-    delete player;
+    // delete player; do it later
 }
 
 bool WorldManager::IsRunning()

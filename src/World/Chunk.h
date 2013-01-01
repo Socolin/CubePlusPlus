@@ -64,6 +64,8 @@ public:
             if (data->addData == NULL)
             {
                 data->addData = new unsigned char[CHUNK_BLOCK_NIBBLE_SIZE];
+                data->clearAddData();
+                flagSectionUseAdd |= (1 << (y >> 4));
             }
             int cellId = ((y & 0xf) << 8 | z << 4 | x);
             data->blocks[cellId] = blockID & 0xff;
@@ -77,7 +79,6 @@ public:
             {
                 data->addData[cellId >> 1] = (currentData & 0xf) | (((blockID >> 8) & 0xf) << 4);
             }
-            flagSectionUseAdd |= (1 << (y >> 4));
         }
         else
         {
@@ -152,6 +153,15 @@ private:
                 data++;
             }
             addData = NULL;
+        }
+        void clearAddData()
+        {
+            unsigned char* data = addData;
+            for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+            {
+                *data = 0xff;
+                data++;
+            }
         }
     } ChunkData;
 

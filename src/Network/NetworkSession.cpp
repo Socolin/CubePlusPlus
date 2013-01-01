@@ -221,7 +221,7 @@ std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)
 	if (length > maxSize)
 		throw NetworkException("String length > maxSize");
 
-	if ((length * 2) + startPosInBuffer > bufferSize)
+	if ((length * 2) + startPosInBuffer >= bufferSize)
 		throw NetworkExceptionData("String length < 0");
 
 	wchar_t utf16Text[length];
