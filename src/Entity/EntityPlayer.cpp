@@ -91,6 +91,10 @@ void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
     packet << (unsigned char) Network::OP_SPAWN_NAMED_ENTITY << entityId << name << networkX << networkY << networkZ << (char)  (yaw * 256.f / 360.f) << (char)  (pitch * 256.f / 360.f) << (unsigned short) 0 /* Current item*/;
     // Metadata
     packet << (char)0 << (char)0 << (unsigned char)127; // TODO: classe metadata
+
+    const Inventory::ItemStack& itemInHand = inventory.GetItemInHand();
+    if (itemInHand.getItemId() != -1)
+        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << itemInHand;
 }
 
 void EntityPlayer::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
@@ -180,6 +184,8 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char Cur
     case FACE_EAST: // +X
         x++;
         break;
+    case FACE_NONE:
+        return;
     };
 
     // TODO check 6 block in range
@@ -187,6 +193,15 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char Cur
     {
         Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
         chunk->ChangeBlock(x & 0xf, y, z & 0xf, item.getItemId(), item.getItemData());
+    }
+}
+
+void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
+{
+    if (hasChangeItemInHand)
+    {
+        hasChangeItemInHand = false;
+        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << inventory.GetItemInHand();
     }
 }
 

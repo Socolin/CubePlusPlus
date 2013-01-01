@@ -11,6 +11,8 @@ class LivingEntity: public Entity
 public:
     LivingEntity(double x, double y, double z);
     virtual ~LivingEntity();
+protected:
+    bool hasChangeItemInHand;
 };
 
 } /* namespace World */

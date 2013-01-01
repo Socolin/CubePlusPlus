@@ -9,6 +9,7 @@ enum BlockFace
     FACE_SOUTH, // +Z
     FACE_WEST, // -X
     FACE_EAST, // +X
+    FACE_NONE = -1,
 
 };
 

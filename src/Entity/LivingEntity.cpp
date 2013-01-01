@@ -4,7 +4,7 @@ namespace World
 {
 
 LivingEntity::LivingEntity(double x, double y, double z) :
-        Entity(x, y, z)
+        Entity(x, y, z), hasChangeItemInHand(false)
 {
 
 }

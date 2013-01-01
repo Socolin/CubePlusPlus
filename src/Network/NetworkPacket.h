@@ -13,6 +13,10 @@
 #include <vector>
 #include <boost/iostreams/filtering_streambuf.hpp>
 
+namespace Inventory
+{
+class ItemStack;
+}
 namespace Network
 {
 
@@ -51,6 +55,7 @@ public:
 	NetworkPacket& operator <<(double value);
 	NetworkPacket& operator <<(std::wstring& value);
 	NetworkPacket& operator <<(const std::pair<char*, short>&);
+	NetworkPacket& operator <<(const Inventory::ItemStack& item);
 
 	const std::vector<char>& getPacketData() const
 	{

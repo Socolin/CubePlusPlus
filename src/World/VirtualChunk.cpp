@@ -86,6 +86,7 @@ void VirtualChunk::SendUpdate()
     for (Entity* entity : entityList)
     {
         entity->GetUpdatePositionAndRotationPacket(updatePacket);
+        entity->GetSpecificUpdatePacket(updatePacket);
     }
     if (updatePacket.getPacketSize())
     {

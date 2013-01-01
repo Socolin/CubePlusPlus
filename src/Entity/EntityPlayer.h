@@ -44,6 +44,8 @@ public:
     Inventory::InventoryPlayer& GetInventory();
     void PlaceBlock(int x, unsigned char y, int z, char face, char CursorpositionX, char CursorpositionY,char CursorpositionZ);
     void DigBlock(int state, int x, unsigned char y, int z, char face);
+    virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet);
+    void ItemInHandHasChange() { hasChangeItemInHand = true; }
 private:
     std::wstring name;
     std::queue<std::pair<int, int> > chunkToSend;

@@ -10,6 +10,7 @@
 #include <zlib.h>
 #include <cstring>
 
+#include "Inventory/ItemStack.h"
 
 namespace Network
 {
@@ -106,6 +107,16 @@ NetworkPacket& NetworkPacket::operator <<(long value)
     tmpBuffer[6] = (value >> 8) & 0xff;
     tmpBuffer[7] = value & 0xff;
     append(tmpBuffer, 8);
+    return *this;
+}
+
+NetworkPacket& NetworkPacket::operator <<(const Inventory::ItemStack& item)
+{
+    *this << (short)item.getItemId();
+    if (item.getItemId() > 0)
+    {
+        *this << (char)item.getStackSize() << (short)item.getItemData() << (short)-1 /*No nbt data*/;
+    }
     return *this;
 }
 

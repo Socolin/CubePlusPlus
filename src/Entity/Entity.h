@@ -31,6 +31,7 @@ public:
     void StopMoving();
     void Teleport(double x, double y, double z, float yaw, float pitch);
     void GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet);
+    virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) = 0;
     virtual void GetDestroyPacket(Network::NetworkPacket& packet);
     virtual void GetCreatePacket(Network::NetworkPacket& packet) = 0;
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
