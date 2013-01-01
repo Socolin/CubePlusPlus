@@ -157,8 +157,10 @@ void NetworkSession::handleHeldItemChange() throw (NetworkException)
 }
 void NetworkSession::handleAnimation() throw (NetworkException)
 {
-	readInt();
-	readByte();
+	int entityId = readInt();
+	char animationId = readByte();
+	std::cout << "handleAnimation: EID:" << entityId << " animationId:" << (int)animationId << std::endl;
+	player->PlayAnimation(animationId);
 }
 void NetworkSession::handleEntityAction() throw (NetworkException)
 {

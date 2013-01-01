@@ -13,7 +13,7 @@ namespace World
 {
 
 EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& name, Network::NetworkSession* session) :
-        LivingEntity(x, y, z), name(name), session(session)
+        LivingEntity(x, y, z), name(name), session(session),animationId(-1)
 {
 
 }
@@ -91,6 +91,7 @@ void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
     packet << (unsigned char) Network::OP_SPAWN_NAMED_ENTITY << entityId << name << networkX << networkY << networkZ << (char)  (yaw * 256.f / 360.f) << (char)  (pitch * 256.f / 360.f) << (unsigned short) 0 /* Current item*/;
     // Metadata
     packet << (char)0 << (char)0 << (unsigned char)127; // TODO: classe metadata
+    packet << (unsigned char) Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
 
     const Inventory::ItemStack& itemInHand = inventory.GetItemInHand();
     if (itemInHand.getItemId() != -1)
@@ -203,6 +204,16 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
         hasChangeItemInHand = false;
         packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << inventory.GetItemInHand();
     }
+    if (animationId >= 0)
+    {
+        packet << (unsigned char) Network::OP_ANIMATION << entityId << animationId;
+        animationId = -1;
+    }
+}
+
+void EntityPlayer::PlayAnimation(char animationId)
+{
+    this->animationId = animationId;
 }
 
 } /* namespace World */
