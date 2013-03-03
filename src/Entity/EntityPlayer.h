@@ -15,7 +15,7 @@ class NetworkSession;
 namespace World
 {
 #define DEFAULT_WALKING_SPEED 12
-#define DEFAULT_FLYING_SPEED 25
+#define DEFAULT_FLYING_SPEED 60
 class EntityPlayer: public LivingEntity
 {
     enum PlayerAbilities

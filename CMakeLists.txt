@@ -48,6 +48,7 @@ target_link_libraries(
 	cryptopp
 	z
 	config++
+	mysqlcppconn
 )
 configure_file(
 	server.cfg

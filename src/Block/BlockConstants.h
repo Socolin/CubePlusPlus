@@ -10,7 +10,8 @@ enum BlockFace
     FACE_WEST, // -X
     FACE_EAST, // +X
     FACE_NONE = -1,
-
 };
+
+#define BLOCK_COUNT 256
 
 #endif

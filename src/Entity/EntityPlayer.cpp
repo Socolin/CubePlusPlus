@@ -61,7 +61,7 @@ void EntityPlayer::JoinWorld()
     packetRespawn << (int) 0 << (int) 100 << (int) 0;
     session->SendPacket(packetRespawn);
 
-    session->SendSetAbilities(DEFAULT_WALKING_SPEED, DEFAULT_FLYING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
+    session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
 
     session->SendUpdateTime(0, 0);
 
@@ -164,6 +164,8 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
+    // Try activate block
+    // If not, try use item on block
     Inventory::ItemStack& item = inventory.GetItemInHand();
     switch (face)
     {

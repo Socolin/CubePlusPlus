@@ -2,11 +2,14 @@
 #include <Network/Opcode.h>
 #include "World/WorldManager.h"
 #include "Config/Config.h"
+#include "Block/BlockList.h"
+#include "Database/DatabaseManager.h"
 #include <iostream>
 
 int main(void)
 
 {
+    Database::DatabaseManager::InitInstance();
     Network::initOpcode();
     Network::NetworkManager manager;
     World::WorldManager* worldManager = World::WorldManager::GetInstance();
@@ -23,6 +26,7 @@ int main(void)
         std::cerr << "Not started" << std::endl;
         return 1;
     }
+    Block::BlockList::InitInstance();
 
     while (worldManager->IsRunning())
     {

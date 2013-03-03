@@ -111,6 +111,174 @@ Server/fast:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/build
 .PHONY : Server/fast
 
+src/Block/Block.o: src/Block/Block.cpp.o
+.PHONY : src/Block/Block.o
+
+# target to build an object file
+src/Block/Block.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Block.cpp.o
+.PHONY : src/Block/Block.cpp.o
+
+src/Block/Block.i: src/Block/Block.cpp.i
+.PHONY : src/Block/Block.i
+
+# target to preprocess a source file
+src/Block/Block.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Block.cpp.i
+.PHONY : src/Block/Block.cpp.i
+
+src/Block/Block.s: src/Block/Block.cpp.s
+.PHONY : src/Block/Block.s
+
+# target to generate assembly for a file
+src/Block/Block.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Block.cpp.s
+.PHONY : src/Block/Block.cpp.s
+
+src/Block/BlockList.o: src/Block/BlockList.cpp.o
+.PHONY : src/Block/BlockList.o
+
+# target to build an object file
+src/Block/BlockList.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/BlockList.cpp.o
+.PHONY : src/Block/BlockList.cpp.o
+
+src/Block/BlockList.i: src/Block/BlockList.cpp.i
+.PHONY : src/Block/BlockList.i
+
+# target to preprocess a source file
+src/Block/BlockList.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/BlockList.cpp.i
+.PHONY : src/Block/BlockList.cpp.i
+
+src/Block/BlockList.s: src/Block/BlockList.cpp.s
+.PHONY : src/Block/BlockList.s
+
+# target to generate assembly for a file
+src/Block/BlockList.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/BlockList.cpp.s
+.PHONY : src/Block/BlockList.cpp.s
+
+src/Block/BlockMaterial.o: src/Block/BlockMaterial.cpp.o
+.PHONY : src/Block/BlockMaterial.o
+
+# target to build an object file
+src/Block/BlockMaterial.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/BlockMaterial.cpp.o
+.PHONY : src/Block/BlockMaterial.cpp.o
+
+src/Block/BlockMaterial.i: src/Block/BlockMaterial.cpp.i
+.PHONY : src/Block/BlockMaterial.i
+
+# target to preprocess a source file
+src/Block/BlockMaterial.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/BlockMaterial.cpp.i
+.PHONY : src/Block/BlockMaterial.cpp.i
+
+src/Block/BlockMaterial.s: src/Block/BlockMaterial.cpp.s
+.PHONY : src/Block/BlockMaterial.s
+
+# target to generate assembly for a file
+src/Block/BlockMaterial.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/BlockMaterial.cpp.s
+.PHONY : src/Block/BlockMaterial.cpp.s
+
+src/Block/Scripts/Basics/StairScript.o: src/Block/Scripts/Basics/StairScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/StairScript.o
+
+# target to build an object file
+src/Block/Scripts/Basics/StairScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/StairScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/StairScript.cpp.o
+
+src/Block/Scripts/Basics/StairScript.i: src/Block/Scripts/Basics/StairScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/StairScript.i
+
+# target to preprocess a source file
+src/Block/Scripts/Basics/StairScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/StairScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/StairScript.cpp.i
+
+src/Block/Scripts/Basics/StairScript.s: src/Block/Scripts/Basics/StairScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/StairScript.s
+
+# target to generate assembly for a file
+src/Block/Scripts/Basics/StairScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/StairScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/StairScript.cpp.s
+
+src/Block/Scripts/BlockScript.o: src/Block/Scripts/BlockScript.cpp.o
+.PHONY : src/Block/Scripts/BlockScript.o
+
+# target to build an object file
+src/Block/Scripts/BlockScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/BlockScript.cpp.o
+.PHONY : src/Block/Scripts/BlockScript.cpp.o
+
+src/Block/Scripts/BlockScript.i: src/Block/Scripts/BlockScript.cpp.i
+.PHONY : src/Block/Scripts/BlockScript.i
+
+# target to preprocess a source file
+src/Block/Scripts/BlockScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/BlockScript.cpp.i
+.PHONY : src/Block/Scripts/BlockScript.cpp.i
+
+src/Block/Scripts/BlockScript.s: src/Block/Scripts/BlockScript.cpp.s
+.PHONY : src/Block/Scripts/BlockScript.s
+
+# target to generate assembly for a file
+src/Block/Scripts/BlockScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/BlockScript.cpp.s
+.PHONY : src/Block/Scripts/BlockScript.cpp.s
+
+src/Block/Scripts/RegisterBlockScripts.o: src/Block/Scripts/RegisterBlockScripts.cpp.o
+.PHONY : src/Block/Scripts/RegisterBlockScripts.o
+
+# target to build an object file
+src/Block/Scripts/RegisterBlockScripts.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/RegisterBlockScripts.cpp.o
+.PHONY : src/Block/Scripts/RegisterBlockScripts.cpp.o
+
+src/Block/Scripts/RegisterBlockScripts.i: src/Block/Scripts/RegisterBlockScripts.cpp.i
+.PHONY : src/Block/Scripts/RegisterBlockScripts.i
+
+# target to preprocess a source file
+src/Block/Scripts/RegisterBlockScripts.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/RegisterBlockScripts.cpp.i
+.PHONY : src/Block/Scripts/RegisterBlockScripts.cpp.i
+
+src/Block/Scripts/RegisterBlockScripts.s: src/Block/Scripts/RegisterBlockScripts.cpp.s
+.PHONY : src/Block/Scripts/RegisterBlockScripts.s
+
+# target to generate assembly for a file
+src/Block/Scripts/RegisterBlockScripts.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/RegisterBlockScripts.cpp.s
+.PHONY : src/Block/Scripts/RegisterBlockScripts.cpp.s
+
+src/Block/SoundBlock.o: src/Block/SoundBlock.cpp.o
+.PHONY : src/Block/SoundBlock.o
+
+# target to build an object file
+src/Block/SoundBlock.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/SoundBlock.cpp.o
+.PHONY : src/Block/SoundBlock.cpp.o
+
+src/Block/SoundBlock.i: src/Block/SoundBlock.cpp.i
+.PHONY : src/Block/SoundBlock.i
+
+# target to preprocess a source file
+src/Block/SoundBlock.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/SoundBlock.cpp.i
+.PHONY : src/Block/SoundBlock.cpp.i
+
+src/Block/SoundBlock.s: src/Block/SoundBlock.cpp.s
+.PHONY : src/Block/SoundBlock.s
+
+# target to generate assembly for a file
+src/Block/SoundBlock.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/SoundBlock.cpp.s
+.PHONY : src/Block/SoundBlock.cpp.s
+
 src/Chat/ChatManager.o: src/Chat/ChatManager.cpp.o
 .PHONY : src/Chat/ChatManager.o
 
@@ -158,6 +326,30 @@ src/Config/Config.s: src/Config/Config.cpp.s
 src/Config/Config.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Config/Config.cpp.s
 .PHONY : src/Config/Config.cpp.s
+
+src/Database/DatabaseManager.o: src/Database/DatabaseManager.cpp.o
+.PHONY : src/Database/DatabaseManager.o
+
+# target to build an object file
+src/Database/DatabaseManager.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Database/DatabaseManager.cpp.o
+.PHONY : src/Database/DatabaseManager.cpp.o
+
+src/Database/DatabaseManager.i: src/Database/DatabaseManager.cpp.i
+.PHONY : src/Database/DatabaseManager.i
+
+# target to preprocess a source file
+src/Database/DatabaseManager.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Database/DatabaseManager.cpp.i
+.PHONY : src/Database/DatabaseManager.cpp.i
+
+src/Database/DatabaseManager.s: src/Database/DatabaseManager.cpp.s
+.PHONY : src/Database/DatabaseManager.s
+
+# target to generate assembly for a file
+src/Database/DatabaseManager.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Database/DatabaseManager.cpp.s
+.PHONY : src/Database/DatabaseManager.cpp.s
 
 src/Entity/Entity.o: src/Entity/Entity.cpp.o
 .PHONY : src/Entity/Entity.o
@@ -303,6 +495,30 @@ src/Inventory/InventoryPlayer.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/InventoryPlayer.cpp.s
 .PHONY : src/Inventory/InventoryPlayer.cpp.s
 
+src/Inventory/Item.o: src/Inventory/Item.cpp.o
+.PHONY : src/Inventory/Item.o
+
+# target to build an object file
+src/Inventory/Item.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Item.cpp.o
+.PHONY : src/Inventory/Item.cpp.o
+
+src/Inventory/Item.i: src/Inventory/Item.cpp.i
+.PHONY : src/Inventory/Item.i
+
+# target to preprocess a source file
+src/Inventory/Item.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Item.cpp.i
+.PHONY : src/Inventory/Item.cpp.i
+
+src/Inventory/Item.s: src/Inventory/Item.cpp.s
+.PHONY : src/Inventory/Item.s
+
+# target to generate assembly for a file
+src/Inventory/Item.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Item.cpp.s
+.PHONY : src/Inventory/Item.cpp.s
+
 src/Inventory/ItemStack.o: src/Inventory/ItemStack.cpp.o
 .PHONY : src/Inventory/ItemStack.o
 
@@ -326,6 +542,78 @@ src/Inventory/ItemStack.s: src/Inventory/ItemStack.cpp.s
 src/Inventory/ItemStack.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/ItemStack.cpp.s
 .PHONY : src/Inventory/ItemStack.cpp.s
+
+src/Inventory/Scripts/Basics/ItemBlockScript.o: src/Inventory/Scripts/Basics/ItemBlockScript.cpp.o
+.PHONY : src/Inventory/Scripts/Basics/ItemBlockScript.o
+
+# target to build an object file
+src/Inventory/Scripts/Basics/ItemBlockScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Scripts/Basics/ItemBlockScript.cpp.o
+.PHONY : src/Inventory/Scripts/Basics/ItemBlockScript.cpp.o
+
+src/Inventory/Scripts/Basics/ItemBlockScript.i: src/Inventory/Scripts/Basics/ItemBlockScript.cpp.i
+.PHONY : src/Inventory/Scripts/Basics/ItemBlockScript.i
+
+# target to preprocess a source file
+src/Inventory/Scripts/Basics/ItemBlockScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Scripts/Basics/ItemBlockScript.cpp.i
+.PHONY : src/Inventory/Scripts/Basics/ItemBlockScript.cpp.i
+
+src/Inventory/Scripts/Basics/ItemBlockScript.s: src/Inventory/Scripts/Basics/ItemBlockScript.cpp.s
+.PHONY : src/Inventory/Scripts/Basics/ItemBlockScript.s
+
+# target to generate assembly for a file
+src/Inventory/Scripts/Basics/ItemBlockScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Scripts/Basics/ItemBlockScript.cpp.s
+.PHONY : src/Inventory/Scripts/Basics/ItemBlockScript.cpp.s
+
+src/Inventory/Scripts/ItemScript.o: src/Inventory/Scripts/ItemScript.cpp.o
+.PHONY : src/Inventory/Scripts/ItemScript.o
+
+# target to build an object file
+src/Inventory/Scripts/ItemScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Scripts/ItemScript.cpp.o
+.PHONY : src/Inventory/Scripts/ItemScript.cpp.o
+
+src/Inventory/Scripts/ItemScript.i: src/Inventory/Scripts/ItemScript.cpp.i
+.PHONY : src/Inventory/Scripts/ItemScript.i
+
+# target to preprocess a source file
+src/Inventory/Scripts/ItemScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Scripts/ItemScript.cpp.i
+.PHONY : src/Inventory/Scripts/ItemScript.cpp.i
+
+src/Inventory/Scripts/ItemScript.s: src/Inventory/Scripts/ItemScript.cpp.s
+.PHONY : src/Inventory/Scripts/ItemScript.s
+
+# target to generate assembly for a file
+src/Inventory/Scripts/ItemScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Scripts/ItemScript.cpp.s
+.PHONY : src/Inventory/Scripts/ItemScript.cpp.s
+
+src/Inventory/Scripts/RegisterItemScripts.o: src/Inventory/Scripts/RegisterItemScripts.cpp.o
+.PHONY : src/Inventory/Scripts/RegisterItemScripts.o
+
+# target to build an object file
+src/Inventory/Scripts/RegisterItemScripts.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Scripts/RegisterItemScripts.cpp.o
+.PHONY : src/Inventory/Scripts/RegisterItemScripts.cpp.o
+
+src/Inventory/Scripts/RegisterItemScripts.i: src/Inventory/Scripts/RegisterItemScripts.cpp.i
+.PHONY : src/Inventory/Scripts/RegisterItemScripts.i
+
+# target to preprocess a source file
+src/Inventory/Scripts/RegisterItemScripts.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Scripts/RegisterItemScripts.cpp.i
+.PHONY : src/Inventory/Scripts/RegisterItemScripts.cpp.i
+
+src/Inventory/Scripts/RegisterItemScripts.s: src/Inventory/Scripts/RegisterItemScripts.cpp.s
+.PHONY : src/Inventory/Scripts/RegisterItemScripts.s
+
+# target to generate assembly for a file
+src/Inventory/Scripts/RegisterItemScripts.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Scripts/RegisterItemScripts.cpp.s
+.PHONY : src/Inventory/Scripts/RegisterItemScripts.cpp.s
 
 src/Main/Server.o: src/Main/Server.cpp.o
 .PHONY : src/Main/Server.o
@@ -543,6 +831,54 @@ src/Network/PacketHandler.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Network/PacketHandler.cpp.s
 .PHONY : src/Network/PacketHandler.cpp.s
 
+src/Scripting/ScriptManager.o: src/Scripting/ScriptManager.cpp.o
+.PHONY : src/Scripting/ScriptManager.o
+
+# target to build an object file
+src/Scripting/ScriptManager.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Scripting/ScriptManager.cpp.o
+.PHONY : src/Scripting/ScriptManager.cpp.o
+
+src/Scripting/ScriptManager.i: src/Scripting/ScriptManager.cpp.i
+.PHONY : src/Scripting/ScriptManager.i
+
+# target to preprocess a source file
+src/Scripting/ScriptManager.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Scripting/ScriptManager.cpp.i
+.PHONY : src/Scripting/ScriptManager.cpp.i
+
+src/Scripting/ScriptManager.s: src/Scripting/ScriptManager.cpp.s
+.PHONY : src/Scripting/ScriptManager.s
+
+# target to generate assembly for a file
+src/Scripting/ScriptManager.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Scripting/ScriptManager.cpp.s
+.PHONY : src/Scripting/ScriptManager.cpp.s
+
+src/Util/AABB.o: src/Util/AABB.cpp.o
+.PHONY : src/Util/AABB.o
+
+# target to build an object file
+src/Util/AABB.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/AABB.cpp.o
+.PHONY : src/Util/AABB.cpp.o
+
+src/Util/AABB.i: src/Util/AABB.cpp.i
+.PHONY : src/Util/AABB.i
+
+# target to preprocess a source file
+src/Util/AABB.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/AABB.cpp.i
+.PHONY : src/Util/AABB.cpp.i
+
+src/Util/AABB.s: src/Util/AABB.cpp.s
+.PHONY : src/Util/AABB.s
+
+# target to generate assembly for a file
+src/Util/AABB.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/AABB.cpp.s
+.PHONY : src/Util/AABB.cpp.s
+
 src/World/Chunk.o: src/World/Chunk.cpp.o
 .PHONY : src/World/Chunk.o
 
@@ -648,12 +984,36 @@ help:
 	@echo "... Server"
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
+	@echo "... src/Block/Block.o"
+	@echo "... src/Block/Block.i"
+	@echo "... src/Block/Block.s"
+	@echo "... src/Block/BlockList.o"
+	@echo "... src/Block/BlockList.i"
+	@echo "... src/Block/BlockList.s"
+	@echo "... src/Block/BlockMaterial.o"
+	@echo "... src/Block/BlockMaterial.i"
+	@echo "... src/Block/BlockMaterial.s"
+	@echo "... src/Block/Scripts/Basics/StairScript.o"
+	@echo "... src/Block/Scripts/Basics/StairScript.i"
+	@echo "... src/Block/Scripts/Basics/StairScript.s"
+	@echo "... src/Block/Scripts/BlockScript.o"
+	@echo "... src/Block/Scripts/BlockScript.i"
+	@echo "... src/Block/Scripts/BlockScript.s"
+	@echo "... src/Block/Scripts/RegisterBlockScripts.o"
+	@echo "... src/Block/Scripts/RegisterBlockScripts.i"
+	@echo "... src/Block/Scripts/RegisterBlockScripts.s"
+	@echo "... src/Block/SoundBlock.o"
+	@echo "... src/Block/SoundBlock.i"
+	@echo "... src/Block/SoundBlock.s"
 	@echo "... src/Chat/ChatManager.o"
 	@echo "... src/Chat/ChatManager.i"
 	@echo "... src/Chat/ChatManager.s"
 	@echo "... src/Config/Config.o"
 	@echo "... src/Config/Config.i"
 	@echo "... src/Config/Config.s"
+	@echo "... src/Database/DatabaseManager.o"
+	@echo "... src/Database/DatabaseManager.i"
+	@echo "... src/Database/DatabaseManager.s"
 	@echo "... src/Entity/Entity.o"
 	@echo "... src/Entity/Entity.i"
 	@echo "... src/Entity/Entity.s"
@@ -672,9 +1032,21 @@ help:
 	@echo "... src/Inventory/InventoryPlayer.o"
 	@echo "... src/Inventory/InventoryPlayer.i"
 	@echo "... src/Inventory/InventoryPlayer.s"
+	@echo "... src/Inventory/Item.o"
+	@echo "... src/Inventory/Item.i"
+	@echo "... src/Inventory/Item.s"
 	@echo "... src/Inventory/ItemStack.o"
 	@echo "... src/Inventory/ItemStack.i"
 	@echo "... src/Inventory/ItemStack.s"
+	@echo "... src/Inventory/Scripts/Basics/ItemBlockScript.o"
+	@echo "... src/Inventory/Scripts/Basics/ItemBlockScript.i"
+	@echo "... src/Inventory/Scripts/Basics/ItemBlockScript.s"
+	@echo "... src/Inventory/Scripts/ItemScript.o"
+	@echo "... src/Inventory/Scripts/ItemScript.i"
+	@echo "... src/Inventory/Scripts/ItemScript.s"
+	@echo "... src/Inventory/Scripts/RegisterItemScripts.o"
+	@echo "... src/Inventory/Scripts/RegisterItemScripts.i"
+	@echo "... src/Inventory/Scripts/RegisterItemScripts.s"
 	@echo "... src/Main/Server.o"
 	@echo "... src/Main/Server.i"
 	@echo "... src/Main/Server.s"
@@ -702,6 +1074,12 @@ help:
 	@echo "... src/Network/PacketHandler.o"
 	@echo "... src/Network/PacketHandler.i"
 	@echo "... src/Network/PacketHandler.s"
+	@echo "... src/Scripting/ScriptManager.o"
+	@echo "... src/Scripting/ScriptManager.i"
+	@echo "... src/Scripting/ScriptManager.s"
+	@echo "... src/Util/AABB.o"
+	@echo "... src/Util/AABB.i"
+	@echo "... src/Util/AABB.s"
 	@echo "... src/World/Chunk.o"
 	@echo "... src/World/Chunk.i"
 	@echo "... src/World/Chunk.s"
