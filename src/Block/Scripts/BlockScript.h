@@ -30,7 +30,7 @@ public:
     virtual void InitParam(int paramId, float param) {}
     virtual void InitParam(int paramId, const std::string& param) {}
     virtual void OnCreate() {};
-    virtual void OnBlockPlacedBy(World::EntityPlayer* player, unsigned char data, int x, unsigned char y, int z) {}
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data) {}
     virtual BlockScript* Copy() = 0;
 private:
     Block::Block* baseBlock;

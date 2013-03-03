@@ -1,6 +1,10 @@
 #include "BlockList.h"
 #include "Database/DatabaseManager.h"
 #include "Util/StringUtil.h"
+#include "Scripts/BlockScript.h"
+#include "Scripting/ScriptManager.h"
+#include <sstream>
+
 namespace Block
 {
 
@@ -58,10 +62,64 @@ void BlockList::Load()
         int materialId = result->getInt(TableBlock::material);
         int scriptId = result->getInt(TableBlock::scriptId);
 
+        Scripting::BlockScript* script = nullptr;
+        if (scriptId > 0)
+        {
+            Scripting::ScriptManager* scriptManager = Scripting::ScriptManager::GetInstance();
+            std::string scriptName = scriptManager->GetScriptName(scriptId);
+            script = scriptManager->GetBlockScript(scriptName);
+            std::cout << "Use script:" << scriptName << " for block:" << blockId << std::endl;
+            if (script != NULL)
+            {
+                std::ostringstream request_construct;
+                request_construct << "SELECT `param`,`valueInt`,`valuefloat`,`valueStr`,`type` FROM `script_data`"
+                        "INNER JOIN script_info ON `script_info`.`scriptId` = `script_data`.`scriptId` AND `script_info`.`paramId` = `script_data`.`param`"
+                        "WHERE `script_info`.`scriptId` = " << scriptId << " AND `stuffId` = " << blockId;
+
+                sql::ResultSet* script_result = db->querry(request_construct.str());
+                while (script_result->next())
+                {
+                    int type = script_result->getInt(TableScriptData_U_ScriptInfo::type);
+                    int param = script_result->getInt(TableScriptData_U_ScriptInfo::param);
+                    switch (type)
+                    {
+                    case 0://string
+                    {
+                        std::string ValueStr = script_result->getString(TableScriptData_U_ScriptInfo::valueStr);
+                        script->InitParam(param, ValueStr);
+                        break;
+                    }
+                    case 1://int
+                    {
+                        int valueInt = script_result->getInt(TableScriptData_U_ScriptInfo::valueInt);
+                        std::cout << "\tparam:" << param << " value:" << valueInt << std::endl;
+                        script->InitParam(param, valueInt);
+                        break;
+                    }
+                    case 2://float
+                    {
+                        float valueFloat = script_result->getDouble(TableScriptData_U_ScriptInfo::valuefloat);
+                        script->InitParam(param, valueFloat);
+                        break;
+                    }
+                    default:
+                        // bug
+                        break;
+                    }
+                }
+
+                //Load script data
+            }
+            else
+            {
+                std::cerr << "ERROR: Script:" << scriptName << " not found" << std::endl;
+            }
+        }
+
         Block* block = new Block(blockId, soundList[soundId], lightOpacity,
                 lightValue, blockResistance, blockHardness, needsRandomTick,
                 slipperiness, isCollidable, isOpaqueCube, materialList[materialId],
-                nullptr);
+                script);
         std::cout << blockId << "\t"
                 << (int)lightOpacity << "\t"
                 << (int)lightValue << "\t"

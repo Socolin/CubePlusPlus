@@ -10,12 +10,15 @@ class AABB;
 }
 namespace Scripting
 {
-class BlockScripts;
+class BlockScript;
 }
-namespace Block
+namespace World
 {
 class EntityPlayer;
 class World;
+}
+namespace Block
+{
 
 class Block
 {
@@ -24,12 +27,12 @@ public:
             unsigned char lightValue, float blockResistance, float blockHardness,
             bool needsRandomTick, float slipperiness,
             bool isCollidable, bool isOpaqueCube,
-            const BlockMaterial& material, Scripting::BlockScripts* script);
+            const BlockMaterial& material, Scripting::BlockScript* script);
     virtual ~Block();
 
-    virtual void OnBlockPlace(World* world, EntityPlayer* player, int x, unsigned char y, int z, short& blockId, short& data);
-    virtual void UpdateTick(World* world, int x, unsigned char y, int z, short blockId, short data);
-
+    virtual void OnBlockPlace(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data);
+    virtual void UpdateTick(World::World* world, int x, unsigned char y, int z, short data);
+    virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, short data);
     virtual const SoundBlock& GetSound() const;
 
 private:
@@ -44,7 +47,7 @@ private:
     bool isCollidable;
     bool isOpaqueCube;
     const BlockMaterial material;
-    Scripting::BlockScripts* script;
+    Scripting::BlockScript* script;
 };
 
 } /* namespace Inventory */

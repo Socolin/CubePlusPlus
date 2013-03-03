@@ -1,7 +1,10 @@
 #include "Block.h"
 
+#include <iostream>
+
 #include "Util/AABB.h"
 #include "SoundBlock.h"
+#include "Scripts/BlockScript.h"
 
 namespace Block
 {
@@ -15,7 +18,7 @@ Block::~Block()
 Block::Block(unsigned short blockId, const SoundBlock& sound, unsigned char lightOpacity,
         unsigned char lightValue, float blockResistance, float blockHardness, bool needsRandomTick,
         float slipperiness, bool isCollidable, bool isOpaqueCube, const BlockMaterial& material,
-        Scripting::BlockScripts* script)
+        Scripting::BlockScript* script)
 : blockId(blockId)
 , sound(sound)
 , lightOpacity(lightOpacity)
@@ -31,12 +34,21 @@ Block::Block(unsigned short blockId, const SoundBlock& sound, unsigned char ligh
 {
 }
 
-void Block::OnBlockPlace(World* world, EntityPlayer* player, int x, unsigned char y, int z, short & blockId, short & data)
+void Block::OnBlockPlace(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data)
+{
+    if (script)
+    {
+        script->OnBlockPlacedBy(player, x, y, z, face, blockId, data);
+    }
+}
+
+void Block::UpdateTick(World::World* world, int x, unsigned char y, int z, short data)
 {
 }
 
-void Block::UpdateTick(World* world, int x, unsigned char y, int z, short blockId, short data)
+bool Block::CanPlace(World::World* world, int x, unsigned char y, int z, short data)
 {
+    return true;
 }
 
 const SoundBlock& Block::GetSound() const

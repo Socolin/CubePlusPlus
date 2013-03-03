@@ -33,9 +33,9 @@ void DatabaseManager::connect()
     /* alternate syntax using auto_ptr to create the db connection */
     //auto_ptr  con (driver -> connect(url, user, password));
     /* turn off the autocommit */
-    con->setAutoCommit(0);
+//    con->setAutoCommit(0);
 
-    std::cout << "\nDatabase connection\'s autocommit mode = " << con->getAutoCommit() << std::endl;
+//    std::cout << "\nDatabase connection\'s autocommit mode = " << con->getAutoCommit() << std::endl;
 
     /* select appropriate database schema */
     con->setSchema("mcpp");

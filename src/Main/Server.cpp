@@ -5,6 +5,7 @@
 #include "Block/BlockList.h"
 #include "Inventory/ItemList.h"
 #include "Database/DatabaseManager.h"
+#include "Scripting/ScriptManager.h"
 #include <iostream>
 
 int main(void)
@@ -17,6 +18,7 @@ int main(void)
     worldManager->Init();
     int port = 25565;
 
+    Scripting::ScriptManager::GetInstance()->RegisterAllScripts();
     if((Config::Config::getConfig()).lookupValue("server.network.port", port))
     {
     	std::cout << "Custom port " << port << " detected" << std::endl;

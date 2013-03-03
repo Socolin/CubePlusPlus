@@ -26,6 +26,7 @@ private:
     static ItemList* instance;
     virtual ~ItemList();
     void GenerateItemBlock();
+    void LoadScripts();
 public:
     Item* items[ITEM_COUNT];
 

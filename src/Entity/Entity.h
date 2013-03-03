@@ -42,6 +42,26 @@ public:
         return world;
     }
 
+    float getPitch() const
+    {
+        return pitch;
+    }
+
+    void setPitch(float pitch)
+    {
+        this->pitch = pitch;
+    }
+
+    float getYaw() const
+    {
+        return yaw;
+    }
+
+    void setYaw(float yaw)
+    {
+        this->yaw = yaw;
+    }
+
 protected:
     World* world;
     int entityId;

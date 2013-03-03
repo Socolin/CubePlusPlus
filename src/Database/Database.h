@@ -66,4 +66,48 @@ enum eDatabaseField
     script,
 };
 }
+
+namespace TableScript
+{
+enum eDatabaseField
+{
+    id = 1,
+    scriptName,
+    paramCount,
+};
+}
+namespace TableScriptData
+{
+enum eDatabaseField
+{
+    scriptId = 1,
+    stuffId,
+    param,
+    valueInt,
+    valuefloat,
+    valueStr,
+};
+}
+namespace TableScriptInfo
+{
+enum eDatabaseField
+{
+    scriptId = 1,
+    name,
+    paramId,
+    type,
+};
+}
+
+namespace TableScriptData_U_ScriptInfo
+{
+enum eDatabaseField
+{
+    param = 1,
+    valueInt,
+    valuefloat,
+    valueStr,
+    type,
+};
+}
 #endif /* DATABASE_H_ */

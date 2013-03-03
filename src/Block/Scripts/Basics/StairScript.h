@@ -12,6 +12,7 @@ public:
     StairScript();
     virtual ~StairScript();
     virtual BlockScript* Copy();
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data);
 };
 
 } /* namespace Scripting */

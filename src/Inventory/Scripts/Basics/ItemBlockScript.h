@@ -10,6 +10,7 @@ SET @scriptId = LAST_INSERT_ID();
 INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,1,'blockid',1);
  */
 #define SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID 1
+#define SCRIPTINGPARAM_ITEM_BLOCK_USEMETADATA 2
 namespace Scripting
 {
 
@@ -23,6 +24,7 @@ public:
     virtual void InitParam(int paramId, int param);
 private:
     int AssociatedBlockId;
+    bool UseMetadata;
 };
 
 } /* namespace Scripting */
