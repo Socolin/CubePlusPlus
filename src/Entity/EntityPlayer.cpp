@@ -169,7 +169,8 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char Cur
     // TODO check 6 block in range
     Inventory::ItemStack& itemstack = inventory.GetItemInHand();
     Inventory::Item* item = itemstack.getItem();
-    item->UseOnBlock(this, x, y, z, face, itemstack);
+    if (item != nullptr)
+        item->UseOnBlock(this, x, y, z, face, itemstack);
 }
 
 void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
