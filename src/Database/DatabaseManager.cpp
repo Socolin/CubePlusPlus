@@ -23,10 +23,12 @@ DatabaseManager::~DatabaseManager()
 
 void DatabaseManager::connect()
 {
+    if (driver != nullptr) // TODO change this, connect only if needed
+        return;
     driver = get_driver_instance();
 
     /* create a database connection using the Driver */
-    con = driver->connect("tcp://127.0.0.1:3306", "root", "mcpp");
+    con = driver->connect("tcp://127.0.0.1:3306", "mcpp", "mcpp");
 
     /* alternate syntax using auto_ptr to create the db connection */
     //auto_ptr  con (driver -> connect(url, user, password));

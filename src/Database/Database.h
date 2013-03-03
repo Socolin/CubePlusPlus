@@ -27,4 +27,43 @@ enum eDatabaseField
     soundId,
 };
 }
+namespace TableBlockSound
+{
+enum eDatabaseField
+{
+    soundId = 1,
+    name,
+    volume,
+    modifier,
+    stepSound,
+    placeSound,
+    breakSound,
+};
+}
+namespace TableBlockMaterial
+{
+enum eDatabaseField
+{
+    materialId = 1,
+    name,
+    canBurn,
+    replacable,
+    translucent,
+    requiresNoTool,
+    mobilityFlag,
+};
+}
+namespace TableItems
+{
+enum eDatabaseField
+{
+    itemId = 1,
+    name,
+    maxStackSize,
+    maxDamage,
+    hasSubType,
+    containerId,
+    script,
+};
+}
 #endif /* DATABASE_H_ */

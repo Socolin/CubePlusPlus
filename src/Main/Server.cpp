@@ -3,6 +3,7 @@
 #include "World/WorldManager.h"
 #include "Config/Config.h"
 #include "Block/BlockList.h"
+#include "Inventory/ItemList.h"
 #include "Database/DatabaseManager.h"
 #include <iostream>
 
@@ -27,6 +28,7 @@ int main(void)
         return 1;
     }
     Block::BlockList::InitInstance();
+    Inventory::ItemList::InitInstance();
 
     while (worldManager->IsRunning())
     {

@@ -1,6 +1,8 @@
 #ifndef BLOCKSCRIPTS_H_
 #define BLOCKSCRIPTS_H_
 
+#include <string>
+
 namespace Block
 {
 class Block;
@@ -24,6 +26,9 @@ public:
     virtual ~BlockScript();
     virtual void Init(Block::Block* baseBlock);
 
+    virtual void InitParam(int paramId, int param) {}
+    virtual void InitParam(int paramId, float param) {}
+    virtual void InitParam(int paramId, const std::string& param) {}
     virtual void OnCreate() {};
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, unsigned char data, int x, unsigned char y, int z) {}
     virtual BlockScript* Copy() = 0;

@@ -3,6 +3,8 @@
 #include <algorithm>
 
 #include "Block/BlockConstants.h"
+#include "Inventory/Item.h"
+#include "Inventory/ItemStack.h"
 #include "Network/NetworkSession.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
@@ -164,39 +166,10 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
-    // Try activate block
-    // If not, try use item on block
-    Inventory::ItemStack& item = inventory.GetItemInHand();
-    switch (face)
-    {
-    case FACE_BOTTOM: // -Y
-        y--;
-        break;
-    case FACE_TOP: // +Y
-        y++;
-        break;
-    case FACE_NORTH: // -Z
-        z--;
-        break;
-    case FACE_SOUTH: // +Z
-        z++;
-        break;
-    case FACE_WEST: // -X
-        x--;
-        break;
-    case FACE_EAST: // +X
-        x++;
-        break;
-    case FACE_NONE:
-        return;
-    };
-
     // TODO check 6 block in range
-    if (item.getItemId() > 0)
-    {
-        Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
-        chunk->ChangeBlock(x & 0xf, y, z & 0xf, item.getItemId(), item.getItemData());
-    }
+    Inventory::ItemStack& itemstack = inventory.GetItemInHand();
+    Inventory::Item* item = itemstack.getItem();
+    item->UseOnBlock(this, x, y, z, face, itemstack);
 }
 
 void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)

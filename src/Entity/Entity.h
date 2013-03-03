@@ -36,6 +36,12 @@ public:
     virtual void GetCreatePacket(Network::NetworkPacket& packet) = 0;
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
     virtual void moveToChunk(int newChunkX, int newChunkZ);
+
+    World* getWorld() const
+    {
+        return world;
+    }
+
 protected:
     World* world;
     int entityId;

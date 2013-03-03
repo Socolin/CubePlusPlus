@@ -1,6 +1,8 @@
 #ifndef ITEMSTACK_H_
 #define ITEMSTACK_H_
 
+#include "ItemList.h"
+
 namespace Inventory
 {
 
@@ -48,6 +50,12 @@ public:
         this->stackSize = stackSize;
     }
 
+    Item* getItem()
+    {
+        if (itemId < 0 || itemId >= ITEM_COUNT)
+            return nullptr;
+        return ItemList::Instance()->items[this->itemId];
+    }
 private:
     int itemId;
     int stackSize;

@@ -23,6 +23,8 @@ public:
     }
 
     void Load();
+    void LoadSounds();
+    void LoadMaterials();
 private:
     BlockList();
     static BlockList* instance;

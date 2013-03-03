@@ -37,11 +37,11 @@ public:
     }
 
 private:
-    const bool canBurn;
-    const bool replacable;
-    const bool translucent;
-    const bool requiresNoTool;
-    const int mobilityFlag;
+    bool canBurn;
+    bool replacable;
+    bool translucent;
+    bool requiresNoTool;
+    int mobilityFlag;
 };
 
 } /* namespace Scripting */

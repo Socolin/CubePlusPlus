@@ -519,6 +519,30 @@ src/Inventory/Item.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/Item.cpp.s
 .PHONY : src/Inventory/Item.cpp.s
 
+src/Inventory/ItemList.o: src/Inventory/ItemList.cpp.o
+.PHONY : src/Inventory/ItemList.o
+
+# target to build an object file
+src/Inventory/ItemList.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/ItemList.cpp.o
+.PHONY : src/Inventory/ItemList.cpp.o
+
+src/Inventory/ItemList.i: src/Inventory/ItemList.cpp.i
+.PHONY : src/Inventory/ItemList.i
+
+# target to preprocess a source file
+src/Inventory/ItemList.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/ItemList.cpp.i
+.PHONY : src/Inventory/ItemList.cpp.i
+
+src/Inventory/ItemList.s: src/Inventory/ItemList.cpp.s
+.PHONY : src/Inventory/ItemList.s
+
+# target to generate assembly for a file
+src/Inventory/ItemList.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Inventory/ItemList.cpp.s
+.PHONY : src/Inventory/ItemList.cpp.s
+
 src/Inventory/ItemStack.o: src/Inventory/ItemStack.cpp.o
 .PHONY : src/Inventory/ItemStack.o
 
@@ -879,6 +903,30 @@ src/Util/AABB.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/AABB.cpp.s
 .PHONY : src/Util/AABB.cpp.s
 
+src/Util/StringUtil.o: src/Util/StringUtil.cpp.o
+.PHONY : src/Util/StringUtil.o
+
+# target to build an object file
+src/Util/StringUtil.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/StringUtil.cpp.o
+.PHONY : src/Util/StringUtil.cpp.o
+
+src/Util/StringUtil.i: src/Util/StringUtil.cpp.i
+.PHONY : src/Util/StringUtil.i
+
+# target to preprocess a source file
+src/Util/StringUtil.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/StringUtil.cpp.i
+.PHONY : src/Util/StringUtil.cpp.i
+
+src/Util/StringUtil.s: src/Util/StringUtil.cpp.s
+.PHONY : src/Util/StringUtil.s
+
+# target to generate assembly for a file
+src/Util/StringUtil.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/StringUtil.cpp.s
+.PHONY : src/Util/StringUtil.cpp.s
+
 src/World/Chunk.o: src/World/Chunk.cpp.o
 .PHONY : src/World/Chunk.o
 
@@ -1035,6 +1083,9 @@ help:
 	@echo "... src/Inventory/Item.o"
 	@echo "... src/Inventory/Item.i"
 	@echo "... src/Inventory/Item.s"
+	@echo "... src/Inventory/ItemList.o"
+	@echo "... src/Inventory/ItemList.i"
+	@echo "... src/Inventory/ItemList.s"
 	@echo "... src/Inventory/ItemStack.o"
 	@echo "... src/Inventory/ItemStack.i"
 	@echo "... src/Inventory/ItemStack.s"
@@ -1080,6 +1131,9 @@ help:
 	@echo "... src/Util/AABB.o"
 	@echo "... src/Util/AABB.i"
 	@echo "... src/Util/AABB.s"
+	@echo "... src/Util/StringUtil.o"
+	@echo "... src/Util/StringUtil.i"
+	@echo "... src/Util/StringUtil.s"
 	@echo "... src/World/Chunk.o"
 	@echo "... src/World/Chunk.i"
 	@echo "... src/World/Chunk.s"
