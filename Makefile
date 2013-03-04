@@ -183,6 +183,30 @@ src/Block/BlockMaterial.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/BlockMaterial.cpp.s
 .PHONY : src/Block/BlockMaterial.cpp.s
 
+src/Block/Scripts/Basics/BlockLeverScript.o: src/Block/Scripts/Basics/BlockLeverScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockLeverScript.o
+
+# target to build an object file
+src/Block/Scripts/Basics/BlockLeverScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockLeverScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockLeverScript.cpp.o
+
+src/Block/Scripts/Basics/BlockLeverScript.i: src/Block/Scripts/Basics/BlockLeverScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockLeverScript.i
+
+# target to preprocess a source file
+src/Block/Scripts/Basics/BlockLeverScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockLeverScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockLeverScript.cpp.i
+
+src/Block/Scripts/Basics/BlockLeverScript.s: src/Block/Scripts/Basics/BlockLeverScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockLeverScript.s
+
+# target to generate assembly for a file
+src/Block/Scripts/Basics/BlockLeverScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockLeverScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockLeverScript.cpp.s
+
 src/Block/Scripts/Basics/BlockWoodScript.o: src/Block/Scripts/Basics/BlockWoodScript.cpp.o
 .PHONY : src/Block/Scripts/Basics/BlockWoodScript.o
 
@@ -1065,6 +1089,9 @@ help:
 	@echo "... src/Block/BlockMaterial.o"
 	@echo "... src/Block/BlockMaterial.i"
 	@echo "... src/Block/BlockMaterial.s"
+	@echo "... src/Block/Scripts/Basics/BlockLeverScript.o"
+	@echo "... src/Block/Scripts/Basics/BlockLeverScript.i"
+	@echo "... src/Block/Scripts/Basics/BlockLeverScript.s"
 	@echo "... src/Block/Scripts/Basics/BlockWoodScript.o"
 	@echo "... src/Block/Scripts/Basics/BlockWoodScript.i"
 	@echo "... src/Block/Scripts/Basics/BlockWoodScript.s"
