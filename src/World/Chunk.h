@@ -44,7 +44,15 @@ public:
         ChunkData* data = datas[y >> 4];
         if (data != NULL)
         {
-            return data->metadata[((y & 0xf) << 8 | z << 4 | x) << 1] & (0xf << ((x & 0x1) << 2));
+            int cellId = (y & 0xf) << 8 | z << 4 | x;
+            if ((x & 0x1) == 0)
+            {
+                return data->metadata[cellId >> 1] & 0xf;
+            }
+            else
+            {
+                return (data->metadata[cellId >> 1] & 0xf0) >> 4;
+            }
         }
         return 0;
     }
