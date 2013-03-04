@@ -74,6 +74,14 @@ public:
             return 0;
         return chunk->getBlockAt(x & 0xf, y, z & 0xf);
     }
+
+    inline int GetBlockData(int x, unsigned char y, int z)
+    {
+        Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+        if (chunk == nullptr)
+            return 0;
+        return chunk->getBlockAt(x & 0xf, y, z & 0xf);
+    }
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 
     void Unload();
