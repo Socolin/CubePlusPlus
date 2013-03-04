@@ -14,21 +14,21 @@ class NetworkSession;
 class NetworkManager
 {
 public:
-	NetworkManager();
-	virtual ~NetworkManager();
+    NetworkManager();
+    virtual ~NetworkManager();
 
-	bool StartServer(unsigned short port);
-	void ReceiveData();
-	void StopServer();
+    bool StartServer(unsigned short port);
+    void ReceiveData();
+    void StopServer();
 private:
-	void OnNewClient(int socket);
-	void OnDisconnectClient(int socket);
+    void OnNewClient(int socket);
+    void OnDisconnectClient(int socket);
 private:
-	std::unordered_map<int, NetworkSession*> sessionList;
-	int sfd, s;
-	int efd;
-	struct epoll_event event;
-	struct epoll_event *events;
+    std::unordered_map<int, NetworkSession*> sessionList;
+    int sfd, s;
+    int efd;
+    struct epoll_event event;
+    struct epoll_event *events;
 };
 }
 #endif /* NETWORKMANAGER_H_ */

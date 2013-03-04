@@ -16,17 +16,17 @@ namespace Network
 {
 
 NetworkPacket::NetworkPacket() :
-        bufferSize(32), packetData(32), packetSize(0), startCompressOffset(0)
+    bufferSize(32), packetData(32), packetSize(0), startCompressOffset(0)
 {
 
 }
 NetworkPacket::NetworkPacket(unsigned char opcode) :
-        bufferSize(32), packetData(32), packetSize(0), startCompressOffset(0)
+    bufferSize(32), packetData(32), packetSize(0), startCompressOffset(0)
 {
     append(&opcode, 1);
 }
 NetworkPacket::NetworkPacket(unsigned char opcode, size_t minSize) :
-        bufferSize(minSize), packetData(minSize), packetSize(0), startCompressOffset(0)
+    bufferSize(minSize), packetData(minSize), packetSize(0), startCompressOffset(0)
 {
     append(&opcode, 1);
 }
@@ -209,38 +209,39 @@ void NetworkPacket::startWriteCompressedData()
 }
 //err = deflateInit2(&stream, level, Z_DEFLATED, -15, 8, Z_DEFAULT_STRATEGY);
 int my_compress (Bytef *dest,   uLongf *destLen,
-        const Bytef *source, uLong sourceLen)
+                 const Bytef *source, uLong sourceLen)
 {
     z_stream stream;
-       int err;
+    int err;
 
-       stream.next_in = (Bytef*)source;
-       stream.avail_in = (uInt)sourceLen;
-   #ifdef MAXSEG_64K
-       /* Check for source > 64K on 16-bit machine: */
-       if ((uLong)stream.avail_in != sourceLen) return Z_BUF_ERROR;
-   #endif
-       stream.next_out = dest;
-       stream.avail_out = (uInt)*destLen;
-       if ((uLong)stream.avail_out != *destLen) return Z_BUF_ERROR;
+    stream.next_in = (Bytef*)source;
+    stream.avail_in = (uInt)sourceLen;
+#ifdef MAXSEG_64K
+    /* Check for source > 64K on 16-bit machine: */
+    if ((uLong)stream.avail_in != sourceLen) return Z_BUF_ERROR;
+#endif
+    stream.next_out = dest;
+    stream.avail_out = (uInt)*destLen;
+    if ((uLong)stream.avail_out != *destLen) return Z_BUF_ERROR;
 
-       stream.zalloc = (alloc_func)0;
-       stream.zfree = (free_func)0;
-       stream.opaque = (voidpf)0;
+    stream.zalloc = (alloc_func)0;
+    stream.zfree = (free_func)0;
+    stream.opaque = (voidpf)0;
 
 
-       err = deflateInit2(&stream, Z_DEFAULT_COMPRESSION, Z_DEFLATED, 15, 8, Z_DEFAULT_STRATEGY);
-       if (err != Z_OK) return err;
+    err = deflateInit2(&stream, Z_DEFAULT_COMPRESSION, Z_DEFLATED, 15, 8, Z_DEFAULT_STRATEGY);
+    if (err != Z_OK) return err;
 
-       err = deflate(&stream, Z_FINISH);
-       if (err != Z_STREAM_END) {
-           deflateEnd(&stream);
-           return err == Z_OK ? Z_BUF_ERROR : err;
-       }
-       *destLen = stream.total_out;
+    err = deflate(&stream, Z_FINISH);
+    if (err != Z_STREAM_END)
+    {
+        deflateEnd(&stream);
+        return err == Z_OK ? Z_BUF_ERROR : err;
+    }
+    *destLen = stream.total_out;
 
-       err = deflateEnd(&stream);
-       return err;
+    err = deflateEnd(&stream);
+    return err;
 }
 
 void NetworkPacket::endWriteCompressedData()

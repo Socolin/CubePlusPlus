@@ -49,7 +49,8 @@ void DatabaseManager::execute(std::string request)
     try
     {
         stmt->execute(request);
-    } catch (sql::SQLException &e)
+    }
+    catch (sql::SQLException &e)
     {
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
@@ -62,7 +63,8 @@ sql::ResultSet* DatabaseManager::querry(std::string request)
     try
     {
         return stmt->executeQuery(request);
-    } catch (sql::SQLException &e)
+    }
+    catch (sql::SQLException &e)
     {
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
@@ -76,7 +78,8 @@ void DatabaseManager::execute(sql::PreparedStatement* pstmt)
     try
     {
         pstmt->execute();
-    } catch (sql::SQLException &e)
+    }
+    catch (sql::SQLException &e)
     {
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();
@@ -89,7 +92,8 @@ sql::ResultSet* DatabaseManager::querry(sql::PreparedStatement* pstmt)
     try
     {
         return pstmt->executeQuery();
-    } catch (sql::SQLException &e)
+    }
+    catch (sql::SQLException &e)
     {
         std::cout << "# ERR: " << e.what();
         std::cout << " (MySQL error code: " << e.getErrorCode();

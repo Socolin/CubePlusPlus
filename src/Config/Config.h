@@ -11,14 +11,16 @@
 #include <iostream>
 #include <libconfig.h++>
 
-namespace Config {
+namespace Config
+{
 
-class Config {
+class Config
+{
 private:
-	Config();
-	~Config();
+    Config();
+    ~Config();
 public:
-	static libconfig::Config& getConfig();
+    static libconfig::Config& getConfig();
 };
 
 } /* namespace Config */

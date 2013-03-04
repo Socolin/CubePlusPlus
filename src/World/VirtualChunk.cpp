@@ -74,7 +74,7 @@ void VirtualChunk::SendPacketToAllNearPlayer(const Network::NetworkPacket& packe
 
 void VirtualChunk::UpdateTick()
 {
-    for (Entity* entity : entityList)
+for (Entity* entity : entityList)
     {
         entity->UpdateTick();
     }
@@ -83,7 +83,7 @@ void VirtualChunk::UpdateTick()
 void VirtualChunk::SendUpdate()
 {
     Network::NetworkPacket updatePacket;
-    for (Entity* entity : entityList)
+for (Entity* entity : entityList)
     {
         entity->GetUpdatePositionAndRotationPacket(updatePacket);
         entity->GetSpecificUpdatePacket(updatePacket);
@@ -96,7 +96,7 @@ void VirtualChunk::SendUpdate()
 
 void VirtualChunk::SendPacketToPlayerInChunk(const Network::NetworkPacket& packet) const
 {
-    for (EntityPlayer* plr : playerList)
+for (EntityPlayer* plr : playerList)
     {
         plr->Send(packet);
     }
@@ -104,7 +104,7 @@ void VirtualChunk::SendPacketToPlayerInChunk(const Network::NetworkPacket& packe
 
 void VirtualChunk::GetCreatePacketFromAllEntityInChunk(Network::NetworkPacket& packet)
 {
-    for (Entity* entity : entityList)
+for (Entity* entity : entityList)
     {
         entity->GetCreatePacket(packet);
     }
@@ -112,7 +112,7 @@ void VirtualChunk::GetCreatePacketFromAllEntityInChunk(Network::NetworkPacket& p
 
 void VirtualChunk::GetDestroyPacketFromAllEntityInChunk(Network::NetworkPacket& packet)
 {
-    for (Entity* entity : entityList)
+for (Entity* entity : entityList)
     {
         entity->GetDestroyPacket(packet);
     }

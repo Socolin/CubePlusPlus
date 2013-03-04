@@ -22,70 +22,70 @@ namespace Network
 
 class NetworkPacket
 {
-	typedef union
-	{
-		int i;
-		float f;
-	} IntToFloat;
+    typedef union
+    {
+        int i;
+        float f;
+    } IntToFloat;
 
-	typedef union
-	{
-		long l;
-		double d;
-	} LongToDouble;
+    typedef union
+    {
+        long l;
+        double d;
+    } LongToDouble;
 
 public:
-	NetworkPacket();
-	NetworkPacket(unsigned char opcode);
-	NetworkPacket(unsigned char opcode, size_t size);
-	virtual ~NetworkPacket();
+    NetworkPacket();
+    NetworkPacket(unsigned char opcode);
+    NetworkPacket(unsigned char opcode, size_t size);
+    virtual ~NetworkPacket();
 
     // Mettre en inline ?
-	void append(const void* data, std::size_t size);
+    void append(const void* data, std::size_t size);
 
-	NetworkPacket& operator <<(bool value);
-	NetworkPacket& operator <<(char value);
-	NetworkPacket& operator <<(unsigned char value);
-	NetworkPacket& operator <<(short value);
-	NetworkPacket& operator <<(unsigned short value);
-	NetworkPacket& operator <<(int value);
-	NetworkPacket& operator <<(unsigned int value);
-	NetworkPacket& operator <<(long value);
-	NetworkPacket& operator <<(float value);
-	NetworkPacket& operator <<(double value);
-	NetworkPacket& operator <<(std::wstring& value);
-	NetworkPacket& operator <<(const std::pair<char*, short>&);
-	NetworkPacket& operator <<(const Inventory::ItemStack& item);
+    NetworkPacket& operator <<(bool value);
+    NetworkPacket& operator <<(char value);
+    NetworkPacket& operator <<(unsigned char value);
+    NetworkPacket& operator <<(short value);
+    NetworkPacket& operator <<(unsigned short value);
+    NetworkPacket& operator <<(int value);
+    NetworkPacket& operator <<(unsigned int value);
+    NetworkPacket& operator <<(long value);
+    NetworkPacket& operator <<(float value);
+    NetworkPacket& operator <<(double value);
+    NetworkPacket& operator <<(std::wstring& value);
+    NetworkPacket& operator <<(const std::pair<char*, short>&);
+    NetworkPacket& operator <<(const Inventory::ItemStack& item);
 
-	const std::vector<char>& getPacketData() const
-	{
-		return packetData;
-	}
+    const std::vector<char>& getPacketData() const
+    {
+        return packetData;
+    }
 
-	size_t getPacketSize() const
-	{
-		return packetSize;
-	}
+    size_t getPacketSize() const
+    {
+        return packetSize;
+    }
 
-	void Reset()
-	{
-	    packetSize = 1;
-	}
+    void Reset()
+    {
+        packetSize = 1;
+    }
 
-	void dump() const;
+    void dump() const;
 
-	void startWriteCompressedData();
-	void endWriteCompressedData();
-	void appendCompress(char* buffer, size_t size);
+    void startWriteCompressedData();
+    void endWriteCompressedData();
+    void appendCompress(char* buffer, size_t size);
 
-	void UpdateAt(int offset, short value);
-	void UpdateAt(int offset, int value);
+    void UpdateAt(int offset, short value);
+    void UpdateAt(int offset, int value);
 private:
-	size_t bufferSize;
-	std::vector<char> packetData;
-	size_t packetSize;
-	char tmpBuffer[8]; // Buffer pour permettre d'écrire tout les type d'int sans avoir à réalouer de la place à chaque fois
-	int startCompressOffset;
+    size_t bufferSize;
+    std::vector<char> packetData;
+    size_t packetSize;
+    char tmpBuffer[8]; // Buffer pour permettre d'écrire tout les type d'int sans avoir à réalouer de la place à chaque fois
+    int startCompressOffset;
 };
 
 } /* namespace Network */

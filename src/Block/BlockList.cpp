@@ -31,21 +31,21 @@ void BlockList::Load()
 
     std::cout << "Loading block's datas" << std::endl;
     std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
-            << "blockId" << "\t"
-            << "lightOp" << "\t"
-            << "lightVa" << "\t"
-            << "blockRe" << "\t"
-            << "blockHa" << "\t"
-            << "needsRa" << "\t"
-            << "slipper" << "\t"
-            << "isColli" << "\t"
-            << "isOpaqu" << "\t"
-            << "materia" << "\t"
-            << "scriptI" << "\t"
-            << "soundId" << "\t"
-            << "name" << " "
-            << UTIL_TEXT_SHELL_NONE
-            << std::endl;
+              << "blockId" << "\t"
+              << "lightOp" << "\t"
+              << "lightVa" << "\t"
+              << "blockRe" << "\t"
+              << "blockHa" << "\t"
+              << "needsRa" << "\t"
+              << "slipper" << "\t"
+              << "isColli" << "\t"
+              << "isOpaqu" << "\t"
+              << "materia" << "\t"
+              << "scriptI" << "\t"
+              << "soundId" << "\t"
+              << "name" << " "
+              << UTIL_TEXT_SHELL_NONE
+              << std::endl;
     while(result->next())
     {
         std::string name = result->getString(TableBlock::name);
@@ -73,8 +73,8 @@ void BlockList::Load()
             {
                 std::ostringstream request_construct;
                 request_construct << "SELECT `param`,`valueInt`,`valuefloat`,`valueStr`,`type` FROM `script_data`"
-                        "INNER JOIN script_info ON `script_info`.`scriptId` = `script_data`.`scriptId` AND `script_info`.`paramId` = `script_data`.`param`"
-                        "WHERE `script_info`.`scriptId` = " << scriptId << " AND `stuffId` = " << blockId;
+                                  "INNER JOIN script_info ON `script_info`.`scriptId` = `script_data`.`scriptId` AND `script_info`.`paramId` = `script_data`.`param`"
+                                  "WHERE `script_info`.`scriptId` = " << scriptId << " AND `stuffId` = " << blockId;
 
                 sql::ResultSet* script_result = db->querry(request_construct.str());
                 while (script_result->next())
@@ -117,23 +117,23 @@ void BlockList::Load()
         }
 
         Block* block = new Block(blockId, soundList[soundId], lightOpacity,
-                lightValue, blockResistance, blockHardness, needsRandomTick,
-                slipperiness, isCollidable, isOpaqueCube, materialList[materialId],
-                script);
+                                 lightValue, blockResistance, blockHardness, needsRandomTick,
+                                 slipperiness, isCollidable, isOpaqueCube, materialList[materialId],
+                                 script);
         std::cout << blockId << "\t"
-                << (int)lightOpacity << "\t"
-                << (int)lightValue << "\t"
-                << blockResistance << "\t"
-                << blockHardness << "\t"
-                << needsRandomTick << "\t"
-                << slipperiness << "\t"
-                << isCollidable << "\t"
-                << isOpaqueCube << "\t"
-                << materialId << "\t"
-                << scriptId << "\t"
-                << soundId << "\t"
-                << name << " "
-                << std::endl;
+                  << (int)lightOpacity << "\t"
+                  << (int)lightValue << "\t"
+                  << blockResistance << "\t"
+                  << blockHardness << "\t"
+                  << needsRandomTick << "\t"
+                  << slipperiness << "\t"
+                  << isCollidable << "\t"
+                  << isOpaqueCube << "\t"
+                  << materialId << "\t"
+                  << scriptId << "\t"
+                  << soundId << "\t"
+                  << name << " "
+                  << std::endl;
         blocks[blockId] = block;
     }
 }
@@ -152,15 +152,15 @@ void BlockList::LoadSounds()
 
     std::cout << "Loading sound's datas" << std::endl;
     std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
-            << "soundId" << "\t"
-            << "volume" << "\t"
-            << "modifie" << "\t"
-            << "stepSound" << "\t"
-            << "placeSound" << "\t"
-            << "breakSound" << "\t"
-            << "name" << "\t"
-            << UTIL_TEXT_SHELL_NONE
-            << std::endl;
+              << "soundId" << "\t"
+              << "volume" << "\t"
+              << "modifie" << "\t"
+              << "stepSound" << "\t"
+              << "placeSound" << "\t"
+              << "breakSound" << "\t"
+              << "name" << "\t"
+              << UTIL_TEXT_SHELL_NONE
+              << std::endl;
     while(result->next())
     {
         std::string soundName = result->getString(TableBlockSound::name);
@@ -172,13 +172,13 @@ void BlockList::LoadSounds()
         float modifier = result->getDouble(TableBlockSound::modifier);
 
         std::cout << soundId << "\t"
-                << volume << "\t"
-                << modifier << "\t"
-                << stepSound << "\t"
-                << placeSound << "\t"
-                << breakSound << "\t"
-                << soundName << "\t"
-                << std::endl;
+                  << volume << "\t"
+                  << modifier << "\t"
+                  << stepSound << "\t"
+                  << placeSound << "\t"
+                  << breakSound << "\t"
+                  << soundName << "\t"
+                  << std::endl;
 
         std::wstring wStepSound;
         std::wstring wBreakSound;
@@ -206,15 +206,15 @@ void BlockList::LoadMaterials()
 
     std::cout << "Loading material's datas" << std::endl;
     std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
-            << "matId" << "\t"
-            << "canBurn" << "\t"
-            << "replaca" << "\t"
-            << "translu" << "\t"
-            << "NoTool" << "\t"
-            << "mobilit" << "\t"
-            << "name" << "\t"
-            << UTIL_TEXT_SHELL_NONE
-            << std::endl;
+              << "matId" << "\t"
+              << "canBurn" << "\t"
+              << "replaca" << "\t"
+              << "translu" << "\t"
+              << "NoTool" << "\t"
+              << "mobilit" << "\t"
+              << "name" << "\t"
+              << UTIL_TEXT_SHELL_NONE
+              << std::endl;
     while(result->next())
     {
         std::string name = result->getString(TableBlockMaterial::name);

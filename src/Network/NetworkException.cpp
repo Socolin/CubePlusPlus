@@ -11,12 +11,12 @@ namespace Network
 {
 
 NetworkException::NetworkException()
-  : message("unk")
+    : message("unk")
 {
 }
 
 NetworkException::NetworkException(const char* message)
-  : message(message)
+    : message(message)
 {
 }
 

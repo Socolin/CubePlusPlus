@@ -16,21 +16,21 @@ Block::~Block()
 }
 
 Block::Block(unsigned short blockId, const SoundBlock& sound, unsigned char lightOpacity,
-        unsigned char lightValue, float blockResistance, float blockHardness, bool needsRandomTick,
-        float slipperiness, bool isCollidable, bool isOpaqueCube, const BlockMaterial& material,
-        Scripting::BlockScript* script)
-: blockId(blockId)
-, sound(sound)
-, lightOpacity(lightOpacity)
-, lightValue(lightValue)
-, blockResistance(blockResistance)
-, blockHardness(blockHardness)
-, needsRandomTick(needsRandomTick)
-, slipperiness(slipperiness)
-, isCollidable(isCollidable)
-, isOpaqueCube(isOpaqueCube)
-, material(material)
-, script(script)
+             unsigned char lightValue, float blockResistance, float blockHardness, bool needsRandomTick,
+             float slipperiness, bool isCollidable, bool isOpaqueCube, const BlockMaterial& material,
+             Scripting::BlockScript* script)
+    : blockId(blockId)
+    , sound(sound)
+    , lightOpacity(lightOpacity)
+    , lightValue(lightValue)
+    , blockResistance(blockResistance)
+    , blockHardness(blockHardness)
+    , needsRandomTick(needsRandomTick)
+    , slipperiness(slipperiness)
+    , isCollidable(isCollidable)
+    , isOpaqueCube(isOpaqueCube)
+    , material(material)
+    , script(script)
 {
 }
 

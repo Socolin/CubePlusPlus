@@ -21,7 +21,7 @@ int main(void)
     Scripting::ScriptManager::GetInstance()->RegisterAllScripts();
     if((Config::Config::getConfig()).lookupValue("server.network.port", port))
     {
-    	std::cout << "Custom port " << port << " detected" << std::endl;
+        std::cout << "Custom port " << port << " detected" << std::endl;
     }
 
     if (!manager.StartServer(port))

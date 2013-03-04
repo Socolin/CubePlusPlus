@@ -16,7 +16,7 @@ namespace World
 {
 
 Chunk::Chunk(int x, int y) :
-        posX(x), posZ(y), loaded(false), cachePacket(Network::OP_CHUNK_DATA), blockChangePacket(Network::OP_MULTI_BLOCK_CHANGE), flagSectionExists(0), flagSectionUseAdd(0), inCache(false), countChange(0)
+    posX(x), posZ(y), loaded(false), cachePacket(Network::OP_CHUNK_DATA), blockChangePacket(Network::OP_MULTI_BLOCK_CHANGE), flagSectionExists(0), flagSectionUseAdd(0), inCache(false), countChange(0)
 {
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
         datas[i] = NULL;
@@ -154,33 +154,33 @@ void Chunk::GeneratePacket()
     cachePacket.startWriteCompressedData();
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
-       ChunkData* chunkData =  datas[i];
-       if (chunkData != NULL)
-           cachePacket.appendCompress((char*)chunkData->blocks,CHUNK_BLOCK_COUNT);
+        ChunkData* chunkData =  datas[i];
+        if (chunkData != NULL)
+            cachePacket.appendCompress((char*)chunkData->blocks,CHUNK_BLOCK_COUNT);
     }
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
-       ChunkData* chunkData =  datas[i];
-       if (chunkData != NULL)
-           cachePacket.appendCompress((char*)chunkData->metadata,CHUNK_BLOCK_NIBBLE_SIZE);
+        ChunkData* chunkData =  datas[i];
+        if (chunkData != NULL)
+            cachePacket.appendCompress((char*)chunkData->metadata,CHUNK_BLOCK_NIBBLE_SIZE);
     }
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
-       ChunkData* chunkData =  datas[i];
-       if (chunkData != NULL)
-           cachePacket.appendCompress((char*)chunkData->blocklight,CHUNK_BLOCK_NIBBLE_SIZE);
+        ChunkData* chunkData =  datas[i];
+        if (chunkData != NULL)
+            cachePacket.appendCompress((char*)chunkData->blocklight,CHUNK_BLOCK_NIBBLE_SIZE);
     }
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
-       ChunkData* chunkData =  datas[i];
-       if (chunkData != NULL)
-           cachePacket.appendCompress((char*)chunkData->skyLight,CHUNK_BLOCK_NIBBLE_SIZE);
+        ChunkData* chunkData =  datas[i];
+        if (chunkData != NULL)
+            cachePacket.appendCompress((char*)chunkData->skyLight,CHUNK_BLOCK_NIBBLE_SIZE);
     }
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
-       ChunkData* chunkData =  datas[i];
-       if (chunkData != NULL && chunkData->addData != NULL)
-           cachePacket.appendCompress((char*)chunkData->addData,CHUNK_BLOCK_NIBBLE_SIZE);
+        ChunkData* chunkData =  datas[i];
+        if (chunkData != NULL && chunkData->addData != NULL)
+            cachePacket.appendCompress((char*)chunkData->addData,CHUNK_BLOCK_NIBBLE_SIZE);
     }
     cachePacket.appendCompress((char*)biomeData,CHUNK_SURFACE);
 
@@ -206,7 +206,7 @@ void Chunk::SendUpdate()
         blockChangePacket.UpdateAt(9, countChange);
         blockChangePacket.UpdateAt(11, (int)(countChange * 4));
         blockChangePacket.dump();
-        for (EntityPlayer* plr : playerList)
+for (EntityPlayer* plr : playerList)
         {
             plr->Send(blockChangePacket);
         }

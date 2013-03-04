@@ -5,7 +5,7 @@
 
 namespace Network
 {
-    class NetworkPacket;
+class NetworkPacket;
 }
 namespace World
 {

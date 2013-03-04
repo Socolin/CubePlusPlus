@@ -15,7 +15,7 @@ namespace World
 {
 
 EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& name, Network::NetworkSession* session) :
-        LivingEntity(x, y, z), name(name), session(session),animationId(-1)
+    LivingEntity(x, y, z), name(name), session(session),animationId(-1)
 {
 
 }

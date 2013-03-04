@@ -3,7 +3,7 @@
 
 namespace Scripting
 {
-    void RegisterBlockScript();
+void RegisterBlockScript();
 }
 
 

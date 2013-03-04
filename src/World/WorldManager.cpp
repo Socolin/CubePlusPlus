@@ -52,7 +52,7 @@ void WorldManager::HandleChatMessage(EntityPlayer* player, std::wstring& message
 }
 
 WorldManager::WorldManager() :
-        world(NULL), isRunning(true)
+    world(NULL), isRunning(true)
 {
 
 }
@@ -85,7 +85,7 @@ void WorldManager::Stop()
 }
 void WorldManager::SendToAllPlayer(Network::NetworkPacket& packet)
 {
-    for (EntityPlayer* plr : playerList)
+for (EntityPlayer* plr : playerList)
     {
         plr->Send(packet);
     }

@@ -16,14 +16,14 @@ namespace World
 {
 
 Entity::Entity(double x, double y, double z) :
-        Position(x, y, z), world(0), entityId(0), yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false), stopMoving(false), motionX(0), motionY(0), motionZ(0)
-        , networkX(((int) x) * 32)
-        , networkY(((int) y) * 32)
-        , networkZ(((int) z) * 32)
-        , virtualChunkX(((int)x) >> 7)
-        , virtualChunkZ(((int)z) >> 7)
-        , chunkX(((int)x) >> 4)
-        , chunkZ(((int)z) >> 4)
+    Position(x, y, z), world(0), entityId(0), yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false), stopMoving(false), motionX(0), motionY(0), motionZ(0)
+    , networkX(((int) x) * 32)
+    , networkY(((int) y) * 32)
+    , networkZ(((int) z) * 32)
+    , virtualChunkX(((int)x) >> 7)
+    , virtualChunkZ(((int)z) >> 7)
+    , chunkX(((int)x) >> 4)
+    , chunkZ(((int)z) >> 4)
 {
 
 }

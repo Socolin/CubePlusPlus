@@ -9,38 +9,38 @@ namespace Network
 
 class NetworkEncryption
 {
-	static NetworkEncryption* instance;
+    static NetworkEncryption* instance;
 public:
-	static NetworkEncryption* GetInstance();
-	virtual ~NetworkEncryption();
+    static NetworkEncryption* GetInstance();
+    virtual ~NetworkEncryption();
 
-	const std::pair<char*, short>& GetCertificate() const
-	{
-		return certificate;
-	}
+    const std::pair<char*, short>& GetCertificate() const
+    {
+        return certificate;
+    }
 
-	const CryptoPP::RSA::PublicKey* getPublicKey() const
-	{
-		return publicKey;
-	}
+    const CryptoPP::RSA::PublicKey* getPublicKey() const
+    {
+        return publicKey;
+    }
 
-	const CryptoPP::RSA::PrivateKey* getPrivateKey() const
-	{
-		return privateKey;
-	}
+    const CryptoPP::RSA::PrivateKey* getPrivateKey() const
+    {
+        return privateKey;
+    }
 
-	CryptoPP::AutoSeededRandomPool& getAutoSeed()
-	{
-		return autoSeed;
-	}
+    CryptoPP::AutoSeededRandomPool& getAutoSeed()
+    {
+        return autoSeed;
+    }
 
 private:
-	NetworkEncryption();
+    NetworkEncryption();
 
-	CryptoPP::AutoSeededRandomPool autoSeed;
-	CryptoPP::RSA::PrivateKey* privateKey;
-	CryptoPP::RSA::PublicKey* publicKey;
-	std::pair<char*,short> certificate;
+    CryptoPP::AutoSeededRandomPool autoSeed;
+    CryptoPP::RSA::PrivateKey* privateKey;
+    CryptoPP::RSA::PublicKey* publicKey;
+    std::pair<char*,short> certificate;
 };
 
 } /* namespace Network */

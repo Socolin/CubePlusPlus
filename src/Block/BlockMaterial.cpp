@@ -14,7 +14,7 @@ BlockMaterial::BlockMaterial(bool canBurn, bool replacable, bool translucent, bo
 }
 
 BlockMaterial::BlockMaterial() :
-        canBurn(false), replacable(false), translucent(false), requiresNoTool(false), mobilityFlag(0)
+    canBurn(false), replacable(false), translucent(false), requiresNoTool(false), mobilityFlag(0)
 {
 }
 

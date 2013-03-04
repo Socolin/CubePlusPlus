@@ -12,7 +12,7 @@ namespace World
 {
 
 World::World() :
-        viewDistance(10), currentEntityId(10), ageOfWorld(0), currentTime(0)
+    viewDistance(10), currentEntityId(10), ageOfWorld(0), currentTime(0)
 {
 }
 
@@ -23,19 +23,19 @@ World::~World()
 // Called each tick
 void World::UpdateTick()
 {
-    for (std::pair<long, Chunk*> chunk : chunkMap)
+for (std::pair<long, Chunk*> chunk : chunkMap)
     {
         chunk.second->UpdateTick();
     }
-    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
     {
         chunk.second->UpdateTick();
     }
-    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
     {
         chunk.second->SendUpdate();
     }
-    for (std::pair<long, Chunk*> chunk : chunkMap)
+for (std::pair<long, Chunk*> chunk : chunkMap)
     {
         chunk.second->SendUpdate();
     }
@@ -117,7 +117,7 @@ VirtualChunk* World::CreateVirtualChunk(int x, int z)
 
 void World::SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const
 {
-    for (EntityPlayer* plr : playerList)
+for (EntityPlayer* plr : playerList)
     {
         plr->Send(packet);
     }
@@ -125,12 +125,12 @@ void World::SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) cons
 
 void World::Unload()
 {
-    for (std::pair<long, Chunk*> chunk : chunkMap)
+for (std::pair<long, Chunk*> chunk : chunkMap)
     {
         chunk.second->Unload();
         delete chunk.second;
     }
-    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
     {
         chunk.second->Unload();
         delete chunk.second;

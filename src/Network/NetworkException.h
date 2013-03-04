@@ -17,15 +17,15 @@ namespace Network
 class NetworkException: public std::exception
 {
 public:
-	NetworkException();
-	NetworkException(const char* message);
+    NetworkException();
+    NetworkException(const char* message);
 
-	virtual const char* what() const throw ()
-	{
-		return message.c_str();
-	}
+    virtual const char* what() const throw ()
+    {
+        return message.c_str();
+    }
 protected:
-	std::string message;
+    std::string message;
 };
 
 } /* namespace Network */

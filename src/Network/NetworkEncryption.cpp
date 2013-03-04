@@ -17,34 +17,34 @@ NetworkEncryption* NetworkEncryption::instance = NULL;
 
 NetworkEncryption* NetworkEncryption::GetInstance()
 {
-	if (instance == NULL)
-		instance = new NetworkEncryption();
-	return instance;
+    if (instance == NULL)
+        instance = new NetworkEncryption();
+    return instance;
 }
 
 NetworkEncryption::NetworkEncryption()
 {
-	std::stringstream ss;
+    std::stringstream ss;
 
-	privateKey = new CryptoPP::RSA::PrivateKey();
-	CryptoPP::Integer i(65537);
-	privateKey->Initialize(autoSeed,1024,i);
-	publicKey = new CryptoPP::RSA::PublicKey(*privateKey);
-	CryptoPP::FileSink fileSink(ss);
-	publicKey->Save(fileSink);
+    privateKey = new CryptoPP::RSA::PrivateKey();
+    CryptoPP::Integer i(65537);
+    privateKey->Initialize(autoSeed,1024,i);
+    publicKey = new CryptoPP::RSA::PublicKey(*privateKey);
+    CryptoPP::FileSink fileSink(ss);
+    publicKey->Save(fileSink);
 
 
-	std::string rStr = ss.str();
-	if (rStr.length() == 0)
-	{
-		std::cerr << "Error while generating RSA";
-	}
+    std::string rStr = ss.str();
+    if (rStr.length() == 0)
+    {
+        std::cerr << "Error while generating RSA";
+    }
 
-	char *pBuffer = new char[rStr.length()];
-	memcpy(pBuffer,rStr.c_str(),rStr.length());
+    char *pBuffer = new char[rStr.length()];
+    memcpy(pBuffer,rStr.c_str(),rStr.length());
 
-	std::cout << "rStr.length():" << rStr.length() << std::endl;
-	certificate = std::make_pair(pBuffer,(short)rStr.length());
+    std::cout << "rStr.length():" << rStr.length() << std::endl;
+    certificate = std::make_pair(pBuffer,(short)rStr.length());
 }
 
 NetworkEncryption::~NetworkEncryption()

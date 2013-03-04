@@ -16,7 +16,7 @@ namespace Network
 class NetworkExceptionData : public NetworkException
 {
 public:
-	NetworkExceptionData(const char* message);
+    NetworkExceptionData(const char* message);
 
 };
 

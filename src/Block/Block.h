@@ -24,10 +24,10 @@ class Block
 {
 public:
     Block(unsigned short blockId,const SoundBlock& sound, unsigned char lightOpacity,
-            unsigned char lightValue, float blockResistance, float blockHardness,
-            bool needsRandomTick, float slipperiness,
-            bool isCollidable, bool isOpaqueCube,
-            const BlockMaterial& material, Scripting::BlockScript* script);
+          unsigned char lightValue, float blockResistance, float blockHardness,
+          bool needsRandomTick, float slipperiness,
+          bool isCollidable, bool isOpaqueCube,
+          const BlockMaterial& material, Scripting::BlockScript* script);
     virtual ~Block();
 
     virtual void OnBlockPlace(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data);
