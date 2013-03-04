@@ -6,6 +6,13 @@
 namespace Scripting
 {
 
+/*
+ *
+INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('block_stair',0);
+ */
+#define SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID 1
+#define SCRIPTINGPARAM_ITEM_BLOCK_USEMETADATA 2
+
 class StairScript : public BlockScript
 {
 public:

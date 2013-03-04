@@ -5,9 +5,10 @@
 
 /*
  *
-INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('item_block',1);
+INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('item_block',2);
 SET @scriptId = LAST_INSERT_ID();
 INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,1,'blockid',1);
+INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,2,'UseMetadata',1);
  */
 #define SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID 1
 #define SCRIPTINGPARAM_ITEM_BLOCK_USEMETADATA 2
