@@ -56,4 +56,9 @@ const SoundBlock& Block::GetSound() const
     return sound;
 }
 
+const BlockMaterial& Block::getMaterial() const
+{
+    return material;
+}
+
 } /* namespace Inventory */

@@ -20,7 +20,6 @@ BlockScript* BlockWoodScript::Copy()
 
 void BlockWoodScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
-
     switch (face)
     {
      case FACE_BOTTOM: // -Y

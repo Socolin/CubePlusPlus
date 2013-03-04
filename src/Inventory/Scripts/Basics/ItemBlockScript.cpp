@@ -28,32 +28,42 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned ch
 {
     // Try activate block
     // If not, try use item on block
-
-    switch (face)
-    {
-    case FACE_BOTTOM: // -Y
-        y--;
-        break;
-    case FACE_TOP: // +Y
-        y++;
-        break;
-    case FACE_NORTH: // -Z
-        z--;
-        break;
-    case FACE_SOUTH: // +Z
-        z++;
-        break;
-    case FACE_WEST: // -X
-        x--;
-        break;
-    case FACE_EAST: // +X
-        x++;
-        break;
-    case FACE_NONE:
-        return false;
-    };
-
     World::World* world = user->getWorld();
+
+    int clickedBlockId = world->GetBlockId(x, y, z);
+    Block::Block* clicketBlock = Block::BlockList::Instance()->blocks[clickedBlockId];
+    if (clicketBlock != NULL && clicketBlock->getMaterial().isReplacable())
+    {
+        if (face == FACE_NONE)
+            return false;
+    }
+    else
+    {
+        switch (face)
+        {
+        case FACE_BOTTOM: // -Y
+            y--;
+            break;
+        case FACE_TOP: // +Y
+            y++;
+            break;
+        case FACE_NORTH: // -Z
+            z--;
+            break;
+        case FACE_SOUTH: // +Z
+            z++;
+            break;
+        case FACE_WEST: // -X
+            x--;
+            break;
+        case FACE_EAST: // +X
+            x++;
+            break;
+        case FACE_NONE:
+            return false;
+        };
+    }
+
     World::Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
     short metadata = 0;
     if (UseMetadata)

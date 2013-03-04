@@ -34,6 +34,7 @@ public:
     virtual void UpdateTick(World::World* world, int x, unsigned char y, int z, short data);
     virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, short data);
     virtual const SoundBlock& GetSound() const;
+    const BlockMaterial& getMaterial() const;
 
 private:
     unsigned short blockId;
