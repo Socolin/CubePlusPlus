@@ -29,12 +29,12 @@ public:
         {
             if (data->addData != NULL)
             {
-                int cellId = (y << 8 | z << 4 | x);
+                int cellId = ((y & 0xf) << 8 | z << 4 | x);
                 return data->blocks[cellId] | (data->addData[cellId << 1] & (0xf << ((x & 0x1) << 2)));
             }
             else
             {
-                return data->blocks[y << 8 | z << 4 | x];
+                return data->blocks[(y & 0xf) << 8 | z << 4 | x];
             }
         }
         return 0;
@@ -44,7 +44,7 @@ public:
         ChunkData* data = datas[y >> 4];
         if (data != NULL)
         {
-            return data->metadata[(y << 8 | z << 4 | x) << 1] & (0xf << ((x & 0x1) << 2));
+            return data->metadata[((y & 0xf) << 8 | z << 4 | x) << 1] & (0xf << ((x & 0x1) << 2));
         }
         return 0;
     }
