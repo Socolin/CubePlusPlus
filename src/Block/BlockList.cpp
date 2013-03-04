@@ -120,6 +120,8 @@ void BlockList::Load()
                                  lightValue, blockResistance, blockHardness, needsRandomTick,
                                  slipperiness, isCollidable, isOpaqueCube, materialList[materialId],
                                  script);
+        if (script != nullptr)
+            script->Init(block);
         std::cout << blockId << "\t"
                   << (int)lightOpacity << "\t"
                   << (int)lightValue << "\t"

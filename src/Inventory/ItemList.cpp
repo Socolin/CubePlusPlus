@@ -103,6 +103,8 @@ void ItemList::Load()
             }
         }
         Item* item = new Item(itemId, maxStackSize, maxDamage, hasSubType, containerId, script);
+        if (script != nullptr)
+            script->Init(item);
         std::cout << itemId << "\t"
                   << maxStackSize << "\t"
                   << maxDamage << "\t"
