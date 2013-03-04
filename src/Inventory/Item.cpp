@@ -23,11 +23,11 @@ Item::~Item()
 
 }
 
-bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item)
+bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     if (script != nullptr)
     {
-        return script->OnUseOnBlock(user, x, y, z, face, item);
+        return script->OnUseOnBlock(user, x, y, z, face, item, CursorpositionX, CursorpositionY, CursorpositionZ);
     }
     return false;
 }

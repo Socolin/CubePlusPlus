@@ -1,26 +1,21 @@
-#ifndef STAIRSCRIPT_H_
-#define STAIRSCRIPT_H_
+#ifndef BLOCKWOODSCRIPT_H_
+#define BLOCKWOODSCRIPT_H_
 
 #include "Block/Scripts/BlockScript.h"
-
 namespace Scripting
 {
 
 /*
- *
-INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('block_stair',0);
+ * INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('block_wood',0);
  */
-#define SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID 1
-#define SCRIPTINGPARAM_ITEM_BLOCK_USEMETADATA 2
-
-class StairScript : public BlockScript
+class BlockWoodScript : public BlockScript
 {
 public:
-    StairScript();
-    virtual ~StairScript();
+    BlockWoodScript();
+    virtual ~BlockWoodScript();
     virtual BlockScript* Copy();
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
 };
 
 } /* namespace Scripting */
-#endif /* STAIRSCRIPT_H_ */
+#endif /* BLOCKWOODSCRIPT_H_ */

@@ -43,7 +43,7 @@ public:
         return maxStackSize;
     }
 
-    bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item);
+    bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
 
 private:
     unsigned short itemId;

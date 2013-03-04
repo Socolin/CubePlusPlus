@@ -24,7 +24,7 @@ ItemScript* ItemBlockScript::Copy()
     return new ItemBlockScript(*this);
 }
 
-bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item)
+bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     // Try activate block
     // If not, try use item on block
@@ -65,7 +65,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned ch
         Block::Block* block = Block::BlockList::Instance()->blocks[AssociatedBlockId];
         if (block && block->CanPlace(user->getWorld(), x, y, z, metadata))
         {
-            block->OnBlockPlace(user, x, y, z,face, blockId, metadata);
+            block->OnBlockPlace(user, x, y, z,face, blockId, metadata, CursorpositionX, CursorpositionY, CursorpositionZ);
             chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, metadata);
         }
         return true;

@@ -30,7 +30,7 @@ public:
           const BlockMaterial& material, Scripting::BlockScript* script);
     virtual ~Block();
 
-    virtual void OnBlockPlace(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data);
+    virtual void OnBlockPlace(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
     virtual void UpdateTick(World::World* world, int x, unsigned char y, int z, short data);
     virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, short data);
     virtual const SoundBlock& GetSound() const;

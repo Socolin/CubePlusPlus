@@ -183,6 +183,30 @@ src/Block/BlockMaterial.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/BlockMaterial.cpp.s
 .PHONY : src/Block/BlockMaterial.cpp.s
 
+src/Block/Scripts/Basics/BlockWoodScript.o: src/Block/Scripts/Basics/BlockWoodScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockWoodScript.o
+
+# target to build an object file
+src/Block/Scripts/Basics/BlockWoodScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockWoodScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockWoodScript.cpp.o
+
+src/Block/Scripts/Basics/BlockWoodScript.i: src/Block/Scripts/Basics/BlockWoodScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockWoodScript.i
+
+# target to preprocess a source file
+src/Block/Scripts/Basics/BlockWoodScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockWoodScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockWoodScript.cpp.i
+
+src/Block/Scripts/Basics/BlockWoodScript.s: src/Block/Scripts/Basics/BlockWoodScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockWoodScript.s
+
+# target to generate assembly for a file
+src/Block/Scripts/Basics/BlockWoodScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockWoodScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockWoodScript.cpp.s
+
 src/Block/Scripts/Basics/StairScript.o: src/Block/Scripts/Basics/StairScript.cpp.o
 .PHONY : src/Block/Scripts/Basics/StairScript.o
 
@@ -1041,6 +1065,9 @@ help:
 	@echo "... src/Block/BlockMaterial.o"
 	@echo "... src/Block/BlockMaterial.i"
 	@echo "... src/Block/BlockMaterial.s"
+	@echo "... src/Block/Scripts/Basics/BlockWoodScript.o"
+	@echo "... src/Block/Scripts/Basics/BlockWoodScript.i"
+	@echo "... src/Block/Scripts/Basics/BlockWoodScript.s"
 	@echo "... src/Block/Scripts/Basics/StairScript.o"
 	@echo "... src/Block/Scripts/Basics/StairScript.i"
 	@echo "... src/Block/Scripts/Basics/StairScript.s"

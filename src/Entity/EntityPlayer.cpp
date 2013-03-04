@@ -170,7 +170,7 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char Cur
     Inventory::ItemStack& itemstack = inventory.GetItemInHand();
     Inventory::Item* item = itemstack.getItem();
     if (item != nullptr)
-        item->UseOnBlock(this, x, y, z, face, itemstack);
+        item->UseOnBlock(this, x, y, z, face, itemstack, CursorpositionX, CursorpositionY, CursorpositionZ);
 }
 
 void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)

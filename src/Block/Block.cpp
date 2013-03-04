@@ -34,11 +34,11 @@ Block::Block(unsigned short blockId, const SoundBlock& sound, unsigned char ligh
 {
 }
 
-void Block::OnBlockPlace(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data)
+void Block::OnBlockPlace(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     if (script)
     {
-        script->OnBlockPlacedBy(player, x, y, z, face, blockId, data);
+        script->OnBlockPlacedBy(player, x, y, z, face, blockId, data, CursorpositionX, CursorpositionY, CursorpositionZ);
     }
 }
 
