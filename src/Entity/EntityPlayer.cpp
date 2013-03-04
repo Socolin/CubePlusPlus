@@ -2,7 +2,9 @@
 
 #include <algorithm>
 
+#include "Block/Block.h"
 #include "Block/BlockConstants.h"
+#include "Block/BlockList.h"
 #include "Inventory/Item.h"
 #include "Inventory/ItemStack.h"
 #include "Network/NetworkSession.h"
@@ -167,10 +169,20 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     // TODO check 6 block in range
+    int clickedBlockId = world->GetBlockId(x, y, z);
+    Block::Block* block = Block::BlockList::Instance()->blocks[clickedBlockId];
     Inventory::ItemStack& itemstack = inventory.GetItemInHand();
     Inventory::Item* item = itemstack.getItem();
-    if (item != nullptr)
-        item->UseOnBlock(this, x, y, z, face, itemstack, CursorpositionX, CursorpositionY, CursorpositionZ);
+    if (face != FACE_NONE)
+    {
+        if (block)
+        {
+            if (block->UseBlock(this, x, y, z, face, itemstack, CursorpositionX, CursorpositionY, CursorpositionZ))
+                return;
+        }
+        if (item != nullptr)
+            item->UseOnBlock(this, x, y, z, face, itemstack, CursorpositionX, CursorpositionY, CursorpositionZ);
+    }
 }
 
 void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)

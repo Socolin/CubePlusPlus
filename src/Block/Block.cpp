@@ -56,6 +56,15 @@ const SoundBlock& Block::GetSound() const
     return sound;
 }
 
+bool Block::UseBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+{
+    if (script)
+    {
+        return script->OnUseBlock(user, x, y, z, face, item, CursorpositionX, CursorpositionY, CursorpositionZ);
+    }
+    return false;
+}
+
 const BlockMaterial& Block::getMaterial() const
 {
     return material;
