@@ -146,7 +146,20 @@ void Chunk::ChangeBlock(int x, unsigned char y, int z, int blockID, int blockDat
     blockChangePacket << dataChange;
     countChange++;
 }
-
+void Chunk::ChangeData(int x, unsigned char y, int z, int blockData)
+{
+    inCache = false;
+    int blockID = getBlockAt(x, y, z);
+    SetDataAt(x, y, z, blockData);
+    unsigned int dataChange = 0;
+    dataChange |= blockData       & 0x0000000f;
+    dataChange |= (blockID << 4)  & 0x0000fff0;
+    dataChange |= ((int)y << 16)  & 0x00ff0000;
+    dataChange |= ((z & 0xf) << 24)       & 0x0f000000;
+    dataChange |= ((x & 0xf) << 28)       & 0xf0000000;
+    blockChangePacket << dataChange;
+    countChange++;
+}
 void Chunk::GeneratePacket()
 {
     cachePacket.Reset();
