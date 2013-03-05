@@ -48,6 +48,10 @@ void Block::UpdateTick(World::World* world, int x, unsigned char y, int z, short
 
 bool Block::CanPlace(World::World* world, int x, unsigned char y, int z, short data)
 {
+	if (script)
+    {
+        return script->CanPlace(world, x, y, z, data);
+	}
     return true;
 }
 
