@@ -11,7 +11,8 @@ namespace Block
 BlockList* BlockList::instance = nullptr;
 BlockList::BlockList()
 {
-
+    for (int i = 0; i < BLOCK_COUNT; i++)
+        blocks[i] = nullptr;
 }
 
 void BlockList::Load()

@@ -15,7 +15,8 @@ namespace Inventory
 ItemList* ItemList::instance = nullptr;
 ItemList::ItemList()
 {
-
+    for (int i = 0; i < ITEM_COUNT; i++)
+        items[i] = nullptr;
 }
 
 void ItemList::Load()
