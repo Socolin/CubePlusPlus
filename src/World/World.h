@@ -80,7 +80,7 @@ public:
         Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
         if (chunk == nullptr)
             return 0;
-        return chunk->getBlockAt(x & 0xf, y, z & 0xf);
+        return chunk->getDataAt(x & 0xf, y, z & 0xf);
     }
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 
