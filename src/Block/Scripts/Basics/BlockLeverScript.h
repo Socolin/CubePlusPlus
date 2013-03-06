@@ -9,7 +9,7 @@ namespace Scripting
 /*
  * INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('block_lever',0);
  */
-class BlockLeverScript: public Scripting::BlockScript
+class BlockLeverScript: public BlockScript
 {
 public:
     BlockLeverScript();
