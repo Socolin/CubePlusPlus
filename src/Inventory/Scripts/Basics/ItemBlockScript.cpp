@@ -77,8 +77,12 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned ch
         {
             block->OnBlockPlace(user, x, y, z,face, blockId, metadata, CursorpositionX, CursorpositionY, CursorpositionZ);
             chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, metadata);
+            return true;
         }
-        return true;
+        else
+        {
+            user->ResetBlock(x, y, z);
+        }
     }
     return false;
 }

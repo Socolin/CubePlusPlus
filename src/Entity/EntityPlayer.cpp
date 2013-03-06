@@ -181,7 +181,16 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char Cur
                 return;
         }
         if (item != nullptr)
-            item->UseOnBlock(this, x, y, z, face, itemstack, CursorpositionX, CursorpositionY, CursorpositionZ);
+        {
+            if (item->UseOnBlock(this, x, y, z, face, itemstack, CursorpositionX, CursorpositionY, CursorpositionZ))
+            {
+
+            }
+            else
+            {
+                ResetBlock(x, y, z);
+            }
+        }
     }
 }
 
@@ -197,6 +206,22 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
         packet << (unsigned char) Network::OP_ANIMATION << entityId << animationId;
         animationId = -1;
     }
+}
+
+void EntityPlayer::ResetBlock(int x, unsigned char y, int z)
+{
+    Network::NetworkPacket packet(Network::OP_MULTI_BLOCK_CHANGE);
+    packet << (x >> 4) << (z >> 4) << (short)1 << (int)4;
+    int blockData = world->GetBlockData(x, y, z);
+    int blockID = world->GetBlockId(x, y, z);
+    unsigned int dataChange = 0;
+    dataChange |= blockData       & 0x0000000f;
+    dataChange |= (blockID << 4)  & 0x0000fff0;
+    dataChange |= ((int)y << 16)  & 0x00ff0000;
+    dataChange |= ((z & 0xf) << 24)       & 0x0f000000;
+    dataChange |= ((x & 0xf) << 28)       & 0xf0000000;
+    packet << dataChange;
+    Send(packet);
 }
 
 void EntityPlayer::PlayAnimation(char animationId)

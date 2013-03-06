@@ -40,6 +40,8 @@ public:
 
     void Kick();
 
+    void ResetBlock(int x, unsigned char y, int z);
+
     const std::wstring& GetUsername();
     Inventory::InventoryPlayer& GetInventory();
     void PlaceBlock(int x, unsigned char y, int z, char face, char CursorpositionX, char CursorpositionY,char CursorpositionZ);

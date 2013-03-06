@@ -255,6 +255,30 @@ src/Block/Scripts/Basics/StairScript.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/StairScript.cpp.s
 .PHONY : src/Block/Scripts/Basics/StairScript.cpp.s
 
+src/Block/Scripts/Basics/TorchScript.o: src/Block/Scripts/Basics/TorchScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/TorchScript.o
+
+# target to build an object file
+src/Block/Scripts/Basics/TorchScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/TorchScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/TorchScript.cpp.o
+
+src/Block/Scripts/Basics/TorchScript.i: src/Block/Scripts/Basics/TorchScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/TorchScript.i
+
+# target to preprocess a source file
+src/Block/Scripts/Basics/TorchScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/TorchScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/TorchScript.cpp.i
+
+src/Block/Scripts/Basics/TorchScript.s: src/Block/Scripts/Basics/TorchScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/TorchScript.s
+
+# target to generate assembly for a file
+src/Block/Scripts/Basics/TorchScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/TorchScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/TorchScript.cpp.s
+
 src/Block/Scripts/BlockScript.o: src/Block/Scripts/BlockScript.cpp.o
 .PHONY : src/Block/Scripts/BlockScript.o
 
@@ -1098,6 +1122,9 @@ help:
 	@echo "... src/Block/Scripts/Basics/StairScript.o"
 	@echo "... src/Block/Scripts/Basics/StairScript.i"
 	@echo "... src/Block/Scripts/Basics/StairScript.s"
+	@echo "... src/Block/Scripts/Basics/TorchScript.o"
+	@echo "... src/Block/Scripts/Basics/TorchScript.i"
+	@echo "... src/Block/Scripts/Basics/TorchScript.s"
 	@echo "... src/Block/Scripts/BlockScript.o"
 	@echo "... src/Block/Scripts/BlockScript.i"
 	@echo "... src/Block/Scripts/BlockScript.s"
