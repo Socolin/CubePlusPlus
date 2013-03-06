@@ -22,7 +22,7 @@ public:
     Chunk(int x, int y);
     virtual ~Chunk();
 
-    inline int getBlockAt(int x, int y, int z)
+    inline int getBlockAt(int x, unsigned char y, int z)
     {
         ChunkData* data = datas[y >> 4];
         if (data != NULL)
@@ -39,7 +39,7 @@ public:
         }
         return 0;
     }
-    inline int getDataAt(int x, int y, int z)
+    inline int getDataAt(int x, unsigned char y, int z)
     {
         ChunkData* data = datas[y >> 4];
         if (data != NULL)
