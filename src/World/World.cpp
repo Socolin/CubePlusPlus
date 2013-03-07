@@ -48,8 +48,6 @@ void World::AddEntity(Entity* entity)
     entity->setWorld(this, currentEntityId++);
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 8, ((int) entity->z) >> 8);
     virtualChunk->AddEntity(entity);
-    Chunk* chunk = GetChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
-    chunk->AddEntity(entity);
 }
 
 void World::AddPlayer(EntityPlayer* player)
@@ -71,8 +69,6 @@ void World::AddPlayer(EntityPlayer* player)
 
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 8, ((int) player->z) >> 8);
     virtualChunk->AddPlayer(player);
-    Chunk* chunk = GetChunk(((int) player->x) >> 4, ((int) player->z) >> 4);
-    chunk->AddEntity(player);
     player->JoinWorld();
 
 }
