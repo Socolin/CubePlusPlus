@@ -234,8 +234,12 @@ void NetworkManager::ReceiveData()
 
 void NetworkManager::StopServer()
 {
+    for (auto session : sessionList)
+    {
+    	OnDisconnectClient(session.first);
+    }
+    sessionList.clear();
     free(events);
-
     close(sfd);
 }
 

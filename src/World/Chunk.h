@@ -58,7 +58,7 @@ public:
         return 0;
     }
 
-    inline void SetBlockAt(int x, i_height y, int z, int blockID)
+    inline void SetBlockAt(int x, i_height y, int z, i_block blockID)
     {
         ChunkData* data = datas[y >> 4];
         if (data == NULL)
@@ -94,7 +94,7 @@ public:
             data->blocks[(y & 0xf) << 8 | z << 4 | x] = blockID & 0xff;
         }
     }
-    inline void SetDataAt(int x, i_height y, int z, unsigned char newData)
+    inline void SetDataAt(int x, i_height y, int z, i_data newData)
     {
         ChunkData* data = datas[y >> 4];
         if (data != NULL)
@@ -116,6 +116,8 @@ public:
     void Load();
     void AddPlayer(EntityPlayer* player);
     void RemovePlayer(EntityPlayer* player);
+    void AddEntity(Entity* player);
+    void RemoveEntity(Entity* player);
     void UpdateTick();
     void Unload();
 
@@ -188,6 +190,7 @@ private:
     std::vector<unsigned int> changedBlock;
     short countChange;
     std::set<EntityPlayer*> playerList;
+    std::set<Entity*> entityList;
 };
 
 } /* namespace Network */

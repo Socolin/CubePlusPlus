@@ -30,7 +30,6 @@ Entity::Entity(double x, double y, double z) :
 
 Entity::~Entity()
 {
-    // TODO Auto-generated destructor stub
 }
 
 void Entity::setWorld(World* world, int entityId)
@@ -86,6 +85,7 @@ void Entity::MoveTo(double x, double y, double z)
 void Entity::Teleport(double x, double y, double z, float yaw, float pitch)
 {
     Relocate(x, y, z);
+    // TODO
 }
 
 void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
@@ -184,6 +184,10 @@ void Entity::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
 
 void Entity::moveToChunk(int newChunkX, int newChunkZ)
 {
+    Chunk *oldChunk = world->GetChunk(chunkX, chunkZ);
+    oldChunk->RemoveEntity(this);
+    Chunk *chunk = world->GetChunk(newChunkX, newChunkZ);
+    chunk->AddEntity(this);
 }
 
 } /* namespace Network */
