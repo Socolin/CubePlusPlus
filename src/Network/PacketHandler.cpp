@@ -112,7 +112,7 @@ void NetworkSession::handlePlayerDigging() throw (NetworkException)
     unsigned char y = readByte();
     int z = readInt();
     char face = readByte();
-    std::cout << "handlePlayerBlockPlacement state:" << (int)state << " x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << std::endl;
+    std::cout << "handlePlayerDigging state:" << (int)state << " x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << std::endl;
     player->DigBlock(state, x, y, z, face);
 }
 
