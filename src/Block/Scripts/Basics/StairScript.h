@@ -19,7 +19,7 @@ public:
     StairScript();
     virtual ~StairScript();
     virtual BlockScript* Copy();
-    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
 };
 
 } /* namespace Scripting */

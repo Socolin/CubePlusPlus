@@ -10,6 +10,7 @@
 #define CHUNK_BLOCK_COUNT (16 * 16 * 16)
 #define CHUNK_BLOCK_NIBBLE_SIZE CHUNK_BLOCK_COUNT / 2
 
+#include "Util/types.h"
 #include "Network/NetworkPacket.h"
 
 namespace World
@@ -22,7 +23,7 @@ public:
     Chunk(int x, int y);
     virtual ~Chunk();
 
-    inline int getBlockAt(int x, unsigned char y, int z)
+    inline i_block getBlockAt(int x, i_height y, int z)
     {
         ChunkData* data = datas[y >> 4];
         if (data != NULL)
@@ -39,7 +40,7 @@ public:
         }
         return 0;
     }
-    inline int getDataAt(int x, unsigned char y, int z)
+    inline i_data getDataAt(int x, i_height y, int z)
     {
         ChunkData* data = datas[y >> 4];
         if (data != NULL)
@@ -57,7 +58,7 @@ public:
         return 0;
     }
 
-    inline void SetBlockAt(int x, int y, int z, int blockID)
+    inline void SetBlockAt(int x, i_height y, int z, int blockID)
     {
         ChunkData* data = datas[y >> 4];
         if (data == NULL)
@@ -78,14 +79,14 @@ public:
             int cellId = ((y & 0xf) << 8 | z << 4 | x);
             data->blocks[cellId] = blockID & 0xff;
 
-            unsigned char currentData = data->addData[cellId >> 1];
+            i_data currentBlock = data->addData[cellId >> 1];
             if ((x & 0x1) == 0)
             {
-                data->addData[cellId >> 1] = (currentData & 0xf0) | ((blockID >> 8) & 0xf);
+                data->addData[cellId >> 1] = (currentBlock & 0xf0) | ((blockID >> 8) & 0xf);
             }
             else
             {
-                data->addData[cellId >> 1] = (currentData & 0xf) | (((blockID >> 8) & 0xf) << 4);
+                data->addData[cellId >> 1] = (currentBlock & 0xf) | (((blockID >> 8) & 0xf) << 4);// TODO: ((blockID >> 4) & 0xf0)
             }
         }
         else
@@ -93,14 +94,14 @@ public:
             data->blocks[(y & 0xf) << 8 | z << 4 | x] = blockID & 0xff;
         }
     }
-    inline void SetDataAt(int x, int y, int z, unsigned char newData)
+    inline void SetDataAt(int x, i_height y, int z, unsigned char newData)
     {
         ChunkData* data = datas[y >> 4];
         if (data != NULL)
         {
             int cellId = (y & 0xf) << 8 | z << 4 | x;
 
-            unsigned char currentData = data->metadata[cellId >> 1];
+            i_data currentData = data->metadata[cellId >> 1];
             if ((x & 0x1) == 0)
             {
                 data->metadata[cellId >> 1] = (currentData & 0xf0) | (newData & 0xf);

@@ -67,7 +67,7 @@ public:
         return it->second;
     }
 
-    inline int GetBlockId(int x, unsigned char y, int z)
+    inline i_block GetBlockId(int x, i_height y, int z)
     {
         Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
         if (chunk == nullptr)
@@ -75,13 +75,25 @@ public:
         return chunk->getBlockAt(x & 0xf, y, z & 0xf);
     }
 
-    inline int GetBlockData(int x, unsigned char y, int z)
+    inline i_data GetBlockData(int x, i_height y, int z)
     {
         Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
         if (chunk == nullptr)
             return 0;
         return chunk->getDataAt(x & 0xf, y, z & 0xf);
     }
+
+    inline s_block_data GetBlockIdAndData(int x, i_height y, int z)
+    {
+        Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+        if (chunk == nullptr)
+            return 0;
+        s_block_data block_data;
+        block_data.blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
+        block_data.blockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
+        return block_data;
+    }
+
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 
     void Unload();

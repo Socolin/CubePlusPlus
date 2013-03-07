@@ -15,7 +15,7 @@ Block::~Block()
     // TODO Auto-generated destructor stub
 }
 
-Block::Block(unsigned short blockId, const SoundBlock& sound, unsigned char lightOpacity,
+Block::Block(i_block blockId, const SoundBlock& sound, unsigned char lightOpacity,
              unsigned char lightValue, float blockResistance, float blockHardness, bool needsRandomTick,
              float slipperiness, bool isCollidable, bool isOpaqueCube, const BlockMaterial& material,
              Scripting::BlockScript* script)
@@ -34,7 +34,7 @@ Block::Block(unsigned short blockId, const SoundBlock& sound, unsigned char ligh
 {
 }
 
-void Block::OnBlockPlace(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+void Block::OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     if (script)
     {
@@ -42,11 +42,11 @@ void Block::OnBlockPlace(World::EntityPlayer* player, int x, unsigned char y, in
     }
 }
 
-void Block::UpdateTick(World::World* world, int x, unsigned char y, int z, short data)
+void Block::UpdateTick(World::World* world, int x, i_height y, int z, i_data data)
 {
 }
 
-bool Block::CanPlace(World::World* world, int x, unsigned char y, int z, short data)
+bool Block::CanPlace(World::World* world, int x, i_height y, int z, short data)
 {
 	if (script)
     {
@@ -60,7 +60,7 @@ const SoundBlock& Block::GetSound() const
     return sound;
 }
 
-bool Block::UseBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     if (script)
     {

@@ -149,7 +149,7 @@ void Chunk::ChangeBlock(int x, unsigned char y, int z, int blockID, int blockDat
 void Chunk::ChangeData(int x, unsigned char y, int z, int blockData)
 {
     inCache = false;
-    int blockID = getBlockAt(x, y, z);
+    i_block blockID = getBlockAt(x, y, z);
     SetDataAt(x, y, z, blockData);
     unsigned int dataChange = 0;
     dataChange |= blockData       & 0x0000000f;

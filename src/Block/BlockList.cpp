@@ -50,7 +50,7 @@ void BlockList::Load()
     while(result->next())
     {
         std::string name = result->getString(TableBlock::name);
-        uint16_t blockId = result->getUInt(TableBlock::blockId);
+        i_block blockId = result->getUInt(TableBlock::blockId);
         int soundId = result->getInt(TableBlock::soundId);
         uint8_t lightOpacity = result->getUInt(TableBlock::lightOpacity);
         uint8_t lightValue = result->getUInt(TableBlock::lightValue);

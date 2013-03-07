@@ -9,14 +9,16 @@ namespace Scripting
 /*
  * INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('block_lever',0);
  */
+
+#define SCRIPT_BLOCK_LEVER_ACTIVATED(metadata) (clickedBlockData & 0x8) == 8
 class BlockLeverScript: public BlockScript
 {
 public:
     BlockLeverScript();
     virtual ~BlockLeverScript();
     virtual BlockScript* Copy();
-    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
-    virtual bool OnUseBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
+    virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
 };
 
 } /* namespace Scripting */

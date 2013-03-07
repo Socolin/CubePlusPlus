@@ -21,7 +21,7 @@ BlockScript* BlockLeverScript::Copy()
     return new BlockLeverScript(*this);
 }
 
-void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     switch (face)
     {
@@ -46,20 +46,20 @@ void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, unsig
          data = 2;
          break;
      case FACE_EAST: // +X
-         data = 1;;
+         data = 1;
          break;
      case FACE_NONE:
          return;
      }
 }
 
-bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     World::World* world = user->getWorld();
     World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
     if (chunk == nullptr)
         return 0;
-    int clickedBlockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
+    i_data clickedBlockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
     chunk->ChangeData(x & 0xf, y, z & 0xf, clickedBlockData ^ 0x8);
     return true;
 }
