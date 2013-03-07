@@ -44,7 +44,7 @@ public:
     }
 
     bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
-
+    bool Use(World::EntityPlayer* user, ItemStack& item);
 private:
     unsigned short itemId;
     unsigned int maxStackSize;

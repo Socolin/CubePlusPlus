@@ -192,6 +192,16 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char Cur
             }
         }
     }
+    else
+    {
+        if (item != nullptr)
+        {
+            if (item->Use(this, itemstack))
+            {
+
+            }
+        }
+    }
 }
 
 void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
