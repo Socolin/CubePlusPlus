@@ -30,25 +30,31 @@ void BlockDoorScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_heig
 {
     int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
 
-    int checkDoorX = x;
-    int checkDoorZ = z;
+    int leftBlockX = x;
+    int leftBlockZ = z;
+    int rightBlockX = x;
+    int rightBlockZ = z;
     switch (playerRotation)
     {
     case 0:
         data = 1;
-        checkDoorX++;
+        leftBlockX++;
+        rightBlockX--;
         break;
     case 1:
         data = 2;
-        checkDoorZ++;
+        leftBlockZ++;
+        rightBlockZ--;
         break;
     case 2:
         data = 3;
-        checkDoorX--;
+        leftBlockX--;
+        rightBlockX++;
         break;
     case 3:
         data = 0;
-        checkDoorZ--;
+        leftBlockZ--;
+        rightBlockZ++;
         break;
     }
 
@@ -57,14 +63,18 @@ void BlockDoorScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_heig
     if (chunk == nullptr)
         return;
 
-    i_block block = chunk->getBlockAt(x & 0xf, y + 1, z & 0xf);
-    if (block == 0)
+    i_block blockTop = chunk->getBlockAt(x & 0xf, y + 1, z & 0xf);
+    if (blockTop == 0)
     {
-		i_block blockLeft = world->GetBlockId(checkDoorX, y, checkDoorZ);
-        if (blockLeft == door_blockid)
+		i_block blockLeft = world->GetBlockId(leftBlockX, y, leftBlockZ);
+        i_block blockRight = world->GetBlockId(rightBlockX, y, rightBlockZ);
+        i_block blockRightTop = world->GetBlockId(rightBlockX, y + 1, rightBlockZ);
+        if (blockLeft == door_blockid || (blockLeft == 0 && (blockRight || blockRightTop)))
             chunk->ChangeBlock(x & 0xf, y + 1, z & 0xf, door_blockid, 9);
         else
+        {
             chunk->ChangeBlock(x & 0xf, y + 1, z & 0xf, door_blockid, 8);
+        }
     }
 }
 
