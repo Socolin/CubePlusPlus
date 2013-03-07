@@ -239,27 +239,6 @@ void NetworkManager::StopServer()
     close(sfd);
 }
 
-/*
- * 				sf::Unicode::Text utf(L"téstÉ");
- sf::Unicode::UTF16String test(utf);
- char data[test.length() * 2 + 3];
- data[0] = 0xff;
- data[1] = 0x0;
- data[2] = test.length();
- const short unsigned* textdata = test.c_str();
- for (size_t i = 0; i < test.length(); i++)
- {
- data[4 + i * 2] = textdata[i] & 0xff;
- data[3 + i * 2] = (textdata[i] & 0xff00) >> 16;
- }
-
- int c = send(events[i].data.fd, data, sizeof data, 0);
- if (c == -1)
- {
- return 0;
- }
- * */
-
 void NetworkManager::OnNewClient(int socket)
 {
     NetworkSession* session = new NetworkSession(socket);
