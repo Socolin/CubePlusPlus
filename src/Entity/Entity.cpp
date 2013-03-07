@@ -184,10 +184,7 @@ void Entity::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
 
 void Entity::moveToChunk(int newChunkX, int newChunkZ)
 {
-    Chunk *oldChunk = world->GetChunk(chunkX, chunkZ);
-    oldChunk->RemoveEntity(this);
-    Chunk *chunk = world->GetChunk(newChunkX, newChunkZ);
-    chunk->AddEntity(this);
+
 }
 
 } /* namespace Network */

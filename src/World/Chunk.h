@@ -16,7 +16,6 @@
 namespace World
 {
 
-class Entity;
 class EntityPlayer;
 class Chunk
 {
@@ -117,8 +116,6 @@ public:
     void Load();
     void AddPlayer(EntityPlayer* player);
     void RemovePlayer(EntityPlayer* player);
-    void AddEntity(Entity* player);
-    void RemoveEntity(Entity* player);
     void UpdateTick();
     void Unload();
 
@@ -191,7 +188,6 @@ private:
     std::vector<unsigned int> changedBlock;
     short countChange;
     std::set<EntityPlayer*> playerList;
-    std::set<Entity*> entityList;
 };
 
 } /* namespace Network */

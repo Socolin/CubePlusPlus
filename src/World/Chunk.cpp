@@ -204,24 +204,12 @@ void Chunk::GeneratePacket()
 
 void Chunk::AddPlayer(EntityPlayer* player)
 {
-	AddEntity(player);
     playerList.insert(player);
 }
 
 void Chunk::RemovePlayer(EntityPlayer* player)
 {
-	RemoveEntity(player);
     playerList.erase(player);
-}
-
-void Chunk::AddEntity(Entity* entity)
-{
-    entityList.insert(entity);
-}
-
-void Chunk::RemoveEntity(Entity* player)
-{
-	entityList.erase(player);
 }
 
 void Chunk::SendUpdate()
