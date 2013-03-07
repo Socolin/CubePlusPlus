@@ -65,10 +65,10 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned ch
     }
 
     World::Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
-    short metadata = 0;
+    i_data metadata = 0;
     if (UseMetadata)
-        metadata = item.getItemData();
-    short blockId = AssociatedBlockId;
+        metadata = item.getItemData() & 0xf;
+    i_block blockId = AssociatedBlockId;
 
     if (AssociatedBlockId < BLOCK_COUNT)
     {

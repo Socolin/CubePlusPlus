@@ -2,6 +2,7 @@
 #define ITEMSCRIPT_H_
 
 #include <string>
+#include "Util/types.h"
 
 namespace Inventory
 {

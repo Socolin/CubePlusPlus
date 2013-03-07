@@ -16,6 +16,7 @@
 namespace World
 {
 
+class Entity;
 class EntityPlayer;
 class Chunk
 {

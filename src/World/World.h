@@ -86,11 +86,16 @@ public:
     inline s_block_data GetBlockIdAndData(int x, i_height y, int z)
     {
         Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
-        if (chunk == nullptr)
-            return 0;
         s_block_data block_data;
-        block_data.blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
-        block_data.blockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
+        if (chunk != nullptr)
+        {
+            block_data.blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
+            block_data.blockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
+        }
+        else
+        {
+            block_data.blockId = 0;
+        }
         return block_data;
     }
 

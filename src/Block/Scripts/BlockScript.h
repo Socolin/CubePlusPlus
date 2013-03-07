@@ -2,6 +2,7 @@
 #define BLOCKSCRIPTS_H_
 
 #include <string>
+#include "Util/types.h"
 
 namespace Block
 {

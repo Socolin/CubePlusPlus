@@ -24,7 +24,7 @@ public:
     virtual bool OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
     virtual void InitParam(int paramId, int param);
 private:
-    int AssociatedBlockId;
+    i_block AssociatedBlockId;
     bool UseMetadata;
 };
 
