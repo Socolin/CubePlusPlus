@@ -24,7 +24,7 @@ ItemScript* ItemBlockScript::Copy()
     return new ItemBlockScript(*this);
 }
 
-bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     // Try activate block
     // If not, try use item on block
@@ -65,24 +65,33 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned ch
     }
 
     World::Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
-    i_data metadata = 0;
-    if (UseMetadata)
-        metadata = item.getItemData() & 0xf;
-    i_block blockId = AssociatedBlockId;
-
-    if (AssociatedBlockId < BLOCK_COUNT)
+    i_block currentBlock = chunk->getBlockAt(x & 0xf, y, z & 0xf);
+    if (currentBlock != 0)
     {
         Block::Block* block = Block::BlockList::Instance()->blocks[AssociatedBlockId];
-        if (block && block->CanPlace(user->getWorld(), x, y, z, metadata))
+        if (block && !block->getMaterial().isReplacable())
         {
-            block->OnBlockPlace(user, x, y, z,face, blockId, metadata, CursorpositionX, CursorpositionY, CursorpositionZ);
-            chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, metadata);
-            return true;
+            return false;
         }
-        else
-        {
-            user->ResetBlock(x, y, z);
-        }
+    }
+
+
+    i_data metadata = 0;
+    i_block blockId = AssociatedBlockId;
+
+    if (UseMetadata)
+        metadata = item.getItemData() & 0xf;
+
+    Block::Block* block = Block::BlockList::Instance()->blocks[AssociatedBlockId];
+    if (block && block->CanPlace(user->getWorld(), x, y, z, metadata))
+    {
+        block->OnBlockPlace(user, x, y, z,face, blockId, metadata, CursorpositionX, CursorpositionY, CursorpositionZ);
+        chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, metadata);
+        return true;
+    }
+    else
+    {
+        user->ResetBlock(x, y, z);
     }
     return false;
 }
@@ -93,6 +102,8 @@ void ItemBlockScript::InitParam(int paramId, int param)
     {
     case SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID:
         AssociatedBlockId = param;
+        if (AssociatedBlockId > BLOCK_COUNT)
+            AssociatedBlockId = 0;
         break;
     case SCRIPTINGPARAM_ITEM_BLOCK_USEMETADATA:
         UseMetadata = param != 0;
