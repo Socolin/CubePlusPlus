@@ -22,6 +22,10 @@ public:
         return instance;
     }
 
+    static inline Block* getBlock(i_block block)
+    {
+        return instance->blocks[block];
+    }
     void Load();
     void LoadSounds();
     void LoadMaterials();

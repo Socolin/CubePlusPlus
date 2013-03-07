@@ -18,7 +18,7 @@ BlockScript* TorchScript::Copy()
     return new TorchScript(*this);
 }
 
-bool TorchScript::CanPlace(World::World* world, int x, unsigned char y, int z, short data)
+bool TorchScript::CanPlace(World::World* world, int x, unsigned char y, int z, char face)
 {
     return false;
 }

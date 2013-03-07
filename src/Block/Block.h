@@ -38,8 +38,9 @@ public:
     virtual void OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
     virtual bool UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
     virtual void UpdateTick(World::World* world, int x, i_height y, int z, i_data data);
-    virtual bool CanPlace(World::World* world, int x, i_height y, int z, short data);// TODO: char face
+    virtual bool CanPlace(World::World* world, int x, i_height y, int z, char face);
     virtual const SoundBlock& GetSound() const;
+    virtual bool GetIsOpaqueCube();
     const BlockMaterial& getMaterial() const;
 
 private:

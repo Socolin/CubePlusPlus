@@ -26,6 +26,7 @@ public:
     virtual BlockScript* Copy();
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
     virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
+    virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, char face);
     virtual void InitParam(int paramId, int param);
 private:
     i_block door_blockid;

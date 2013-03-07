@@ -46,11 +46,11 @@ void Block::UpdateTick(World::World* world, int x, i_height y, int z, i_data dat
 {
 }
 
-bool Block::CanPlace(World::World* world, int x, i_height y, int z, short data)
+bool Block::CanPlace(World::World* world, int x, i_height y, int z, char face)
 {
 	if (script)
     {
-        return script->CanPlace(world, x, y, z, data);
+        return script->CanPlace(world, x, y, z, face);
 	}
     return true;
 }
@@ -67,6 +67,11 @@ bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char f
         return script->OnUseBlock(user, x, y, z, face, item, CursorpositionX, CursorpositionY, CursorpositionZ);
     }
     return false;
+}
+
+bool Block::GetIsOpaqueCube()
+{
+    return isOpaqueCube;
 }
 
 const BlockMaterial& Block::getMaterial() const

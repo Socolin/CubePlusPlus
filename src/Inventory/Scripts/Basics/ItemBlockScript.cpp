@@ -83,7 +83,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
         metadata = item.getItemData() & 0xf;
 
     Block::Block* block = Block::BlockList::Instance()->blocks[AssociatedBlockId];
-    if (block && block->CanPlace(user->getWorld(), x, y, z, metadata))
+    if (block && block->CanPlace(user->getWorld(), x, y, z, face))
     {
         block->OnBlockPlace(user, x, y, z,face, blockId, metadata, CursorpositionX, CursorpositionY, CursorpositionZ);
         chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, metadata);
