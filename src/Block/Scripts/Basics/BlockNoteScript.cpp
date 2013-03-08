@@ -52,8 +52,8 @@ bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, i
                 }
             }
             double pitch = std::pow(2.0, (note - 12.0) / 12.0);
-            world->PlaySound(x + 0.5, y + 0.5, z + 0.5, soundName[materialSoundId], 1.f, pitch * 64, 3);
-            world->PlayBlockAction(x, y, z, materialSoundId + 1, note, baseBlock->GetBlockId(), 3);
+            world->PlaySound(x + 0.5, y + 0.5, z + 0.5, soundName[materialSoundId], 3.f, pitch * 64, 3);
+            world->PlayBlockAction(x, y, z, materialSoundId + 1, note, baseBlock->GetBlockId(), 2);
         }
     }
     return true;
