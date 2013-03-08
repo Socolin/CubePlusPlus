@@ -134,7 +134,7 @@ NetworkPacket& NetworkPacket::operator <<(double value)
     return (*this << conv.l);
 }
 
-NetworkPacket& NetworkPacket::operator <<(std::wstring& value)
+NetworkPacket& NetworkPacket::operator <<(const std::wstring& value)
 {
     short strLenght = value.size();
     tmpBuffer[0] = (strLenght >> 8) & 0xff;

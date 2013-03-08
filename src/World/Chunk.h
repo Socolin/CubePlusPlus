@@ -121,8 +121,8 @@ public:
 
     const Network::NetworkPacket& GetPacket();
 
-    void ChangeBlock(int x, unsigned char y, int z, int blockID, int blockData);
-    void ChangeData(int x, unsigned char y, int z, int blockData);
+    void ChangeBlock(int x, i_height y, int z, i_block blockID, i_data blockData);
+    void ChangeData(int x, i_height y, int z, i_data blockData);
     void SendUpdate();
 private:
     void GeneratePacket();

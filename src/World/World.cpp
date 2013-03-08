@@ -3,6 +3,8 @@
 #include <sstream>
 
 #include "Chunk.h"
+#include "Block/Block.h"
+#include "Block/BlockList.h"
 #include "Entity/EntityPlayer.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
@@ -110,6 +112,22 @@ void World::RemovePlayer(EntityPlayer* player)
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->RemovePlayer(player);
     player->setWorld(NULL, 0);
+}
+
+void World::PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockData)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, blockData);
+    Block::Block* block = Block::BlockList::getBlock(blockId);
+    if (block)
+    {
+        const Block::SoundBlock& sound = block->GetSound();
+        Network::NetworkPacket soundPacket(Network::OP_NAMED_SOUND_EFFECT);
+        soundPacket << sound.GetPlaceSound() << (x * 8) << (y * 8) << (z * 8)
+                << sound.GetVolume() << (unsigned char)(sound.GetModifier() * 63.f);
+        VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(x >> 4, z >> 4);
+        vSmallChunk->SendPacketToAllNearPlayer(soundPacket);
+    }
 }
 
 Chunk* World::LoadChunk(int x, int z)

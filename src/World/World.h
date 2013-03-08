@@ -130,7 +130,7 @@ public:
         }
         return block_data;
     }
-
+    void PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockData);
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 
     void Unload();

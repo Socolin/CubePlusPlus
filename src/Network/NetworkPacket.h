@@ -53,7 +53,7 @@ public:
     NetworkPacket& operator <<(long value);
     NetworkPacket& operator <<(float value);
     NetworkPacket& operator <<(double value);
-    NetworkPacket& operator <<(std::wstring& value);
+    NetworkPacket& operator <<(const std::wstring& value);
     NetworkPacket& operator <<(const std::pair<char*, short>&);
     NetworkPacket& operator <<(const Inventory::ItemStack& item);
 

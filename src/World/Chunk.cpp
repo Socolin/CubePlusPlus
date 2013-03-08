@@ -132,7 +132,7 @@ const Network::NetworkPacket& Chunk::GetPacket()
     return cachePacket;
 }
 
-void Chunk::ChangeBlock(int x, unsigned char y, int z, int blockID, int blockData)
+void Chunk::ChangeBlock(int x, i_height y, int z, i_block blockID, i_data blockData)
 {
     inCache = false;
     SetBlockAt(x, y, z, blockID);
@@ -146,7 +146,7 @@ void Chunk::ChangeBlock(int x, unsigned char y, int z, int blockID, int blockDat
     blockChangePacket << dataChange;
     countChange++;
 }
-void Chunk::ChangeData(int x, unsigned char y, int z, int blockData)
+void Chunk::ChangeData(int x, i_height y, int z, i_data blockData)
 {
     inCache = false;
     i_block blockID = getBlockAt(x, y, z);

@@ -64,8 +64,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
         };
     }
 
-    World::Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
-    i_block currentBlock = chunk->getBlockAt(x & 0xf, y, z & 0xf);
+    i_block currentBlock = world->GetBlockId(x, y, z);
     if (currentBlock != 0)
     {
         Block::Block* block = Block::BlockList::Instance()->blocks[AssociatedBlockId];
@@ -86,7 +85,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     if (block && block->CanPlace(user->getWorld(), x, y, z, face))
     {
         block->OnBlockPlace(user, x, y, z,face, blockId, metadata, CursorpositionX, CursorpositionY, CursorpositionZ);
-        chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, metadata);
+        world->PlaceBlock(x, y, z, blockId, metadata);
         return true;
     }
     else
