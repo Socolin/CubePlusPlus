@@ -19,6 +19,7 @@ class Chunk;
 class Entity;
 class EntityPlayer;
 class VirtualChunk;
+class VirtualSmallChunk;
 
 class World
 {
@@ -30,8 +31,7 @@ public:
     void AddPlayer(EntityPlayer* entity);
     void RemoveEntity(Entity* entity);
     void RemovePlayer(EntityPlayer* entity);
-    Chunk* LoadChunk(int x, int z);
-    VirtualChunk* CreateVirtualChunk(int x, int z);
+
 
     inline Chunk* GetChunk(int x, int z)
     {
@@ -63,6 +63,38 @@ public:
             VirtualChunk* vChunk = CreateVirtualChunk(x, z);
             virtualChunkMap[CHUNK_KEY(x,z)] = vChunk;
             return vChunk;
+        }
+        return it->second;
+    }
+
+    inline VirtualChunk* GetVirtualChunkIfLoaded(int x, int z)
+    {
+        auto it = virtualChunkMap.find(CHUNK_KEY(x,z));
+        if (it == virtualChunkMap.end())
+        {
+            return nullptr;
+        }
+        return it->second;
+    }
+
+    inline VirtualSmallChunk* GetVirtualSmallChunk(int x, int z)
+    {
+        auto it = virtualSmallChunkMap.find(CHUNK_KEY(x,z));
+        if (it == virtualSmallChunkMap.end())
+        {
+            VirtualSmallChunk* vChunk = CreateVirtualSmallChunk(x, z);
+            virtualSmallChunkMap[CHUNK_KEY(x,z)] = vChunk;
+            return vChunk;
+        }
+        return it->second;
+    }
+
+    inline VirtualSmallChunk* GetVirtualSmallChunkIfLoaded(int x, int z)
+    {
+        auto it = virtualSmallChunkMap.find(CHUNK_KEY(x,z));
+        if (it == virtualSmallChunkMap.end())
+        {
+            return nullptr;
         }
         return it->second;
     }
@@ -106,9 +138,13 @@ public:
     int getViewDistance();
 private:
     void UpdateTime();
+    VirtualChunk* CreateVirtualChunk(int x, int z);
+    VirtualSmallChunk* CreateVirtualSmallChunk(int x, int z);
+    Chunk* LoadChunk(int x, int z);
 private:
     std::unordered_map<long, Chunk*> chunkMap;
     std::unordered_map<long, VirtualChunk*> virtualChunkMap;
+    std::unordered_map<long, VirtualSmallChunk*> virtualSmallChunkMap;
     std::set<EntityPlayer*> playerList;
     int viewDistance; // In chunk
     int currentEntityId;

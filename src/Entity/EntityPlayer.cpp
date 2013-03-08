@@ -11,6 +11,7 @@
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "World/VirtualChunk.h"
+#include "World/VirtualSmallChunk.h"
 #include "World/World.h"
 
 namespace World
@@ -111,6 +112,11 @@ void EntityPlayer::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ
 }
 void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
 {
+
+    VirtualSmallChunk*oldVChunk = world->GetVirtualSmallChunk(chunkX, chunkZ);
+    oldVChunk->RemovePlayer(this);
+    VirtualSmallChunk *vChunk = world->GetVirtualSmallChunk(newChunkX, newChunkZ);
+    vChunk->AddPlayer(this);
     int viewDistance = world->getViewDistance();
     if (newChunkX != chunkX)
     {

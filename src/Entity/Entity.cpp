@@ -10,6 +10,7 @@
 #include "Network/Opcode.h"
 #include "Network/NetworkPacket.h"
 #include "World/VirtualChunk.h"
+#include "World/VirtualSmallChunk.h"
 #include "World/World.h"
 
 namespace World
@@ -184,7 +185,10 @@ void Entity::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
 
 void Entity::moveToChunk(int newChunkX, int newChunkZ)
 {
-
+    VirtualSmallChunk*oldVChunk = world->GetVirtualSmallChunk(chunkX, chunkZ);
+    oldVChunk->RemoveEntity(this);
+    VirtualSmallChunk *vChunk = world->GetVirtualSmallChunk(newChunkX, newChunkZ);
+    vChunk->AddEntity(this);
 }
 
 } /* namespace Network */

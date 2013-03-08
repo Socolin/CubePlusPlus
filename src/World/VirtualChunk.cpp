@@ -39,8 +39,9 @@ void VirtualChunk::AddPlayer(EntityPlayer* player)
     for (int x = posX - 1; x <= posX + 1; x++)
         for (int z = posZ - 1; z <= posZ + 1; z++)
         {
-            VirtualChunk* chunk = world->GetVirtualChunk(x, z);
-            chunk->GetCreatePacketFromAllEntityInChunk(entityJoinPacket);
+            VirtualChunk* chunk = world->GetVirtualChunkIfLoaded(x, z);
+            if (chunk)
+                chunk->GetCreatePacketFromAllEntityInChunk(entityJoinPacket);
         }
     if (entityJoinPacket.getPacketSize())
         player->Send(entityJoinPacket);
@@ -56,8 +57,9 @@ void VirtualChunk::RemovePlayer(EntityPlayer* player)
     for (int x = posX - 1; x <= posX + 1; x++)
         for (int z = posZ - 1; z <= posZ + 1; z++)
         {
-            VirtualChunk* chunk = world->GetVirtualChunk(x, z);
-            chunk->GetDestroyPacketFromAllEntityInChunk(entityDestroyPacket);
+            VirtualChunk* chunk = world->GetVirtualChunkIfLoaded(x, z);
+            if (chunk)
+                chunk->GetDestroyPacketFromAllEntityInChunk(entityDestroyPacket);
         }
     player->Send(entityDestroyPacket);
 }
@@ -67,8 +69,9 @@ void VirtualChunk::SendPacketToAllNearPlayer(const Network::NetworkPacket& packe
     for (int x = posX - 1; x <= posX + 1; x++)
         for (int z = posZ - 1; z <= posZ + 1; z++)
         {
-            VirtualChunk* chunk = world->GetVirtualChunk(x, z);
-            chunk->SendPacketToPlayerInChunk(packet);
+            VirtualChunk* chunk = world->GetVirtualChunkIfLoaded(x, z);
+            if (chunk)
+                chunk->SendPacketToPlayerInChunk(packet);
         }
 }
 
