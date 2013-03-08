@@ -114,7 +114,7 @@ void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
     int viewDistance = world->getViewDistance();
     if (newChunkX != chunkX)
     {
-        int offsetX = newChunkX - chunkX;
+        int offsetX = newChunkX - chunkX; // -1 or 1
         int xRemove = chunkX - viewDistance * offsetX;
         int xAdd = newChunkX + viewDistance * offsetX;
         for (int z = chunkZ - viewDistance; z <= chunkZ + viewDistance; z++)
@@ -128,10 +128,10 @@ void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
     }
     if (newChunkZ != chunkZ) // Déplacement sur l'axe Z
     {
-        int offsetZ = newChunkZ - chunkZ;
+        int offsetZ = newChunkZ - chunkZ;// -1 or 1
         int zRemove = chunkZ - viewDistance * offsetZ;
         int zAdd = newChunkZ + viewDistance * offsetZ;
-        for (int x = chunkX - viewDistance; x <= chunkX + viewDistance; x++)
+        for (int x = newChunkX - viewDistance; x <= newChunkX + viewDistance; x++)
         {
             Chunk* chunk = world->GetChunk(zAdd, x);
             chunk->AddPlayer(this);
