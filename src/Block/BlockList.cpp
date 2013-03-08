@@ -121,8 +121,6 @@ void BlockList::Load()
                                  lightValue, blockResistance, blockHardness, needsRandomTick,
                                  slipperiness, isCollidable, isOpaqueCube, materialList[materialId],
                                  script);
-        if (script != nullptr)
-            script->Init(block);
         std::cout << blockId << "\t"
                   << (int)lightOpacity << "\t"
                   << (int)lightValue << "\t"
@@ -138,6 +136,14 @@ void BlockList::Load()
                   << name << " "
                   << std::endl;
         blocks[blockId] = block;
+    }
+
+    for (i_block id = 0; id < BLOCK_COUNT; id++)
+    {
+        if (blocks[id])
+        {
+            blocks[id]->InitScript();
+        }
     }
 }
 
@@ -238,10 +244,7 @@ void BlockList::LoadMaterials()
                 << name << "\t"
                 << std::endl;
 
-        std::wstring wStepSound;
-        std::wstring wBreakSound;
-        std::wstring wPlaceSound;
-        materialList[materialId] = BlockMaterial(canBurn, replacable, translucent, requiresNoTool, mobilityFlag);
+        materialList[materialId] = BlockMaterial(materialId, canBurn, replacable, translucent, requiresNoTool, mobilityFlag);
     }
 }
 

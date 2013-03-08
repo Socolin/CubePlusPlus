@@ -26,6 +26,7 @@ public:
     void RemovePlayer(EntityPlayer* player);
 
     void SendPacketToAllNearPlayer(const Network::NetworkPacket& packet) const;
+    void SendPacketToAllNearPlayer(const Network::NetworkPacket& packet, int distanceChunk) const;
     void SendPacketToPlayerInChunk(const Network::NetworkPacket& packet) const;
 
     void Unload();

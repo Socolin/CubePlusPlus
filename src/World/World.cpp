@@ -124,10 +124,31 @@ void World::PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockDa
         const Block::SoundBlock& sound = block->GetSound();
         Network::NetworkPacket soundPacket(Network::OP_NAMED_SOUND_EFFECT);
         soundPacket << sound.GetPlaceSound() << (x * 8) << (y * 8) << (z * 8)
-                << sound.GetVolume() << (unsigned char)(sound.GetModifier() * 63.f);
+                << sound.GetVolume() << (char)(sound.GetModifier() * 63.f);
         VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(x >> 4, z >> 4);
         vSmallChunk->SendPacketToAllNearPlayer(soundPacket);
+        if (block->UseTileEntity())
+        {
+            Block::TileEntity* tileEntity = block->CreateNewTileEntity();
+            chunk->SetTileEntity(tileEntity ,x & 0xf, y, z & 0xf);
+        }
     }
+}
+
+void World::PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, char modifier, unsigned char distanceChunk)
+{
+    VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(((int)x) >> 4, ((int)z) >> 4);
+    Network::NetworkPacket soundPacket(Network::OP_NAMED_SOUND_EFFECT);
+    soundPacket << soundName << (int)(x * 8) << (int)(y * 8) << (int)(z * 8) << volume << modifier;
+    vSmallChunk->SendPacketToAllNearPlayer(soundPacket, distanceChunk);
+}
+
+void World::PlayBlockAction(int x, short y, int z, char type, char modifier, i_block blockId, char distanceChunk)
+{
+    VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(((int)x) >> 4, ((int)z) >> 4);
+    Network::NetworkPacket particlePacket(Network::OP_BLOCK_ACTION);
+    particlePacket << x << y << z << type << modifier << blockId;
+    vSmallChunk->SendPacketToAllNearPlayer(particlePacket, distanceChunk);
 }
 
 Chunk* World::LoadChunk(int x, int z)

@@ -7,9 +7,14 @@ namespace Block
 class BlockMaterial
 {
 public:
-    BlockMaterial(bool canBurn, bool replacable, bool translucent, bool requiresNoTool, int mobilityFlag);
+    BlockMaterial(unsigned char id, bool canBurn, bool replacable, bool translucent, bool requiresNoTool, int mobilityFlag);
     BlockMaterial();
     virtual ~BlockMaterial();
+
+    inline unsigned char getId() const
+    {
+        return id;
+    }
 
     inline bool isCanBurn() const
     {
@@ -37,6 +42,7 @@ public:
     }
 
 private:
+    unsigned char id;
     bool canBurn;
     bool replacable;
     bool translucent;

@@ -79,4 +79,35 @@ const BlockMaterial& Block::getMaterial() const
     return material;
 }
 
+TileEntity* Block::CreateNewTileEntity()
+{
+    if (script)
+    {
+        return script->CreateNewTileEntity();
+    }
+    return nullptr;
+}
+
+bool Block::UseTileEntity()
+{
+    if (script)
+    {
+        return script->UseTileEntity();
+    }
+    return false;
+}
+
+void Block::InitScript()
+{
+    if (script)
+    {
+        return script->Init(this);
+    }
+}
+
+i_block Block::GetBlockId()
+{
+    return blockId;
+}
+
 } /* namespace Inventory */

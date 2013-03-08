@@ -6,6 +6,7 @@
 #include "Block/Block.h"
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
+#include "Block/TileEntities/TileEntityNote.h"
 #include "World/Chunk.h"
 #include "World/World.h"
 
@@ -140,5 +141,6 @@ void BlockDoorScript::InitParam(int paramId, int param)
     	break;
     }
 }
+
 
 } /* namespace Util */

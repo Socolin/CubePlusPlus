@@ -9,6 +9,8 @@
 
 #include <iostream>
 
+#include "Block/TileEntities/TileEntity.h"
+#include "Block/BlockList.h"
 #include "Entity/EntityPlayer.h"
 #include "Network/OpcodeList.h"
 
@@ -135,6 +137,12 @@ const Network::NetworkPacket& Chunk::GetPacket()
 void Chunk::ChangeBlock(int x, i_height y, int z, i_block blockID, i_data blockData)
 {
     inCache = false;
+    i_block previousBlockId = getBlockAt(x, y, z);
+    Block::Block* previousBlock = Block::BlockList::getBlock(previousBlockId);
+    if (previousBlock && previousBlock->UseTileEntity())
+    {
+        RemoveTileEntity(x, y, z);
+    }
     SetBlockAt(x, y, z, blockID);
     SetDataAt(x, y, z, blockData);
     unsigned int dataChange = 0;
@@ -224,6 +232,32 @@ for (EntityPlayer* plr : playerList)
             plr->Send(blockChangePacket);
         }
         ResetBlockChangePacket();
+    }
+}
+
+
+void Chunk::SetTileEntity(Block::TileEntity* tileEntity, int x, i_height y, int z)
+{
+    tileEntities[TILEENTITY_KEY(x, y, z)] = tileEntity;
+}
+Block::TileEntity* Chunk::GetTileEntity(int x, i_height y, int z)
+{
+    auto it = tileEntities.find(TILEENTITY_KEY(x, y, z));
+    if (it == tileEntities.end())
+    {
+        return nullptr;
+    }
+    return it->second;
+}
+
+void Chunk::RemoveTileEntity(int x, i_height y, int z)
+{
+    auto it = tileEntities.find(TILEENTITY_KEY(x, y, z));
+    if (it != tileEntities.end())
+    {
+        Block::TileEntity* tileEntity = it->second;
+        tileEntities.erase(it);
+        delete tileEntity;
     }
 }
 

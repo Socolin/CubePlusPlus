@@ -24,7 +24,7 @@ class ItemStack;
 }
 namespace Block
 {
-
+class TileEntity;
 class Block
 {
 public:
@@ -42,7 +42,10 @@ public:
     virtual const SoundBlock& GetSound() const;
     virtual bool GetIsOpaqueCube();
     const BlockMaterial& getMaterial() const;
-
+    TileEntity* CreateNewTileEntity();
+    bool UseTileEntity();
+    void InitScript();
+    i_block GetBlockId();
 private:
     i_block blockId;
     const SoundBlock sound;

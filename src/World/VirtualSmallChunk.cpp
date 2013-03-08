@@ -48,6 +48,18 @@ void VirtualSmallChunk::SendPacketToAllNearPlayer(const Network::NetworkPacket& 
         }
 }
 
+void VirtualSmallChunk::SendPacketToAllNearPlayer(const Network::NetworkPacket& packet, int distanceChunk) const
+{
+    for (int x = posX - distanceChunk; x <= posX + distanceChunk; x++)
+        for (int z = posZ - distanceChunk; z <= posZ + distanceChunk; z++)
+        {
+            VirtualSmallChunk* chunk = world->GetVirtualSmallChunkIfLoaded(x, z);
+            if (chunk)
+                chunk->SendPacketToPlayerInChunk(packet);
+        }
+}
+
+
 void VirtualSmallChunk::SendPacketToPlayerInChunk(const Network::NetworkPacket& packet) const
 {
 for (EntityPlayer* plr : playerList)

@@ -1,6 +1,7 @@
 #ifndef CHUNK_H_
 #define CHUNK_H_
 
+#include <map>
 #include <set>
 #include <vector>
 #include <iostream>
@@ -13,6 +14,10 @@
 #include "Util/types.h"
 #include "Network/NetworkPacket.h"
 
+namespace Block
+{
+class TileEntity;
+}
 namespace World
 {
 
@@ -124,6 +129,10 @@ public:
     void ChangeBlock(int x, i_height y, int z, i_block blockID, i_data blockData);
     void ChangeData(int x, i_height y, int z, i_data blockData);
     void SendUpdate();
+
+    void SetTileEntity(Block::TileEntity* tileEntity, int x, i_height y, int z);
+    void RemoveTileEntity(int x, i_height y, int z);
+    Block::TileEntity* GetTileEntity(int x, i_height y, int z);
 private:
     void GeneratePacket();
     void ResetBlockChangePacket();
@@ -188,6 +197,7 @@ private:
     std::vector<unsigned int> changedBlock;
     short countChange;
     std::set<EntityPlayer*> playerList;
+    std::map<unsigned short, Block::TileEntity*> tileEntities;
 };
 
 } /* namespace Network */

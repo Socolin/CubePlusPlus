@@ -3,8 +3,9 @@
 namespace Block
 {
 
-BlockMaterial::BlockMaterial(bool canBurn, bool replacable, bool translucent, bool requiresNoTool, int mobilityFlag)
-    : canBurn(canBurn)
+BlockMaterial::BlockMaterial(unsigned char id, bool canBurn, bool replacable, bool translucent, bool requiresNoTool, int mobilityFlag)
+    : id(id)
+    , canBurn(canBurn)
     , replacable(replacable)
     , translucent(translucent)
     , requiresNoTool(requiresNoTool)
@@ -14,7 +15,7 @@ BlockMaterial::BlockMaterial(bool canBurn, bool replacable, bool translucent, bo
 }
 
 BlockMaterial::BlockMaterial() :
-    canBurn(false), replacable(false), translucent(false), requiresNoTool(false), mobilityFlag(0)
+    id(0), canBurn(false), replacable(false), translucent(false), requiresNoTool(false), mobilityFlag(0)
 {
 }
 

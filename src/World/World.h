@@ -136,6 +136,8 @@ public:
     void Unload();
     void RequestChunk(EntityPlayer* player, std::pair<int, int>);
     int getViewDistance();
+    void PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, char modifier, unsigned char distanceChunk);
+    void PlayBlockAction(int x, short y, int z, char type, char modifier, i_block blockId, char distanceChunk);
 private:
     void UpdateTime();
     VirtualChunk* CreateVirtualChunk(int x, int z);

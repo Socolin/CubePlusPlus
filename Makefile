@@ -183,6 +183,54 @@ src/Block/BlockMaterial.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/BlockMaterial.cpp.s
 .PHONY : src/Block/BlockMaterial.cpp.s
 
+src/Block/Scripts/Basics/BlockDoorScript.o: src/Block/Scripts/Basics/BlockDoorScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockDoorScript.o
+
+# target to build an object file
+src/Block/Scripts/Basics/BlockDoorScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockDoorScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockDoorScript.cpp.o
+
+src/Block/Scripts/Basics/BlockDoorScript.i: src/Block/Scripts/Basics/BlockDoorScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockDoorScript.i
+
+# target to preprocess a source file
+src/Block/Scripts/Basics/BlockDoorScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockDoorScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockDoorScript.cpp.i
+
+src/Block/Scripts/Basics/BlockDoorScript.s: src/Block/Scripts/Basics/BlockDoorScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockDoorScript.s
+
+# target to generate assembly for a file
+src/Block/Scripts/Basics/BlockDoorScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockDoorScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockDoorScript.cpp.s
+
+src/Block/Scripts/Basics/BlockJackOLanternScript.o: src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockJackOLanternScript.o
+
+# target to build an object file
+src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.o
+
+src/Block/Scripts/Basics/BlockJackOLanternScript.i: src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockJackOLanternScript.i
+
+# target to preprocess a source file
+src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.i
+
+src/Block/Scripts/Basics/BlockJackOLanternScript.s: src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockJackOLanternScript.s
+
+# target to generate assembly for a file
+src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.s
+
 src/Block/Scripts/Basics/BlockLeverScript.o: src/Block/Scripts/Basics/BlockLeverScript.cpp.o
 .PHONY : src/Block/Scripts/Basics/BlockLeverScript.o
 
@@ -206,6 +254,30 @@ src/Block/Scripts/Basics/BlockLeverScript.s: src/Block/Scripts/Basics/BlockLever
 src/Block/Scripts/Basics/BlockLeverScript.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockLeverScript.cpp.s
 .PHONY : src/Block/Scripts/Basics/BlockLeverScript.cpp.s
+
+src/Block/Scripts/Basics/BlockNoteScript.o: src/Block/Scripts/Basics/BlockNoteScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockNoteScript.o
+
+# target to build an object file
+src/Block/Scripts/Basics/BlockNoteScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockNoteScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockNoteScript.cpp.o
+
+src/Block/Scripts/Basics/BlockNoteScript.i: src/Block/Scripts/Basics/BlockNoteScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockNoteScript.i
+
+# target to preprocess a source file
+src/Block/Scripts/Basics/BlockNoteScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockNoteScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockNoteScript.cpp.i
+
+src/Block/Scripts/Basics/BlockNoteScript.s: src/Block/Scripts/Basics/BlockNoteScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockNoteScript.s
+
+# target to generate assembly for a file
+src/Block/Scripts/Basics/BlockNoteScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockNoteScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockNoteScript.cpp.s
 
 src/Block/Scripts/Basics/BlockWoodScript.o: src/Block/Scripts/Basics/BlockWoodScript.cpp.o
 .PHONY : src/Block/Scripts/Basics/BlockWoodScript.o
@@ -350,6 +422,54 @@ src/Block/SoundBlock.s: src/Block/SoundBlock.cpp.s
 src/Block/SoundBlock.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/SoundBlock.cpp.s
 .PHONY : src/Block/SoundBlock.cpp.s
+
+src/Block/TileEntities/TileEntity.o: src/Block/TileEntities/TileEntity.cpp.o
+.PHONY : src/Block/TileEntities/TileEntity.o
+
+# target to build an object file
+src/Block/TileEntities/TileEntity.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntity.cpp.o
+.PHONY : src/Block/TileEntities/TileEntity.cpp.o
+
+src/Block/TileEntities/TileEntity.i: src/Block/TileEntities/TileEntity.cpp.i
+.PHONY : src/Block/TileEntities/TileEntity.i
+
+# target to preprocess a source file
+src/Block/TileEntities/TileEntity.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntity.cpp.i
+.PHONY : src/Block/TileEntities/TileEntity.cpp.i
+
+src/Block/TileEntities/TileEntity.s: src/Block/TileEntities/TileEntity.cpp.s
+.PHONY : src/Block/TileEntities/TileEntity.s
+
+# target to generate assembly for a file
+src/Block/TileEntities/TileEntity.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntity.cpp.s
+.PHONY : src/Block/TileEntities/TileEntity.cpp.s
+
+src/Block/TileEntities/TileEntityNote.o: src/Block/TileEntities/TileEntityNote.cpp.o
+.PHONY : src/Block/TileEntities/TileEntityNote.o
+
+# target to build an object file
+src/Block/TileEntities/TileEntityNote.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntityNote.cpp.o
+.PHONY : src/Block/TileEntities/TileEntityNote.cpp.o
+
+src/Block/TileEntities/TileEntityNote.i: src/Block/TileEntities/TileEntityNote.cpp.i
+.PHONY : src/Block/TileEntities/TileEntityNote.i
+
+# target to preprocess a source file
+src/Block/TileEntities/TileEntityNote.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntityNote.cpp.i
+.PHONY : src/Block/TileEntities/TileEntityNote.cpp.i
+
+src/Block/TileEntities/TileEntityNote.s: src/Block/TileEntities/TileEntityNote.cpp.s
+.PHONY : src/Block/TileEntities/TileEntityNote.s
+
+# target to generate assembly for a file
+src/Block/TileEntities/TileEntityNote.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntityNote.cpp.s
+.PHONY : src/Block/TileEntities/TileEntityNote.cpp.s
 
 src/Chat/ChatManager.o: src/Chat/ChatManager.cpp.o
 .PHONY : src/Chat/ChatManager.o
@@ -1047,6 +1167,30 @@ src/World/VirtualChunk.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/VirtualChunk.cpp.s
 .PHONY : src/World/VirtualChunk.cpp.s
 
+src/World/VirtualSmallChunk.o: src/World/VirtualSmallChunk.cpp.o
+.PHONY : src/World/VirtualSmallChunk.o
+
+# target to build an object file
+src/World/VirtualSmallChunk.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/VirtualSmallChunk.cpp.o
+.PHONY : src/World/VirtualSmallChunk.cpp.o
+
+src/World/VirtualSmallChunk.i: src/World/VirtualSmallChunk.cpp.i
+.PHONY : src/World/VirtualSmallChunk.i
+
+# target to preprocess a source file
+src/World/VirtualSmallChunk.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/VirtualSmallChunk.cpp.i
+.PHONY : src/World/VirtualSmallChunk.cpp.i
+
+src/World/VirtualSmallChunk.s: src/World/VirtualSmallChunk.cpp.s
+.PHONY : src/World/VirtualSmallChunk.s
+
+# target to generate assembly for a file
+src/World/VirtualSmallChunk.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/World/VirtualSmallChunk.cpp.s
+.PHONY : src/World/VirtualSmallChunk.cpp.s
+
 src/World/World.o: src/World/World.cpp.o
 .PHONY : src/World/World.o
 
@@ -1113,9 +1257,18 @@ help:
 	@echo "... src/Block/BlockMaterial.o"
 	@echo "... src/Block/BlockMaterial.i"
 	@echo "... src/Block/BlockMaterial.s"
+	@echo "... src/Block/Scripts/Basics/BlockDoorScript.o"
+	@echo "... src/Block/Scripts/Basics/BlockDoorScript.i"
+	@echo "... src/Block/Scripts/Basics/BlockDoorScript.s"
+	@echo "... src/Block/Scripts/Basics/BlockJackOLanternScript.o"
+	@echo "... src/Block/Scripts/Basics/BlockJackOLanternScript.i"
+	@echo "... src/Block/Scripts/Basics/BlockJackOLanternScript.s"
 	@echo "... src/Block/Scripts/Basics/BlockLeverScript.o"
 	@echo "... src/Block/Scripts/Basics/BlockLeverScript.i"
 	@echo "... src/Block/Scripts/Basics/BlockLeverScript.s"
+	@echo "... src/Block/Scripts/Basics/BlockNoteScript.o"
+	@echo "... src/Block/Scripts/Basics/BlockNoteScript.i"
+	@echo "... src/Block/Scripts/Basics/BlockNoteScript.s"
 	@echo "... src/Block/Scripts/Basics/BlockWoodScript.o"
 	@echo "... src/Block/Scripts/Basics/BlockWoodScript.i"
 	@echo "... src/Block/Scripts/Basics/BlockWoodScript.s"
@@ -1134,6 +1287,12 @@ help:
 	@echo "... src/Block/SoundBlock.o"
 	@echo "... src/Block/SoundBlock.i"
 	@echo "... src/Block/SoundBlock.s"
+	@echo "... src/Block/TileEntities/TileEntity.o"
+	@echo "... src/Block/TileEntities/TileEntity.i"
+	@echo "... src/Block/TileEntities/TileEntity.s"
+	@echo "... src/Block/TileEntities/TileEntityNote.o"
+	@echo "... src/Block/TileEntities/TileEntityNote.i"
+	@echo "... src/Block/TileEntities/TileEntityNote.s"
 	@echo "... src/Chat/ChatManager.o"
 	@echo "... src/Chat/ChatManager.i"
 	@echo "... src/Chat/ChatManager.s"
@@ -1221,6 +1380,9 @@ help:
 	@echo "... src/World/VirtualChunk.o"
 	@echo "... src/World/VirtualChunk.i"
 	@echo "... src/World/VirtualChunk.s"
+	@echo "... src/World/VirtualSmallChunk.o"
+	@echo "... src/World/VirtualSmallChunk.i"
+	@echo "... src/World/VirtualSmallChunk.s"
 	@echo "... src/World/World.o"
 	@echo "... src/World/World.i"
 	@echo "... src/World/World.s"

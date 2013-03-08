@@ -7,6 +7,7 @@
 namespace Block
 {
 class Block;
+class TileEntity;
 }
 namespace Inventory
 {
@@ -36,7 +37,9 @@ public:
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ) {}
     virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ) {return false;}
     virtual BlockScript* Copy() = 0;
-private:
+    virtual Block::TileEntity* CreateNewTileEntity() {return nullptr;}
+    virtual bool UseTileEntity() {return false;}
+protected:
     Block::Block* baseBlock;
 };
 
