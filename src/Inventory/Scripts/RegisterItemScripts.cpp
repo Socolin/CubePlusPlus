@@ -1,7 +1,6 @@
 #include "RegisterItemScripts.h"
 
 #include "Inventory/Scripts/Basics/ItemBlockScript.h"
-#include "Inventory/Scripts/Basics/ItemUseWithBlockScript.h"
 
 namespace Scripting
 {
@@ -9,7 +8,6 @@ namespace Scripting
 void RegisterItemScripts()
 {
     new ItemBlockScript();
-    new ItemUseWithBlockScript();
 }
 
 } /* namespace Scripting */

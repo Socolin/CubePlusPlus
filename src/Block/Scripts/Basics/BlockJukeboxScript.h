@@ -16,9 +16,10 @@ public:
     virtual ~BlockJukeboxScript();
     virtual BlockScript* Copy() override;
     virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
+    virtual Block::TileEntity* CreateNewTileEntity() override;
+    virtual bool UseTileEntity() override;
 private:
-    unsigned char materialId[5];
-    const std::wstring soundName[5];
+
 };
 
 } /* namespace Scripting */

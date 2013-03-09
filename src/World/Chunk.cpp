@@ -241,6 +241,7 @@ void Chunk::SetTileEntity(Block::TileEntity* tileEntity, i_small_coord x, i_heig
 {
     tileEntities[TILEENTITY_KEY(x, y, z)] = tileEntity;
 }
+
 Block::TileEntity* Chunk::GetTileEntity(i_small_coord x, i_height y, i_small_coord z)
 {
     auto it = tileEntities.find(TILEENTITY_KEY(x, y, z));

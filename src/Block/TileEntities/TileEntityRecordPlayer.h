@@ -12,9 +12,9 @@ public:
     TileEntityRecordPlayer();
     virtual ~TileEntityRecordPlayer();
 
-    virtual void UpdateTick() = 0;
-    virtual bool NeedUpdate() = 0;
-    // Add tickFrequence ?
+    virtual void UpdateTick() override;
+    virtual bool NeedUpdate() override;
+
     void SetRecord(i_block);
     i_block GetRecord();
 private:

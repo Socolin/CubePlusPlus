@@ -231,6 +231,30 @@ src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.s
 .PHONY : src/Block/Scripts/Basics/BlockJackOLanternScript.cpp.s
 
+src/Block/Scripts/Basics/BlockJukeboxScript.o: src/Block/Scripts/Basics/BlockJukeboxScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockJukeboxScript.o
+
+# target to build an object file
+src/Block/Scripts/Basics/BlockJukeboxScript.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockJukeboxScript.cpp.o
+.PHONY : src/Block/Scripts/Basics/BlockJukeboxScript.cpp.o
+
+src/Block/Scripts/Basics/BlockJukeboxScript.i: src/Block/Scripts/Basics/BlockJukeboxScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockJukeboxScript.i
+
+# target to preprocess a source file
+src/Block/Scripts/Basics/BlockJukeboxScript.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockJukeboxScript.cpp.i
+.PHONY : src/Block/Scripts/Basics/BlockJukeboxScript.cpp.i
+
+src/Block/Scripts/Basics/BlockJukeboxScript.s: src/Block/Scripts/Basics/BlockJukeboxScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockJukeboxScript.s
+
+# target to generate assembly for a file
+src/Block/Scripts/Basics/BlockJukeboxScript.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/Scripts/Basics/BlockJukeboxScript.cpp.s
+.PHONY : src/Block/Scripts/Basics/BlockJukeboxScript.cpp.s
+
 src/Block/Scripts/Basics/BlockLeverScript.o: src/Block/Scripts/Basics/BlockLeverScript.cpp.o
 .PHONY : src/Block/Scripts/Basics/BlockLeverScript.o
 
@@ -470,6 +494,30 @@ src/Block/TileEntities/TileEntityNote.s: src/Block/TileEntities/TileEntityNote.c
 src/Block/TileEntities/TileEntityNote.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntityNote.cpp.s
 .PHONY : src/Block/TileEntities/TileEntityNote.cpp.s
+
+src/Block/TileEntities/TileEntityRecordPlayer.o: src/Block/TileEntities/TileEntityRecordPlayer.cpp.o
+.PHONY : src/Block/TileEntities/TileEntityRecordPlayer.o
+
+# target to build an object file
+src/Block/TileEntities/TileEntityRecordPlayer.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntityRecordPlayer.cpp.o
+.PHONY : src/Block/TileEntities/TileEntityRecordPlayer.cpp.o
+
+src/Block/TileEntities/TileEntityRecordPlayer.i: src/Block/TileEntities/TileEntityRecordPlayer.cpp.i
+.PHONY : src/Block/TileEntities/TileEntityRecordPlayer.i
+
+# target to preprocess a source file
+src/Block/TileEntities/TileEntityRecordPlayer.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntityRecordPlayer.cpp.i
+.PHONY : src/Block/TileEntities/TileEntityRecordPlayer.cpp.i
+
+src/Block/TileEntities/TileEntityRecordPlayer.s: src/Block/TileEntities/TileEntityRecordPlayer.cpp.s
+.PHONY : src/Block/TileEntities/TileEntityRecordPlayer.s
+
+# target to generate assembly for a file
+src/Block/TileEntities/TileEntityRecordPlayer.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Block/TileEntities/TileEntityRecordPlayer.cpp.s
+.PHONY : src/Block/TileEntities/TileEntityRecordPlayer.cpp.s
 
 src/Chat/ChatManager.o: src/Chat/ChatManager.cpp.o
 .PHONY : src/Chat/ChatManager.o
@@ -1263,6 +1311,9 @@ help:
 	@echo "... src/Block/Scripts/Basics/BlockJackOLanternScript.o"
 	@echo "... src/Block/Scripts/Basics/BlockJackOLanternScript.i"
 	@echo "... src/Block/Scripts/Basics/BlockJackOLanternScript.s"
+	@echo "... src/Block/Scripts/Basics/BlockJukeboxScript.o"
+	@echo "... src/Block/Scripts/Basics/BlockJukeboxScript.i"
+	@echo "... src/Block/Scripts/Basics/BlockJukeboxScript.s"
 	@echo "... src/Block/Scripts/Basics/BlockLeverScript.o"
 	@echo "... src/Block/Scripts/Basics/BlockLeverScript.i"
 	@echo "... src/Block/Scripts/Basics/BlockLeverScript.s"
@@ -1293,6 +1344,9 @@ help:
 	@echo "... src/Block/TileEntities/TileEntityNote.o"
 	@echo "... src/Block/TileEntities/TileEntityNote.i"
 	@echo "... src/Block/TileEntities/TileEntityNote.s"
+	@echo "... src/Block/TileEntities/TileEntityRecordPlayer.o"
+	@echo "... src/Block/TileEntities/TileEntityRecordPlayer.i"
+	@echo "... src/Block/TileEntities/TileEntityRecordPlayer.s"
 	@echo "... src/Chat/ChatManager.o"
 	@echo "... src/Chat/ChatManager.i"
 	@echo "... src/Chat/ChatManager.s"
