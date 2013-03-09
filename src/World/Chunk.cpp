@@ -13,6 +13,7 @@
 #include "Block/BlockList.h"
 #include "Entity/EntityPlayer.h"
 #include "Network/OpcodeList.h"
+#include "Util/types.h"
 
 namespace World
 {
@@ -134,7 +135,7 @@ const Network::NetworkPacket& Chunk::GetPacket()
     return cachePacket;
 }
 
-void Chunk::ChangeBlock(int x, i_height y, int z, i_block blockID, i_data blockData)
+void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData)
 {
     inCache = false;
     i_block previousBlockId = getBlockAt(x, y, z);
@@ -154,7 +155,7 @@ void Chunk::ChangeBlock(int x, i_height y, int z, i_block blockID, i_data blockD
     blockChangePacket << dataChange;
     countChange++;
 }
-void Chunk::ChangeData(int x, i_height y, int z, i_data blockData)
+void Chunk::ChangeData(i_small_coord x, i_height y, i_small_coord z, i_data blockData)
 {
     inCache = false;
     i_block blockID = getBlockAt(x, y, z);
@@ -236,11 +237,11 @@ for (EntityPlayer* plr : playerList)
 }
 
 
-void Chunk::SetTileEntity(Block::TileEntity* tileEntity, int x, i_height y, int z)
+void Chunk::SetTileEntity(Block::TileEntity* tileEntity, i_small_coord x, i_height y, i_small_coord z)
 {
     tileEntities[TILEENTITY_KEY(x, y, z)] = tileEntity;
 }
-Block::TileEntity* Chunk::GetTileEntity(int x, i_height y, int z)
+Block::TileEntity* Chunk::GetTileEntity(i_small_coord x, i_height y, i_small_coord z)
 {
     auto it = tileEntities.find(TILEENTITY_KEY(x, y, z));
     if (it == tileEntities.end())
@@ -250,7 +251,7 @@ Block::TileEntity* Chunk::GetTileEntity(int x, i_height y, int z)
     return it->second;
 }
 
-void Chunk::RemoveTileEntity(int x, i_height y, int z)
+void Chunk::RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z)
 {
     auto it = tileEntities.find(TILEENTITY_KEY(x, y, z));
     if (it != tileEntities.end())
