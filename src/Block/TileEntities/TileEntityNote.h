@@ -12,8 +12,8 @@ public:
     TileEntityNote();
     virtual ~TileEntityNote();
 
-    virtual void UpdateTick();
-    virtual bool NeedUpdate();
+    virtual void UpdateTick() override;
+    virtual bool NeedUpdate() override;
 
     int getNoteLevel();
     int nextNoteLevel();

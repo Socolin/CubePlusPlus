@@ -23,7 +23,7 @@ bool TorchScript::CanPlace(World::World* world, int x, unsigned char y, int z, c
     return false;
 }
 
-void TorchScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+void TorchScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     switch (face)
     {

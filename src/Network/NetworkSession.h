@@ -2,7 +2,6 @@
 #define NETWORKSESSION_H_
 
 #include "NetworkException.h"
-#include <SFML/System/Unicode.hpp>
 #include <vector>
 #include <cryptopp/modes.h>
 #include <cryptopp/rsa.h>

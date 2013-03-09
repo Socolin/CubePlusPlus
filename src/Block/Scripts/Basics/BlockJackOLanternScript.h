@@ -13,8 +13,8 @@ class BlockJackOLanternScript: public Scripting::BlockScript
 public:
     BlockJackOLanternScript();
     virtual ~BlockJackOLanternScript();
-    virtual BlockScript* Copy();
-    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
+    virtual BlockScript* Copy() override;
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
 };
 
 } /* namespace Scripting */

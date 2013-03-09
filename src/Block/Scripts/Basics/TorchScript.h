@@ -13,9 +13,9 @@ class TorchScript : public BlockScript
 public:
     TorchScript();
     virtual ~TorchScript();
-    virtual BlockScript* Copy();
-    virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, char face);
-    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, unsigned char y, int z, int face, short& blockId, short& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
+    virtual BlockScript* Copy() override;
+    virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, char face) override;
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
 };
 
 } /* namespace Scripting */

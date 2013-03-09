@@ -20,9 +20,9 @@ class ItemBlockScript : public ItemScript
 public:
     ItemBlockScript();
     virtual ~ItemBlockScript();
-    virtual ItemScript* Copy();
-    virtual bool OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
-    virtual void InitParam(int paramId, int param);
+    virtual ItemScript* Copy() override;
+    virtual bool OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
+    virtual void InitParam(int paramId, int param) override;
 private:
     i_block AssociatedBlockId;
     bool UseMetadata;
