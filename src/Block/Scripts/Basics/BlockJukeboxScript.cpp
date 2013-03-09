@@ -10,8 +10,7 @@ namespace Scripting
 {
 
 BlockJukeboxScript::BlockJukeboxScript():
-                BlockScript("block_jukebox")//,
-                //soundName({L"note.bd",L"note.snare",L"note.hat",L"note.bassattack",L"note.harp"})
+                BlockScript("block_jukebox")
 {
 }
 
@@ -28,14 +27,19 @@ bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
     World::World* world = user->getWorld();
     World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
     if (chunk == nullptr)
+    {
+    	std::cout << "toto est content" <<std::endl;
         return true;
+    }
     Block::TileEntity* tileEntity = chunk->GetTileEntity(x & 0xf, y, z & 0xf);
     if (tileEntity)
     {
         Block::TileEntityRecordPlayer* recordPlayer = dynamic_cast<Block::TileEntityRecordPlayer*>(tileEntity);
         if (recordPlayer)
         {
-            recordPlayer->SetRecord(item.getItemId());
+            //recordPlayer->SetRecord(item.getItemId());
+        	std::cout << "toto" <<std::endl;
+        	world->PlaySoundOrParticleEffect(x, y, z, 1005, item.getItemId(), false, 5);
         }
     }
     return true;

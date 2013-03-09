@@ -143,6 +143,14 @@ void World::PlaySound(double x, double y, double z, const std::wstring& soundNam
     vSmallChunk->SendPacketToAllNearPlayer(soundPacket, distanceChunk);
 }
 
+void World::PlaySoundOrParticleEffect(double x, i_height y, double z, int effectId, int data, bool disableRelativeVolume, unsigned char distanceChunk)
+{
+    VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(((int)x) >> 4, ((int)z) >> 4);
+    Network::NetworkPacket soundPacket(Network::OP_SOUND_OR_PARTICLE_EFFECT);
+    soundPacket << effectId << (int) x << y << (int) z << data << disableRelativeVolume;
+    vSmallChunk->SendPacketToAllNearPlayer(soundPacket, distanceChunk);
+}
+
 void World::PlayBlockAction(int x, short y, int z, char type, char modifier, i_block blockId, char distanceChunk)
 {
     VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(((int)x) >> 4, ((int)z) >> 4);
