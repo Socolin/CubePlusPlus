@@ -46,6 +46,7 @@ public:
     bool UseTileEntity();
     void InitScript();
     i_block GetBlockId();
+
 private:
     i_block blockId;
     const SoundBlock sound;

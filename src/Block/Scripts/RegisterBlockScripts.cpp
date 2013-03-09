@@ -7,6 +7,7 @@
 #include "Basics/BlockLeverScript.h"
 #include "Basics/BlockWoodScript.h"
 #include "Basics/TorchScript.h"
+#include "Basics/BlockJukeboxScript.h"
 
 namespace Scripting
 {
@@ -19,5 +20,6 @@ void RegisterBlockScript()
     new StairScript();
     new BlockLeverScript();
 	new TorchScript();
+	new BlockJukeboxScript();
 }
 }
