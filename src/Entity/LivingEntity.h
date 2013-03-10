@@ -11,6 +11,7 @@ class LivingEntity: public Entity
 public:
     LivingEntity(double x, double y, double z);
     virtual ~LivingEntity();
+    virtual float getEyeHeight();
 protected:
     bool hasChangeItemInHand;
 };

@@ -14,4 +14,9 @@ LivingEntity::~LivingEntity()
     // TODO Auto-generated destructor stub
 }
 
+float LivingEntity::getEyeHeight()
+{
+    return 1.62f;
+}
+
 } /* namespace World */

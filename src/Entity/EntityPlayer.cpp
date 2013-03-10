@@ -11,6 +11,7 @@
 #include "Network/NetworkSession.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
+#include "Util/FloatUtil.h"
 #include "World/VirtualChunk.h"
 #include "World/VirtualSmallChunk.h"
 #include "World/World.h"
@@ -180,9 +181,19 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
         Inventory::Item* item = itemstack.getItem();
         if (item != nullptr)
         {
-            EntityItem* item = new EntityItem(this->x, this->y, this->z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()));
-            world->AddEntity(item);
+            const double speed = 0.3F;
+            double motionX = -sin(yaw/ 180.0F * M_PI) * cos(pitch / 180.0F * M_PI) * speed;
+            double motionZ = cos(yaw / 180.0F * M_PI) * cos(pitch / 180.0F * M_PI) * speed;
+            double motionY = -sin(pitch / 180.0F * M_PI) * speed + 0.1F;
 
+            double modifier = 0.02F;
+            float randomModifier =  Util::randFloat() * M_PI * 2.0F;
+            modifier *= Util::randFloat();
+            motionX += cos(randomModifier) * modifier;
+            motionY += (Util::randFloat() - Util::randFloat()) * 0.1f;
+            motionZ += sin(randomModifier) * modifier;
+            EntityItem* item = new EntityItem(this->x, this->y + getEyeHeight() - 0.3f, this->z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()), motionX, motionY, motionZ);
+            world->AddEntity(item);
         }
     }
 }

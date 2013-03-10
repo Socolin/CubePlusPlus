@@ -11,7 +11,7 @@ namespace World
 class EntityItem : public Entity
 {
 public:
-    EntityItem(double x, double y, double z, Inventory::ItemStack itemStack);
+    EntityItem(double x, double y, double z, Inventory::ItemStack itemStack, double motionX, double motionY, double motionZ);
     virtual ~EntityItem();
 
     virtual void UpdateTick() override;
