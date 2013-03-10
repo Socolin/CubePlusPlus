@@ -159,6 +159,21 @@ void World::PlayBlockAction(int x, short y, int z, char type, char modifier, i_b
     vSmallChunk->SendPacketToAllNearPlayer(particlePacket, distanceChunk);
 }
 
+void World::GetBlockBoundingBoxInRange(int x, int y, int z, size_t range, size_t rangeHeight, std::vector<Util::AABB>& bbList)
+{
+    for (size_t blockX = x - range; blockX <= x + range; blockX++)
+        for (size_t blockZ = z - range; blockZ <= z + range; blockZ++)
+            for (size_t blockY = y - rangeHeight; blockY <= y + rangeHeight; blockY++)
+            {
+                s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
+                Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+                if (block)
+                {
+                    block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
+                }
+            }
+}
+
 Chunk* World::LoadChunk(int x, int z)
 {
     Chunk* chunk = new Chunk(x, z);

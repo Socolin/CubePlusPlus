@@ -1,14 +1,13 @@
 #ifndef BLOCK_H_
 #define BLOCK_H_
 
+#include <vector>
+
 #include "Util/types.h"
+#include "Util/AABB.h"
 #include "Block/BlockMaterial.h"
 #include "Block/SoundBlock.h"
 
-namespace Util
-{
-class AABB;
-}
 namespace Scripting
 {
 class BlockScript;
@@ -35,17 +34,19 @@ public:
           const BlockMaterial& material, Scripting::BlockScript* script);
     virtual ~Block();
 
-    virtual void OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
-    virtual bool UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
-    virtual void UpdateTick(World::World* world, int x, i_height y, int z, i_data data);
-    virtual bool CanPlace(World::World* world, int x, i_height y, int z, char face);
-    virtual const SoundBlock& GetSound() const;
-    virtual bool GetIsOpaqueCube();
+    void OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
+    bool UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
+    void UpdateTick(World::World* world, int x, i_height y, int z, i_data data);
+    bool CanPlace(World::World* world, int x, i_height y, int z, char face);
+    const SoundBlock& GetSound() const;
+    bool GetIsOpaqueCube();
     const BlockMaterial& getMaterial() const;
     TileEntity* CreateNewTileEntity();
     bool UseTileEntity();
     void InitScript();
     i_block GetBlockId();
+    void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList);
+
 
 private:
     i_block blockId;

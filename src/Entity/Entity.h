@@ -8,7 +8,10 @@
 #ifndef ENTITY_H_
 #define ENTITY_H_
 
+#include <vector>
+
 #include "Position.h"
+#include "Util/AABB.h"
 
 namespace Network
 {
@@ -28,9 +31,12 @@ public:
 
     void Rotate(float yaw, float pitch);
     void MoveTo(double x, double y, double z);
+    void Move(double dx, double dy, double dz);
     void StopMoving();
     void Teleport(double x, double y, double z, float yaw, float pitch);
     void GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet);
+
+    void SetWidthHeight(double width, double height);
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) = 0;
     virtual void GetDestroyPacket(Network::NetworkPacket& packet);
     virtual void GetCreatePacket(Network::NetworkPacket& packet) = 0;
@@ -71,16 +77,27 @@ protected:
     bool hasRotate;
     bool isMoving;
     bool stopMoving;
+    bool noclip;
+
+    // Motion vector
     double motionX;
     double motionY;
     double motionZ;
+
+    // Position * 32
     int networkX;
     int networkY;
     int networkZ;
+
+    // VirutalChunk coordinate where entity is
     int virtualChunkX;
     int virtualChunkZ;
+
+    // Chunk coordinate where entity is
     int chunkX;
     int chunkZ;
+
+    Util::AABB boundingBox;
 };
 
 } /* namespace Network */

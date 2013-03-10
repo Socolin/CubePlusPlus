@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <string>
 #include <set>
+
+#include "Util/AABB.h"
 #include "Chunk.h"
 
 #define CHUNK_KEY(X,Z) ((((long)X << 32) & 0xffffffff00000000)| ((long)Z & 0x00000000ffffffff))
@@ -60,6 +62,8 @@ public:
     void PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, char modifier, unsigned char distanceChunk);
     void PlaySoundOrParticleEffect(double x, i_height y, double z, int effectId, int data, bool disableRelativeVolume, unsigned char distanceChunk);
     void PlayBlockAction(int x, short y, int z, char type, char modifier, i_block blockId, char distanceChunk);
+
+    void GetBlockBoundingBoxInRange(int x, int y, int z, size_t range, size_t rangeHeight, std::vector<Util::AABB>& bbList);
 private:
     void UpdateTime();
     VirtualChunk* CreateVirtualChunk(int x, int z);

@@ -110,4 +110,16 @@ i_block Block::GetBlockId()
     return blockId;
 }
 
+void Block::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList)
+{
+    if (script)
+    {
+        script->GetBoundingBoxes(x, y, z, data, bbList);
+    }
+    else
+    {
+        bbList.push_back(Util::AABB(x, y, z, 1, 1, 1));
+    }
+}
+
 } /* namespace Inventory */

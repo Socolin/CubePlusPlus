@@ -17,7 +17,7 @@ namespace World
 {
 
 Entity::Entity(double x, double y, double z) :
-    Position(x, y, z), world(0), entityId(0), yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false), stopMoving(false), motionX(0), motionY(0), motionZ(0)
+    Position(x, y, z), world(0), entityId(0), yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false), stopMoving(false), noclip(false), motionX(0), motionY(0), motionZ(0)
     , networkX(((int) x) * 32)
     , networkY(((int) y) * 32)
     , networkZ(((int) z) * 32)
@@ -25,6 +25,7 @@ Entity::Entity(double x, double y, double z) :
     , virtualChunkZ(((int)z) >> 7)
     , chunkX(((int)x) >> 4)
     , chunkZ(((int)z) >> 4)
+    , boundingBox(x, y, z, 0.6, 1.8, 0.6)
 {
 
 }
@@ -51,6 +52,7 @@ void Entity::MoveTo(double x, double y, double z)
     int newChunkX = ((int) x) >> 4;
     int newChunkZ = ((int) z) >> 4;
     Chunk* chunk = world->GetChunkIfLoaded(newChunkX, newChunkZ);
+    // TODO: if movedistance > 1 chunk tpback
     if (chunk == NULL)
     {
         Teleport(this->x, this->y, this->z, this->yaw, this->pitch);
@@ -81,6 +83,39 @@ void Entity::MoveTo(double x, double y, double z)
     virtualChunkZ = newVirtualChunkZ;
     chunkX = newChunkX;
     chunkZ = newChunkZ;
+    boundingBox.SetPositionCenteredXZ(x, y, z);
+
+    // TODO:
+    // BlockCollision (example: pressureplate)
+    // Fire collision
+    // Lava Collision
+}
+
+
+void Entity::Move(double dx, double dy, double dz)
+{
+    if (noclip)
+    {
+        MoveTo(x + dx, y + dy, z + dz);
+        return;
+    }
+
+    std::vector<Util::AABB> bbList;
+    world->GetBlockBoundingBoxInRange((int)(x + dx), (int)(y + dy), (int)(z + dz), 1, 1, bbList);
+
+    for (Util::AABB& box : bbList)
+        dx = box.GetXOffsetWith(boundingBox, dx);
+    boundingBox.MoveX(dx);
+
+    for (Util::AABB& box : bbList)
+        dy = box.GetYOffsetWith(boundingBox, dy);
+    boundingBox.MoveY(dy);
+
+    for (Util::AABB& box : bbList)
+        dz = box.GetZOffsetWith(boundingBox, dz);
+    boundingBox.MoveZ(dz);
+
+    MoveTo(x + dx, y + dy, z + dz);
 }
 
 void Entity::Teleport(double x, double y, double z, float yaw, float pitch)
@@ -181,6 +216,12 @@ void Entity::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
     oldVChunk->RemoveEntityByMoving(this, newVirtualChunkX, newVirtualChunkZ);
     VirtualChunk *vChunk = world->GetVirtualChunk(newVirtualChunkX, newVirtualChunkZ);
     vChunk->AddEntityByMoving(this, virtualChunkX, virtualChunkZ);
+}
+
+void Entity::SetWidthHeight(double width, double height)
+{
+    boundingBox.depth = boundingBox.width = width;
+    boundingBox.height = height;
 }
 
 void Entity::moveToChunk(int newChunkX, int newChunkZ)
