@@ -259,7 +259,7 @@ void NetworkManager::OnDisconnectClient(int socket)
         if (!sessionItr->second->isDisconnected())
             sessionItr->second->disconnect("OnDisconnectClient");
         sessionList.erase(socket);
-        delete sessionItr->second;
+        //delete sessionItr->second;
     }
 }
 

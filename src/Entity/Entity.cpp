@@ -17,7 +17,7 @@ namespace World
 {
 
 Entity::Entity(double x, double y, double z) :
-    Position(x, y, z), world(0), entityId(0), yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false), stopMoving(false), noclip(false), motionX(0), motionY(0), motionZ(0)
+    Position(x, y, z), world(0), entityId(0), yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false), stopMoving(false), noclip(false),onGround(false), motionX(0), motionY(0), motionZ(0)
     , networkX(((int) x) * 32)
     , networkY(((int) y) * 32)
     , networkZ(((int) z) * 32)
@@ -100,6 +100,10 @@ void Entity::Move(double dx, double dy, double dz)
         return;
     }
 
+    double oldDx = dx;
+    double oldDy = dy;
+    double oldDz = dz;
+
     std::vector<Util::AABB> bbList;
     world->GetBlockBoundingBoxInRange((int)(x + dx), (int)(y + dy), (int)(z + dz), 1, 1, bbList);
 
@@ -111,11 +115,20 @@ void Entity::Move(double dx, double dy, double dz)
         dy = box.GetYOffsetWith(boundingBox, dy);
     boundingBox.MoveY(dy);
 
+    if (dy < 0)
+    {
+        if (oldDy != dy)
+            onGround = true;
+    }
+    else
+        onGround = false;
+
     for (Util::AABB& box : bbList)
         dz = box.GetZOffsetWith(boundingBox, dz);
     boundingBox.MoveZ(dz);
 
-    MoveTo(x + dx, y + dy, z + dz);
+    if (oldDx != dx || oldDy != dy || oldDz != dz)
+        MoveTo(x + dx, y + dy, z + dz);
 }
 
 void Entity::Teleport(double x, double y, double z, float yaw, float pitch)

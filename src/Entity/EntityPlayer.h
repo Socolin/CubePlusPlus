@@ -32,7 +32,7 @@ public:
     void AddChunkToSend(int x, int z);
     virtual void UpdateTick();
     void Respawn(double x, double y, double z);
-    void JoinWorld();
+    void OnJoinWorld();
     void Send(const Network::NetworkPacket& packet) const;
     virtual void GetCreatePacket(Network::NetworkPacket& packet);
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);

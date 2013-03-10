@@ -78,7 +78,7 @@ void World::AddPlayer(EntityPlayer* player)
 
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 8, ((int) player->z) >> 8);
     virtualChunk->AddPlayer(player);
-    player->JoinWorld();
+    player->OnJoinWorld();
 
 }
 
@@ -159,11 +159,11 @@ void World::PlayBlockAction(int x, short y, int z, char type, char modifier, i_b
     vSmallChunk->SendPacketToAllNearPlayer(particlePacket, distanceChunk);
 }
 
-void World::GetBlockBoundingBoxInRange(int x, int y, int z, size_t range, size_t rangeHeight, std::vector<Util::AABB>& bbList)
+void World::GetBlockBoundingBoxInRange(int x, int y, int z, int range, int rangeHeight, std::vector<Util::AABB>& bbList)
 {
-    for (size_t blockX = x - range; blockX <= x + range; blockX++)
-        for (size_t blockZ = z - range; blockZ <= z + range; blockZ++)
-            for (size_t blockY = y - rangeHeight; blockY <= y + rangeHeight; blockY++)
+    for (int blockX = x - range; blockX <= x + range; blockX++)
+        for (int blockZ = z - range; blockZ <= z + range; blockZ++)
+            for (int blockY = y - rangeHeight; blockY <= y + rangeHeight; blockY++)
             {
                 s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
                 Block::Block* block = Block::BlockList::getBlock(blockData.blockId);

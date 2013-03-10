@@ -44,9 +44,9 @@ public:
     TileEntity* CreateNewTileEntity();
     bool UseTileEntity();
     void InitScript();
-    i_block GetBlockId();
+    i_block GetBlockId() const;
     void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList);
-
+    float getSlipperiness() const {return slipperiness;}
 
 private:
     i_block blockId;

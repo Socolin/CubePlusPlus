@@ -127,11 +127,11 @@ float NetworkSession::readFloat() throw (NetworkException)
 void NetworkSession::disconnect(const char* reason)
 {
     std::cout << "Disconnect player: "<< reason << std::endl;
-    if (player != NULL)
+    if (player != nullptr)
     {
         World::WorldManager* worldManager = World::WorldManager::GetInstance();
         worldManager->RemovePlayer(player);
-        player = NULL;
+        player = nullptr;
     }
     state = STATE_DISCONECT;
 }
@@ -197,12 +197,14 @@ void NetworkSession::SendPacket(const NetworkPacket& packet) const
         size_t sendSize = 0;
         size_t x = 512;
         size_t y = packet.getPacketSize();
+        size_t sended = 0;
         sendSize = y ^ ((x ^ y) & -(x < y)); // min(x, y)
         while (sendSize > 0)
         {
-            aesEncryptor->ProcessData((byte*)sendBuffer,(byte*)&packet.getPacketData()[0],packet.getPacketSize());
+            aesEncryptor->ProcessData((byte*)sendBuffer,(byte*)&packet.getPacketData()[sended],sendSize);
             send(socket, sendBuffer, sendSize, 0);
             y -= sendSize;
+            sended += sendSize;
             sendSize = y ^ ((x ^ y) & -(x < y)); // min(x, y)
         }
     }

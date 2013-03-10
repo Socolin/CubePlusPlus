@@ -5,6 +5,7 @@
 #include "Block/Block.h"
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
+#include "Entity/EntityItem.h"
 #include "Inventory/Item.h"
 #include "Inventory/ItemStack.h"
 #include "Network/NetworkSession.h"
@@ -60,7 +61,7 @@ void EntityPlayer::Respawn(double x, double y, double z)
     session->SendPacket(packetInitialPosition);
 }
 
-void EntityPlayer::JoinWorld()
+void EntityPlayer::OnJoinWorld()
 {
     Network::NetworkPacket packetRespawn(Network::OP_SPAWN_POSITION);
     packetRespawn << (int) 0 << (int) 100 << (int) 0;
@@ -166,14 +167,29 @@ Inventory::InventoryPlayer& EntityPlayer::GetInventory()
 }
 void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
 {
+    if (!world)
+        return;
     if (state == 0)
     {
         Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
         chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
     }
+    else if (state == 4)
+    {
+        Inventory::ItemStack& itemstack = inventory.GetItemInHand();
+        Inventory::Item* item = itemstack.getItem();
+        if (item != nullptr)
+        {
+            EntityItem* item = new EntityItem(this->x, this->y, this->z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()));
+            world->AddEntity(item);
+
+        }
+    }
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
+    if (!world)
+        return;
     // TODO check 6 block in range
     int clickedBlockId = world->GetBlockId(x, y, z);
     Block::Block* block = Block::BlockList::Instance()->blocks[clickedBlockId];

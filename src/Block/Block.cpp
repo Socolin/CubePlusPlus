@@ -105,7 +105,7 @@ void Block::InitScript()
     }
 }
 
-i_block Block::GetBlockId()
+i_block Block::GetBlockId() const
 {
     return blockId;
 }

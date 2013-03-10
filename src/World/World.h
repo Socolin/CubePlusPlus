@@ -63,7 +63,7 @@ public:
     void PlaySoundOrParticleEffect(double x, i_height y, double z, int effectId, int data, bool disableRelativeVolume, unsigned char distanceChunk);
     void PlayBlockAction(int x, short y, int z, char type, char modifier, i_block blockId, char distanceChunk);
 
-    void GetBlockBoundingBoxInRange(int x, int y, int z, size_t range, size_t rangeHeight, std::vector<Util::AABB>& bbList);
+    void GetBlockBoundingBoxInRange(int x, int y, int z, int range, int rangeHeight, std::vector<Util::AABB>& bbList);
 private:
     void UpdateTime();
     VirtualChunk* CreateVirtualChunk(int x, int z);

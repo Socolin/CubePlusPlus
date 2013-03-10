@@ -78,6 +78,7 @@ protected:
     bool isMoving;
     bool stopMoving;
     bool noclip;
+    bool onGround;
 
     // Motion vector
     double motionX;
