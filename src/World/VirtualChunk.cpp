@@ -9,7 +9,7 @@ namespace World
 
 
 VirtualChunk::VirtualChunk(int x, int z, World* world)
-    : posX(x), posZ(z), world(world)
+    : posX(x), posZ(z), world(world), updatingEntities(false)
 {
 }
 
@@ -22,12 +22,18 @@ void VirtualChunk::AddEntity(Entity* entity)
     Network::NetworkPacket entityJoinPacket;
     entity->GetCreatePacket(entityJoinPacket);
     SendPacketToAllNearPlayer(entityJoinPacket);
-    entityList.insert(entity);
+    if (updatingEntities)
+        waitingAddEntityList.push_back(entity);
+    else
+        entityList.insert(entity);
 }
 
 void VirtualChunk::RemoveEntity(Entity* entity)
 {
-    entityList.erase(entity);
+    if (updatingEntities)
+        waitingRemoveEntityList.push_back(entity);
+    else
+        entityList.erase(entity);
     Network::NetworkPacket entityDestroyPacket;
     entity->GetDestroyPacket(entityDestroyPacket);
     SendPacketToAllNearPlayer(entityDestroyPacket);
@@ -46,12 +52,18 @@ void VirtualChunk::AddPlayer(EntityPlayer* player)
     if (entityJoinPacket.getPacketSize())
         player->Send(entityJoinPacket);
     AddEntity(player);
-    playerList.insert(player);
+    if (updatingEntities)
+        waitingAddPlayerList.push_back(player);
+    else
+        playerList.insert(player);
 }
 
 void VirtualChunk::RemovePlayer(EntityPlayer* player)
 {
-    playerList.erase(player);
+    if (updatingEntities)
+        waitingRemoveEntityList.push_back(player);
+    else
+        playerList.erase(player);
     RemoveEntity(player);
     Network::NetworkPacket entityDestroyPacket;
     for (int x = posX - 1; x <= posX + 1; x++)
@@ -77,16 +89,32 @@ void VirtualChunk::SendPacketToAllNearPlayer(const Network::NetworkPacket& packe
 
 void VirtualChunk::UpdateTick()
 {
-for (Entity* entity : entityList)
+    updatingEntities = true;
+    for (Entity* entity : entityList)
     {
         entity->UpdateTick();
     }
+    updatingEntities = false;
+
+    for (Entity* entity : waitingAddEntityList)
+        entityList.insert(entity);
+    for (EntityPlayer* player : waitingAddPlayerList)
+        playerList.insert(player);
+    for (Entity* entity : waitingRemoveEntityList)
+        entityList.erase(entity);
+    for (EntityPlayer* player : waitingRemovePlayerList)
+        playerList.erase(player);
+
+    waitingAddEntityList.clear();
+    waitingAddPlayerList.clear();
+    waitingRemoveEntityList.clear();
+    waitingRemovePlayerList.clear();
 }
 
 void VirtualChunk::SendUpdate()
 {
     Network::NetworkPacket updatePacket;
-for (Entity* entity : entityList)
+    for (Entity* entity : entityList)
     {
         entity->GetUpdatePositionAndRotationPacket(updatePacket);
         entity->GetSpecificUpdatePacket(updatePacket);
@@ -99,7 +127,7 @@ for (Entity* entity : entityList)
 
 void VirtualChunk::SendPacketToPlayerInChunk(const Network::NetworkPacket& packet) const
 {
-for (EntityPlayer* plr : playerList)
+    for (EntityPlayer* plr : playerList)
     {
         plr->Send(packet);
     }
@@ -176,12 +204,18 @@ void VirtualChunk::AddPlayerByMoving(EntityPlayer* player, int prevChunkX, int p
         std::cerr << "ERROR AddPlayerByMoving: " << posX << " " << posZ << " from " << prevChunkX << " " << prevChunkZ << std::endl;
     }
     AddEntityByMoving(player, prevChunkX, prevChunkZ);
+    if (updatingEntities)
+        waitingAddEntityList.push_back(player);
+    else
     playerList.insert(player);
 }
 
 void VirtualChunk::RemovePlayerByMoving(EntityPlayer* player, int newChunkX, int newChunkZ)
 {
-    playerList.erase(player);
+    if (updatingEntities)
+        waitingRemoveEntityList.push_back(player);
+    else
+        playerList.erase(player);
     RemoveEntityByMoving(player, newChunkX, newChunkZ);
     if (newChunkX != posX)
     {
@@ -282,7 +316,10 @@ void VirtualChunk::AddEntityByMoving(Entity* entity, int prevChunkX, int prevChu
     {
         std::cerr << "ERROR AddEntityByMoving: " << posX << " " << posZ << " from " << prevChunkX << " " << prevChunkZ << std::endl;
     }
-    entityList.insert(entity);
+    if (updatingEntities)
+        waitingAddEntityList.push_back(entity);
+    else
+        entityList.insert(entity);
 }
 
 void VirtualChunk::RemoveEntityByMoving(Entity* entity, int newChunkX, int newChunkZ)
@@ -331,7 +368,10 @@ void VirtualChunk::RemoveEntityByMoving(Entity* entity, int newChunkX, int newCh
     {
         std::cerr << "ERROR RemovePlayerByMoving: " << posX << " " << posZ << " to " << newChunkX << " " << newChunkZ << std::endl;
     }
-    entityList.erase(entity);
+    if (updatingEntities)
+        waitingRemoveEntityList.push_back(entity);
+    else
+        entityList.erase(entity);
 }
 
 void VirtualChunk::Unload()

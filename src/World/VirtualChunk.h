@@ -2,6 +2,7 @@
 #define VIRTUALCHUNK_H_
 
 #include <set>
+#include <vector>
 
 namespace Network
 {
@@ -45,8 +46,14 @@ private:
     const int posX;
     const int posZ;
     World* world;
+    bool updatingEntities;
     std::set<Entity*> entityList;
     std::set<EntityPlayer*> playerList;
+
+    std::vector<Entity*> waitingAddEntityList;
+    std::vector<EntityPlayer*> waitingAddPlayerList;
+    std::vector<Entity*> waitingRemoveEntityList;
+    std::vector<EntityPlayer*> waitingRemovePlayerList;
 };
 
 } /* namespace World */
