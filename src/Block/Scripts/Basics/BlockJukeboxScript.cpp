@@ -34,7 +34,8 @@ bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
     if (tileEntity)
     {
         Block::TileEntityRecordPlayer* recordPlayer = dynamic_cast<Block::TileEntityRecordPlayer*>(tileEntity);
-        if (recordPlayer)
+
+        if (recordPlayer && std::find(item_list.begin(), item_list.end(), item.getItemId()) != item_list.end())
         {
             recordPlayer->SetRecord(item.getItemId());
             world->PlaySoundOrParticleEffect(x, y, z, 1005 /*TODO enum*/, item.getItemId(), false, 5);
@@ -52,6 +53,24 @@ Block::TileEntity* BlockJukeboxScript::CreateNewTileEntity()
 bool BlockJukeboxScript::UseTileEntity()
 {
     return true;
+}
+
+void BlockJukeboxScript::InitParam(int paramId, const std::string& param)
+{
+    if(paramId == 1)
+    {
+    	std::istringstream allowed_items(param);
+    	int value;
+    	for(std::string each; std::getline(allowed_items, each, ',');)
+    	{
+    		std::istringstream(each) >> value;
+    		item_list.push_back(value);
+    	}
+    }
+    else
+    {
+    	std::cerr << "BAD PARAMETER ID: " << paramId << std::endl;
+    }
 }
 
 } /* namespace Scripting */
