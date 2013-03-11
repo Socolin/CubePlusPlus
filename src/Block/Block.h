@@ -31,6 +31,9 @@ public:
           unsigned char lightValue, float blockResistance, float blockHardness,
           bool needsRandomTick, float slipperiness,
           bool isCollidable, bool isOpaqueCube,
+          bool renderAsNormal,
+          float minX, float minY, float minZ,
+          float maxX, float maxY, float maxZ,
           const BlockMaterial& material, Scripting::BlockScript* script);
     virtual ~Block();
 
@@ -47,6 +50,7 @@ public:
     i_block GetBlockId() const;
     void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList);
     float getSlipperiness() const {return slipperiness;}
+    const Util::AABB GetBoundingBox(int x, int y, int z) const;
 
 private:
     i_block blockId;
@@ -59,6 +63,13 @@ private:
     float slipperiness;
     bool isCollidable;
     bool isOpaqueCube;
+    bool renderAsNormal;
+    float minX;
+    float minY;
+    float minZ;
+    float maxX;
+    float maxY;
+    float maxZ;
     const BlockMaterial material;
     Scripting::BlockScript* script;
 };

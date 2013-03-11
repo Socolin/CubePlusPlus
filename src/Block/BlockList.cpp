@@ -41,6 +41,13 @@ void BlockList::Load()
               << "slipper" << "\t"
               << "isColli" << "\t"
               << "isOpaqu" << "\t"
+              << "renderA" << "\t"
+              << "minX" << "\t"
+              << "minY" << "\t"
+              << "minZ" << "\t"
+              << "maxX" << "\t"
+              << "maxY" << "\t"
+              << "maxZ" << "\t"
               << "materia" << "\t"
               << "scriptI" << "\t"
               << "soundId" << "\t"
@@ -60,6 +67,13 @@ void BlockList::Load()
         float slipperiness = result->getDouble(TableBlock::slipperiness);
         bool isCollidable = result->getBoolean(TableBlock::isCollidable);
         bool isOpaqueCube = result->getBoolean(TableBlock::isOpaqueCube);
+        bool renderAsNormal = result->getBoolean(TableBlock::renderAsNormal);
+        float minX = result->getDouble(TableBlock::minX);
+        float minY = result->getDouble(TableBlock::minY);
+        float minZ = result->getDouble(TableBlock::minZ);
+        float maxX = result->getDouble(TableBlock::maxX);
+        float maxY = result->getDouble(TableBlock::maxY);
+        float maxZ = result->getDouble(TableBlock::maxZ);
         int materialId = result->getInt(TableBlock::material);
         int scriptId = result->getInt(TableBlock::scriptId);
 
@@ -119,7 +133,9 @@ void BlockList::Load()
 
         Block* block = new Block(blockId, soundList[soundId], lightOpacity,
                                  lightValue, blockResistance, blockHardness, needsRandomTick,
-                                 slipperiness, isCollidable, isOpaqueCube, materialList[materialId],
+                                 slipperiness, isCollidable, isOpaqueCube,renderAsNormal,
+                                 minX, minY, minZ, maxX, maxY, maxZ,
+                                 materialList[materialId],
                                  script);
         std::cout << blockId << "\t"
                   << (int)lightOpacity << "\t"
@@ -130,6 +146,13 @@ void BlockList::Load()
                   << slipperiness << "\t"
                   << isCollidable << "\t"
                   << isOpaqueCube << "\t"
+                  << renderAsNormal << "\t"
+                  << minX << "\t"
+                  << minY << "\t"
+                  << minZ << "\t"
+                  << maxX << "\t"
+                  << maxY << "\t"
+                  << maxZ << "\t"
                   << materialId << "\t"
                   << scriptId << "\t"
                   << soundId << "\t"

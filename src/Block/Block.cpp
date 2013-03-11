@@ -17,7 +17,10 @@ Block::~Block()
 
 Block::Block(i_block blockId, const SoundBlock& sound, unsigned char lightOpacity,
              unsigned char lightValue, float blockResistance, float blockHardness, bool needsRandomTick,
-             float slipperiness, bool isCollidable, bool isOpaqueCube, const BlockMaterial& material,
+             float slipperiness, bool isCollidable, bool isOpaqueCube, bool renderAsNormal,
+             float minX, float minY, float minZ,
+             float maxX, float maxY, float maxZ,
+             const BlockMaterial& material,
              Scripting::BlockScript* script)
     : blockId(blockId)
     , sound(sound)
@@ -29,6 +32,13 @@ Block::Block(i_block blockId, const SoundBlock& sound, unsigned char lightOpacit
     , slipperiness(slipperiness)
     , isCollidable(isCollidable)
     , isOpaqueCube(isOpaqueCube)
+    , renderAsNormal(renderAsNormal)
+    , minX(minX)
+    , minY(minY)
+    , minZ(minZ)
+    , maxX(maxX)
+    , maxY(maxY)
+    , maxZ(maxZ)
     , material(material)
     , script(script)
 {
@@ -118,8 +128,14 @@ void Block::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util:
     }
     else
     {
-        bbList.push_back(Util::AABB(x, y, z, 1, 1, 1));
+        bbList.push_back(GetBoundingBox(x, y, z));
     }
 }
+
+const Util::AABB Block::GetBoundingBox(int x, int y, int z) const
+{
+    return Util::AABB(x + minX, y + minY, z + minZ, maxX - minX, maxY - minY, maxZ - minZ);
+}
+
 
 } /* namespace Inventory */
