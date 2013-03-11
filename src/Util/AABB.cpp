@@ -156,6 +156,4 @@ double AABB::GetZOffsetWith(const AABB& B, double dz) const
 
 
 
-
-
 } /* namespace Inventory */

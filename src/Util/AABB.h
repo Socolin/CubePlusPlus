@@ -23,6 +23,25 @@ public:
     double GetYOffsetWith(const AABB& B, double dy) const;
     double GetZOffsetWith(const AABB& B, double dz) const;
 
+    inline void SetWidthHeight(double width, double height);
+    inline double getDepth() const;
+    inline void setDepth(double depth);
+    inline double getHeight() const;
+    inline void setHeight(double height);
+    inline double getWidth() const;
+    inline void setWidth(double width);
+    inline double getX() const;
+    inline void setX(double x);
+    inline double getY() const;
+    inline void setY(double y);
+    inline double getZ() const;
+    inline void setZ(double z);
+
+    inline double getMaxX() const;
+    inline double getMaxY() const;
+    inline double getMaxZ() const;
+
+private:
     double width;
     double height;
     double depth;
@@ -31,5 +50,8 @@ public:
     double z;
 };
 
-} /* namespace Inventory */
+} /* namespace Util */
+
+#include "AABB.hxx"
+
 #endif /* AABB_H_ */

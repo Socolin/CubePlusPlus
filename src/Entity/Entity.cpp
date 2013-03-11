@@ -9,6 +9,7 @@
 
 #include "Network/Opcode.h"
 #include "Network/NetworkPacket.h"
+#include "Util/FloatUtil.h"
 #include "World/VirtualChunk.h"
 #include "World/VirtualSmallChunk.h"
 #include "World/World.h"
@@ -239,8 +240,7 @@ void Entity::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
 
 void Entity::SetWidthHeight(double width, double height)
 {
-    boundingBox.depth = boundingBox.width = width;
-    boundingBox.height = height;
+    boundingBox.SetWidthHeight(width, height);
 }
 
 void Entity::moveToChunk(int newChunkX, int newChunkZ)
@@ -249,6 +249,100 @@ void Entity::moveToChunk(int newChunkX, int newChunkZ)
     oldVChunk->RemoveEntity(this);
     VirtualSmallChunk *vChunk = world->GetVirtualSmallChunk(newChunkX, newChunkZ);
     vChunk->AddEntity(this);
+}
+
+bool Entity::PushOutOfBlock(double x, double y, double z)
+{
+    int blockX = floor(x);
+    int blockY = floor(y);
+    int blockZ = floor(z);
+
+    double dx = x - (double)blockX;
+    double dy = y - (double)blockY;
+    double dz = z - (double)blockZ;
+
+    bool collision = false;
+    std::vector<Util::AABB> bbList;
+    world->GetBlockBoundingBoxInAABB(boundingBox, bbList);
+    for (Util::AABB& box : bbList)
+    {
+        if (boundingBox.DetectCollision(box))
+        {
+            collision = true;
+            break;
+        }
+    }
+    if (!collision && !world->IsFullBlock(blockX, blockY, blockZ))
+    {
+        return false;
+    }
+    else
+    {
+        bool blockWestFull = world->IsFullBlock(blockX - 1, blockY, blockZ);
+        bool blockEastFull = world->IsFullBlock(blockX + 1, blockY, blockZ);
+        bool blockTopFull = world->IsFullBlock(blockX, blockY + 1, blockZ);
+        bool blockNorthFull = world->IsFullBlock(blockX, blockY, blockZ - 1);
+        bool blockSouthFull = world->IsFullBlock(blockX, blockY, blockZ + 1);
+        char direction = 3;
+        double lowerDistance = 9999.0;
+
+        if (!blockWestFull && dx < lowerDistance)
+        {
+            lowerDistance = dx;
+            direction = 0;
+        }
+
+        if (!blockEastFull && 1.0 - dx < lowerDistance)
+        {
+            lowerDistance = 1.0 - dx;
+            direction = 1;
+        }
+
+        if (!blockTopFull && 1.0 - dy < lowerDistance)
+        {
+            lowerDistance = 1.0 - dy;
+            direction = 3;
+        }
+
+        if (!blockNorthFull && dz < lowerDistance)
+        {
+            lowerDistance = dz;
+            direction = 4;
+        }
+
+        if (!blockSouthFull && 1.0 - dz < lowerDistance)
+        {
+            lowerDistance = 1.0 - dz;
+            direction = 5;
+        }
+
+        float randomSpeed = Util::randFloat() * 0.2F + 0.1F;
+
+        if (direction == 0)
+        {
+            motionX = -randomSpeed;
+        }
+        else if (direction == 1)
+        {
+            motionX = randomSpeed;
+        }
+        else if (direction == 3)
+        {
+            motionY = randomSpeed;
+        }
+        else if (direction == 4)
+        {
+            motionZ = -randomSpeed;
+        }
+        else if (direction == 5)
+        {
+            motionZ = randomSpeed;
+        }
+
+        return true;
+    }
+
+    return true;
 }
 
 } /* namespace Network */

@@ -51,6 +51,7 @@ public:
     void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList);
     float getSlipperiness() const {return slipperiness;}
     const Util::AABB GetBoundingBox(int x, int y, int z) const;
+    bool isFullBlock();
 
 private:
     i_block blockId;
@@ -72,6 +73,9 @@ private:
     float maxZ;
     const BlockMaterial material;
     Scripting::BlockScript* script;
+
+    // Calculated data
+    bool fullBlock;
 };
 
 } /* namespace Inventory */

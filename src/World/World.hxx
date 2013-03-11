@@ -1,6 +1,10 @@
 #ifndef WORLD_HXX_
 #define WORLD_HXX_
 
+#include "Block/Block.h"
+#include "Block/BlockConstants.h"
+#include "Block/BlockList.h"
+
 namespace World
 {
 
@@ -16,7 +20,7 @@ inline Chunk* World::GetChunk(int x, int z)
     return it->second;
 }
 
-inline Chunk* World::GetChunkIfLoaded(int x, int z)
+inline Chunk* World::GetChunkIfLoaded(int x, int z) const
 {
     auto it = chunkMap.find(CHUNK_KEY(x,z));
     if (it == chunkMap.end())
@@ -38,7 +42,7 @@ inline VirtualChunk* World::GetVirtualChunk(int x, int z)
     return it->second;
 }
 
-inline VirtualChunk* World::GetVirtualChunkIfLoaded(int x, int z)
+inline VirtualChunk* World::GetVirtualChunkIfLoaded(int x, int z) const
 {
     auto it = virtualChunkMap.find(CHUNK_KEY(x,z));
     if (it == virtualChunkMap.end())
@@ -60,7 +64,7 @@ inline VirtualSmallChunk* World::GetVirtualSmallChunk(int x, int z)
     return it->second;
 }
 
-inline VirtualSmallChunk* World::GetVirtualSmallChunkIfLoaded(int x, int z)
+inline VirtualSmallChunk* World::GetVirtualSmallChunkIfLoaded(int x, int z) const
 {
     auto it = virtualSmallChunkMap.find(CHUNK_KEY(x,z));
     if (it == virtualSmallChunkMap.end())
@@ -86,7 +90,7 @@ inline i_data World::GetBlockData(int x, i_height y, int z)
     return chunk->getDataAt(x & 0xf, y, z & 0xf);
 }
 
-inline s_block_data World::GetBlockIdAndData(int x, i_height y, int z)
+inline s_block_data World::GetBlockIdAndData(int x, i_height y, int z) const
 {
     Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
     s_block_data block_data;
@@ -100,6 +104,19 @@ inline s_block_data World::GetBlockIdAndData(int x, i_height y, int z)
         block_data.blockId = 0;
     }
     return block_data;
+}
+bool World::IsFullBlock(int x, i_height y, int z)
+{
+    i_block blockId = GetBlockId(x, y, z);
+    if (blockId < BLOCK_COUNT)
+    {
+        Block::Block* block = Block::BlockList::getBlock(blockId);
+        if (block)
+        {
+            return block->isFullBlock();
+        }
+    }
+    return false;
 }
 }
 

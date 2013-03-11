@@ -38,18 +38,20 @@ public:
     void RemovePlayer(EntityPlayer* entity);
 
     inline Chunk* GetChunk(int x, int z);
-    inline Chunk* GetChunkIfLoaded(int x, int z);
+    inline Chunk* GetChunkIfLoaded(int x, int z) const;
 
     inline VirtualChunk* GetVirtualChunk(int x, int z);
-    inline VirtualChunk* GetVirtualChunkIfLoaded(int x, int z);
+    inline VirtualChunk* GetVirtualChunkIfLoaded(int x, int z) const;
 
     inline VirtualSmallChunk* GetVirtualSmallChunk(int x, int z);
-    inline VirtualSmallChunk* GetVirtualSmallChunkIfLoaded(int x, int z);
+    inline VirtualSmallChunk* GetVirtualSmallChunkIfLoaded(int x, int z) const;
 
     inline i_block GetBlockId(int x, i_height y, int z);
     inline i_data GetBlockData(int x, i_height y, int z);
 
-    inline s_block_data GetBlockIdAndData(int x, i_height y, int z);
+    inline bool IsFullBlock(int x, i_height y, int z);
+
+    inline s_block_data GetBlockIdAndData(int x, i_height y, int z) const;
 
     void PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockData);
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
@@ -66,6 +68,7 @@ public:
     void DropItemstackWithRandomDirection(double x, double y, double z, const Inventory::ItemStack& itemstack);
     void GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::AABB>& bbList);
     void GetBlockBoundingBoxInRange(int x, int y, int z, int range, int rangeHeight, std::vector<Util::AABB>& bbList);
+    void GetBlockBoundingBoxInAABB(const Util::AABB& box, std::vector<Util::AABB>& bbList) const;
 private:
     void UpdateTime();
     VirtualChunk* CreateVirtualChunk(int x, int z);

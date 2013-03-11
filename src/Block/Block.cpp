@@ -42,6 +42,7 @@ Block::Block(i_block blockId, const SoundBlock& sound, unsigned char lightOpacit
     , material(material)
     , script(script)
 {
+    fullBlock = ((maxX - minX) + (maxZ - minZ) + (maxZ - minZ)) >= 3;
 }
 
 void Block::OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
@@ -137,5 +138,9 @@ const Util::AABB Block::GetBoundingBox(int x, int y, int z) const
     return Util::AABB(x + minX, y + minY, z + minZ, maxX - minX, maxY - minY, maxZ - minZ);
 }
 
+bool Block::isFullBlock()
+{
+    return fullBlock;
+}
 
 } /* namespace Inventory */

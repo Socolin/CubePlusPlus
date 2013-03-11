@@ -29,13 +29,8 @@ void EntityItem::UpdateTick()
     liveTime++;
 
     motionY -= 0.03999999910593033;
-//    std::cout << "motionY:" << motionY << std::endl;
 
-    // If isInsideBlock
-    //   noclip=true
-    //   set motion XYZ to move out
-    // else
-    //   noclip = false
+    noclip = PushOutOfBlock(x, y + (boundingBox.getHeight() / 2), z);
 
     Move(motionX, motionY, motionZ);
 

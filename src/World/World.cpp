@@ -181,6 +181,31 @@ void World::GetBlockBoundingBoxInRange(int x, int y, int z, int range, int range
             }
 }
 
+void World::GetBlockBoundingBoxInAABB(const Util::AABB& box, std::vector<Util::AABB>& bbList) const
+{
+    int minX = floor(box.getX());
+    int minY = floor(box.getY());
+    int minZ = floor(box.getZ());
+    int maxX = floor(box.getMaxX());
+    int maxY = floor(box.getMaxY());
+    int maxZ = floor(box.getMaxZ());
+    for (int blockX = minX; blockX <= maxX; blockX++)
+        for (int blockZ = minZ; blockZ <= maxZ; blockZ++)
+            for (int blockY = minY; blockY <= maxY; blockY++)
+            {
+                s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
+                if (blockData.blockId > 0)
+                {
+                    Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+                    if (block)
+                    {
+                        block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
+                    }
+                }
+            }
+}
+
+
 void World::GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::AABB>& bbList)
 {
     for (int blockX = x - 1; blockX <= x + 1; blockX++)
@@ -215,6 +240,7 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, const
         AddEntity(item);
     }
 }
+
 
 Chunk* World::LoadChunk(int x, int z)
 {
