@@ -50,7 +50,7 @@ public:
         this->stackSize = stackSize;
     }
 
-    Item* getItem()
+    Item* getItem() const
     {
         if (itemId < 0 || itemId >= ITEM_COUNT)
             return nullptr;

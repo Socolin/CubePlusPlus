@@ -1,15 +1,19 @@
 #include "World.h"
 
+#include <cmath>
 #include <sstream>
 
 #include "Chunk.h"
 #include "Block/Block.h"
 #include "Block/BlockList.h"
+#include "Inventory/ItemStack.h"
 #include "Entity/EntityPlayer.h"
+#include "Entity/EntityItem.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "VirtualChunk.h"
 #include "VirtualSmallChunk.h"
+#include "Util/FloatUtil.h"
 
 namespace World
 {
@@ -193,6 +197,23 @@ void World::GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::A
                     }
                 }
             }
+}
+
+void World::DropItemstackWithRandomDirection(double x, double y, double z, const Inventory::ItemStack& itemstack)
+{
+    Inventory::Item* item = itemstack.getItem();
+    if (item != nullptr)
+    {
+        float randomDistance = Util::randFloat() * 0.5;
+        float randomAngle = Util::randFloat() * M_PI * 2.0;
+
+        double motionX = -sin(randomAngle) * randomDistance;
+        double motionZ = cos(randomAngle) * randomDistance;
+        double motionY = 0.20000000298023224;
+
+        EntityItem* item = new EntityItem(x, y, z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()), motionX, motionY, motionZ);
+        AddEntity(item);
+    }
 }
 
 Chunk* World::LoadChunk(int x, int z)
