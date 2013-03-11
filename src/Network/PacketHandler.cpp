@@ -390,11 +390,18 @@ void NetworkSession::handlePing() throw (NetworkException)
     oss << maxplayers;
     std::string str_maxplayers = oss.str();
 
+    int currentPlayers = World::WorldManager::GetInstance()->getPlayerCount();
+    std::ostringstream currentPlayerStream;
+    currentPlayerStream << currentPlayers;
+    std::string str_currentPlayers = currentPlayerStream.str();
+
     std::wstring answer(L"\u00a7\u0031\u0001");
     answer += CURRENT_VERSION_PROTOCOL_WSTR;
     answer += L"\u00001.4.5\u0000";
     std::copy(motd.begin(), motd.end(), std::back_inserter(answer));
-    answer += L"\u000020\u0000";
+    answer += L"\u0000";
+    std::copy(str_currentPlayers.begin(), str_maxplayers.end(), std::back_inserter(answer));
+    answer += L"\u0000";
     std::copy(str_maxplayers.begin(), str_maxplayers.end(), std::back_inserter(answer));
 
     NetworkPacket packet;

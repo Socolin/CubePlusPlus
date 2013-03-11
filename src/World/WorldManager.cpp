@@ -51,6 +51,11 @@ void WorldManager::HandleChatMessage(EntityPlayer* player, std::wstring& message
     }
 }
 
+int WorldManager::getPlayerCount()
+{
+    return playerList.size();
+}
+
 WorldManager::WorldManager() :
     world(NULL), isRunning(true)
 {

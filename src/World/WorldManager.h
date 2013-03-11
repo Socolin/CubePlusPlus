@@ -32,6 +32,7 @@ public:
 
     void HandleChatMessage(EntityPlayer* player, std::wstring& message);
 
+    int getPlayerCount();
     void Stop();
     bool IsRunning();
     void SendToAllPlayer(Network::NetworkPacket& packet);
