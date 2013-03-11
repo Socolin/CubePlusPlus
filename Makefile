@@ -615,6 +615,30 @@ src/Entity/Entity.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/Entity.cpp.s
 .PHONY : src/Entity/Entity.cpp.s
 
+src/Entity/EntityItem.o: src/Entity/EntityItem.cpp.o
+.PHONY : src/Entity/EntityItem.o
+
+# target to build an object file
+src/Entity/EntityItem.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/EntityItem.cpp.o
+.PHONY : src/Entity/EntityItem.cpp.o
+
+src/Entity/EntityItem.i: src/Entity/EntityItem.cpp.i
+.PHONY : src/Entity/EntityItem.i
+
+# target to preprocess a source file
+src/Entity/EntityItem.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/EntityItem.cpp.i
+.PHONY : src/Entity/EntityItem.cpp.i
+
+src/Entity/EntityItem.s: src/Entity/EntityItem.cpp.s
+.PHONY : src/Entity/EntityItem.s
+
+# target to generate assembly for a file
+src/Entity/EntityItem.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Entity/EntityItem.cpp.s
+.PHONY : src/Entity/EntityItem.cpp.s
+
 src/Entity/EntityPlayer.o: src/Entity/EntityPlayer.cpp.o
 .PHONY : src/Entity/EntityPlayer.o
 
@@ -1143,6 +1167,30 @@ src/Util/AABB.cpp.s:
 	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/AABB.cpp.s
 .PHONY : src/Util/AABB.cpp.s
 
+src/Util/FloatUtil.o: src/Util/FloatUtil.cpp.o
+.PHONY : src/Util/FloatUtil.o
+
+# target to build an object file
+src/Util/FloatUtil.cpp.o:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/FloatUtil.cpp.o
+.PHONY : src/Util/FloatUtil.cpp.o
+
+src/Util/FloatUtil.i: src/Util/FloatUtil.cpp.i
+.PHONY : src/Util/FloatUtil.i
+
+# target to preprocess a source file
+src/Util/FloatUtil.cpp.i:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/FloatUtil.cpp.i
+.PHONY : src/Util/FloatUtil.cpp.i
+
+src/Util/FloatUtil.s: src/Util/FloatUtil.cpp.s
+.PHONY : src/Util/FloatUtil.s
+
+# target to generate assembly for a file
+src/Util/FloatUtil.cpp.s:
+	$(MAKE) -f CMakeFiles/Server.dir/build.make CMakeFiles/Server.dir/src/Util/FloatUtil.cpp.s
+.PHONY : src/Util/FloatUtil.cpp.s
+
 src/Util/StringUtil.o: src/Util/StringUtil.cpp.o
 .PHONY : src/Util/StringUtil.o
 
@@ -1359,6 +1407,9 @@ help:
 	@echo "... src/Entity/Entity.o"
 	@echo "... src/Entity/Entity.i"
 	@echo "... src/Entity/Entity.s"
+	@echo "... src/Entity/EntityItem.o"
+	@echo "... src/Entity/EntityItem.i"
+	@echo "... src/Entity/EntityItem.s"
 	@echo "... src/Entity/EntityPlayer.o"
 	@echo "... src/Entity/EntityPlayer.i"
 	@echo "... src/Entity/EntityPlayer.s"
@@ -1425,6 +1476,9 @@ help:
 	@echo "... src/Util/AABB.o"
 	@echo "... src/Util/AABB.i"
 	@echo "... src/Util/AABB.s"
+	@echo "... src/Util/FloatUtil.o"
+	@echo "... src/Util/FloatUtil.i"
+	@echo "... src/Util/FloatUtil.s"
 	@echo "... src/Util/StringUtil.o"
 	@echo "... src/Util/StringUtil.i"
 	@echo "... src/Util/StringUtil.s"

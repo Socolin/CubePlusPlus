@@ -23,7 +23,7 @@ ScriptManager* ScriptManager::GetInstance()
 
 void ScriptManager::RegisterScript(std::string scriptName, BlockScript* script)
 {
-    std::cout << scriptName << " script registerd";
+    std::cout << "\t- " << scriptName << std::endl;
     blockScript[scriptName] = script;
 }
 BlockScript* ScriptManager::GetBlockScript(std::string scriptName)

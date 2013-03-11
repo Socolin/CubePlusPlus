@@ -1,9 +1,10 @@
 #include "AABB.h"
+#include <iostream>
 
 namespace Util
 {
 
-AABB::AABB(float width, float height, float depht)
+AABB::AABB(double width, double height, double depht)
     : width(width)
     , height(height)
     , depth(depht)
@@ -13,7 +14,7 @@ AABB::AABB(float width, float height, float depht)
 {
 }
 
-AABB::AABB(float x, float y, float z, float width, float height, float depht)
+AABB::AABB(double x, double y, double z, double width, double height, double depht)
     : width(width)
     , height(height)
     , depth(depht)
@@ -35,14 +36,14 @@ bool AABB::DetectCollision(const AABB& B) const
     return true;
 }
 
-void AABB::SetPosition(float x, float y, float z)
+void AABB::SetPosition(double x, double y, double z)
 {
     this->x = x;
     this->y = y;
     this->z = z;
 }
 
-void AABB::SetPositionCenteredXZ(float x, float y, float z)
+void AABB::SetPositionCenteredXZ(double x, double y, double z)
 {
     this->x = x - width / 2;
     this->y = y;
@@ -50,15 +51,15 @@ void AABB::SetPositionCenteredXZ(float x, float y, float z)
 }
 
 
-float AABB::GetXOffsetWith(const AABB& B, float dx) const
+double AABB::GetXOffsetWith(const AABB& B, double dx) const
 {
-    if (B.y + B.height > B.y && B.y < y + height)
+    if ((B.y + B.height) > y && B.y < (y + height))
     {
-        if (B.z + B.depth > z && B.z < z + depth)
+        if ((B.z + B.depth) > z && B.z < (z + depth))
         {
             double distance;
 
-            if (dx > 0.f && B.x + B.width <= x)
+            if (dx > 0.0 && (B.x + B.width) <= x)
             {
                 distance = x - (B.x + B.width);
 
@@ -68,7 +69,7 @@ float AABB::GetXOffsetWith(const AABB& B, float dx) const
                 }
             }
 
-            if (dx < 0.f && B.x >= x + width)
+            if (dx < 0.0 && B.x >= (x + width))
             {
                 distance = (x + width) - B.x;
 
@@ -82,7 +83,7 @@ float AABB::GetXOffsetWith(const AABB& B, float dx) const
     return dx;
 }
 
-float AABB::GetYOffsetWith(const AABB& B, float dy) const
+double AABB::GetYOffsetWith(const AABB& B, double dy) const
 {
     if ((B.x + B.width) > x && B.x < x + width)
     {
@@ -114,14 +115,14 @@ float AABB::GetYOffsetWith(const AABB& B, float dy) const
     return dy;
 }
 
-void AABB::Move(float dx, float dy, float dz)
+void AABB::Move(double dx, double dy, double dz)
 {
     x += dx;
     y += dy;
     z += dz;
 }
 
-float AABB::GetZOffsetWith(const AABB& B, float dz) const
+double AABB::GetZOffsetWith(const AABB& B, double dz) const
 {
     if ((B.x + B.width) > x && B.x < x + width)
     {

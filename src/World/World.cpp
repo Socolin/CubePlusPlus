@@ -166,10 +166,31 @@ void World::GetBlockBoundingBoxInRange(int x, int y, int z, int range, int range
             for (int blockY = y - rangeHeight; blockY <= y + rangeHeight; blockY++)
             {
                 s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
-                Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
-                if (block)
+                if (blockData.blockId > 0)
                 {
-                    block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
+                    Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+                    if (block)
+                    {
+                        block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
+                    }
+                }
+            }
+}
+
+void World::GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::AABB>& bbList)
+{
+    for (int blockX = x - 1; blockX <= x + 1; blockX++)
+        for (int blockZ = z - 1; blockZ <= z + 1; blockZ++)
+            for (int blockY = y - 1; blockY <= y + 1; blockY++)
+            {
+                s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
+                if (blockData.blockId > 0)
+                {
+                    Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+                    if (block)
+                    {
+                        block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
+                    }
                 }
             }
 }

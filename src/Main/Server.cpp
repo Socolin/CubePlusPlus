@@ -7,6 +7,7 @@
 #include "Database/DatabaseManager.h"
 #include "Scripting/ScriptManager.h"
 #include <iostream>
+#include <ctime>
 
 int main(void)
 
@@ -32,11 +33,29 @@ int main(void)
     Block::BlockList::InitInstance();
     Inventory::ItemList::InitInstance();
 
+    clock_t time = std::clock();
+    struct timespec requestTime;
+    struct timespec unused;
+    requestTime.tv_sec = 0;
     while (worldManager->IsRunning())
     {
+        time = std::clock();
         manager.ReceiveData();
         worldManager->UpdateTick();
-        usleep(1);
+        clock_t diff = std::clock() - time;
+
+        double diffInSeconds = (((double)diff)/CLOCKS_PER_SEC);
+        if (diffInSeconds < 0.05)
+        {
+            requestTime.tv_nsec = (0.05 - diffInSeconds) * 1000000000;
+            nanosleep(&requestTime, &unused);
+            //std::cout << diffInSeconds << std::endl;;
+        }
+        else
+        {
+            std::cerr << "Tick take more than 5ms :"<< diffInSeconds << "seconds" << std::endl;
+            usleep(1);
+        }
     }
     delete worldManager;
     return 0;

@@ -13,7 +13,8 @@ EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack itemSt
     , liveTime(0)
     , itemStack(itemStack)
 {
-    SetWidthHeight(0.5, 0.5);
+    std::cout << y << std::endl;
+    SetWidthHeight(0.25, 0.25);
     this->motionX = motionX;
     this->motionY = motionY;
     this->motionZ = motionZ;
@@ -27,7 +28,8 @@ void EntityItem::UpdateTick()
 {
     liveTime++;
 
-    motionY -= 0.040;
+    motionY -= 0.03999999910593033;
+//    std::cout << "motionY:" << motionY << std::endl;
 
     // If isInsideBlock
     //   noclip=true
@@ -36,6 +38,7 @@ void EntityItem::UpdateTick()
     //   noclip = false
 
     Move(motionX, motionY, motionZ);
+
 
     if (hasMove)
     {
@@ -46,24 +49,38 @@ void EntityItem::UpdateTick()
             // Check merge with item near
         }
 
-        float slowDown = 0.98;
-        i_block blockBottomId = 0;
-        if (y > 1 && y < 255)
-            blockBottomId = world->GetBlockId(x, y - 1, z);
-        if (blockBottomId > 0)
+        double slowDown = 0.98;
+        if (onGround)
         {
-            Block::Block* blockBottom = Block::BlockList::getBlock(blockBottomId);
-            if (blockBottom)
+            i_block blockBottomId = 0;
+            if (1 < y && y < 256)
+                blockBottomId = world->GetBlockId(floor(x), floor(y) - 1, floor(z));
+            if (blockBottomId > 0)
             {
-                slowDown = blockBottom->getSlipperiness() * 0.98f;
+                Block::Block* blockBottom = Block::BlockList::getBlock(blockBottomId);
+                if (blockBottom)
+                {
+                    slowDown = blockBottom->getSlipperiness() * 0.98f;
+                }
+                else
+                    slowDown = 0.58800006;
             }
-            else
-                slowDown = 0.588f;
         }
 
         motionX *= slowDown;
-        motionY *= 0.98f;
+        motionY *= 0.9800000190734863;
         motionZ *= slowDown;
+
+        if (onGround)
+        {
+            motionY *= -0.5;
+        }
+
+        if (fabs(motionX) < 0.00001 && fabs(motionZ) < 0.00001)
+        {
+            motionX = 0;
+            motionZ = 0;
+        }
     }
 
 }

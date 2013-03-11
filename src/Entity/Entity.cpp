@@ -105,30 +105,36 @@ void Entity::Move(double dx, double dy, double dz)
     double oldDz = dz;
 
     std::vector<Util::AABB> bbList;
-    world->GetBlockBoundingBoxInRange((int)(x + dx), (int)(y + dy), (int)(z + dz), 1, 1, bbList);
+    world->GetBlockBoundingBoxInRange1(floor(x + dx), floor(y + dy), floor(z + dz), bbList);
 
     for (Util::AABB& box : bbList)
         dx = box.GetXOffsetWith(boundingBox, dx);
+
     boundingBox.MoveX(dx);
 
     for (Util::AABB& box : bbList)
         dy = box.GetYOffsetWith(boundingBox, dy);
     boundingBox.MoveY(dy);
 
-    if (dy < 0)
-    {
-        if (oldDy != dy)
-            onGround = true;
-    }
-    else
-        onGround = false;
+    onGround = oldDy < 0 && dy != oldDy;
 
     for (Util::AABB& box : bbList)
         dz = box.GetZOffsetWith(boundingBox, dz);
     boundingBox.MoveZ(dz);
 
-    if (oldDx != dx || oldDy != dy || oldDz != dz)
+    if (0 != dx || 0 != dy || 0 != dz)
         MoveTo(x + dx, y + dy, z + dz);
+
+    if (oldDx != dx)
+        dx = 0;
+    if (oldDy != dy)
+        dy = 0;
+    if (oldDz != dz)
+        dz = 0;
+
+    motionX = dx;
+    motionY = dy;
+    motionZ = dz;
 }
 
 void Entity::Teleport(double x, double y, double z, float yaw, float pitch)

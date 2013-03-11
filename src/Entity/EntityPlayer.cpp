@@ -42,11 +42,14 @@ void EntityPlayer::UpdateTick()
         {
             session->UpdateTick();
         }
-        if (!chunkToSend.empty())
+        for (int i = 0; i < 15; i++)
         {
-            // TODO: add check distance world->viewdistance
-            world->RequestChunk(this, chunkToSend.front());
-            chunkToSend.pop();
+            if (!chunkToSend.empty())
+            {
+                // TODO: add check distance world->viewdistance
+                world->RequestChunk(this, chunkToSend.front());
+                chunkToSend.pop();
+            }
         }
     }
 }
@@ -192,7 +195,7 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
             motionX += cos(randomModifier) * modifier;
             motionY += (Util::randFloat() - Util::randFloat()) * 0.1f;
             motionZ += sin(randomModifier) * modifier;
-            EntityItem* item = new EntityItem(this->x, this->y + getEyeHeight() - 0.3f, this->z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()), motionX, motionY, motionZ);
+            EntityItem* item = new EntityItem(this->x, this->y + getEyeHeight() - 0.3, this->z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()), motionX, motionY, motionZ);
             world->AddEntity(item);
         }
     }

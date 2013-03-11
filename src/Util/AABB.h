@@ -7,28 +7,28 @@ namespace Util
 class AABB
 {
 public:
-    AABB(float width, float height, float depht);
-    AABB(float x, float y, float z, float width, float height, float depht);
+    AABB(double width, double height, double depht);
+    AABB(double x, double y, double z, double width, double height, double depht);
     virtual ~AABB();
 
     bool DetectCollision(const AABB& B) const;
-    void SetPosition(float x, float y, float z);
-    void SetPositionCenteredXZ(float x, float y, float z);
-    void MoveX(float dx) {x += dx;}
-    void MoveY(float dy) {y += dy;}
-    void MoveZ(float dz) {z += dz;}
-    void Move(float dx, float dy, float dz);
+    void SetPosition(double x, double y, double z);
+    void SetPositionCenteredXZ(double x, double y, double z);
+    void MoveX(double dx) {x += dx;}
+    void MoveY(double dy) {y += dy;}
+    void MoveZ(double dz) {z += dz;}
+    void Move(double dx, double dy, double dz);
 
-    float GetXOffsetWith(const AABB& B, float dx) const;
-    float GetYOffsetWith(const AABB& B, float dy) const;
-    float GetZOffsetWith(const AABB& B, float dz) const;
+    double GetXOffsetWith(const AABB& B, double dx) const;
+    double GetYOffsetWith(const AABB& B, double dy) const;
+    double GetZOffsetWith(const AABB& B, double dz) const;
 
-    float width;
-    float height;
-    float depth;
-    float x;
-    float y;
-    float z;
+    double width;
+    double height;
+    double depth;
+    double x;
+    double y;
+    double z;
 };
 
 } /* namespace Inventory */
