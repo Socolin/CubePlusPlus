@@ -150,6 +150,14 @@ void Block::NeighborChange(World::World* world, int x, i_height y, int z)
     }
 }
 
+void Block::Destroy(World::World* world, int x, i_height y, int z, i_data data)
+{
+    if (script)
+    {
+        script->OnDestroy(world, x, y, z, data);
+    }
+}
+
 bool Block::isFullBlock()
 {
     return fullBlock;

@@ -152,16 +152,27 @@ void World::PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockDa
 void World::RemoveBlock(int x, i_height y, int z)
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
-    chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+    i_block blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
+    if (blockId > 0)
+    {
+        Block::Block* block = Block::BlockList::getBlock(blockId);
+        if (block)
+        {
+            i_data blockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
+            block->Destroy(this, x, y, z, blockData);
+        }
 
-    NotifyNeighborBlockChange(x + 1, y, z);
-    NotifyNeighborBlockChange(x - 1, y, z);
-    if (y < 255)
-        NotifyNeighborBlockChange(x, y + 1, z);
-    if (y > 0)
-        NotifyNeighborBlockChange(x, y - 1, z);
-    NotifyNeighborBlockChange(x, y, z + 1);
-    NotifyNeighborBlockChange(x, y, z - 1);
+        chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+
+        NotifyNeighborBlockChange(x + 1, y, z);
+        NotifyNeighborBlockChange(x - 1, y, z);
+        if (y < 255)
+            NotifyNeighborBlockChange(x, y + 1, z);
+        if (y > 0)
+            NotifyNeighborBlockChange(x, y - 1, z);
+        NotifyNeighborBlockChange(x, y, z + 1);
+        NotifyNeighborBlockChange(x, y, z - 1);
+    }
 }
 
 void World::NotifyNeighborBlockChange(int x, i_height y, int z)
