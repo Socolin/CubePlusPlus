@@ -47,6 +47,7 @@ public:
     virtual bool UseTileEntity() {return false;}
     virtual void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data);
     virtual void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) { bbList.push_back(baseBlock->GetBoundingBox(x, y, z)); }
+    virtual void OnNeighborChange(World::World* world, int x, i_height y, int z) {}
 protected:
     Block::Block* baseBlock;
 };

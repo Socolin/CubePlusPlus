@@ -41,6 +41,7 @@ public:
     bool UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
     void UpdateTick(World::World* world, int x, i_height y, int z, i_data data);
     bool CanPlace(World::World* world, int x, i_height y, int z, char face);
+    void NeighborChange(World::World* world, int x, i_height y, int z);
     const SoundBlock& GetSound() const;
     bool GetIsOpaqueCube();
     const BlockMaterial& getMaterial() const;

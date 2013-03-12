@@ -30,6 +30,7 @@ class World;
  */
 class Chunk
 {
+    friend World;
 public:
     Chunk(int x, int y, World* world);
     virtual ~Chunk();
@@ -37,10 +38,6 @@ public:
     // Get block id or data at coordninate
     inline i_block getBlockAt(i_small_coord x, i_height y, i_small_coord z);
     inline i_data getDataAt(i_small_coord x, i_height y, i_small_coord z);
-
-    // Write in chunk data without notification for client or other block
-    inline void SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blockID);
-    inline void SetDataAt(i_small_coord x, i_height y, i_small_coord z, i_data newData);
 
     // Load chunk from file
     void Load();
@@ -58,9 +55,6 @@ public:
     // Generate or get cached packet witch containing chunk datas
     const Network::NetworkPacket& GetPacket();
 
-    // Modifiy a block or data only, and mark them to be notified to client
-    void ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData);
-    void ChangeData(i_small_coord x, i_height y, i_small_coord z, i_data blockData);
 
     // Send all change done with ChangeBlock or ChangeData to client
     void SendUpdate();
@@ -72,6 +66,14 @@ public:
     // Retrive tile entity in block
     Block::TileEntity* GetTileEntity(i_small_coord x, i_height y, i_small_coord z);
 private:
+    // Write in chunk data without notification for client or other block
+    inline void SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blockID);
+    inline void SetDataAt(i_small_coord x, i_height y, i_small_coord z, i_data newData);
+
+    // Modifiy a block or data only, and mark them to be notified to client
+    void ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData);
+    void ChangeData(i_small_coord x, i_height y, i_small_coord z, i_data blockData);
+
     void GeneratePacket();
     void ResetBlockChangePacket();
 private:

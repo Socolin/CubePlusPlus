@@ -53,7 +53,10 @@ public:
 
     inline s_block_data GetBlockIdAndData(int x, i_height y, int z) const;
 
+    void ChangeDataNoEvent(int x, i_height y, int z, i_data blockData);
+    void ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData);
     void PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockData);
+    void RemoveBlock(int x, i_height y, int z);
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 
     void Unload();
@@ -71,6 +74,7 @@ public:
     void GetBlockBoundingBoxInAABB(const Util::AABB& box, std::vector<Util::AABB>& bbList) const;
 
 private:
+    void NotifyNeighborBlockChange(int x, i_height y, int z);
     void UpdateTime();
     VirtualChunk* CreateVirtualChunk(int x, int z);
     VirtualSmallChunk* CreateVirtualSmallChunk(int x, int z);

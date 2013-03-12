@@ -62,21 +62,17 @@ void BlockDoorScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_heig
     }
 
     World::World* world = player->getWorld();
-    World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
-    if (chunk == nullptr)
-        return;
-
-    i_block blockTop = chunk->getBlockAt(x & 0xf, y + 1, z & 0xf);
+    i_block blockTop = world->GetBlockId(x, y + 1, z);
     if (blockTop == 0)
     {
 		i_block blockLeft = world->GetBlockId(leftBlockX, y, leftBlockZ);
         i_block blockRight = world->GetBlockId(rightBlockX, y, rightBlockZ);
         i_block blockRightTop = world->GetBlockId(rightBlockX, y + 1, rightBlockZ);
         if (blockLeft == door_blockid || (blockLeft == 0 && (blockRight || blockRightTop)))
-            chunk->ChangeBlock(x & 0xf, y + 1, z & 0xf, door_blockid, 9);
+            world->ChangeBlockNoEvent(x, y + 1, z, door_blockid, 9);
         else
         {
-            chunk->ChangeBlock(x & 0xf, y + 1, z & 0xf, door_blockid, 8);
+            world->ChangeBlockNoEvent(x, y + 1, z, door_blockid, 8);
         }
     }
 }
@@ -98,12 +94,12 @@ bool BlockDoorScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, i
         if (block == door_blockid)
         {
             i_data bottomBlockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
-            chunk->ChangeData(x & 0xf, y - 1, z & 0xf, (bottomBlockData ^ 0x4) & 0x7);
+            world->ChangeDataNoEvent(x, y - 1, z, (bottomBlockData ^ 0x4) & 0x7);
         }
     }
     else
     {
-        chunk->ChangeData(x & 0xf, y, z & 0xf, clickedBlockData ^ 0x4);
+        world->ChangeDataNoEvent(x, y, z, clickedBlockData ^ 0x4);
     }
     return true;
 }

@@ -174,8 +174,7 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
         return;
     if (state == 0)
     {
-        Chunk* chunk = world->GetChunk(x >> 4, z >> 4);
-        chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+        world->RemoveBlock(x, y, z);
     }
     else if (state == 4)
     {

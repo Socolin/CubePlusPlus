@@ -117,6 +117,17 @@ void World::RemovePlayer(EntityPlayer* player)
     player->setWorld(NULL, 0);
 }
 
+void World::ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, blockData);
+}
+
+void World::ChangeDataNoEvent(int x, i_height y, int z, i_data blockData)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    chunk->ChangeData(x & 0xf, y, z & 0xf, blockData);
+}
 void World::PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockData)
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
@@ -135,6 +146,31 @@ void World::PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockDa
             Block::TileEntity* tileEntity = block->CreateNewTileEntity();
             chunk->SetTileEntity(tileEntity ,x & 0xf, y, z & 0xf);
         }
+    }
+}
+
+void World::RemoveBlock(int x, i_height y, int z)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+
+    NotifyNeighborBlockChange(x + 1, y, z);
+    NotifyNeighborBlockChange(x - 1, y, z);
+    if (y < 255)
+        NotifyNeighborBlockChange(x, y + 1, z);
+    if (y > 0)
+        NotifyNeighborBlockChange(x, y - 1, z);
+    NotifyNeighborBlockChange(x, y, z + 1);
+    NotifyNeighborBlockChange(x, y, z - 1);
+}
+
+void World::NotifyNeighborBlockChange(int x, i_height y, int z)
+{
+    i_block blockId = GetBlockId(x, y, z);
+    Block::Block* block = Block::BlockList::getBlock(blockId);
+    if (block)
+    {
+        block->NeighborChange(this, x, y, z);
     }
 }
 
@@ -239,6 +275,7 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, const
         AddEntity(item);
     }
 }
+
 
 
 Chunk* World::LoadChunk(int x, int z)

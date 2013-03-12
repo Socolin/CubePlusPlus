@@ -56,11 +56,8 @@ void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_hei
 bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
 {
     World::World* world = user->getWorld();
-    World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
-    if (chunk == nullptr)
-        return 0;
-    i_data clickedBlockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
-    chunk->ChangeData(x & 0xf, y, z & 0xf, clickedBlockData ^ 0x8);
+    i_data clickedBlockData = world->GetBlockData(x, y, z);
+    world->ChangeDataNoEvent(x, y, z, clickedBlockData ^ 0x8);
     return true;
 }
 

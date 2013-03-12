@@ -142,6 +142,14 @@ const Util::AABB Block::GetBoundingBox(int x, int y, int z) const
     return Util::AABB(x + minX, y + minY, z + minZ, maxX - minX, maxY - minY, maxZ - minZ);
 }
 
+void Block::NeighborChange(World::World* world, int x, i_height y, int z)
+{
+    if (script)
+    {
+        script->OnNeighborChange(world, x, y, z);
+    }
+}
+
 bool Block::isFullBlock()
 {
     return fullBlock;
