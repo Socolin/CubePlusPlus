@@ -26,7 +26,6 @@ World::World() :
 World::~World()
 {
 }
-
 // Called each tick
 void World::UpdateTick()
 {
@@ -244,7 +243,7 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, const
 
 Chunk* World::LoadChunk(int x, int z)
 {
-    Chunk* chunk = new Chunk(x, z);
+    Chunk* chunk = new Chunk(x, z, this);
     chunk->Load();
     chunkMap[CHUNK_KEY(x,z)] = chunk;
     return chunk;

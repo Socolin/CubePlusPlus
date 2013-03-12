@@ -53,6 +53,11 @@ public:
     const Util::AABB GetBoundingBox(int x, int y, int z) const;
     bool isFullBlock();
 
+    bool isNeedsRandomTick() const
+    {
+        return needsRandomTick;
+    }
+
 private:
     i_block blockId;
     const SoundBlock sound;

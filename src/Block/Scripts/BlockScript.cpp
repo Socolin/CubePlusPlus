@@ -22,4 +22,8 @@ void BlockScript::Init(Block::Block* baseBlock)
     this->baseBlock = baseBlock;
 }
 
+void BlockScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data)
+{
+}
+
 } /* namespace Inventory */

@@ -55,6 +55,10 @@ void Block::OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, 
 
 void Block::UpdateTick(World::World* world, int x, i_height y, int z, i_data data)
 {
+    if (script)
+    {
+        return script->OnUpdateTick(world, x, y, z, data);
+    }
 }
 
 bool Block::CanPlace(World::World* world, int x, i_height y, int z, char face)

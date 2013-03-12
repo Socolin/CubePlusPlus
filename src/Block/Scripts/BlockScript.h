@@ -45,6 +45,7 @@ public:
     virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ) {return false;}
     virtual Block::TileEntity* CreateNewTileEntity() {return nullptr;}
     virtual bool UseTileEntity() {return false;}
+    virtual void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data);
     virtual void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) { bbList.push_back(baseBlock->GetBoundingBox(x, y, z)); }
 protected:
     Block::Block* baseBlock;

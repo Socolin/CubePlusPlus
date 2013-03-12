@@ -14,13 +14,18 @@
 #include "Entity/EntityPlayer.h"
 #include "Network/OpcodeList.h"
 #include "Util/types.h"
+#include "Util/IntUtil.h"
 
 namespace World
 {
 
-Chunk::Chunk(int x, int y) :
-    posX(x), posZ(y), loaded(false), cachePacket(Network::OP_CHUNK_DATA), blockChangePacket(Network::OP_MULTI_BLOCK_CHANGE), flagSectionExists(0), flagSectionUseAdd(0), inCache(false), countChange(0)
+Chunk::Chunk(int x, int z, World* world) :
+    posX(x), posZ(z), loaded(false)
+    , cachePacket(Network::OP_CHUNK_DATA), blockChangePacket(Network::OP_MULTI_BLOCK_CHANGE)
+    , flagSectionExists(0), flagSectionUseAdd(0), inCache(false), countChange(0), world(world)
 {
+    posXx16 = x * 16;
+    posZx16 = z * 16;
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
         datas[i] = NULL;
     ResetBlockChangePacket();
@@ -122,6 +127,48 @@ void Chunk::UpdateTick()
 {
     if (!loaded)
         return;
+
+    ChunkData** chunkDataItr = datas;
+    for (int i = 0; i < CHUNK_DATA_COUNT; i++)
+    {
+        if (*chunkDataItr)
+        {
+            ChunkData* chunkData = (*chunkDataItr);
+            int random = Util::FastGenRandomInt();
+            unsigned int cellId = random & 0xfff;
+            i_block blockId;
+            i_data blockData;
+            if (chunkData->addData != NULL)
+            {
+                blockId = chunkData->blocks[cellId] | (chunkData->addData[cellId << 1] & (0xf << ((cellId & 0x1) << 2)));
+            }
+            else
+            {
+                blockId = chunkData->blocks[cellId];
+            }
+            if (blockId > 0)
+            {
+                Block::Block* block = Block::BlockList::getBlock(blockId);
+                if (block)
+                {
+                    if ((cellId & 0x1) == 0)
+                    {
+                        blockData = chunkData->metadata[cellId >> 1] & 0xf;
+                    }
+                    else
+                    {
+                        blockData = (chunkData->metadata[cellId >> 1] & 0xf0) >> 4;
+                    }
+                    if (block->isNeedsRandomTick())
+                    {
+                        block->UpdateTick(world, posXx16 + (cellId & 0xf), (i << 4) + ((cellId >> 8) & 0xf), posZx16 + ((cellId >> 4) & 0xf), blockData);
+                    }
+                }
+            }
+
+        }
+        chunkDataItr++;
+    }
 }
 
 void Chunk::Unload()
@@ -228,7 +275,7 @@ void Chunk::SendUpdate()
         blockChangePacket.UpdateAt(9, countChange);
         blockChangePacket.UpdateAt(11, (int)(countChange * 4));
         blockChangePacket.dump();
-for (EntityPlayer* plr : playerList)
+        for (EntityPlayer* plr : playerList)
         {
             plr->Send(blockChangePacket);
         }

@@ -118,6 +118,7 @@ bool World::IsFullBlock(int x, i_height y, int z)
     }
     return false;
 }
+
 }
 
 #endif

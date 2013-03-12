@@ -22,6 +22,7 @@ namespace World
 {
 
 class EntityPlayer;
+class World;
 /*
  * This class store chunk data, block, metadata, light, tileentities etc...
  * A chunk is a block of 16 x 16 x 256, divide in 16 block of 16 x 16 x 16
@@ -30,7 +31,7 @@ class EntityPlayer;
 class Chunk
 {
 public:
-    Chunk(int x, int y);
+    Chunk(int x, int y, World* world);
     virtual ~Chunk();
 
     // Get block id or data at coordninate
@@ -125,6 +126,8 @@ private:
     ChunkData* datas[CHUNK_DATA_COUNT];
     int posX;
     int posZ;
+    int posXx16;
+    int posZx16;
     bool loaded;
     Network::NetworkPacket cachePacket;
     Network::NetworkPacket blockChangePacket;
@@ -136,6 +139,7 @@ private:
     short countChange;
     std::set<EntityPlayer*> playerList;
     std::map<unsigned short, Block::TileEntity*> tileEntities;
+    World* world;
 };
 
 

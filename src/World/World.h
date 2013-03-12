@@ -69,6 +69,7 @@ public:
     void GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::AABB>& bbList);
     void GetBlockBoundingBoxInRange(int x, int y, int z, int range, int rangeHeight, std::vector<Util::AABB>& bbList);
     void GetBlockBoundingBoxInAABB(const Util::AABB& box, std::vector<Util::AABB>& bbList) const;
+
 private:
     void UpdateTime();
     VirtualChunk* CreateVirtualChunk(int x, int z);
@@ -83,6 +84,7 @@ private:
     int currentEntityId;
     long ageOfWorld;
     long currentTime;
+
 };
 
 } /* namespace World */
