@@ -3,8 +3,8 @@
 namespace World
 {
 
-LivingEntity::LivingEntity(double x, double y, double z) :
-    Entity(x, y, z), hasChangeItemInHand(false)
+LivingEntity::LivingEntity(eEntityType entityType, double x, double y, double z) :
+    Entity(entityType, x, y, z), hasChangeItemInHand(false)
 {
 
 }

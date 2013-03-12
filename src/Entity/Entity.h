@@ -20,11 +20,18 @@ class NetworkPacket;
 
 namespace World
 {
+enum eEntityType
+{
+    ENTITY_TYPE_NONE,
+    ENTITY_TYPE_PLAYER,
+    ENTITY_TYPE_ITEM,
+};
+
 class World;
 class Entity: public Position
 {
 public:
-    Entity(double x, double y, double z);
+    Entity(eEntityType entityType, double x, double y, double z);
     virtual ~Entity();
     virtual void UpdateTick() = 0;
     void setWorld(World* world, int entityId);
@@ -68,8 +75,15 @@ public:
         this->yaw = yaw;
     }
 
+    int getEntityType() const
+    {
+        return entityType;
+    }
+
 protected:
     bool PushOutOfBlock(double x, double y, double z);
+
+    const int entityType;
 
     World* world;
     int entityId;

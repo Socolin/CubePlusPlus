@@ -9,7 +9,7 @@ namespace World
 class LivingEntity: public Entity
 {
 public:
-    LivingEntity(double x, double y, double z);
+    LivingEntity(eEntityType entityType, double x, double y, double z);
     virtual ~LivingEntity();
     virtual float getEyeHeight();
 protected:

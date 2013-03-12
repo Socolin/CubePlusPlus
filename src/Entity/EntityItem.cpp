@@ -9,11 +9,10 @@ namespace World
 {
 
 EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack itemStack, double motionX, double motionY, double motionZ)
-    : Entity(x, y, z)
+    : Entity(ENTITY_TYPE_ITEM, x, y, z)
     , liveTime(0)
     , itemStack(itemStack)
 {
-    std::cout << y << std::endl;
     SetWidthHeight(0.25, 0.25);
     this->motionX = motionX;
     this->motionY = motionY;
@@ -30,6 +29,7 @@ void EntityItem::UpdateTick()
 
     motionY -= 0.03999999910593033;
 
+    // opti : if !noclip check every 5 tick ?
     noclip = PushOutOfBlock(x, y + (boundingBox.getHeight() / 2), z);
 
     Move(motionX, motionY, motionZ);
