@@ -138,5 +138,16 @@ void BlockDoorScript::InitParam(int paramId, int param)
     }
 }
 
+void BlockDoorScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data)
+{
+    if (SCRIPT_BLOCK_DOOR_ISTOP(data))
+    {
+        world->ChangeBlockNoEvent(x, y - 1, z, 0, 0);
+    }
+    else
+    {
+        world->ChangeBlockNoEvent(x, y + 1, z, 0, 0);
+    }
+}
 
 } /* namespace Util */

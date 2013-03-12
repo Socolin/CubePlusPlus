@@ -28,6 +28,7 @@ public:
     virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
     virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, char face) override;
     virtual void InitParam(int paramId, int param) override;
+    virtual void OnDestroy(World::World* world, int x, i_height y, int z, i_data data) override;
 private:
     i_block door_blockid;
     bool need_redstone;
