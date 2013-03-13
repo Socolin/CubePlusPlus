@@ -73,12 +73,15 @@ public:
     void GetBlockBoundingBoxInRange(int x, int y, int z, int range, int rangeHeight, std::vector<Util::AABB>& bbList);
     void GetBlockBoundingBoxInAABB(const Util::AABB& box, std::vector<Util::AABB>& bbList) const;
 
+    void MarkEntityAsDead(int entityId);
+
 private:
     void NotifyNeighborBlockChange(int x, i_height y, int z);
     void UpdateTime();
     VirtualChunk* CreateVirtualChunk(int x, int z);
     VirtualSmallChunk* CreateVirtualSmallChunk(int x, int z);
     Chunk* LoadChunk(int x, int z);
+    void MarkEntityForDelete(Entity* entity);
 private:
     std::unordered_map<long, Chunk*> chunkMap;
     std::unordered_map<long, VirtualChunk*> virtualChunkMap;
@@ -89,6 +92,9 @@ private:
     long ageOfWorld;
     long currentTime;
 
+    std::map<int, Entity*> entityById;
+    std::set<int> deadEntity;
+    std::vector<Entity*> entityToDelete;
 };
 
 } /* namespace World */

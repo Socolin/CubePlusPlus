@@ -11,7 +11,6 @@ LivingEntity::LivingEntity(eEntityType entityType, double x, double y, double z)
 
 LivingEntity::~LivingEntity()
 {
-    // TODO Auto-generated destructor stub
 }
 
 float LivingEntity::getEyeHeight()

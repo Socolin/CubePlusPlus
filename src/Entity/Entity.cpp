@@ -30,6 +30,7 @@ Entity::Entity(eEntityType entityType, double x, double y, double z) :
     , chunkX(((int)x) >> 4)
     , chunkZ(((int)z) >> 4)
     , boundingBox(x, y, z, 0.6, 1.8, 0.6)
+    , dead(false)
 {
 
 }
@@ -254,6 +255,7 @@ void Entity::moveToChunk(int newChunkX, int newChunkZ)
     vChunk->AddEntity(this);
 }
 
+
 bool Entity::PushOutOfBlock(double x, double y, double z)
 {
     int blockX = floor(x);
@@ -346,6 +348,22 @@ bool Entity::PushOutOfBlock(double x, double y, double z)
     }
 
     return true;
+}
+
+bool Entity::isDead() const
+{
+    return dead;
+}
+
+void Entity::kill()
+{
+    dead = true;
+    world->MarkEntityAsDead(entityId);
+}
+
+int Entity::getEntityId() const
+{
+    return entityId;
 }
 
 } /* namespace Network */

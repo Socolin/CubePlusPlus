@@ -56,6 +56,7 @@ void World::AddEntity(Entity* entity)
     virtualChunk->AddEntity(entity);
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
     vChunk->AddEntity(entity);
+    entityById[entity->getEntityId()] = entity;
 }
 
 void World::AddPlayer(EntityPlayer* player)
@@ -82,16 +83,17 @@ void World::AddPlayer(EntityPlayer* player)
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 8, ((int) player->z) >> 8);
     virtualChunk->AddPlayer(player);
     player->OnJoinWorld();
-
+    entityById[player->getEntityId()] = player;
 }
 
 void World::RemoveEntity(Entity* entity)
 {
-    entity->setWorld(NULL, 0);
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 8, ((int) entity->z) >> 8);
     virtualChunk->RemoveEntity(entity);
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
     vChunk->RemoveEntity(entity);
+    entityById[entity->getEntityId()] = nullptr;
+    entity->setWorld(NULL, 0);
 }
 
 void World::RemovePlayer(EntityPlayer* player)
@@ -115,6 +117,7 @@ void World::RemovePlayer(EntityPlayer* player)
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->RemovePlayer(player);
     player->setWorld(NULL, 0);
+    entityById[player->getEntityId()] = nullptr;
 }
 
 void World::ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData)
@@ -287,7 +290,10 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, const
     }
 }
 
-
+void World::MarkEntityAsDead(int entityId)
+{
+    deadEntity.insert(entityId);
+}
 
 Chunk* World::LoadChunk(int x, int z)
 {
@@ -354,6 +360,37 @@ void World::UpdateTime()
         updateTimePacket << ageOfWorld << currentTime;
         SendPacketToPlayerInWorld(updateTimePacket);
     }
+
+    for (int deadEntityId : deadEntity)
+    {
+        Entity* entity = entityById[deadEntityId];
+        if (entity)
+        {
+            if (entity->getEntityType() == ENTITY_TYPE_PLAYER)
+            {
+                EntityPlayer* player = dynamic_cast<EntityPlayer*>(entity);
+                if (player)
+                {
+                    RemovePlayer(player);
+                    continue;
+                }
+            }
+            RemoveEntity(entity);
+            MarkEntityForDelete(entity);
+        }
+    }
+    deadEntity.clear();
+    for (size_t i = 0; i < entityToDelete.size(); i++)
+    {
+        delete entityToDelete[i];
+    }
+    entityToDelete.clear();
+
+}
+
+void World::MarkEntityForDelete(Entity* entity)
+{
+    entityToDelete.push_back(entity);
 }
 
 } /* namespace World */

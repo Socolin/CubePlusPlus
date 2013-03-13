@@ -25,6 +25,9 @@ EntityItem::~EntityItem()
 
 void EntityItem::UpdateTick()
 {
+    if (dead)
+        return;
+
     liveTime++;
 
     motionY -= 0.03999999910593033;
@@ -77,6 +80,8 @@ void EntityItem::UpdateTick()
             motionZ = 0;
         }
     }
+    if (liveTime >= 100)
+        kill();
 
 }
 

@@ -80,6 +80,10 @@ public:
         return entityType;
     }
 
+    bool isDead() const;
+    void kill();
+    int getEntityId() const;
+
 protected:
     bool PushOutOfBlock(double x, double y, double z);
 
@@ -115,6 +119,8 @@ protected:
     int chunkZ;
 
     Util::AABB boundingBox;
+
+    bool dead;
 };
 
 } /* namespace Network */
