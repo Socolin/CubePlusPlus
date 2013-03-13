@@ -2,6 +2,7 @@
 #define BLOCKJUKEBOXSCRIPT_H_
 
 #include "Block/Scripts/BlockScript.h"
+#include <set>
 
 namespace Scripting
 {
@@ -22,7 +23,7 @@ public:
     virtual bool UseTileEntity() override;
     virtual void InitParam(int paramId, const std::string& param) override;
 private:
-    std::vector<i_block> item_list;
+    std::set<i_block> item_list;
 };
 
 } /* namespace Scripting */

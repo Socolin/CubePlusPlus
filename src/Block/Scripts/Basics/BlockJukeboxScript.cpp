@@ -35,7 +35,7 @@ bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
     {
         Block::TileEntityRecordPlayer* recordPlayer = dynamic_cast<Block::TileEntityRecordPlayer*>(tileEntity);
 
-        if (recordPlayer && std::find(item_list.begin(), item_list.end(), item.getItemId()) != item_list.end())
+        if (recordPlayer && item_list.find(item.getItemId()) != item_list.end())
         {
             recordPlayer->SetRecord(item.getItemId());
             world->PlaySoundOrParticleEffect(x, y, z, 1005 /*TODO enum*/, item.getItemId(), false, 5);
@@ -64,7 +64,7 @@ void BlockJukeboxScript::InitParam(int paramId, const std::string& param)
     	for(std::string each; std::getline(allowed_items, each, ',');)
     	{
     		std::istringstream(each) >> value;
-    		item_list.push_back(value);
+    		item_list.insert(value);
     	}
     }
     else
