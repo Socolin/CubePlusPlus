@@ -14,6 +14,7 @@ EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack itemSt
     , itemStack(itemStack)
 {
     SetWidthHeight(0.25, 0.25);
+    boundingBox.SetPositionCenteredXZ(x, y, z);
     this->motionX = motionX;
     this->motionY = motionY;
     this->motionZ = motionZ;
