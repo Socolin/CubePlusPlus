@@ -77,4 +77,8 @@ void TorchScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y
      };
 }
 
+void TorchScript::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList)
+{
+}
+
 } /* namespace Scripting */

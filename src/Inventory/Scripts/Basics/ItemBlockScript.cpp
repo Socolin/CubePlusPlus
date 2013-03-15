@@ -85,7 +85,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     if (block && block->CanPlace(user->getWorld(), x, y, z, face))
     {
         block->OnBlockPlace(user, x, y, z,face, blockId, metadata, CursorpositionX, CursorpositionY, CursorpositionZ);
-        world->PlaceBlock(x, y, z, blockId, metadata);
+        world->ChangeBlock(x, y, z, blockId, metadata, true);
         return true;
     }
     else

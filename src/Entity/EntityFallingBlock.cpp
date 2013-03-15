@@ -1,6 +1,7 @@
 #include "EntityFallingBlock.h"
 #include "World/World.h"
 #include "Network/OpcodeList.h"
+#include "Inventory/ItemStack.h"
 
 namespace World
 {
@@ -25,7 +26,21 @@ void EntityFallingBlock::UpdateTick()
     motionY *= 0.9800000190734863;
     if (onGround)
     {
-        world->PlaceBlock(std::floor(x), std::floor(y), std::floor(z), blockId, blockData);
+        bool canPlaceBlock = true;
+        i_block replaceBlockId = world->GetBlockId(std::floor(x), std::floor(y), std::floor(z));
+        if (replaceBlockId)
+        {
+            Block::Block* block = Block::BlockList::getBlock(replaceBlockId);
+            if (block)
+            {
+                if (!block->getMaterial().isReplacable())
+                    canPlaceBlock = false;
+            }
+        }
+        if (canPlaceBlock)
+            world->ChangeBlock(std::floor(x), std::floor(y), std::floor(z), blockId, blockData, false);
+        else
+            world->DropItemstackWithRandomDirection(x, y, z, Inventory::ItemStack(blockId, 1, blockData));
         kill();
     }
 }

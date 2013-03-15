@@ -55,7 +55,7 @@ public:
 
     void ChangeDataNoEvent(int x, i_height y, int z, i_data blockData);
     void ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData);
-    void PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockData);
+    void ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockData, bool playSound = true);
     void RemoveBlock(int x, i_height y, int z);
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 

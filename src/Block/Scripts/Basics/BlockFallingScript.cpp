@@ -44,7 +44,7 @@ void BlockFallingScript::OnUpdateTick(World::World* world, int x, i_height y, in
     {
         World::EntityFallingBlock* entity = new World::EntityFallingBlock((double)x + 0.5, (double)y + 0.5, (double)z + 0.5, baseBlock->GetBlockId(), data);
         world->AddEntity(entity);
-        world->PlaceBlock(x, y, z, 0, 0);
+        world->ChangeBlock(x, y, z, 0, 0, false);
     }
 }
 void BlockFallingScript::InitParam(int paramId, const std::string& param)
