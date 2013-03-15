@@ -129,6 +129,7 @@ void Chunk::UpdateTick()
         return;
 
     ChunkData** chunkDataItr = datas;
+    // Random update tick
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
         if (*chunkDataItr)
@@ -169,6 +170,50 @@ void Chunk::UpdateTick()
         }
         chunkDataItr++;
     }
+
+    while (!toUpdateBlockList.empty())
+    {
+        const UpdateBlockData& updateData = toUpdateBlockList.top();
+        toUpdateBlockList.pop();
+        if (updateData.updateTick > selfTickCounter)
+            break;
+
+        unsigned int cellId = updateData.coord.cellId & 0xfff;
+        i_block blockId;
+        i_data blockData;
+        ChunkData* chunkData = datas[updateData.coord.coord.chunkDataY];
+        if (chunkData->addData != NULL)
+        {
+            blockId = chunkData->blocks[cellId] | (chunkData->addData[cellId << 1] & (0xf << ((cellId & 0x1) << 2)));
+        }
+        else
+        {
+            blockId = chunkData->blocks[cellId];
+        }
+        if (blockId == updateData.blockId && blockId > 0)
+        {
+            Block::Block* block = Block::BlockList::getBlock(blockId);
+            if (block)
+            {
+                if ((cellId & 0x1) == 0)
+                {
+                    blockData = chunkData->metadata[cellId >> 1] & 0xf;
+                }
+                else
+                {
+                    blockData = (chunkData->metadata[cellId >> 1] & 0xf0) >> 4;
+                }
+                if (block->isNeedsRandomTick())
+                {
+                    block->UpdateTick(world,
+                            posXx16 + updateData.coord.coord.x,
+                            (updateData.coord.coord.chunkDataY << 4) + updateData.coord.coord.y,
+                            posZx16 + updateData.coord.coord.z, blockData);
+                }
+            }
+        }
+    }
+    selfTickCounter++;
 }
 
 void Chunk::Unload()
@@ -308,6 +353,19 @@ void Chunk::RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z)
         tileEntities.erase(it);
         delete tileEntity;
     }
+}
+
+void Chunk::MarkForUpdate(i_small_coord x, i_height y, i_small_coord z, i_block blockId, unsigned int tickWait)
+{
+    assert(tickWait > 0);
+    UpdateBlockData updateData;
+    updateData.coord.coord.x = x;
+    updateData.coord.coord.z = z;
+    updateData.coord.coord.y = y & 0xff;
+    updateData.coord.coord.chunkDataY = (y >> 4) & 0xff;
+    updateData.blockId = blockId;
+    updateData.updateTick = tickWait + selfTickCounter;
+    toUpdateBlockList.push(updateData);
 }
 
 void Chunk::ResetBlockChangePacket()

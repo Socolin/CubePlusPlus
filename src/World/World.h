@@ -59,6 +59,8 @@ public:
     void RemoveBlock(int x, i_height y, int z);
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 
+    void MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick = 1);
+
     void Unload();
     void RequestChunk(EntityPlayer* player, std::pair<int, int>);
 

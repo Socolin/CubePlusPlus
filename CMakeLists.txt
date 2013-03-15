@@ -3,12 +3,17 @@ cmake_minimum_required(VERSION 2.6)
 project(Server)
 
 SET(CMAKE_MODULE_PATH CMakeScripts)
-FIND_PACKAGE(Boost REQUIRED)
+
+SET(BOOST_MIN_VERSION "1.49.0")
+FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED)
+
 FIND_PACKAGE(ZLIB REQUIRED)
 IF (ZLIB_FOUND)
   MESSAGE(STATUS "Cmake FindZLIB: using ZLIB includes at: ${ZLIB_INCLUDE_DIR}")
   MESSAGE(STATUS "Cmake FindZLIB: using ZLIB libraries: ${ZLIB_LIBRARIES}")
 ENDIF (ZLIB_FOUND)
+
+
 
 # Initialize CXXFLAGS.
 set(CMAKE_CXX_FLAGS                "-Wall -std=c++0x")
@@ -31,6 +36,10 @@ else ()
 endif ()
 
 INCLUDE_DIRECTORIES(src/)
+
+
+link_directories ( ${Boost_LIBRARY_DIRS} )
+include_directories ( ${Boost_INCLUDE_DIRS} )
 
 set(EXECUTABLE_OUTPUT_PATH bin)
 

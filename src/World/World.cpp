@@ -388,6 +388,12 @@ void World::UpdateTime()
 
 }
 
+void World::MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    chunk->MarkForUpdate(x & 0xf, y, z & 0xf, blockId, waitTick);
+}
+
 void World::MarkEntityForDelete(Entity* entity)
 {
     entityToDelete.push_back(entity);

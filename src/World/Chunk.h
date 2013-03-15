@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 #include <iostream>
+#include <boost/heap/binomial_heap.hpp>
 
 #define CHUNK_SURFACE 256
 #define CHUNK_DATA_COUNT 16
@@ -65,6 +66,7 @@ public:
     void RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z);
     // Retrive tile entity in block
     Block::TileEntity* GetTileEntity(i_small_coord x, i_height y, i_small_coord z);
+
 private:
     // Write in chunk data without notification for client or other block
     inline void SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blockID);
@@ -76,6 +78,8 @@ private:
 
     void GeneratePacket();
     void ResetBlockChangePacket();
+
+    void MarkForUpdate(i_small_coord x, i_height y, i_small_coord z, i_block blockId, unsigned int tickWait = 1);
 private:
     // 16 x 16 x 16
     typedef struct
@@ -125,6 +129,32 @@ private:
         }
     } ChunkData;
 
+    struct UpdateBlockCoordStruct
+    {
+        i_small_coord x: 4;
+        i_small_coord z: 4;
+        i_small_coord y: 4;
+        unsigned char chunkDataY: 4;
+    } __attribute__((packed));
+    union UpdateBlockCoord
+    {
+        struct UpdateBlockCoordStruct coord;
+        unsigned short cellId;
+    };
+    typedef struct __attribute__((packed))
+    {
+        unsigned int updateTick;
+        union UpdateBlockCoord coord;
+        unsigned short blockId;
+    } UpdateBlockData;
+    struct CompateUpdateBlockData
+    {
+       bool operator() (const UpdateBlockData &a,const UpdateBlockData &b) const
+       {
+           return (a.updateTick < b.updateTick);
+       }
+     };
+
     ChunkData* datas[CHUNK_DATA_COUNT];
     int posX;
     int posZ;
@@ -142,6 +172,8 @@ private:
     std::set<EntityPlayer*> playerList;
     std::map<unsigned short, Block::TileEntity*> tileEntities;
     World* world;
+    unsigned int selfTickCounter;
+    boost::heap::binomial_heap<UpdateBlockData,boost::heap::compare<CompateUpdateBlockData>> toUpdateBlockList;
 };
 
 
