@@ -22,9 +22,9 @@ Entity::Entity(eEntityType entityType, double x, double y, double z) :
     , yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false)
     , stopMoving(false), noclip(false),onGround(false)
     , motionX(0), motionY(0), motionZ(0)
-    , networkX(((int) x) * 32)
-    , networkY(((int) y) * 32)
-    , networkZ(((int) z) * 32)
+    , networkX((int)(x * 32))
+    , networkY((int)(y * 32))
+    , networkZ((int)(z * 32))
     , virtualChunkX(((int)x) >> 7)
     , virtualChunkZ(((int)z) >> 7)
     , chunkX(((int)x) >> 4)
@@ -88,7 +88,8 @@ void Entity::MoveTo(double x, double y, double z)
     virtualChunkZ = newVirtualChunkZ;
     chunkX = newChunkX;
     chunkZ = newChunkZ;
-    boundingBox.SetPositionCenteredXZ(x, y, z);
+    if (entityType == ENTITY_TYPE_PLAYER)
+        boundingBox.SetPositionCenteredXZ(x, y, z);
 
     // TODO:
     // BlockCollision (example: pressureplate)
@@ -171,7 +172,7 @@ void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
             {
                 packet << (unsigned char) Network::OP_ENTITY_LOOK_AND_RELATIVE_MOVE << entityId << (char) dx << (char) dy << (char) dz << (char) (yaw * 256.f / 360.f) << (char) (pitch * 256.f / 360.f);
                 packet << (unsigned char) Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
-                packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << (short)(motionX * 32000) << (short)(motionY * 32000) << (short)(motionZ * 32000);
+                packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << (short)(motionX * 8000) << (short)(motionY * 8000) << (short)(motionZ * 8000);
                 networkX = newNetworkX;
                 networkY = newNetworkY;
                 networkZ = newNetworkZ;
@@ -197,7 +198,7 @@ void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
             if (dx > 4 || dy > 4 || dz > 4 || dx < -4 || dy < -4 || dz < -4)
             {
                 packet << (unsigned char) Network::OP_ENTITY_RELATIVE_MOVE << entityId << (char) dx << (char) dy << (char) dz;
-                packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << (short)(motionX * 32000) << (short)(motionY * 32000) << (short)(motionZ * 32000);
+                packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << (short)(motionX * 8000) << (short)(motionY * 8000) << (short)(motionZ * 8000);
                 networkX = newNetworkX;
                 networkY = newNetworkY;
                 networkZ = newNetworkZ;
