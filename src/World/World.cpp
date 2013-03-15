@@ -151,6 +151,15 @@ void World::PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockDa
             chunk->SetTileEntity(tileEntity ,x & 0xf, y, z & 0xf);
         }
     }
+
+    NotifyNeighborBlockChange(x + 1, y, z);
+    NotifyNeighborBlockChange(x - 1, y, z);
+    if (y < 255)
+        NotifyNeighborBlockChange(x, y + 1, z);
+    if (y > 0)
+        NotifyNeighborBlockChange(x, y - 1, z);
+    NotifyNeighborBlockChange(x, y, z + 1);
+    NotifyNeighborBlockChange(x, y, z - 1);
 }
 
 void World::RemoveBlock(int x, i_height y, int z)
