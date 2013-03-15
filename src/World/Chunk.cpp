@@ -174,9 +174,9 @@ void Chunk::UpdateTick()
     while (!toUpdateBlockList.empty())
     {
         const UpdateBlockData& updateData = toUpdateBlockList.top();
-        toUpdateBlockList.pop();
         if (updateData.updateTick > selfTickCounter)
             break;
+        toUpdateBlockList.pop();
 
         unsigned int cellId = updateData.coord.cellId & 0xfff;
         i_block blockId;
