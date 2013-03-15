@@ -2,6 +2,7 @@
 
 #include "Basics/BlockButtonScript.h"
 #include "Basics/BlockDoorScript.h"
+#include "Basics/BlockFallingScript.h"
 #include "Basics/BlockJackOLanternScript.h"
 #include "Basics/BlockJukeboxScript.h"
 #include "Basics/BlockLeverScript.h"
@@ -16,6 +17,7 @@ void RegisterBlockScript()
 {
     new BlockButtonScript();
     new BlockDoorScript();
+    new BlockFallingScript();
     new BlockJackOLanternScript();
 	new BlockJukeboxScript();
     new BlockLeverScript();

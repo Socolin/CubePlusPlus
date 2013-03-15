@@ -25,6 +25,7 @@ enum eEntityType
     ENTITY_TYPE_NONE,
     ENTITY_TYPE_PLAYER,
     ENTITY_TYPE_ITEM,
+    ENTITY_TYPE_FALLINGBLOCK,
 };
 
 class World;
