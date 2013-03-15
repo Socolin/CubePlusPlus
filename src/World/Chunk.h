@@ -151,7 +151,7 @@ private:
     {
        bool operator() (const UpdateBlockData &a,const UpdateBlockData &b) const
        {
-           return (a.updateTick < b.updateTick);
+           return (a.updateTick > b.updateTick);
        }
      };
 
