@@ -35,11 +35,18 @@ bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
     {
         Block::TileEntityRecordPlayer* recordPlayer = dynamic_cast<Block::TileEntityRecordPlayer*>(tileEntity);
 
-        if (recordPlayer && item_list.find(item.getItemId()) != item_list.end())
+        if (recordPlayer)
         {
-            recordPlayer->SetRecord(item.getItemId());
-            world->PlaySoundOrParticleEffect(x, y, z, 1005 /*TODO enum*/, item.getItemId(), false, 5);
-            return true;
+        	if(recordPlayer->GetRecordItem().getItemId() != 0)
+        	{
+        		EjectRecord(world, x, y, z);
+        	}
+
+        	if(item_list.find(item.getItemId()) != item_list.end())
+        	{
+        		recordPlayer->SetRecordItem(world, x, y, z, item);
+        		return true;
+        	}
         }
     }
     return false;
@@ -53,6 +60,25 @@ Block::TileEntity* BlockJukeboxScript::CreateNewTileEntity()
 bool BlockJukeboxScript::UseTileEntity()
 {
     return true;
+}
+
+void BlockJukeboxScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data)
+{
+	EjectRecord(world, x, y, z);
+}
+
+void BlockJukeboxScript::EjectRecord(World::World* world, int x, i_height y, int z)
+{
+	Block::TileEntity* tileEntity = world->GetChunkIfLoaded(x >> 4, z >> 4)->GetTileEntity(x & 0xf, y, z & 0xf);
+	if (tileEntity)
+	{
+		Block::TileEntityRecordPlayer* recordPlayer = dynamic_cast<Block::TileEntityRecordPlayer*>(tileEntity);
+		if(recordPlayer)
+		{
+			world->DropItemstackWithRandomDirection(x + 0.5, y + 1, z + 0.5, recordPlayer->GetRecordItem());
+			recordPlayer->SetRecordItem(world, x, y, z, Inventory::ItemStack(0,0,0));
+		}
+	}
 }
 
 void BlockJukeboxScript::InitParam(int paramId, const std::string& param)

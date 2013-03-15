@@ -4,6 +4,8 @@
 #include "Block/Scripts/BlockScript.h"
 #include <set>
 
+#define PARAM_BLOCK_JUKEBOX_ALLOWED_ITEMS 1
+
 namespace Scripting
 {
 
@@ -21,6 +23,8 @@ public:
     virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
     virtual Block::TileEntity* CreateNewTileEntity() override;
     virtual bool UseTileEntity() override;
+    virtual void OnDestroy(World::World* world, int x, i_height y, int z, i_data data) override;
+    virtual void EjectRecord(World::World* world, int x, i_height y, int z);
     virtual void InitParam(int paramId, const std::string& param) override;
 private:
     std::set<i_block> item_list;
