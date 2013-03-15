@@ -1,5 +1,6 @@
 #include "RegisterBlockScripts.h"
 
+#include "Basics/BlockButtonScript.h"
 #include "Basics/BlockDoorScript.h"
 #include "Basics/BlockJackOLanternScript.h"
 #include "Basics/BlockJukeboxScript.h"
@@ -13,6 +14,7 @@ namespace Scripting
 {
 void RegisterBlockScript()
 {
+    new BlockButtonScript();
     new BlockDoorScript();
     new BlockJackOLanternScript();
 	new BlockJukeboxScript();
