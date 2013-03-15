@@ -60,6 +60,11 @@ public:
         return needsRandomTick;
     }
 
+    bool isRenderAsNormal() const
+    {
+        return renderAsNormal;
+    }
+
 private:
     i_block blockId;
     const SoundBlock sound;

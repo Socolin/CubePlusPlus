@@ -131,6 +131,7 @@ void World::ChangeDataNoEvent(int x, i_height y, int z, i_data blockData)
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
     chunk->ChangeData(x & 0xf, y, z & 0xf, blockData);
 }
+
 void World::PlaceBlock(int x, i_height y, int z, i_block blockId, i_data blockData)
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);

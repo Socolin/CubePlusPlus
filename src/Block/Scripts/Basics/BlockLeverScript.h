@@ -10,7 +10,7 @@ namespace Scripting
  * INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('block_lever',0);
  */
 
-#define SCRIPT_BLOCK_LEVER_ACTIVATED(metadata) (clickedBlockData & 0x8) == 8
+#define SCRIPT_BLOCK_LEVER_ACTIVATED(metadata) (metadata & 0x8) == 8
 class BlockLeverScript: public BlockScript
 {
 public:
