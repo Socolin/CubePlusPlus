@@ -49,6 +49,12 @@ void AABB::SetPositionCenteredXZ(double x, double y, double z)
     this->y = y;
     this->z = z - depth / 2;
 }
+void AABB::SetPositionCenteredXYZ(double x, double y, double z)
+{
+    this->x = x - width / 2;
+    this->y = y - height / 2;
+    this->z = z - depth / 2;
+}
 
 
 double AABB::GetXOffsetWith(const AABB& B, double dx) const

@@ -14,6 +14,7 @@ public:
     bool DetectCollision(const AABB& B) const;
     void SetPosition(double x, double y, double z);
     void SetPositionCenteredXZ(double x, double y, double z);
+    void SetPositionCenteredXYZ(double x, double y, double z);
     void MoveX(double dx) {x += dx;}
     void MoveY(double dy) {y += dy;}
     void MoveZ(double dz) {z += dz;}
