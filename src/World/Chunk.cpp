@@ -177,7 +177,6 @@ void Chunk::UpdateTick()
         if (updateData.updateTick > selfTickCounter)
             break;
         toUpdateBlockList.pop();
-
         unsigned int cellId = updateData.coord.cellId & 0xfff;
         i_block blockId;
         i_data blockData;
@@ -203,13 +202,10 @@ void Chunk::UpdateTick()
                 {
                     blockData = (chunkData->metadata[cellId >> 1] & 0xf0) >> 4;
                 }
-                if (block->isNeedsRandomTick())
-                {
-                    block->UpdateTick(world,
-                            posXx16 + updateData.coord.coord.x,
-                            (updateData.coord.coord.chunkDataY << 4) + updateData.coord.coord.y,
-                            posZx16 + updateData.coord.coord.z, blockData);
-                }
+                block->UpdateTick(world,
+                        posXx16 + updateData.coord.coord.x,
+                        (updateData.coord.coord.chunkDataY << 4) + updateData.coord.coord.y,
+                        posZx16 + updateData.coord.coord.z, blockData);
             }
         }
     }
