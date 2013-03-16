@@ -12,6 +12,7 @@
 
 #include "Position.h"
 #include "Util/AABB.h"
+#include "EntityMetadata/EntityMetadataManager.h"
 
 namespace Network
 {
@@ -122,6 +123,8 @@ protected:
     Util::AABB boundingBox;
 
     bool dead;
+
+    EntityMetadataManager metadataManager;
 };
 
 } /* namespace Network */

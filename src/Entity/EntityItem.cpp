@@ -18,6 +18,7 @@ EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack itemSt
     this->motionX = motionX;
     this->motionY = motionY;
     this->motionZ = motionZ;
+    metadataManager.SetEntityMetadata(10, itemStack);
 }
 
 EntityItem::~EntityItem()
@@ -92,15 +93,19 @@ void EntityItem::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
 
 void EntityItem::GetCreatePacket(Network::NetworkPacket& packet)
 {
-    packet << (unsigned char) Network::OP_SPAWN_DROPPED_ITEM
+    packet << (unsigned char) Network::OP_SPAWN_OBJECT_VEHICLE
             << entityId
-            << itemStack
+            << (char) 2
             << networkX
             << networkY
             << networkZ
             << (char) (yaw * 256.f / 360.f)
             << (char) (pitch * 256.f / 360.f)
-            << (char) 0;
+            << (int) 0;
+
+    packet << (unsigned char) Network::OP_ENTITY_METADATA
+            << entityId;
+    metadataManager.Write(packet);
 }
 
 } /* namespace World */
