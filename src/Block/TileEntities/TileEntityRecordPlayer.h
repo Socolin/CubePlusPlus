@@ -2,6 +2,8 @@
 #define TILEENTITYRECPLY_H_
 
 #include "TileEntity.h"
+#include "World/World.h"
+#include "Inventory/InventoryPlayer.h"
 
 namespace Block
 {
@@ -15,11 +17,11 @@ public:
     virtual void UpdateTick() override;
     virtual bool NeedUpdate() override;
 
-    void SetRecord(i_block);
-    i_block GetRecord();
+    void SetRecordItem(World::World* world, int x, i_height y, int z, Inventory::ItemStack item);
+    Inventory::ItemStack GetRecordItem();
 private:
     i_block Record;
-
+    Inventory::ItemStack RecordItem;
 };
 
 } /* namespace Block */

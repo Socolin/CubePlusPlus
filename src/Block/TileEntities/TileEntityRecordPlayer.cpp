@@ -4,7 +4,8 @@ namespace Block
 {
 
 TileEntityRecordPlayer::TileEntityRecordPlayer():
-			Record(0)
+			Record(0),
+			RecordItem(Inventory::ItemStack(0,0,0))
 {
 }
 
@@ -21,16 +22,22 @@ bool TileEntityRecordPlayer::NeedUpdate()
     return false;
 }
 
-void TileEntityRecordPlayer::SetRecord(i_block id_disk)
+void TileEntityRecordPlayer::SetRecordItem(World::World* world, int x, i_height y, int z, Inventory::ItemStack item)
 {
-	Record = id_disk;
+	RecordItem = item;
+	Record = item.getItemId();
+
+	world->PlaySoundOrParticleEffect(x, y, z, 1005 /*TODO enum*/, Record, false, 5);
+
+	if(item.getItemId() != 0)
+		world->ChangeDataNoEvent(x, y, z, 1);
+	else
+		world->ChangeDataNoEvent(x, y, z, 0);
 }
 
-
-i_block TileEntityRecordPlayer::GetRecord()
+Inventory::ItemStack TileEntityRecordPlayer::GetRecordItem()
 {
-	return Record;
+	return RecordItem;
 }
-
 
 } /* namespace Block */
