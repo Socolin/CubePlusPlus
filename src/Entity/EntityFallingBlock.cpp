@@ -57,6 +57,8 @@ void EntityFallingBlock::GetCreatePacket(Network::NetworkPacket& packet)
             << networkX
             << networkY
             << networkZ
+            << (char) (yaw * 256.f / 360.f)
+            << (char) (pitch * 256.f / 360.f)
             << (unsigned int)(blockId| (blockData << 0x12))
             << (short)0 << (short)0 << (short)0;
 }

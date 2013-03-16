@@ -1,5 +1,7 @@
 #include "EntityMetadataManager.h"
 
+#include "ItemStackEntityMetadata.h"
+#include "CharEntityMetadata.h"
 #include "Network/NetworkPacket.h"
 
 namespace World
@@ -27,6 +29,7 @@ void EntityMetadataManager::Write(Network::NetworkPacket& packet)
     {
         metadata.second->Write(packet);
     }
+    packet << (char)127;
 }
 
 void EntityMetadataManager::SetEntityMetadata(int valueId, Inventory::ItemStack& value)

@@ -23,6 +23,7 @@ protected:
         DATATYPE_INTEGER,
         DATATYPE_FLOAT,
         DATATYPE_STRING,
+        DATATYPE_ITEMSTACK,
         DATATYPE_CHUNKCOORDINATE,
     };
     int valueId;

@@ -16,7 +16,7 @@ ItemStackEntityMetadata::~ItemStackEntityMetadata()
 
 void ItemStackEntityMetadata::Write(Network::NetworkPacket& packet)
 {
-    char header = (DATATYPE_CHAR << 5) | valueId;
+    char header = (DATATYPE_ITEMSTACK<< 5) | valueId;
     packet << header << value;
 }
 
