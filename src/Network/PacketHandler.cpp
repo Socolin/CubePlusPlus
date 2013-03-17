@@ -67,8 +67,9 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 void NetworkSession::handleUseEntity() throw (NetworkException)
 {
     readInt();
-    readInt();
-    readByte();
+    int target = readInt();
+    bool leftClick = readByte();
+    player->UseEntity(target, leftClick);
 }
 void NetworkSession::handlePlayer() throw (NetworkException)
 {

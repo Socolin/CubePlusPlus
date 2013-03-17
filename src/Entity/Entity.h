@@ -13,6 +13,7 @@
 #include "Position.h"
 #include "Util/AABB.h"
 #include "EntityMetadata/EntityMetadataManager.h"
+#include "EntityConstants.h"
 
 namespace Network
 {
@@ -21,15 +22,8 @@ class NetworkPacket;
 
 namespace World
 {
-enum eEntityType
-{
-    ENTITY_TYPE_NONE,
-    ENTITY_TYPE_PLAYER,
-    ENTITY_TYPE_ITEM,
-    ENTITY_TYPE_FALLINGBLOCK,
-};
-
 class World;
+class EntityPlayer;
 class Entity: public Position
 {
 public:
@@ -45,12 +39,15 @@ public:
     void Teleport(double x, double y, double z, float yaw, float pitch);
     void GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet);
     void SetWidthHeight(double width, double height);
+    bool CollideWith(const Util::AABB& box);
+    Util::AABB GetBoundingBox() const;
 
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) = 0;
     virtual void GetDestroyPacket(Network::NetworkPacket& packet);
     virtual void GetCreatePacket(Network::NetworkPacket& packet) = 0;
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
     virtual void moveToChunk(int newChunkX, int newChunkZ);
+    virtual void Interact(EntityPlayer* player);
 
     World* getWorld() const
     {
@@ -77,7 +74,7 @@ public:
         this->yaw = yaw;
     }
 
-    int getEntityType() const
+    eEntityType getEntityType() const
     {
         return entityType;
     }
@@ -89,7 +86,7 @@ public:
 protected:
     bool PushOutOfBlock(double x, double y, double z);
 
-    const int entityType;
+    const eEntityType entityType;
 
     World* world;
     int entityId;

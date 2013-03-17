@@ -8,7 +8,7 @@
 #include "Block/BlockList.h"
 #include "Inventory/ItemStack.h"
 #include "Entity/EntityPlayer.h"
-#include "Entity/EntityItem.h"
+#include "Entity/Object/EntityItem.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "VirtualChunk.h"
@@ -303,6 +303,25 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, const
     }
 }
 
+
+void World::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
+{
+    int minX = floor(box.getX());
+    int minZ = floor(box.getZ());
+    int maxX = floor(box.getMaxX());
+    int maxZ = floor(box.getMaxZ());
+    minX <<= 4;
+    minZ <<= 4;
+    maxX <<= 4;
+    maxZ <<= 4;
+    for (int chunkX = minX; chunkX <= maxX; chunkX++)
+        for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++)
+            {
+                VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(chunkX, chunkZ);
+                vSmallChunk->GetEntitiesBoundingBoxInAABB(type, ignoreEntityId, box, bbList);
+            }
+}
+
 void World::MarkEntityAsDead(int entityId)
 {
     deadEntity.insert(entityId);
@@ -405,6 +424,11 @@ void World::MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsign
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
     chunk->MarkForUpdate(x & 0xf, y, z & 0xf, blockId, waitTick);
+}
+
+Entity* World::GetEntityById(int target)
+{
+    return entityById[target];
 }
 
 void World::MarkEntityForDelete(Entity* entity)

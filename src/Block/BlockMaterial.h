@@ -7,7 +7,7 @@ namespace Block
 class BlockMaterial
 {
 public:
-    BlockMaterial(unsigned char id, bool canBurn, bool replacable, bool translucent, bool requiresNoTool, int mobilityFlag);
+    BlockMaterial(unsigned char id, bool canBurn, bool replacable, bool translucent, bool requiresNoTool, int mobilityFlag, bool solid, bool liquid);
     BlockMaterial();
     virtual ~BlockMaterial();
 
@@ -41,6 +41,16 @@ public:
         return translucent;
     }
 
+    bool isLiquid() const
+    {
+        return liquid;
+    }
+
+    bool isSolid() const
+    {
+        return solid;
+    }
+
 private:
     unsigned char id;
     bool canBurn;
@@ -48,6 +58,8 @@ private:
     bool translucent;
     bool requiresNoTool;
     int mobilityFlag;
+    bool solid;
+    bool liquid;
 };
 
 } /* namespace Scripting */

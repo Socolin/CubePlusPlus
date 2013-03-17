@@ -6,7 +6,7 @@ namespace World
 {
 
 CharEntityMetadata::CharEntityMetadata(int valueId, char value)
-    : EntityMetadata(valueId)
+    : EntityMetadata(valueId, DATATYPE_CHAR)
     , value(value)
 {
 }
@@ -19,6 +19,11 @@ void CharEntityMetadata::Write(Network::NetworkPacket& packet)
 {
     char header = (DATATYPE_CHAR << 5) | valueId;
     packet << header << value;
+}
+
+const char CharEntityMetadata::getValue() const
+{
+    return value;
 }
 
 } /* namespace World */

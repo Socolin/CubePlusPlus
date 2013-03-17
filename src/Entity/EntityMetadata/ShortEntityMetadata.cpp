@@ -6,7 +6,7 @@ namespace World
 {
 
 ShortEntityMetadata::ShortEntityMetadata(int valueId, short value)
-    : EntityMetadata(valueId)
+    : EntityMetadata(valueId, DATATYPE_SHORT)
     , value(value)
 {
 }
@@ -19,6 +19,11 @@ void ShortEntityMetadata::Write(Network::NetworkPacket& packet)
 {
     char header = (DATATYPE_SHORT << 5) | valueId;
     packet << header << value;
+}
+
+const short ShortEntityMetadata::getValue() const
+{
+    return value;
 }
 
 } /* namespace World */

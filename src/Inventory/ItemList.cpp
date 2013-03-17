@@ -69,6 +69,7 @@ void ItemList::Load()
                                   "WHERE `script_info`.`scriptId` = " << scriptId << " AND `stuffId` = " << itemId;
 
                 sql::ResultSet* script_result = db->querry(request_construct.str());
+                //Load script data
                 while (script_result->next())
                 {
                     int type = script_result->getInt(TableScriptData_U_ScriptInfo::type);
@@ -100,7 +101,10 @@ void ItemList::Load()
                     }
                 }
 
-                //Load script data
+            }
+            else
+            {
+                std::cerr << "ERROR: Script:" << scriptName << " not found" << std::endl;
             }
         }
         Item* item = new Item(itemId, maxStackSize, maxDamage, hasSubType, containerId, script);

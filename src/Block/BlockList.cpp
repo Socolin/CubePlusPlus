@@ -267,7 +267,7 @@ void BlockList::LoadMaterials()
                 << name << "\t"
                 << std::endl;
 
-        materialList[materialId] = BlockMaterial(materialId, canBurn, replacable, translucent, requiresNoTool, mobilityFlag);
+        materialList[materialId] = BlockMaterial(materialId, canBurn, replacable, translucent, requiresNoTool, mobilityFlag, true, false);
     }
 }
 

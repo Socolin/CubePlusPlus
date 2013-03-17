@@ -68,4 +68,22 @@ for (EntityPlayer* plr : playerList)
     }
 }
 
+void VirtualSmallChunk::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType>& type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList)
+{
+    for (Entity* entity : entityList)
+    {
+        if (type.find(entity->getEntityType()) != type.end())
+        {
+            if (entity->getEntityId() != ignoreEntityId)
+            {
+                if (entity->CollideWith(box))
+                {
+                    bbList.push_back(std::make_pair(entity->getEntityId(), entity->GetBoundingBox()));
+                }
+            }
+        }
+    }
+}
+
+
 } /* namespace World */

@@ -5,7 +5,7 @@
 #include "Block/Block.h"
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
-#include "Entity/EntityItem.h"
+#include "Entity/Object/EntityItem.h"
 #include "Inventory/Item.h"
 #include "Inventory/ItemStack.h"
 #include "Network/NetworkSession.h"
@@ -266,6 +266,16 @@ void EntityPlayer::ResetBlock(int x, unsigned char y, int z)
     dataChange |= ((x & 0xf) << 28)       & 0xf0000000;
     packet << dataChange;
     Send(packet);
+}
+
+void EntityPlayer::UseEntity(int target, bool leftClick)
+{
+    Entity* entity = world->GetEntityById(target);
+    if (entity)
+    {
+        if (!leftClick)
+            entity->Interact(this);
+    }
 }
 
 void EntityPlayer::PlayAnimation(char animationId)

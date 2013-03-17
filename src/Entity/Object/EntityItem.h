@@ -1,7 +1,7 @@
 #ifndef ENTITYITEM_H_
 #define ENTITYITEM_H_
 
-#include "Entity.h"
+#include "Entity/Entity.h"
 
 #include "Inventory/ItemStack.h"
 

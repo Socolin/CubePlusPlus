@@ -9,11 +9,13 @@ namespace World
 class ItemStackEntityMetadata : public EntityMetadata
 {
 public:
-    ItemStackEntityMetadata(int valueId, Inventory::ItemStack& value);
+    ItemStackEntityMetadata(int valueId,const Inventory::ItemStack& value);
     virtual ~ItemStackEntityMetadata();
     virtual void Write(Network::NetworkPacket& packet) override;
+    const Inventory::ItemStack& getValue() const;
+
 private:
-    Inventory::ItemStack value;
+    const Inventory::ItemStack value;
 };
 
 } /* namespace World */

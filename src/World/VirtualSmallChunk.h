@@ -2,6 +2,9 @@
 #define VIRTUALSMALLCHUNK_H_
 
 #include <set>
+#include <vector>
+#include "Entity/EntityConstants.h"
+#include "Util/AABB.h"
 
 namespace Network
 {
@@ -29,7 +32,7 @@ public:
     void SendPacketToAllNearPlayer(const Network::NetworkPacket& packet, int distanceChunk) const;
     void SendPacketToPlayerInChunk(const Network::NetworkPacket& packet) const;
 
-    void Unload();
+    void GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
 private:
 
     const int posX;

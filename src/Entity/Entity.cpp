@@ -22,9 +22,9 @@ Entity::Entity(eEntityType entityType, double x, double y, double z) :
     , yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false)
     , stopMoving(false), noclip(false),onGround(false)
     , motionX(0), motionY(0), motionZ(0)
-    , networkX((int)(x * 32))
-    , networkY((int)(y * 32))
-    , networkZ((int)(z * 32))
+    , networkX((int)(x * 32.0))
+    , networkY((int)(y * 32.0))
+    , networkZ((int)(z * 32.0))
     , virtualChunkX(((int)x) >> 7)
     , virtualChunkZ(((int)z) >> 7)
     , chunkX(((int)x) >> 4)
@@ -43,6 +43,9 @@ void Entity::setWorld(World* world, int entityId)
 {
     this->world = world;
     this->entityId = entityId;
+    networkX = (int)(x * 32.0);
+    networkY = (int)(y * 32.0);
+    networkZ = (int)(z * 32.0);
 }
 
 void Entity::Rotate(float yaw, float pitch)
@@ -151,9 +154,9 @@ void Entity::Teleport(double x, double y, double z, float yaw, float pitch)
 
 void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
 {
-    int newNetworkX = (int) (x * 32);
-    int newNetworkY = (int) (y * 32);
-    int newNetworkZ = (int) (z * 32);
+    int newNetworkX = (int) (x * 32.0);
+    int newNetworkY = (int) (y * 32.0);
+    int newNetworkZ = (int) (z * 32.0);
     if (hasMove && hasRotate)
     {
         int dx = newNetworkX - networkX;
@@ -256,16 +259,25 @@ void Entity::moveToChunk(int newChunkX, int newChunkZ)
     vChunk->AddEntity(this);
 }
 
+void Entity::Interact(EntityPlayer* player)
+{
+}
+
+bool Entity::CollideWith(const Util::AABB& box)
+{
+    return boundingBox.DetectCollision(box);
+}
+
+Util::AABB Entity::GetBoundingBox() const
+{
+    return boundingBox;
+}
 
 bool Entity::PushOutOfBlock(double x, double y, double z)
 {
     int blockX = floor(x);
     int blockY = floor(y);
     int blockZ = floor(z);
-
-    double dx = x - (double)blockX;
-    double dy = y - (double)blockY;
-    double dz = z - (double)blockZ;
 
     bool collision = false;
     std::vector<Util::AABB> bbList;
@@ -284,6 +296,10 @@ bool Entity::PushOutOfBlock(double x, double y, double z)
     }
     else
     {
+        double dx = x - (double)blockX;
+        double dy = y - (double)blockY;
+        double dz = z - (double)blockZ;
+
         bool blockWestFull = world->IsFullBlock(blockX - 1, blockY, blockZ);
         bool blockEastFull = world->IsFullBlock(blockX + 1, blockY, blockZ);
         bool blockTopFull = world->IsFullBlock(blockX, blockY + 1, blockZ);

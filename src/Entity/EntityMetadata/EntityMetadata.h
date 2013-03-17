@@ -12,10 +12,6 @@ namespace World
 class EntityMetadata
 {
 public:
-    EntityMetadata(int valueId);
-    virtual ~EntityMetadata();
-    virtual void Write(Network::NetworkPacket& packet) = 0;
-protected:
     enum eDataType
     {
         DATATYPE_CHAR,
@@ -26,7 +22,14 @@ protected:
         DATATYPE_ITEMSTACK,
         DATATYPE_CHUNKCOORDINATE,
     };
+public:
+    EntityMetadata(int valueId, eDataType type);
+    virtual ~EntityMetadata();
+    virtual void Write(Network::NetworkPacket& packet) = 0;
+    const eDataType getType() const;
+protected:
     int valueId;
+    const eDataType type;
 };
 
 } /* namespace World */

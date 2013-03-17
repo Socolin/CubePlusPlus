@@ -4,8 +4,8 @@
 namespace World
 {
 
-ItemStackEntityMetadata::ItemStackEntityMetadata(int valueId, Inventory::ItemStack& value)
-    : EntityMetadata(valueId)
+ItemStackEntityMetadata::ItemStackEntityMetadata(int valueId,const Inventory::ItemStack& value)
+    : EntityMetadata(valueId, DATATYPE_ITEMSTACK)
     , value(value)
 {
 }
@@ -18,6 +18,11 @@ void ItemStackEntityMetadata::Write(Network::NetworkPacket& packet)
 {
     char header = (DATATYPE_ITEMSTACK<< 5) | valueId;
     packet << header << value;
+}
+
+const Inventory::ItemStack& ItemStackEntityMetadata::getValue() const
+{
+    return value;
 }
 
 } /* namespace World */

@@ -3,7 +3,7 @@
 #include "Entity/EntityPlayer.h"
 #include "Inventory/ItemStack.h"
 #include "Scripts/ItemScript.h"
-
+#include <iostream>
 namespace Inventory
 {
 

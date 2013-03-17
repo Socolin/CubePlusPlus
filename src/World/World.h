@@ -7,6 +7,7 @@
 
 #include "Util/AABB.h"
 #include "Chunk.h"
+#include "Entity/EntityConstants.h"
 
 #define CHUNK_KEY(X,Z) ((((long)X << 32) & 0xffffffff00000000)| ((long)Z & 0x00000000ffffffff))
 
@@ -75,7 +76,11 @@ public:
     void GetBlockBoundingBoxInRange(int x, int y, int z, int range, int rangeHeight, std::vector<Util::AABB>& bbList);
     void GetBlockBoundingBoxInAABB(const Util::AABB& box, std::vector<Util::AABB>& bbList) const;
 
+    void GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int ignoreEntityId, const Util::AABB& boundingBox, std::vector<std::pair<int, Util::AABB>>& bbList);
+
     void MarkEntityAsDead(int entityId);
+
+    Entity* GetEntityById(int target);
 
 private:
     void NotifyNeighborBlockChange(int x, i_height y, int z);

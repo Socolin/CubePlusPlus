@@ -12,8 +12,10 @@ public:
     IntegerEntityMetadata(int valueId, int value);
     virtual ~IntegerEntityMetadata();
     virtual void Write(Network::NetworkPacket& packet) override;
+    const int getValue() const;
+
 private:
-    int value;
+    const int value;
 };
 
 } /* namespace World */

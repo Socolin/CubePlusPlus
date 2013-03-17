@@ -1,7 +1,7 @@
 #ifndef ENTITYFALLINGBLOCK_H_
 #define ENTITYFALLINGBLOCK_H_
 
-#include "Entity.h"
+#include "Entity/Entity.h"
 #include "Util/types.h"
 
 namespace World

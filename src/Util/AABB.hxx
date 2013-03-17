@@ -11,6 +11,13 @@ void AABB::SetWidthHeight(double width, double height)
     this->height = height;
 }
 
+void AABB::SetWidthHeightDepth(double width, double height, double depth)
+{
+    this->width = width;
+    this->depth = depth;
+    this->height = height;
+}
+
 double AABB::getDepth() const
 {
     return depth;

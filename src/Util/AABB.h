@@ -25,6 +25,7 @@ public:
     double GetZOffsetWith(const AABB& B, double dz) const;
 
     inline void SetWidthHeight(double width, double height);
+    inline void SetWidthHeightDepth(double width, double height, double depth);
     inline double getDepth() const;
     inline void setDepth(double depth);
     inline double getHeight() const;

@@ -6,14 +6,16 @@
 namespace World
 {
 
-class FloatEntityMetadata: public World::EntityMetadata
+class FloatEntityMetadata: public EntityMetadata
 {
 public:
     FloatEntityMetadata(int valueId, float value);
     virtual ~FloatEntityMetadata();
     virtual void Write(Network::NetworkPacket& packet) override;
+    const float getValue() const;
+
 private:
-    float value;
+    const float value;
 };
 
 } /* namespace World */

@@ -4,7 +4,7 @@
 #include <iostream>
 
 #include "Entity/EntityPlayer.h"
-#include "Entity/EntityFallingBlock.h"
+#include "Entity/Object/EntityFallingBlock.h"
 #include "Block/BlockConstants.h"
 #include "World/World.h"
 
