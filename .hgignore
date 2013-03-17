@@ -7,3 +7,4 @@ cmake_install.cmake
 .settings/*
 src/.cproject
 src/.project
+Makefile
