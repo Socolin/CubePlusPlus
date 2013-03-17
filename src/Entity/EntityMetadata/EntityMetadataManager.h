@@ -22,6 +22,9 @@ public:
     virtual ~EntityMetadataManager();
     void Write(Network::NetworkPacket& packet);
     void SetEntityMetadata(int valueId, char value);
+    void SetEntityMetadata(int valueId, short value);
+    void SetEntityMetadata(int valueId, int value);
+    void SetEntityMetadata(int valueId, float value);
     void SetEntityMetadata(int valueId, Inventory::ItemStack& value);
 private:
     std::map<int, EntityMetadata*> metadataList;

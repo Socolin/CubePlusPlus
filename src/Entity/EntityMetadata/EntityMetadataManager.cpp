@@ -2,6 +2,10 @@
 
 #include "ItemStackEntityMetadata.h"
 #include "CharEntityMetadata.h"
+#include "FloatEntityMetadata.h"
+#include "IntegerEntityMetadata.h"
+#include "ShortEntityMetadata.h"
+
 #include "Network/NetworkPacket.h"
 
 namespace World
@@ -15,6 +19,15 @@ EntityMetadataManager::~EntityMetadataManager()
 {
 }
 
+void EntityMetadataManager::Write(Network::NetworkPacket& packet)
+{
+    for (auto metadata : metadataList)
+    {
+        metadata.second->Write(packet);
+    }
+    packet << (char)127;
+}
+
 void EntityMetadataManager::SetEntityMetadata(int valueId, char value)
 {
     EntityMetadata* oldMetadata = metadataList[valueId];
@@ -23,13 +36,28 @@ void EntityMetadataManager::SetEntityMetadata(int valueId, char value)
         delete oldMetadata;
 }
 
-void EntityMetadataManager::Write(Network::NetworkPacket& packet)
+void EntityMetadataManager::SetEntityMetadata(int valueId, short value)
 {
-    for (auto metadata : metadataList)
-    {
-        metadata.second->Write(packet);
-    }
-    packet << (char)127;
+    EntityMetadata* oldMetadata = metadataList[valueId];
+    metadataList[valueId] = new ShortEntityMetadata(valueId, value);
+    if (oldMetadata)
+        delete oldMetadata;
+}
+
+void EntityMetadataManager::SetEntityMetadata(int valueId, int value)
+{
+    EntityMetadata* oldMetadata = metadataList[valueId];
+    metadataList[valueId] = new IntegerEntityMetadata(valueId, value);
+    if (oldMetadata)
+        delete oldMetadata;
+}
+
+void EntityMetadataManager::SetEntityMetadata(int valueId, float value)
+{
+    EntityMetadata* oldMetadata = metadataList[valueId];
+    metadataList[valueId] = new FloatEntityMetadata(valueId, value);
+    if (oldMetadata)
+        delete oldMetadata;
 }
 
 void EntityMetadataManager::SetEntityMetadata(int valueId, Inventory::ItemStack& value)

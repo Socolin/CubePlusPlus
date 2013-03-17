@@ -1,6 +1,7 @@
 #include "CharEntityMetadata.h"
 
 #include "Network/NetworkPacket.h"
+
 namespace World
 {
 
