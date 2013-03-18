@@ -32,7 +32,8 @@ Entity::Entity(eEntityType entityType, double x, double y, double z) :
     , boundingBox(x, y, z, 0.6, 1.8, 0.6)
     , dead(false)
 {
-
+    metadataManager.SetEntityMetadata(0, (char)0);
+    metadataManager.SetEntityMetadata(1, (short)300);
 }
 
 Entity::~Entity()
@@ -46,6 +47,12 @@ void Entity::setWorld(World* world, int entityId)
     networkX = (int)(x * 32.0);
     networkY = (int)(y * 32.0);
     networkZ = (int)(z * 32.0);
+    virtualChunkX = ((int)x) >> 7;
+    virtualChunkZ = ((int)z) >> 7;
+    chunkX = ((int)x) >> 4;
+    chunkZ = ((int)z) >> 4;
+    hasMove = false;
+    hasRotate = false;
 }
 
 void Entity::Rotate(float yaw, float pitch)

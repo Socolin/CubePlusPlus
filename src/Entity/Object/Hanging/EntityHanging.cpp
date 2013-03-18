@@ -110,11 +110,11 @@ void EntityHanging::setDirection(int direction)
     float boundingReduceSize = -0.03125F;
 
     x = entityPositionX;
-    y = entityPositionY - (height + boundingReduceSize);
+    y = entityPositionY;
     z = entityPositionZ;
 
     boundingBox.SetWidthHeightDepth((widthX + boundingReduceSize) * 2,(height + boundingReduceSize) * 2,(widthZ + boundingReduceSize) * 2);
-    boundingBox.SetPositionCenteredXYZ(entityPositionX, entityPositionY, entityPositionZ);
+    boundingBox.SetPositionCenteredXZ(entityPositionX, entityPositionY, entityPositionZ);
 }
 
 double EntityHanging::getWidthOffset(int width)

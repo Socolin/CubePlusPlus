@@ -57,18 +57,14 @@ void EntityHangingFrame::GetCreatePacket(Network::NetworkPacket& packet)
     packet << (unsigned char) Network::OP_SPAWN_OBJECT_VEHICLE
             << entityId
             << (char) 71
-            << networkX
-            << networkY
-            << networkZ
-            << (char) (yaw * 256.f / 360.f)
+            << (int)blockX * 32
+            << (int)blockY * 32
+            << (int)blockZ * 32
             << (char) (pitch * 256.f / 360.f)
+            << (char) (yaw * 256.f / 360.f)
             << (int) direction;
     if (direction)
             packet << (short) 0 << (short) 0 << (short) 0;
-
-    packet << (unsigned char) Network::OP_ENTITY_LOOK << entityId << ((char) (yaw * 256.f / 360.f)) << ((char) (pitch * 256.f / 360.f));
-    packet << (unsigned char) Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
-    packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << (short) 0 << (short) 0 << (short) 0;
 
     packet << (unsigned char) Network::OP_ENTITY_METADATA
             << entityId;
