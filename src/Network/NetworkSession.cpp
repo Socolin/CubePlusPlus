@@ -133,6 +133,7 @@ void NetworkSession::disconnect(const char* reason)
         worldManager->RemovePlayer(player);
         player = nullptr;
     }
+    close(socket);
     state = STATE_DISCONECT;
 }
 
@@ -189,8 +190,10 @@ buffer_t NetworkSession::readBuffer() throw (NetworkException)
     return std::make_pair(bufferData, len);
 }
 
-void NetworkSession::SendPacket(const NetworkPacket& packet) const
+void NetworkSession::SendPacket(const NetworkPacket& packet)
 {
+    if (state == STATE_DISCONECT)
+        return;
     //packet.dump();
     if (cryptedMode)
     {
@@ -202,7 +205,11 @@ void NetworkSession::SendPacket(const NetworkPacket& packet) const
         while (sendSize > 0)
         {
             aesEncryptor->ProcessData((byte*)sendBuffer,(byte*)&packet.getPacketData()[sended],sendSize);
-            send(socket, sendBuffer, sendSize, 0);
+            send(socket, sendBuffer, sendSize, MSG_NOSIGNAL);
+            if (errno == EPIPE)
+            {
+                disconnect("EPIPE");
+            }
             y -= sendSize;
             sended += sendSize;
             sendSize = y ^ ((x ^ y) & -(x < y)); // min(x, y)

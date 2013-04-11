@@ -60,7 +60,7 @@ public:
     void ReceiveInBuffer() throw (NetworkException);
     void ReceiveData() throw (NetworkException);
 
-    void SendPacket(const NetworkPacket& packet) const;
+    void SendPacket(const NetworkPacket& packet);
 
     void handleBadPacket() throw (NetworkException)
     {

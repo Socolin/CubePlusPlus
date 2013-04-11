@@ -23,8 +23,8 @@ public:
             return name < rhs.name;
         }
         std::wstring name;
-        unsigned short sizeX;
-        unsigned short sizeY;
+        unsigned short width;
+        unsigned short height;
         i_damage itemData;
     };
     const std::set<Painting>& getPainting(i_item itemId);

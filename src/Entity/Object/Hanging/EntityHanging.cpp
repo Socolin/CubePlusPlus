@@ -113,7 +113,7 @@ void EntityHanging::setDirection(int direction)
     y = entityPositionY;
     z = entityPositionZ;
 
-    boundingBox.SetWidthHeightDepth((widthX + boundingReduceSize) * 2,(height + boundingReduceSize) * 2,(widthZ + boundingReduceSize) * 2);
+    boundingBox.SetWidthHeightDepth(std::fabs(widthX + boundingReduceSize) * 2, std::fabs(height + boundingReduceSize) * 2, std::fabs(widthZ + boundingReduceSize) * 2);
     boundingBox.SetPositionCenteredXZ(entityPositionX, entityPositionY, entityPositionZ);
 }
 
@@ -193,6 +193,7 @@ bool EntityHanging::isOnValidSurface()
 
     std::set<eEntityType> typeList;
     typeList.insert(ENTITY_TYPE_HANGINGFRAME);
+    typeList.insert(ENTITY_TYPE_PAINTING);
     std::vector<std::pair<int, Util::AABB>> bbEntityList;
     world->GetEntitiesBoundingBoxInAABB(typeList, entityId, boundingBox, bbEntityList);
 

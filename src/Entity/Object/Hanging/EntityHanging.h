@@ -18,9 +18,9 @@ public:
 protected:
     virtual int getPixelWidth() const = 0;
     virtual int getPixelHeight() const = 0;
+    bool isOnValidSurface();
 private:
     double getWidthOffset(int width);
-    bool isOnValidSurface();
 protected:
     int direction;
     int blockX;
