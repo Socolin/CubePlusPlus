@@ -74,6 +74,18 @@ enum eDatabaseField
 };
 }
 
+namespace TablePainting
+{
+enum eDatabaseField
+{
+    name = 1,
+    sizeX,
+    sizeY,
+    itemId,
+    itemData,
+};
+}
+
 namespace TableScript
 {
 enum eDatabaseField
@@ -117,4 +129,5 @@ enum eDatabaseField
     type,
 };
 }
+
 #endif /* DATABASE_H_ */

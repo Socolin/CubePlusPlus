@@ -5,6 +5,7 @@
 #include "Block/BlockList.h"
 #include "Inventory/ItemList.h"
 #include "Database/DatabaseManager.h"
+#include "Database/MiscData/PaintingData.h"
 #include "Scripting/ScriptManager.h"
 #include <iostream>
 #include <ctime>
@@ -32,6 +33,7 @@ int main(void)
     }
     Block::BlockList::InitInstance();
     Inventory::ItemList::InitInstance();
+    Database::PaintingData::Instance();
 
     clock_t time = std::clock();
     struct timespec requestTime;
