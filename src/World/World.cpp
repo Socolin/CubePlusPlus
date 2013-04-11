@@ -310,10 +310,10 @@ void World::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int 
     int minZ = floor(box.getZ());
     int maxX = floor(box.getMaxX());
     int maxZ = floor(box.getMaxZ());
-    minX <<= 4;
-    minZ <<= 4;
-    maxX <<= 4;
-    maxZ <<= 4;
+    minX >>= 4;
+    minZ >>= 4;
+    maxX >>= 4;
+    maxZ >>= 4;
     for (int chunkX = minX; chunkX <= maxX; chunkX++)
         for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++)
             {
