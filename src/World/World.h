@@ -84,6 +84,8 @@ public:
 
     Entity* GetEntityById(int target);
 
+    void SetTime(long time);
+
 private:
     void NotifyNeighborBlockChange(int x, i_height y, int z);
     void UpdateTime();

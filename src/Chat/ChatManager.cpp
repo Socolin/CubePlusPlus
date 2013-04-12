@@ -5,6 +5,7 @@
 
 #include "Entity/EntityPlayer.h"
 #include "World/WorldManager.h"
+#include "World/World.h"
 
 namespace Chat
 {
@@ -28,6 +29,11 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     if (message == L"/stop")
     {
         World::WorldManager::GetInstance()->Stop();
+        isCanceled = true;
+    }
+    if (message == L"/night")
+    {
+        World::WorldManager::GetInstance()->GetWorld()->SetTime(20000);
         isCanceled = true;
     }
     if (isCanceled)

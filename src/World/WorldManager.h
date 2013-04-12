@@ -36,6 +36,8 @@ public:
     void Stop();
     bool IsRunning();
     void SendToAllPlayer(Network::NetworkPacket& packet);
+
+    World* GetWorld();
 private:
     Chat::ChatManager chatManager;
     WorldManager();

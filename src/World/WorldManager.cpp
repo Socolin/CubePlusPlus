@@ -62,6 +62,11 @@ WorldManager::WorldManager() :
 
 }
 
+World* WorldManager::GetWorld()
+{
+    return world;
+}
+
 WorldManager::~WorldManager()
 {
     world->Unload();

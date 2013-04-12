@@ -704,6 +704,11 @@ void World::setLightValueAt(eLightType lightType, int x, i_height y, int z, i_li
     }
 }
 
+void World::SetTime(long time)
+{
+    currentTime = time;
+}
+
 bool World::isBlockDirectlyLightedFromSky(int x, i_height y, int z)
 {
     // FIXME y >= heightmap(x, z)
