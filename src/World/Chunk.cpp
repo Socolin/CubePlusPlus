@@ -81,7 +81,7 @@ void Chunk::Load()
         data = chunkData->skyLight;
         for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
         {
-            *data = 0xff;
+            *data = 0x0;
             data++;
         }
         chunkData->addData = NULL;
@@ -113,7 +113,7 @@ void Chunk::Load()
         data = chunkData->skyLight;
         for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
         {
-            *data = 0xff;
+            *data = 0;
             data++;
         }
         chunkData->addData = NULL;

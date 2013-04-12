@@ -12,6 +12,10 @@ enum BlockFace
     FACE_NONE = -1,
 };
 
+const int xOffsetsForSides[6] = {0, 0, 0, 0, -1, 1};
+const int yOffsetsForSides[6] = {-1, 1, 0, 0, 0, 0};
+const int zOffsetsForSides[6] = {0, 0, -1, 1, 0, 0};
+
 #define BLOCK_COUNT 256
 
 #endif

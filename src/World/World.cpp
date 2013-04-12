@@ -2,9 +2,11 @@
 
 #include <cmath>
 #include <sstream>
+#include <algorithm>
 
 #include "Chunk.h"
 #include "Block/Block.h"
+#include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
 #include "Inventory/ItemStack.h"
 #include "Entity/EntityPlayer.h"
@@ -124,6 +126,7 @@ void World::ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
     chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, blockData);
+    updateAllLightTypes(x, y, z);
 }
 
 void World::ChangeDataNoEvent(int x, i_height y, int z, i_data blockData)
@@ -163,6 +166,7 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
         NotifyNeighborBlockChange(x, y - 1, z);
     NotifyNeighborBlockChange(x, y, z + 1);
     NotifyNeighborBlockChange(x, y, z - 1);
+    updateAllLightTypes(x, y, z);
 }
 
 void World::RemoveBlock(int x, i_height y, int z)
@@ -434,6 +438,276 @@ Entity* World::GetEntityById(int target)
 void World::MarkEntityForDelete(Entity* entity)
 {
     entityToDelete.push_back(entity);
+}
+
+/*
+ *
+ */
+bool World::isChunksExistInRange(int x, i_height y, int z, int range)
+{
+    return isChunksExist(x - range, (i_height) std::max(0, y - range), z - range, x + range, (i_height) std::min(255, y + range), z + range);
+
+}
+
+bool World::isChunksExist(int xmin, i_height ymin, int zmin, int xmax, i_height ymax, int zmax)
+{
+    xmin >>= 4;
+    zmin >>= 4;
+    xmax >>= 4;
+    zmax >>= 4;
+
+    for (int chunkX = xmin; chunkX <= xmax; ++chunkX)
+    {
+        for (int chunkZ = zmin; chunkZ <= zmax; ++chunkZ)
+        {
+            if (!isChunkExist(chunkX, chunkZ))
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool World::isChunkExist(int chunkX, int chunkZ)
+{
+    Chunk* chunk = GetChunkIfLoaded(chunkX, chunkZ);
+    return chunk != nullptr;
+}
+
+/* **************************************************************************
+ *  Light relative's functions
+ *  *************************************************************************
+ */
+void World::updateAllLightTypes(int x, i_height y, int z)
+{
+    updateLightByType(LIGHTTYPE_SKY, x, y, z);
+    updateLightByType(LIGHTTYPE_BLOCK, x, y, z);
+}
+
+void World::updateLightByType(eLightType lightType, int x, i_height y, int z)
+{
+    if (!isChunksExistInRange(x, y, z, 17))
+        return;
+
+    updateLightQueue.reset();
+
+    i_lightvalue oldBlockLightValue = getLightValueAt(lightType, x, y, z);
+    i_lightvalue newBlockLightValue = computeBlockLightValueUsingNeighbors(lightType, x, y, z);
+
+    if (newBlockLightValue > oldBlockLightValue)
+    {
+        updateLightQueue.push({0,0,0,0});
+    }
+    else if (newBlockLightValue < oldBlockLightValue)
+    {
+        updateLightQueue.push({0,0,0,oldBlockLightValue});
+        while (!updateLightQueue.empty())
+        {
+            struct LightUpdateData blockToUpdate = updateLightQueue.pop();
+            int blockToUpdateX = blockToUpdate.x + x;
+            int blockToUpdateY = blockToUpdate.y + y;
+            int blockToUpdateZ = blockToUpdate.z + z;
+
+            i_lightvalue blockToUpdateLightValue = blockToUpdate.l;
+            i_lightvalue blockToUpdateOldLightValue = getLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ);
+
+            if (blockToUpdateOldLightValue == blockToUpdateLightValue)
+            {
+                setLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ, 0);
+                if (blockToUpdateLightValue > 0)
+                {
+                    int dx = blockToUpdateX - x;
+                    int dy = blockToUpdateY - y;
+                    int dz = blockToUpdateZ - z;
+
+                    if (dx + dy + dz < 17) // http://en.wikipedia.org/wiki/Taxicab_geometry
+                    {
+                        for (int side = 0; side < 6; ++side)
+                        {
+                            int blockSideY = blockToUpdateY + yOffsetsForSides[side];
+                            if (blockSideY < 0 || blockSideY > 255)
+                                continue;
+                            int blockSideX = blockToUpdateX + xOffsetsForSides[side];
+                            int blockSideZ = blockToUpdateZ + zOffsetsForSides[side];
+
+                            Block::Block* block = Block::BlockList::getBlock(GetBlockId(blockSideX, blockSideY, blockSideZ));
+
+                            i_lightvalue blockSideLightValue = 1;
+                            if (block != nullptr)
+                                blockSideLightValue = std::max(i_lightvalue(1), block->getLightOpacity());
+                            i_lightvalue blockSideOldLightValue = getLightValueAt(lightType, blockSideX, blockSideY, blockSideZ);
+
+                            // Si le block qu'on viens d'update avait peut etre une influance sur la lumière du block calculé
+                            // ex: si le block qu'on update est le 13, il influance la lumière du 12 car il était entre lui et la source de lumière
+                            // 15 14 13 12 11
+                            // T  15 14[13]12
+                            // 15 14 13 12 11
+                            // 14 13 12 11 10
+                            if (blockSideOldLightValue == blockToUpdateLightValue - blockSideLightValue)
+                            {
+                                updateLightQueue.push({ blockSideX - x, blockSideY - y, blockSideZ - z, i_lightvalue(blockToUpdateLightValue - blockSideLightValue) });
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        updateLightQueue.rewind();
+    }
+    while (!updateLightQueue.empty())
+    {
+        struct LightUpdateData blockToUpdate = updateLightQueue.pop();
+        int blockToUpdateX = blockToUpdate.x + x;
+        int blockToUpdateY = blockToUpdate.y + y;
+        int blockToUpdateZ = blockToUpdate.z + z;
+
+        i_lightvalue blockToUpdateOldLightValue = getLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ);
+        i_lightvalue blockToUpdateNewLightValue = computeBlockLightValueUsingNeighbors(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ);
+
+
+        if (blockToUpdateNewLightValue != blockToUpdateOldLightValue)
+        {
+            setLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ, blockToUpdateNewLightValue);
+            if (blockToUpdateNewLightValue > blockToUpdateOldLightValue)
+            {
+                int dx = blockToUpdateX - x;
+                int dy = blockToUpdateY - y;
+                int dz = blockToUpdateZ - z;
+
+                if (dx + dy + dz < 17 && updateLightQueue.hasSpaceFor(6)) // http://en.wikipedia.org/wiki/Taxicab_geometry
+                {
+                    if (getLightValueAt(lightType, blockToUpdateX - 1, blockToUpdateY, blockToUpdateZ) < blockToUpdateNewLightValue)
+                    {
+                        updateLightQueue.push({blockToUpdateX - 1 - x, blockToUpdateY - y, blockToUpdateZ - z, 0});
+                    }
+
+                    if (getLightValueAt(lightType, blockToUpdateX + 1, blockToUpdateY, blockToUpdateZ) < blockToUpdateNewLightValue)
+                    {
+                        updateLightQueue.push({blockToUpdateX + 1 - x, blockToUpdateY - y, blockToUpdateZ - z, 0});
+                    }
+
+                    if (getLightValueAt(lightType, blockToUpdateX, blockToUpdateY - 1, blockToUpdateZ) < blockToUpdateNewLightValue)
+                    {
+                        updateLightQueue.push({blockToUpdateX - x, blockToUpdateY - 1 - y, blockToUpdateZ - z, 0});
+                    }
+
+                    if (getLightValueAt(lightType, blockToUpdateX, blockToUpdateY + 1, blockToUpdateZ) < blockToUpdateNewLightValue)
+                    {
+                        updateLightQueue.push({blockToUpdateX - x, blockToUpdateY + 1 - y, blockToUpdateZ - z, 0});
+                    }
+
+                    if (getLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ - 1) < blockToUpdateNewLightValue)
+                    {
+                        updateLightQueue.push({blockToUpdateX - x, blockToUpdateY - y, blockToUpdateZ - 1 - z, 0});
+                    }
+
+                    if (getLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ + 1) < blockToUpdateNewLightValue)
+                    {
+                        updateLightQueue.push({blockToUpdateX - x, blockToUpdateY - y, blockToUpdateZ + 1 - z, 0});
+                    }
+                }
+            }
+        }
+    }
+}
+
+i_lightvalue World::computeBlockLightValueUsingNeighbors(eLightType lightType, int x, i_height y, int z)
+{
+    if (lightType == LIGHTTYPE_SKY && isBlockDirectlyLightedFromSky(x, y, z))
+    {
+        return LIGHT_VALUE_MAX;
+    }
+
+    i_block blockId = GetBlockId(x, y, z);
+    i_lightvalue blockLightValue = 0;
+    i_lightvalue blockLightOpacity = 0;
+    Block::Block* block = Block::BlockList::getBlock(blockId);
+    if (block != nullptr)
+    {
+        blockLightValue = block->getLightValue();
+        blockLightOpacity = block->getLightOpacity();
+    }
+
+    if (blockLightOpacity >= LIGHT_VALUE_MAX && blockLightValue > 0)
+    {
+        blockLightOpacity = 1;
+    }
+
+    if (blockLightOpacity < 1)
+    {
+        blockLightOpacity = 1;
+    }
+
+    if (lightType == LIGHTTYPE_SKY)
+    {
+        blockLightValue = 0;
+    }
+
+
+    if (blockLightOpacity >= LIGHT_VALUE_MAX)
+    {
+        return 0;
+    }
+    else if (blockLightValue >= LIGHT_VALUE_MAX - 1)
+    {
+        return blockLightValue;
+    }
+    else
+    {
+        for (int side = 0; side < 6; ++side)
+        {
+            int blockSideY = y + yOffsetsForSides[side];
+            if (blockSideY < 0 || blockSideY > 255)
+                continue;
+            int blockSideX = x + xOffsetsForSides[side];
+            int blockSideZ = z + zOffsetsForSides[side];
+            int blockSideLightValue = getLightValueAt(lightType, blockSideX, blockSideY, blockSideZ) - blockLightOpacity;
+
+            if (blockSideLightValue > blockLightValue)
+            {
+                blockLightValue = blockSideLightValue;
+            }
+
+            if (blockLightValue >= LIGHT_VALUE_MAX - 1)
+            {
+                return blockLightValue;
+            }
+        }
+
+        return blockLightValue;
+    }
+
+}
+
+i_lightvalue World::getLightValueAt(eLightType lightType, int x, i_height y, int z)
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        if (lightType == LIGHTTYPE_BLOCK)
+            return chunk->getBlockLightAt(x & 0xf, y, z & 0xf);
+        return chunk->getSkyLightAt(x & 0xf, y, z & 0xf);
+    }
+    return lightType;
+}
+
+void World::setLightValueAt(eLightType lightType, int x, i_height y, int z, i_lightvalue value)
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        if (lightType == LIGHTTYPE_BLOCK)
+            chunk->setBlockLightAt(x & 0xf, y, z & 0xf, value);
+        chunk->setSkyLightAt(x & 0xf, y, z & 0xf, value);
+    }
+}
+
+bool World::isBlockDirectlyLightedFromSky(int x, i_height y, int z)
+{
+    // FIXME y >= heightmap(x, z)
+    return false;
 }
 
 } /* namespace World */

@@ -14,6 +14,7 @@
 
 #include "Util/types.h"
 #include "Network/NetworkPacket.h"
+#include "WorldConstants.h"
 
 namespace Block
 {
@@ -66,6 +67,11 @@ public:
     void RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z);
     // Retrive tile entity in block
     Block::TileEntity* GetTileEntity(i_small_coord x, i_height y, i_small_coord z);
+
+    inline i_lightvalue getBlockLightAt(i_small_coord x, i_height y, i_small_coord z);
+    inline i_lightvalue getSkyLightAt(i_small_coord x, i_height y, i_small_coord z);
+    inline void setBlockLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value);
+    inline void setSkyLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value);
 
 private:
     // Write in chunk data without notification for client or other block

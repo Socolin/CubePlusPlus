@@ -65,6 +65,16 @@ public:
         return renderAsNormal;
     }
 
+    unsigned char getLightOpacity() const
+    {
+        return lightOpacity;
+    }
+
+    unsigned char getLightValue() const
+    {
+        return lightValue;
+    }
+
 private:
     i_block blockId;
     const SoundBlock sound;

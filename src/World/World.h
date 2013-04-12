@@ -6,8 +6,10 @@
 #include <set>
 
 #include "Util/AABB.h"
+#include "Util/BufferedRewindableQueue.h"
 #include "Chunk.h"
 #include "Entity/EntityConstants.h"
+#include "World/WorldConstants.h"
 
 #define CHUNK_KEY(X,Z) ((((long)X << 32) & 0xffffffff00000000)| ((long)Z & 0x00000000ffffffff))
 
@@ -89,6 +91,19 @@ private:
     VirtualSmallChunk* CreateVirtualSmallChunk(int x, int z);
     Chunk* LoadChunk(int x, int z);
     void MarkEntityForDelete(Entity* entity);
+
+    bool isChunksExistInRange(int x, i_height y, int z, int range);
+    bool isChunksExist(int xmin, i_height ymin, int zmin, int xmax, i_height ymax, int zmax);
+    bool isChunkExist(int chunkX, int chunkZ);
+
+    /*Light functions*/
+    void updateAllLightTypes(int x, i_height y, int z);
+    void updateLightByType(eLightType lightType, int x, i_height y, int z);
+    i_lightvalue computeBlockLightValueUsingNeighbors(eLightType lightType, int x, i_height y, int z);
+    i_lightvalue getLightValueAt(eLightType lightType, int x, i_height y, int z);
+    void setLightValueAt(eLightType lightType, int x, i_height y, int z, i_lightvalue value);
+    bool isBlockDirectlyLightedFromSky(int x, i_height y, int z);
+
 private:
     std::unordered_map<long, Chunk*> chunkMap;
     std::unordered_map<long, VirtualChunk*> virtualChunkMap;
@@ -102,6 +117,15 @@ private:
     std::map<int, Entity*> entityById;
     std::set<int> deadEntity;
     std::vector<Entity*> entityToDelete;
+
+    struct LightUpdateData
+    {
+        int x:6;
+        int y:6;
+        int z:6;
+        unsigned l:4;
+    };
+    Util::BufferedRewindableQueue<struct LightUpdateData, 32768> updateLightQueue;
 };
 
 } /* namespace World */

@@ -4,6 +4,7 @@
 typedef unsigned short i_block;
 typedef unsigned short i_item;
 typedef unsigned short i_damage;
+typedef unsigned char i_lightvalue;
 typedef unsigned char i_data;
 typedef unsigned char i_height;
 typedef unsigned char i_small_coord; // Use to represent x and z < 16
