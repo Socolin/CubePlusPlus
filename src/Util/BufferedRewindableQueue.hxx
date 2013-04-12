@@ -49,7 +49,7 @@ inline bool Util::BufferedRewindableQueue<T, size>::empty()
 template<typename T, size_t size>
 inline bool Util::BufferedRewindableQueue<T, size>::hasSpaceFor(size_t count)
 {
-    return (size - countElements) <= count;
+    return (size - countElements) > count;
 }
 
 
