@@ -40,14 +40,7 @@ i_data Chunk::getDataAt(i_small_coord x, i_height y, i_small_coord z)
 
 void Chunk::SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blockID)
 {
-	ChunkData* data = datas[y >> 4];
-	if (data == NULL)
-	{
-		data = new ChunkData();
-		data->clear();
-		flagSectionExists |= (1 << (y >> 4));
-		datas[y >> 4] = data;
-	}
+    ChunkData* data = getOrCreateData(y >> 4);
 	if (blockID > 255)
 	{
 		if (data->addData == NULL)
@@ -76,7 +69,8 @@ void Chunk::SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blo
 }
 void Chunk::SetDataAt(i_small_coord x, i_height y, i_small_coord z, i_data newData)
 {
-	ChunkData* data = datas[y >> 4];
+    inCache = false;
+    ChunkData* data = getOrCreateData(y >> 4);
 	if (data != NULL)
 	{
 		int cellId = (y & 0xf) << 8 | z << 4 | x;
@@ -132,40 +126,42 @@ i_lightvalue Chunk::getSkyLightAt(i_small_coord x, i_height y, i_small_coord z)
 
 void Chunk::setBlockLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value)
 {
-    ChunkData* data = datas[y >> 4];
-    if (data != NULL)
-    {
-        int cellId = (y & 0xf) << 8 | z << 4 | x;
+    inCache = false;
+    ChunkData* data = getOrCreateData(y >> 4);
 
-        i_data currentData = data->blocklight[cellId >> 1];
-        if ((x & 0x1) == 0)
-        {
-            data->blocklight[cellId >> 1] = (currentData & 0xf0) | (value & 0xf);
-        }
-        else
-        {
-            data->blocklight[cellId >> 1] = (currentData & 0xf) | ((value & 0xf) << 4);
-        }
+    int cellId = (y & 0xf) << 8 | z << 4 | x;
+    i_lightvalue currentData = data->blocklight[cellId >> 1];
+    if ((x & 0x1) == 0)
+    {
+        data->blocklight[cellId >> 1] = (currentData & 0xf0) | (value & 0xf);
+    }
+    else
+    {
+        data->blocklight[cellId >> 1] = (currentData & 0xf) | ((value & 0xf) << 4);
     }
 }
 
 void Chunk::setSkyLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value)
 {
-    ChunkData* data = datas[y >> 4];
-    if (data != NULL)
-    {
-        int cellId = (y & 0xf) << 8 | z << 4 | x;
+    inCache = false;
+    ChunkData* data = getOrCreateData(y >> 4);
 
-        i_data currentData = data->skyLight[cellId >> 1];
-        if ((x & 0x1) == 0)
-        {
-            data->skyLight[cellId >> 1] = (currentData & 0xf0) | (value & 0xf);
-        }
-        else
-        {
-            data->skyLight[cellId >> 1] = (currentData & 0xf) | ((value & 0xf) << 4);
-        }
+    int cellId = (y & 0xf) << 8 | z << 4 | x;
+    i_lightvalue currentData = data->skyLight[cellId >> 1];
+    if ((x & 0x1) == 0)
+    {
+        data->skyLight[cellId >> 1] = (currentData & 0xf0) | (value & 0xf);
     }
+    else
+    {
+        data->skyLight[cellId >> 1] = (currentData & 0xf) | ((value & 0xf) << 4);
+    }
+}
+
+
+int Chunk::getHeightMapAt(i_small_coord x, i_small_coord z)
+{
+    return heightMap[x | z << 4];
 }
 
 }

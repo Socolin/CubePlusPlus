@@ -193,6 +193,7 @@ void World::RemoveBlock(int x, i_height y, int z)
         NotifyNeighborBlockChange(x, y, z + 1);
         NotifyNeighborBlockChange(x, y, z - 1);
     }
+    updateAllLightTypes(x, y, z);
 }
 
 void World::NotifyNeighborBlockChange(int x, i_height y, int z)
@@ -518,9 +519,9 @@ void World::updateLightByType(eLightType lightType, int x, i_height y, int z)
                 setLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ, 0);
                 if (blockToUpdateLightValue > 0)
                 {
-                    int dx = blockToUpdateX - x;
-                    int dy = blockToUpdateY - y;
-                    int dz = blockToUpdateZ - z;
+                    int dx = abs(blockToUpdateX - x);
+                    int dy = abs(blockToUpdateY - y);
+                    int dz = abs(blockToUpdateZ - z);
 
                     if (dx + dy + dz < 17) // http://en.wikipedia.org/wiki/Taxicab_geometry
                     {
@@ -566,15 +567,14 @@ void World::updateLightByType(eLightType lightType, int x, i_height y, int z)
         i_lightvalue blockToUpdateOldLightValue = getLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ);
         i_lightvalue blockToUpdateNewLightValue = computeBlockLightValueUsingNeighbors(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ);
 
-
         if (blockToUpdateNewLightValue != blockToUpdateOldLightValue)
         {
             setLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ, blockToUpdateNewLightValue);
             if (blockToUpdateNewLightValue > blockToUpdateOldLightValue)
             {
-                int dx = blockToUpdateX - x;
-                int dy = blockToUpdateY - y;
-                int dz = blockToUpdateZ - z;
+                int dx = abs(blockToUpdateX - x);
+                int dy = abs(blockToUpdateY - y);
+                int dz = abs(blockToUpdateZ - z);
 
                 if (dx + dy + dz < 17 && updateLightQueue.hasSpaceFor(6)) // http://en.wikipedia.org/wiki/Taxicab_geometry
                 {
@@ -700,7 +700,8 @@ void World::setLightValueAt(eLightType lightType, int x, i_height y, int z, i_li
     {
         if (lightType == LIGHTTYPE_BLOCK)
             chunk->setBlockLightAt(x & 0xf, y, z & 0xf, value);
-        chunk->setSkyLightAt(x & 0xf, y, z & 0xf, value);
+        else
+            chunk->setSkyLightAt(x & 0xf, y, z & 0xf, value);
     }
 }
 
@@ -711,7 +712,11 @@ void World::SetTime(long time)
 
 bool World::isBlockDirectlyLightedFromSky(int x, i_height y, int z)
 {
-    // FIXME y >= heightmap(x, z)
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        return y >= chunk->getHeightMapAt(x & 0xf, z & 0xf);
+    }
     return false;
 }
 

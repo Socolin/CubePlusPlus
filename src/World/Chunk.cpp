@@ -50,9 +50,12 @@ void Chunk::Load()
     flagSectionUseAdd = 0;
     {
         unsigned char* data = biomeData;
+        unsigned char* heightdata = heightMap;
         for (int i = 0; i < CHUNK_SURFACE; i++)
         {
             *data = 0;
+            *heightdata = 32;
+            heightdata++;
             data++;
         }
     }

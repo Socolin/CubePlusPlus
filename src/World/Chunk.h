@@ -68,12 +68,15 @@ public:
     // Retrive tile entity in block
     Block::TileEntity* GetTileEntity(i_small_coord x, i_height y, i_small_coord z);
 
+private:
+
     inline i_lightvalue getBlockLightAt(i_small_coord x, i_height y, i_small_coord z);
     inline i_lightvalue getSkyLightAt(i_small_coord x, i_height y, i_small_coord z);
     inline void setBlockLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value);
     inline void setSkyLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value);
 
-private:
+    inline int getHeightMapAt(i_small_coord x, i_small_coord z);
+
     // Write in chunk data without notification for client or other block
     inline void SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blockID);
     inline void SetDataAt(i_small_coord x, i_height y, i_small_coord z, i_data newData);
@@ -135,6 +138,18 @@ private:
         }
     } ChunkData;
 
+    inline ChunkData* getOrCreateData(i_small_coord y)
+    {
+        ChunkData* data = datas[y];
+        if (data == NULL)
+        {
+            data = new ChunkData();
+            data->clear();
+            flagSectionExists |= (1 << y);
+            datas[y] = data;
+        }
+        return data;
+    }
     struct UpdateBlockCoordStruct
     {
         i_small_coord x: 4;
@@ -172,6 +187,7 @@ private:
     unsigned short flagSectionExists;
     unsigned short flagSectionUseAdd;
     unsigned char biomeData[CHUNK_SURFACE];
+    unsigned char heightMap[CHUNK_SURFACE];
     bool inCache = false;
     std::vector<unsigned int> changedBlock;
     short countChange;
