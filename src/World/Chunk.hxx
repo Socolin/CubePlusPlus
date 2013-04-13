@@ -1,6 +1,8 @@
 #ifndef CHUNK_HXX_
 #define CHUNK_HXX_
 
+#include "Block/BlockList.h"
+
 namespace World
 {
 i_block Chunk::getBlockAt(i_small_coord x, i_height y, i_small_coord z)
@@ -40,6 +42,7 @@ i_data Chunk::getDataAt(i_small_coord x, i_height y, i_small_coord z)
 
 void Chunk::SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blockID)
 {
+    bool sectionNotExist = (datas[y >> 4] == nullptr);
     ChunkData* data = getOrCreateData(y >> 4);
 	if (blockID > 255)
 	{
@@ -65,6 +68,33 @@ void Chunk::SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blo
 	else
 	{
 		data->blocks[(y & 0xf) << 8 | z << 4 | x] = blockID & 0xff;
+	}
+	i_height terrainHeight = getHeightMapAt(x, z);
+	if (sectionNotExist && y >= terrainHeight)
+	{
+	    GenerateSkyLight();
+	}
+	else
+	{
+        i_lightopacity blockOpacity = 0;
+        Block::Block* block = Block::BlockList::getBlock(blockID);
+        if (block)
+        {
+            blockOpacity = block->getLightOpacity();
+        }
+        if (blockOpacity > 0)
+        {
+            if (y >= terrainHeight)
+            {
+                updateHeightMapAndSkyLight(x, y + 1, z);
+            }
+        }
+        else if (y == terrainHeight - 1)
+        {
+            updateHeightMapAndSkyLight(x, y, z);
+        }
+
+        propagateSkylightOcclusion(x, z);
 	}
 }
 void Chunk::SetDataAt(i_small_coord x, i_height y, i_small_coord z, i_data newData)
@@ -127,7 +157,7 @@ i_lightvalue Chunk::getSkyLightAt(i_small_coord x, i_height y, i_small_coord z)
 void Chunk::setBlockLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value)
 {
     inCache = false;
-    ChunkData* data = getOrCreateData(y >> 4);
+    ChunkData* data = getOrCreateDataForLight(y >> 4);
 
     int cellId = (y & 0xf) << 8 | z << 4 | x;
     i_lightvalue currentData = data->blocklight[cellId >> 1];
@@ -144,7 +174,7 @@ void Chunk::setBlockLightAt(i_small_coord x, i_height y, i_small_coord z, i_ligh
 void Chunk::setSkyLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value)
 {
     inCache = false;
-    ChunkData* data = getOrCreateData(y >> 4);
+    ChunkData* data = getOrCreateDataForLight(y >> 4);
 
     int cellId = (y & 0xf) << 8 | z << 4 | x;
     i_lightvalue currentData = data->skyLight[cellId >> 1];

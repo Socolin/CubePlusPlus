@@ -15,6 +15,7 @@
 #include "Network/OpcodeList.h"
 #include "Util/types.h"
 #include "Util/IntUtil.h"
+#include "World/World.h"
 
 namespace World
 {
@@ -23,6 +24,7 @@ Chunk::Chunk(int x, int z, World* world) :
     posX(x), posZ(z), loaded(false)
     , cachePacket(Network::OP_CHUNK_DATA), blockChangePacket(Network::OP_MULTI_BLOCK_CHANGE)
     , flagSectionExists(0), flagSectionUseAdd(0), inCache(false), countChange(0), world(world)
+    , minHeight(0), skylightNeedUpdate(false), skylightColumnsToUpdate{false}
 {
     posXx16 = x * 16;
     posZx16 = z * 16;
@@ -132,6 +134,9 @@ void Chunk::UpdateTick()
         return;
 
     ChunkData** chunkDataItr = datas;
+
+    UpdateSkyLightIFN();
+
     // Random update tick
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
@@ -212,6 +217,7 @@ void Chunk::UpdateTick()
             }
         }
     }
+
     selfTickCounter++;
 }
 
@@ -354,6 +360,104 @@ void Chunk::RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z)
     }
 }
 
+void Chunk::updateHeightMapAndSkyLight(i_small_coord x, i_height y, i_small_coord z)
+{
+    i_height terrainHeight = heightMap[z << 4 | x];
+    i_height yLimit = terrainHeight;
+
+    if (y > terrainHeight)
+    {
+        yLimit = y;
+    }
+
+    while (yLimit > 0 && getBlockLightOpacity(x, yLimit - 1, z) == 0)
+    {
+        --yLimit;
+    }
+
+    if (yLimit != terrainHeight)
+    {
+        int worldX = x + posXx16;
+        int worldZ = z + posZx16;
+        world->updateSkylightOnColumnt(worldX, worldZ, yLimit, terrainHeight);
+        heightMap[z << 4 | x] = yLimit;
+
+
+        {
+            ChunkData* chunkData = nullptr;
+
+            if (yLimit < terrainHeight)
+            {
+                for (i_height worldY = yLimit; worldY < terrainHeight; ++worldY)
+                {
+                    chunkData = datas[worldY >> 4];
+
+                    if (chunkData != nullptr)
+                    {
+                        // TODO: optimize, direct write in chunkData->skylight
+                        setSkyLightAt(x, worldY, z, 15);
+                    }
+                }
+            }
+            else
+            {
+                for (i_height worldY = terrainHeight; worldY < yLimit; ++worldY)
+                {
+                    chunkData = datas[worldY >> 4];
+
+                    if (chunkData != nullptr)
+                    {
+                        // TODO: optimize, direct write in chunkData->skylight
+                        setSkyLightAt(x, worldY, z, 0);
+                    }
+                }
+            }
+        }
+
+        i_lightvalue blockLight = 15;
+        i_lightopacity blockOpacity = 0;
+
+        while (yLimit > 0 && blockLight > 0)
+        {
+            --yLimit;
+            blockOpacity = getBlockLightOpacity(x, yLimit, z);
+            blockOpacity = std::max(i_lightopacity(1), blockOpacity);
+
+            if (blockLight > 0)
+                blockLight -= blockOpacity;
+
+            ChunkData* chunkData = datas[yLimit >> 4];
+
+            if (chunkData != nullptr)
+            {
+                // TODO: optimize, direct write in chunkData->skylight
+                setSkyLightAt(x, yLimit, z, blockLight);
+            }
+        }
+
+        i_height currentHeightMap = heightMap[z << 4 | x];
+        blockOpacity = terrainHeight;
+        int maxY = currentHeightMap;
+
+        if (currentHeightMap < terrainHeight)
+        {
+            blockOpacity = currentHeightMap;
+            maxY = terrainHeight;
+        }
+
+        if (currentHeightMap < minHeight)
+        {
+            minHeight = currentHeightMap;
+        }
+
+        world->updateSkylightOnColumnt(worldX - 1, worldZ, blockOpacity, maxY);
+        world->updateSkylightOnColumnt(worldX + 1, worldZ, blockOpacity, maxY);
+        world->updateSkylightOnColumnt(worldX, worldZ - 1, blockOpacity, maxY);
+        world->updateSkylightOnColumnt(worldX, worldZ + 1, blockOpacity, maxY);
+        world->updateSkylightOnColumnt(worldX, worldZ, blockOpacity, maxY);
+    }
+}
+
 void Chunk::MarkForUpdate(i_small_coord x, i_height y, i_small_coord z, i_block blockId, unsigned int tickWait)
 {
     assert(tickWait > 0);
@@ -372,6 +476,159 @@ void Chunk::ResetBlockChangePacket()
     blockChangePacket.Reset();
     blockChangePacket << posX << posZ << (short)0 << (int)0;
     countChange = 0;
+}
+
+void Chunk::UpdateSkyLightIFN()
+{
+    if (!skylightNeedUpdate)
+        return;
+
+    if (!world->isChunksExistInRange(posXx16 + 8, 0,  posZx16 + 8, 16))
+        return;
+
+    for (int xInChunk = 0; xInChunk < 16; ++xInChunk)
+    {
+        for (int zInChunk = 0; zInChunk < 16; ++zInChunk)
+        {
+            if (skylightColumnsToUpdate[xInChunk + zInChunk * 16])
+            {
+                skylightColumnsToUpdate[xInChunk + zInChunk * 16] = false;
+                int terrainHeight = getHeightMapAt(xInChunk, zInChunk);
+                int x = posXx16 + xInChunk;
+                int z = posZx16 + zInChunk;
+                i_height westHeightMap;
+                i_height westBlockMinHeight = world->getMinHeightAndHeightMapAt(x - 1, z, westHeightMap);
+                i_height eastHeightMap;
+                i_height eastBlockMinHeight = world->getMinHeightAndHeightMapAt(x + 1, z, eastHeightMap);
+                i_height northHeightMap;
+                i_height northBlockMinHeight = world->getMinHeightAndHeightMapAt(x, z - 1, northHeightMap);
+                i_height southHeightMap;
+                i_height southBlockMinHeight = world->getMinHeightAndHeightMapAt(x, z + 1, southHeightMap);
+
+                if (eastBlockMinHeight < westBlockMinHeight)
+                {
+                    westBlockMinHeight = eastBlockMinHeight;
+                }
+
+                if (northBlockMinHeight < westBlockMinHeight)
+                {
+                    westBlockMinHeight = northBlockMinHeight;
+                }
+
+                if (southBlockMinHeight < westBlockMinHeight)
+                {
+                    westBlockMinHeight = southBlockMinHeight;
+                }
+
+                world->updateSkylightOnColumnt(x, z, westBlockMinHeight, terrainHeight);
+                world->updateSkylightOnColumnt(x - 1, z, terrainHeight, westHeightMap);
+                world->updateSkylightOnColumnt(x + 1, z, terrainHeight, eastHeightMap);
+                world->updateSkylightOnColumnt(x, z - 1, terrainHeight, northHeightMap);
+                world->updateSkylightOnColumnt(x, z + 1, terrainHeight, westHeightMap);
+            }
+        }
+    }
+
+    skylightNeedUpdate = false;
+}
+
+void Chunk::propagateSkylightOcclusion(i_small_coord x, i_small_coord z)
+{
+    skylightColumnsToUpdate[x + z * 16] = true;
+    skylightNeedUpdate = true;
+}
+
+void Chunk::GenerateSkyLight()
+{
+    i_height maxY = getFirstAvaibleChunkDataPositionFromTop() + 16 - 1;
+    minHeight = 255;
+
+    for (i_small_coord x = 0; x < 16; ++x)
+    {
+        i_small_coord z = 0;
+
+        while (z < 16)
+        {
+            i_height y = maxY;
+
+            while (true)
+            {
+                if (y > 0)
+                {
+                    if (getBlockLightOpacity(x, y - 1, z) == 0)
+                    {
+                        --y;
+                        continue;
+                    }
+
+                    heightMap[z << 4 | x] = y;
+
+                    if (y < minHeight)
+                    {
+                        minHeight = y;
+                    }
+                }
+
+                y = 15;
+                int blockY = maxY;
+
+                do
+                {
+                    y -= getBlockLightOpacity(x, blockY, z);
+
+                    if (y > 0)
+                    {
+                        ChunkData* chunkData = datas[blockY >> 4];
+
+                        if (chunkData != nullptr)
+                        {
+                            // TODO optimize using chunkData->skyLight
+                            setSkyLightAt(x, blockY, z, y);
+                        }
+                    }
+
+                    --blockY;
+                } while (blockY > 0 && y > 0);
+
+                ++z;
+                break;
+            }
+        }
+    }
+
+    inCache = false;
+
+    for (i_small_coord x = 0; x < 16; ++x)
+    {
+        for (i_small_coord z = 0; z < 16; ++z)
+        {
+            propagateSkylightOcclusion(x, z);
+        }
+    }
+}
+
+i_height Chunk::getFirstAvaibleChunkDataPositionFromTop()
+{
+    i_height i = CHUNK_DATA_COUNT - 1;
+    while (datas[i] == nullptr)
+        i--;
+    return i_height(i * 16);
+}
+
+i_lightopacity Chunk::getBlockLightOpacity(i_small_coord x, i_height y, i_small_coord z)
+{
+    i_block blockId = getBlockAt(x, y, z);
+    Block::Block* block = Block::BlockList::getBlock(blockId);
+    if (block)
+    {
+        return block->getLightOpacity();
+    }
+    return 0;
+}
+
+i_height Chunk::getMinHeight() const
+{
+    return minHeight;
 }
 
 } /* namespace Network */

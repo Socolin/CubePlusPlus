@@ -67,6 +67,7 @@ public:
     void RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z);
     // Retrive tile entity in block
     Block::TileEntity* GetTileEntity(i_small_coord x, i_height y, i_small_coord z);
+    i_height getMinHeight() const;
 
 private:
 
@@ -76,10 +77,13 @@ private:
     inline void setSkyLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value);
 
     inline int getHeightMapAt(i_small_coord x, i_small_coord z);
+    i_height getFirstAvaibleChunkDataPositionFromTop();
 
     // Write in chunk data without notification for client or other block
     inline void SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blockID);
     inline void SetDataAt(i_small_coord x, i_height y, i_small_coord z, i_data newData);
+
+    void updateHeightMapAndSkyLight(i_small_coord x, i_height y, i_small_coord z);
 
     // Modifiy a block or data only, and mark them to be notified to client
     void ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData);
@@ -89,6 +93,12 @@ private:
     void ResetBlockChangePacket();
 
     void MarkForUpdate(i_small_coord x, i_height y, i_small_coord z, i_block blockId, unsigned int tickWait = 1);
+
+    void UpdateSkyLightIFN();
+    void propagateSkylightOcclusion(i_small_coord x, i_small_coord z);
+    void GenerateSkyLight();
+
+    i_lightopacity getBlockLightOpacity(i_small_coord x, i_height y, i_small_coord z);
 private:
     // 16 x 16 x 16
     typedef struct
@@ -150,6 +160,20 @@ private:
         }
         return data;
     }
+
+    inline ChunkData* getOrCreateDataForLight(i_small_coord y)
+    {
+        ChunkData* data = datas[y];
+        if (data == NULL)
+        {
+            data = new ChunkData();
+            data->clear();
+            flagSectionExists |= (1 << y);
+            datas[y] = data;
+            GenerateSkyLight();
+        }
+        return data;
+    }
     struct UpdateBlockCoordStruct
     {
         i_small_coord x: 4;
@@ -188,7 +212,7 @@ private:
     unsigned short flagSectionUseAdd;
     unsigned char biomeData[CHUNK_SURFACE];
     unsigned char heightMap[CHUNK_SURFACE];
-    bool inCache = false;
+    bool inCache;
     std::vector<unsigned int> changedBlock;
     short countChange;
     std::set<EntityPlayer*> playerList;
@@ -196,6 +220,9 @@ private:
     World* world;
     unsigned int selfTickCounter;
     boost::heap::binomial_heap<UpdateBlockData,boost::heap::compare<CompateUpdateBlockData>> toUpdateBlockList;
+    i_height minHeight;
+    bool skylightNeedUpdate;
+    bool skylightColumnsToUpdate[CHUNK_SURFACE];
 };
 
 

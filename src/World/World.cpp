@@ -705,9 +705,38 @@ void World::setLightValueAt(eLightType lightType, int x, i_height y, int z, i_li
     }
 }
 
-void World::SetTime(long time)
+void World::updateSkylightOnColumnt(int x, int z, i_height y1, i_height y2)
 {
-    currentTime = time;
+    if (!isChunksExistInRange(x, 0, z, 16))
+        return;
+    i_height ymin = std::min(y1, y2);
+    i_height ymax = std::max(y1, y2);
+    for (i_height y = ymin; y < ymax; y++)
+    {
+        updateLightByType(LIGHTTYPE_SKY, x, y, z);
+    }
+}
+
+i_height World::getMinHeightMapAt(int x, int z)
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        return chunk->getMinHeight();
+    }
+    return 0;
+}
+
+i_height World::getMinHeightAndHeightMapAt(int x, int z, i_height& heightMap)
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        heightMap = chunk->getHeightMapAt(x & 0xf, z & 0xf);
+        return chunk->getMinHeight();
+    }
+    heightMap = 0;
+    return 0;
 }
 
 bool World::isBlockDirectlyLightedFromSky(int x, i_height y, int z)
@@ -718,6 +747,11 @@ bool World::isBlockDirectlyLightedFromSky(int x, i_height y, int z)
         return y >= chunk->getHeightMapAt(x & 0xf, z & 0xf);
     }
     return false;
+}
+
+void World::SetTime(long time)
+{
+    currentTime = time;
 }
 
 } /* namespace World */

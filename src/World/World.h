@@ -28,6 +28,7 @@ class VirtualSmallChunk;
 
 class World
 {
+    friend Chunk;
 public:
     World();
     virtual ~World();
@@ -98,9 +99,13 @@ private:
     bool isChunksExist(int xmin, i_height ymin, int zmin, int xmax, i_height ymax, int zmax);
     bool isChunkExist(int chunkX, int chunkZ);
 
+    i_height getMinHeightAndHeightMapAt(int x, int z, i_height& heightMap);
+    i_height getMinHeightMapAt(int x, int z);
+
     /*Light functions*/
     void updateAllLightTypes(int x, i_height y, int z);
     void updateLightByType(eLightType lightType, int x, i_height y, int z);
+    void updateSkylightOnColumnt(int x, int z, i_height y1, i_height y2);
     i_lightvalue computeBlockLightValueUsingNeighbors(eLightType lightType, int x, i_height y, int z);
     i_lightvalue getLightValueAt(eLightType lightType, int x, i_height y, int z);
     void setLightValueAt(eLightType lightType, int x, i_height y, int z, i_lightvalue value);
