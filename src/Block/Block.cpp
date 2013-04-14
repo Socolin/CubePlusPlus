@@ -20,6 +20,7 @@ Block::Block(i_block blockId, const SoundBlock& sound, unsigned char lightOpacit
              float minX, float minY, float minZ,
              float maxX, float maxY, float maxZ,
              const BlockMaterial& material,
+             bool useNeighborBrightness,
              Scripting::BlockScript* script)
     : blockId(blockId)
     , sound(sound)
@@ -39,6 +40,7 @@ Block::Block(i_block blockId, const SoundBlock& sound, unsigned char lightOpacit
     , maxY(maxY)
     , maxZ(maxZ)
     , material(material)
+    , useNeighborBrightness(useNeighborBrightness)
     , script(script)
 {
     fullBlock = ((maxX - minX) + (maxZ - minZ) + (maxZ - minZ)) >= 3;

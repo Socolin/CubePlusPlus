@@ -87,6 +87,9 @@ public:
 
     void SetTime(long time);
 
+    i_lightopacity GetBlockLightOpacity(int x, i_height y, int z);
+    i_lightvalue GetRealLightValueAt(int x, i_height y, int z);
+
 private:
     void NotifyNeighborBlockChange(int x, i_height y, int z);
     void UpdateTime();
@@ -110,6 +113,7 @@ private:
     i_lightvalue getLightValueAt(eLightType lightType, int x, i_height y, int z);
     void setLightValueAt(eLightType lightType, int x, i_height y, int z, i_lightvalue value);
     bool isBlockDirectlyLightedFromSky(int x, i_height y, int z);
+    i_lightvalue recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall);
 
 private:
     std::unordered_map<long, Chunk*> chunkMap;
@@ -133,6 +137,7 @@ private:
         unsigned l:4;
     };
     Util::BufferedRewindableQueue<struct LightUpdateData, 32768> updateLightQueue;
+    i_lightvalue sunReduceValue;
 };
 
 } /* namespace World */

@@ -54,6 +54,11 @@ float Block::GetSlipperiness() const
     return slipperiness;
 }
 
+bool Block::UseNeighborBrightness() const
+{
+    return useNeighborBrightness;
+}
+
 } /* namespace Block */
 
 #endif /* BLOCK_HXX_ */

@@ -117,7 +117,6 @@ void Chunk::SetDataAt(i_small_coord x, i_height y, i_small_coord z, i_data newDa
 	}
 }
 
-
 i_lightvalue Chunk::getBlockLightAt(i_small_coord x, i_height y, i_small_coord z)
 {
     ChunkData* data = datas[y >> 4];

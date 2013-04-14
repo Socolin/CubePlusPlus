@@ -615,6 +615,15 @@ i_height Chunk::getFirstAvaibleChunkDataPositionFromTop()
     return i_height(i * 16);
 }
 
+i_lightvalue Chunk::getRealBlockLightValue(i_small_coord x, i_height y, i_small_coord z, i_lightvalue sunReduceValue)
+{
+    i_lightvalue skyLight = getSkyLightAt(x, y, z);
+    skyLight = std::max(0, skyLight - sunReduceValue);
+    i_lightvalue blockLight = getBlockLightAt(x, y, z);
+    blockLight = std::max(skyLight, blockLight);
+    return blockLight;
+}
+
 i_lightopacity Chunk::getBlockLightOpacity(i_small_coord x, i_height y, i_small_coord z)
 {
     i_block blockId = getBlockAt(x, y, z);

@@ -32,6 +32,7 @@ enum eDatabaseField
     material,
     scriptId,
     soundId,
+    useNeighborBrightness,
 };
 }
 namespace TableBlockSound

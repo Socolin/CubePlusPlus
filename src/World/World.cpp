@@ -21,7 +21,7 @@ namespace World
 {
 
 World::World() :
-    viewDistance(10), currentEntityId(10), ageOfWorld(0), currentTime(0)
+    viewDistance(10), currentEntityId(10), ageOfWorld(0), currentTime(0),sunReduceValue(0)
 {
 }
 
@@ -715,6 +715,67 @@ i_height World::getMinHeightAndHeightMapAt(int x, int z, i_height& heightMap)
     }
     heightMap = 0;
     return 0;
+}
+
+i_lightopacity World::GetBlockLightOpacity(int x, i_height y, int z)
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        return chunk->getBlockLightOpacity(x & 0xf, y, z & 0xf);
+    }
+    return 0;
+}
+
+i_lightvalue World::GetRealLightValueAt(int x, i_height y, int z)
+{
+    return recursiveGetRealLightValueAt(x, y, z, true);
+}
+
+i_lightvalue World::recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall)
+{
+    if (firstCall)
+    {
+        i_block blockId = GetBlockId(x, y, z);
+        const Block::Block* block = Block::BlockList::getBlock(blockId);
+        if (block && block->UseNeighborBrightness())
+        {
+            i_lightvalue topLightValue = recursiveGetRealLightValueAt(x, std::max(255, y + 1), z, false);
+            i_lightvalue eastLightValue = recursiveGetRealLightValueAt(x + 1, y, z, false);
+            i_lightvalue westLightValue = recursiveGetRealLightValueAt(x - 1, y, z, false);
+            i_lightvalue southLightValue = recursiveGetRealLightValueAt(x, y, z + 1, false);
+            i_lightvalue northLightValue = recursiveGetRealLightValueAt(x, y, z - 1, false);
+
+            if (eastLightValue > topLightValue)
+            {
+                topLightValue = eastLightValue;
+            }
+
+            if (westLightValue > topLightValue)
+            {
+                topLightValue = westLightValue;
+            }
+
+            if (southLightValue > topLightValue)
+            {
+                topLightValue = southLightValue;
+            }
+
+            if (northLightValue > topLightValue)
+            {
+                topLightValue = northLightValue;
+            }
+
+            return topLightValue;
+        }
+    }
+
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        return chunk->getRealBlockLightValue(x & 0xf, y, z & 0xf, sunReduceValue);
+    }
+    return LIGHT_VALUE_MAX;
 }
 
 bool World::isBlockDirectlyLightedFromSky(int x, i_height y, int z)

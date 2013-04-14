@@ -37,7 +37,9 @@ public:
           bool renderAsNormal,
           float minX, float minY, float minZ,
           float maxX, float maxY, float maxZ,
-          const BlockMaterial& material, Scripting::BlockScript* script);
+          const BlockMaterial& material,
+          bool useNeighborBrightness,
+          Scripting::BlockScript* script);
     virtual ~Block();
 
     void InitScript();
@@ -66,6 +68,7 @@ public:
     inline i_lightopacity GetLightOpacity() const;
     inline i_lightvalue GetLightValue() const;
     inline float GetSlipperiness() const;
+    inline bool UseNeighborBrightness() const;
 
 private:
     // Database data
@@ -87,6 +90,7 @@ private:
     float maxY;
     float maxZ;
     const BlockMaterial material;
+    bool useNeighborBrightness;
     Scripting::BlockScript* script;
 
     // Calculated data
