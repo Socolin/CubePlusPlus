@@ -1,4 +1,5 @@
-#include "TorchScript.h"
+#include "BlockTorchScript.h"
+
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
 #include "World/World.h"

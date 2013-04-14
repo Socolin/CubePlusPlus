@@ -7,9 +7,9 @@
 #include "Basics/BlockJukeboxScript.h"
 #include "Basics/BlockLeverScript.h"
 #include "Basics/BlockNoteScript.h"
+#include "Basics/BlockStairScript.h"
+#include "Basics/BlockTorchScript.h"
 #include "Basics/BlockWoodScript.h"
-#include "Basics/StairScript.h"
-#include "Basics/TorchScript.h"
 
 namespace Scripting
 {

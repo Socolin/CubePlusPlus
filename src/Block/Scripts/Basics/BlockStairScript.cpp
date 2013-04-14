@@ -1,4 +1,4 @@
-#include "StairScript.h"
+#include "BlockStairScript.h"
 
 #include <cmath>
 #include "Entity/EntityPlayer.h"
@@ -26,6 +26,9 @@ void StairScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y
     int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
     data = 0;
     if (face == FACE_BOTTOM)
+        data = 4;
+
+    if (cursorPositionY >= 8)
         data = 4;
 
     switch (playerRotation)
