@@ -7,6 +7,7 @@
 #include "Basics/BlockJukeboxScript.h"
 #include "Basics/BlockLeverScript.h"
 #include "Basics/BlockNoteScript.h"
+#include "Basics/BlockQuartzScript.h"
 #include "Basics/BlockStairScript.h"
 #include "Basics/BlockTorchScript.h"
 #include "Basics/BlockWoodScript.h"
@@ -22,6 +23,7 @@ void RegisterBlockScript()
     new BlockJukeboxScript();
     new BlockLeverScript();
     new BlockNoteScript();
+    new BlockQuartzScript();
     new BlockStairScript();
     new BlockTorchScript();
     new BlockWoodScript();
