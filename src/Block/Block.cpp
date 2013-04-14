@@ -12,7 +12,6 @@ namespace Block
 
 Block::~Block()
 {
-    // TODO Auto-generated destructor stub
 }
 
 Block::Block(i_block blockId, const SoundBlock& sound, unsigned char lightOpacity,
@@ -70,10 +69,6 @@ bool Block::CanPlace(World::World* world, int x, i_height y, int z, char face) c
     return true;
 }
 
-const SoundBlock& Block::GetSound() const
-{
-    return sound;
-}
 
 bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
@@ -82,16 +77,6 @@ bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char f
         return script->OnUseBlock(user, x, y, z, face, item, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
     return false;
-}
-
-bool Block::GetIsOpaqueCube() const
-{
-    return isOpaqueCube;
-}
-
-const BlockMaterial& Block::getMaterial() const
-{
-    return material;
 }
 
 TileEntity* Block::CreateNewTileEntity() const
@@ -118,11 +103,6 @@ void Block::InitScript()
     {
         return script->Init(this);
     }
-}
-
-i_block Block::GetBlockId() const
-{
-    return blockId;
 }
 
 void Block::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const
@@ -156,11 +136,6 @@ void Block::Destroy(World::World* world, int x, i_height y, int z, i_data data) 
     {
         script->OnDestroy(world, x, y, z, data);
     }
-}
-
-bool Block::isFullBlock() const
-{
-    return fullBlock;
 }
 
 } /* namespace Block */

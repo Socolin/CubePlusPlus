@@ -16,6 +16,8 @@ class PaintingData : public Util::Singleton<PaintingData>
     PaintingData();
     friend class Util::Singleton<PaintingData>;
 public:
+    void InitInstance() override;
+
     struct Painting
     {
         bool operator<(const Painting& rhs) const

@@ -41,7 +41,7 @@ bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, i
             int materialSoundId = 4;
             if (bottomBlock)
             {
-                unsigned char bottomMaterialId = bottomBlock->getMaterial().getId();
+                unsigned char bottomMaterialId = bottomBlock->GetMaterial().getId();
                 for (int i = 0; i < 4; i++)
                 {
                     if (bottomMaterialId == materialId[i])
@@ -68,10 +68,10 @@ Block::TileEntity* BlockNoteScript::CreateNewTileEntity() const
 void BlockNoteScript::Init(Block::Block* baseBlock)
 {
     BlockScript::Init(baseBlock);
-    materialId[0] = Block::BlockList::getBlock(1)->getMaterial().getId(); // Material.rock
-    materialId[1] = Block::BlockList::getBlock(12)->getMaterial().getId(); // Material.sand
-    materialId[2] = Block::BlockList::getBlock(20)->getMaterial().getId(); // Material.glass
-    materialId[3] = Block::BlockList::getBlock(5)->getMaterial().getId(); // Material.wood
+    materialId[0] = Block::BlockList::getBlock(1)->GetMaterial().getId(); // Material.rock
+    materialId[1] = Block::BlockList::getBlock(12)->GetMaterial().getId(); // Material.sand
+    materialId[2] = Block::BlockList::getBlock(20)->GetMaterial().getId(); // Material.glass
+    materialId[3] = Block::BlockList::getBlock(5)->GetMaterial().getId(); // Material.wood
     materialId[4] = 0;
 }
 

@@ -168,7 +168,7 @@ void Chunk::UpdateTick()
                     {
                         blockData = (chunkData->metadata[cellId >> 1] & 0xf0) >> 4;
                     }
-                    if (block->isNeedsRandomTick())
+                    if (block->NeedsRandomTick())
                     {
                         block->UpdateTick(world, posXx16 + (cellId & 0xf), (i << 4) + ((cellId >> 8) & 0xf), posZx16 + ((cellId >> 4) & 0xf), blockData);
                     }
@@ -621,7 +621,7 @@ i_lightopacity Chunk::getBlockLightOpacity(i_small_coord x, i_height y, i_small_
     const Block::Block* block = Block::BlockList::getBlock(blockId);
     if (block)
     {
-        return block->getLightOpacity();
+        return block->GetLightOpacity();
     }
     return 0;
 }

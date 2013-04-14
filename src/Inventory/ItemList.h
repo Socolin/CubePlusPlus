@@ -1,30 +1,29 @@
 #ifndef ITEMLIST_H_
 #define ITEMLIST_H_
 
+#include "Util/Singleton.h"
+
+#include "Util/types.h"
+
 #define ITEM_COUNT 32000
 
 namespace Inventory
 {
 class Item;
 
-class ItemList
+class ItemList : public Util::Singleton<ItemList>
 {
+    friend class Util::Singleton<ItemList>;
 public:
-    static void InitInstance()
+    static const Item* getItem(i_item item)
     {
-        instance = new ItemList();
-        instance->Load();
+        return Instance().items[item];
     }
-    static ItemList* Instance()
-    {
-        return instance;
-    }
-
-    void Load();
+    virtual ~ItemList();
+    void InitInstance() override;
 private:
     ItemList();
-    static ItemList* instance;
-    virtual ~ItemList();
+    void Initialize();
     void GenerateItemBlock();
     void LoadScripts();
 public:

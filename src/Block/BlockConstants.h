@@ -12,9 +12,32 @@ enum BlockFace
     FACE_NONE = -1,
 };
 
-const int xOffsetsForSides[6] = {0, 0, 0, 0, -1, 1};
-const int yOffsetsForSides[6] = {-1, 1, 0, 0, 0, 0};
-const int zOffsetsForSides[6] = {0, 0, -1, 1, 0, 0};
+const int xOffsetsForSidesYZX[6] = {0, 0, 0, 0, -1, 1};
+const int yOffsetsForSidesYZX[6] = {-1, 1, 0, 0, 0, 0};
+const int zOffsetsForSidesYZX[6] = {0, 0, -1, 1, 0, 0};
+
+#define FOR_EACH_SIDE_YZX(BlocX, BlocY, BlocZ, VarName)             \
+        for (int side = 0; side < 6; side++)                        \
+        {                                                           \
+            int VarName##Y = BlocY + yOffsetsForSidesYZX[side];     \
+            if (VarName##Y < 0 || VarName##Y > 255)                 \
+                continue;                                           \
+            int VarName##X = BlocX + xOffsetsForSidesYZX[side];     \
+            int VarName##Z = BlocZ + zOffsetsForSidesYZX[side];     \
+
+const int xOffsetsForSidesXYZ[6] = {-1, 1, 0, 0, 0, 0};
+const int yOffsetsForSidesXYZ[6] = {0, 0, -1, 1, 0, 0};
+const int zOffsetsForSidesXYZ[6] = {0, 0, 0, 0, -1, 1};
+
+#define FOR_EACH_SIDE_XYZ(BlocX, BlocY, BlocZ, VarName)             \
+        for (int side = 0; side < 6; side++)                        \
+        {                                                           \
+            int VarName##Y = BlocY + yOffsetsForSidesXYZ[side];     \
+            if (VarName##Y < 0 || VarName##Y > 255)                 \
+                continue;                                           \
+            int VarName##X = BlocX + xOffsetsForSidesXYZ[side];     \
+            int VarName##Z = BlocZ + zOffsetsForSidesXYZ[side];     \
+
 
 #define BLOCK_COUNT 256
 

@@ -10,6 +10,12 @@ namespace Block
 
 BlockList::BlockList()
 {
+    for (int i = 0; i < BLOCK_COUNT; i++)
+        blocks[i] = nullptr;
+}
+
+BlockList::~BlockList()
+{
 
 }
 
@@ -20,9 +26,6 @@ void BlockList::InitInstance()
 
 void BlockList::Initialize()
 {
-    for (int i = 0; i < BLOCK_COUNT; i++)
-        blocks[i] = nullptr;
-
     Database::DatabaseManager* db = Database::DatabaseManager::Instance();
     db->connect();
     LoadSounds();
@@ -277,11 +280,6 @@ void BlockList::LoadMaterials()
 
         materialList[materialId] = BlockMaterial(materialId, canBurn, replacable, translucent, requiresNoTool, mobilityFlag, true, false);//TODO; load in db true and flase
     }
-}
-
-BlockList::~BlockList()
-{
-
 }
 
 } /* namespace Block */

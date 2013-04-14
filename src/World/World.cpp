@@ -158,14 +158,10 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
         }
     }
 
-    NotifyNeighborBlockChange(x + 1, y, z);
-    NotifyNeighborBlockChange(x - 1, y, z);
-    if (y < 255)
-        NotifyNeighborBlockChange(x, y + 1, z);
-    if (y > 0)
-        NotifyNeighborBlockChange(x, y - 1, z);
-    NotifyNeighborBlockChange(x, y, z + 1);
-    NotifyNeighborBlockChange(x, y, z - 1);
+    FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
+        NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ);
+    }
+
     updateAllLightTypes(x, y, z);
 }
 
@@ -184,14 +180,9 @@ void World::RemoveBlock(int x, i_height y, int z)
 
         chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
 
-        NotifyNeighborBlockChange(x + 1, y, z);
-        NotifyNeighborBlockChange(x - 1, y, z);
-        if (y < 255)
-            NotifyNeighborBlockChange(x, y + 1, z);
-        if (y > 0)
-            NotifyNeighborBlockChange(x, y - 1, z);
-        NotifyNeighborBlockChange(x, y, z + 1);
-        NotifyNeighborBlockChange(x, y, z - 1);
+        FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
+            NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ);
+        }
     }
     updateAllLightTypes(x, y, z);
 }
@@ -293,7 +284,7 @@ void World::GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::A
 
 void World::DropItemstackWithRandomDirection(double x, double y, double z, const Inventory::ItemStack& itemstack)
 {
-    Inventory::Item* item = itemstack.getItem();
+    const Inventory::Item* item = itemstack.getItem();
     if (item != nullptr)
     {
         float randomDistance = Util::randFloat() * 0.5;
@@ -525,19 +516,12 @@ void World::updateLightByType(eLightType lightType, int x, i_height y, int z)
 
                     if (dx + dy + dz < 17) // http://en.wikipedia.org/wiki/Taxicab_geometry
                     {
-                        for (int side = 0; side < 6; ++side)
-                        {
-                            int blockSideY = blockToUpdateY + yOffsetsForSides[side];
-                            if (blockSideY < 0 || blockSideY > 255)
-                                continue;
-                            int blockSideX = blockToUpdateX + xOffsetsForSides[side];
-                            int blockSideZ = blockToUpdateZ + zOffsetsForSides[side];
-
+                        FOR_EACH_SIDE_YZX(blockToUpdateX, blockToUpdateY, blockToUpdateZ, blockSide)
                             const Block::Block* block = Block::BlockList::getBlock(GetBlockId(blockSideX, blockSideY, blockSideZ));
 
                             i_lightvalue blockSideLightValue = 1;
                             if (block != nullptr)
-                                blockSideLightValue = std::max(i_lightvalue(1), block->getLightOpacity());
+                                blockSideLightValue = std::max(i_lightvalue(1), block->GetLightOpacity());
                             i_lightvalue blockSideOldLightValue = getLightValueAt(lightType, blockSideX, blockSideY, blockSideZ);
 
                             // Si le block qu'on viens d'update avait peut etre une influance sur la lumière du block calculé
@@ -626,8 +610,8 @@ i_lightvalue World::computeBlockLightValueUsingNeighbors(eLightType lightType, i
     const Block::Block* block = Block::BlockList::getBlock(blockId);
     if (block != nullptr)
     {
-        blockLightValue = block->getLightValue();
-        blockLightOpacity = block->getLightOpacity();
+        blockLightValue = block->GetLightValue();
+        blockLightOpacity = block->GetLightOpacity();
     }
 
     if (blockLightOpacity >= LIGHT_VALUE_MAX && blockLightValue > 0)
@@ -656,13 +640,7 @@ i_lightvalue World::computeBlockLightValueUsingNeighbors(eLightType lightType, i
     }
     else
     {
-        for (int side = 0; side < 6; ++side)
-        {
-            int blockSideY = y + yOffsetsForSides[side];
-            if (blockSideY < 0 || blockSideY > 255)
-                continue;
-            int blockSideX = x + xOffsetsForSides[side];
-            int blockSideZ = z + zOffsetsForSides[side];
+        FOR_EACH_SIDE_YZX(x, y, z, blockSide)
             int blockSideLightValue = getLightValueAt(lightType, blockSideX, blockSideY, blockSideZ) - blockLightOpacity;
 
             if (blockSideLightValue > blockLightValue)

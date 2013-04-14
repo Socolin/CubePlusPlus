@@ -85,7 +85,7 @@ bool BlockButtonScript::CanPlace(World::World* world, int x, unsigned char y, in
     const Block::Block* clickedBlock = Block::BlockList::Instance().getBlock(world->GetBlockId(x, y, z));
     if(clickedBlock != NULL)
     {
-        return clickedBlock->GetIsOpaqueCube() && clickedBlock->isRenderAsNormal();
+        return clickedBlock->IsOpaqueCube() && clickedBlock->IsRenderAsNormal();
     }
 
     return false;

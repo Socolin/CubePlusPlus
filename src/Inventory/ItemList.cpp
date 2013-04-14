@@ -12,14 +12,22 @@
 namespace Inventory
 {
 
-ItemList* ItemList::instance = nullptr;
 ItemList::ItemList()
 {
     for (int i = 0; i < ITEM_COUNT; i++)
         items[i] = nullptr;
 }
 
-void ItemList::Load()
+ItemList::~ItemList()
+{
+}
+
+void ItemList::InitInstance()
+{
+    Initialize();
+}
+
+void ItemList::Initialize()
 {
     GenerateItemBlock();
     Database::DatabaseManager* db = Database::DatabaseManager::Instance();
@@ -122,10 +130,7 @@ void ItemList::Load()
     }
 
 }
-ItemList::~ItemList()
-{
-    // TODO Auto-generated destructor stub
-}
+
 
 void ItemList::GenerateItemBlock()
 {

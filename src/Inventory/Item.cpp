@@ -1,12 +1,13 @@
 #include "Item.h"
 
+#include <iostream>
+
 #include "Entity/EntityPlayer.h"
 #include "Inventory/ItemStack.h"
 #include "Scripts/ItemScript.h"
-#include <iostream>
+
 namespace Inventory
 {
-
 Item::Item(unsigned short itemId, unsigned int maxStackSize, unsigned int maxDamage, bool hasSubType, unsigned short containerId, Scripting::ItemScript* script)
     : itemId(itemId)
     , maxStackSize(maxStackSize)
@@ -15,15 +16,13 @@ Item::Item(unsigned short itemId, unsigned int maxStackSize, unsigned int maxDam
     , containerId(containerId)
     , script(script)
 {
-
 }
 
 Item::~Item()
 {
-
 }
 
-bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
+bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (script != nullptr)
     {
@@ -32,7 +31,7 @@ bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, 
     return false;
 }
 
-bool Item::Use(World::EntityPlayer* user, ItemStack& item)
+bool Item::Use(World::EntityPlayer* user, ItemStack& item) const
 {
 	if (script != nullptr)
 	{

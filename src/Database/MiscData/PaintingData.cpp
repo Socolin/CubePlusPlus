@@ -8,12 +8,16 @@ namespace Database
 
 PaintingData::PaintingData()
 {
-    load();
 }
 
 const std::set<PaintingData::Painting>& PaintingData::getPainting(i_item itemId)
 {
     return paintingList[itemId];
+}
+
+void PaintingData::InitInstance()
+{
+    load();
 }
 
 void PaintingData::load()

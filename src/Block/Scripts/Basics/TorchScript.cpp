@@ -45,7 +45,7 @@ bool TorchScript::CanPlace(World::World* world, int x, unsigned char y, int z, c
     
     if(clickedBlock != NULL)
     {
-    	if(clickedBlock->GetIsOpaqueCube())
+    	if(clickedBlock->IsOpaqueCube())
     	{
     		return true;
     	}

@@ -31,14 +31,18 @@ int main(void)
         std::cerr << "Not started" << std::endl;
         return 1;
     }
-    Block::BlockList::Instance().InitInstance();
-    Inventory::ItemList::InitInstance();
-    Database::PaintingData::Instance();
 
+    // Load data
+    Block::BlockList::Instance().InitInstance();
+    Inventory::ItemList::Instance().InitInstance();
+    Database::PaintingData::Instance().InitInstance();
+
+    // Tick time management
     clock_t time = std::clock();
     struct timespec requestTime;
     struct timespec unused;
     requestTime.tv_sec = 0;
+
     while (worldManager->IsRunning())
     {
         time = std::clock();
@@ -59,6 +63,7 @@ int main(void)
             usleep(1);
         }
     }
+
     delete worldManager;
     return 0;
 }

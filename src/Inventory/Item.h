@@ -18,33 +18,15 @@ public:
     Item(unsigned short itemId, unsigned int maxStackSize, unsigned int maxDamage, bool hasSubType, unsigned short containerId, Scripting::ItemScript* script);
     virtual ~Item();
 
-    inline unsigned short getContainerId() const
-    {
-        return containerId;
-    }
+    bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    bool Use(World::EntityPlayer* user, ItemStack& item) const;
 
-    inline bool isHasSubType() const
-    {
-        return hasSubType;
-    }
+    inline unsigned short getContainerId() const;
+    inline bool isHasSubType() const;
+    inline unsigned short getItemId() const;
+    inline unsigned int getMaxDamage() const;
+    inline unsigned int getMaxStackSize() const;
 
-    inline unsigned short getItemId() const
-    {
-        return itemId;
-    }
-
-    inline unsigned int getMaxDamage() const
-    {
-        return maxDamage;
-    }
-
-    inline unsigned int getMaxStackSize() const
-    {
-        return maxStackSize;
-    }
-
-    bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ);
-    bool Use(World::EntityPlayer* user, ItemStack& item);
 private:
     unsigned short itemId;
     unsigned int maxStackSize;
@@ -56,4 +38,7 @@ private:
 };
 
 } /* namespace Inventory */
+
+#include "Item.hxx"
+
 #endif /* ITEM_H_ */

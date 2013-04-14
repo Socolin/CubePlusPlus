@@ -24,7 +24,7 @@ ItemScript* ItemBlockScript::Copy()
     return new ItemBlockScript(*this);
 }
 
-bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
+bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     // Try activate block
     // If not, try use item on block
@@ -32,7 +32,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
 
     int clickedBlockId = world->GetBlockId(x, y, z);
     const Block::Block* clicketBlock = Block::BlockList::getBlock(clickedBlockId);
-    if (clicketBlock != NULL && clicketBlock->getMaterial().isReplacable())
+    if (clicketBlock != NULL && clicketBlock->GetMaterial().isReplacable())
     {
         if (face == FACE_NONE)
             return false;
@@ -68,7 +68,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     if (currentBlock != 0)
     {
         const Block::Block* block = Block::BlockList::getBlock(AssociatedBlockId);
-        if (block && !block->getMaterial().isReplacable())
+        if (block && !block->GetMaterial().isReplacable())
         {
             return false;
         }

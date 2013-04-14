@@ -50,11 +50,11 @@ public:
         this->stackSize = stackSize;
     }
 
-    Item* getItem() const
+    const Item* getItem() const
     {
         if (itemId < 0 || itemId >= ITEM_COUNT)
             return nullptr;
-        return ItemList::Instance()->items[this->itemId];
+        return ItemList::Instance().getItem(itemId);
     }
 private:
     int itemId;

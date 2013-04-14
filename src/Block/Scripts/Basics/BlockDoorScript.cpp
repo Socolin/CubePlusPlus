@@ -119,7 +119,7 @@ bool BlockDoorScript::CanPlace(World::World* world, int x, unsigned char y, int 
 
     i_block bottomBlock_id = world->GetBlockId(x, y - 1, z);
     const Block::Block* bottomBlock = Block::BlockList::getBlock(bottomBlock_id);
-    if (bottomBlock->GetIsOpaqueCube())
+    if (bottomBlock->IsOpaqueCube())
         return true;
 
     return false;

@@ -33,7 +33,7 @@ void EntityFallingBlock::UpdateTick()
             const Block::Block* block = Block::BlockList::getBlock(replaceBlockId);
             if (block)
             {
-                if (!block->getMaterial().isReplacable())
+                if (!block->GetMaterial().isReplacable())
                     canPlaceBlock = false;
             }
         }

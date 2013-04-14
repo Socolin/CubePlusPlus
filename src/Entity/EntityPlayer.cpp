@@ -179,7 +179,7 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
     else if (state == 4)
     {
         Inventory::ItemStack& itemstack = inventory.GetItemInHand();
-        Inventory::Item* item = itemstack.getItem();
+        const Inventory::Item* item = itemstack.getItem();
         if (item != nullptr)
         {
             const double speed = 0.3F;
@@ -206,7 +206,7 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
     int clickedBlockId = world->GetBlockId(x, y, z);
     const Block::Block* block = Block::BlockList::Instance().getBlock(clickedBlockId);
     Inventory::ItemStack& itemstack = inventory.GetItemInHand();
-    Inventory::Item* item = itemstack.getItem();
+    const Inventory::Item* item = itemstack.getItem();
     if (face != FACE_NONE)
     {
         if (block)

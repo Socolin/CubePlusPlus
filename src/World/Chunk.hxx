@@ -80,7 +80,7 @@ void Chunk::SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blo
         const Block::Block* block = Block::BlockList::getBlock(blockID);
         if (block)
         {
-            blockOpacity = block->getLightOpacity();
+            blockOpacity = block->GetLightOpacity();
         }
         if (blockOpacity > 0)
         {

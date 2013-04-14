@@ -8,6 +8,7 @@
 
 #include "BlockConstants.h"
 #include "Block.h"
+#include "Util/types.h"
 
 namespace Block
 {
@@ -15,7 +16,7 @@ class BlockList : public Util::Singleton<BlockList>
 {
     friend class Util::Singleton<BlockList>;
 public:
-    static inline const Block* getBlock(i_block block)
+    static const Block* getBlock(i_block block)
     {
         return Instance().blocks[block];
     }

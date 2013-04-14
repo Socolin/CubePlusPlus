@@ -60,7 +60,7 @@ void EntityItem::UpdateTick()
                 const Block::Block* blockBottom = Block::BlockList::getBlock(blockBottomId);
                 if (blockBottom)
                 {
-                    slowDown = blockBottom->getSlipperiness() * 0.98f;
+                    slowDown = blockBottom->GetSlipperiness() * 0.98f;
                 }
                 else
                     slowDown = 0.58800006;

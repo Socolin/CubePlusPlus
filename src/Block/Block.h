@@ -12,15 +12,18 @@ namespace Scripting
 {
 class BlockScript;
 }
+
 namespace World
 {
 class EntityPlayer;
 class World;
 }
+
 namespace Inventory
 {
 class ItemStack;
 }
+
 namespace Block
 {
 class TileEntity;
@@ -37,49 +40,39 @@ public:
           const BlockMaterial& material, Scripting::BlockScript* script);
     virtual ~Block();
 
+    void InitScript();
+
     void OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
     bool UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
     void UpdateTick(World::World* world, int x, i_height y, int z, i_data data) const;
     void Destroy(World::World* world, int x, i_height y, int z, i_data data) const;
     bool CanPlace(World::World* world, int x, i_height y, int z, char face) const;
     void NeighborChange(World::World* world, int x, i_height y, int z) const;
-    const SoundBlock& GetSound() const;
-    bool GetIsOpaqueCube() const;
-    const BlockMaterial& getMaterial() const;
+
     TileEntity* CreateNewTileEntity() const;
     bool UseTileEntity() const;
-    void InitScript();
-    i_block GetBlockId() const;
+
     void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const;
-    float getSlipperiness() const {return slipperiness;}
     const Util::AABB GetBoundingBox(int x, int y, int z) const;
-    bool isFullBlock() const;
 
-    bool isNeedsRandomTick() const
-    {
-        return needsRandomTick;
-    }
-
-    bool isRenderAsNormal() const
-    {
-        return renderAsNormal;
-    }
-
-    unsigned char getLightOpacity() const
-    {
-        return lightOpacity;
-    }
-
-    unsigned char getLightValue() const
-    {
-        return lightValue;
-    }
+    // Getters
+    inline i_block GetBlockId() const;
+    inline const SoundBlock& GetSound() const;
+    inline const BlockMaterial& GetMaterial() const;
+    inline bool IsOpaqueCube() const;
+    inline bool IsFullBlock() const;
+    inline bool NeedsRandomTick() const;
+    inline bool IsRenderAsNormal() const;
+    inline i_lightopacity GetLightOpacity() const;
+    inline i_lightvalue GetLightValue() const;
+    inline float GetSlipperiness() const;
 
 private:
+    // Database data
     i_block blockId;
     const SoundBlock sound;
-    unsigned char lightOpacity;
-    unsigned char lightValue;
+    i_lightopacity lightOpacity;
+    i_lightvalue lightValue;
     float blockResistance;
     float blockHardness;
     bool needsRandomTick;
@@ -101,4 +94,7 @@ private:
 };
 
 } /* namespace Block */
+
+#include "Block.hxx"
+
 #endif /* BLOCK_H_ */

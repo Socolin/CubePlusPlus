@@ -72,7 +72,7 @@ void BlockFallingScript::InitParam(int paramId, const std::string& param)
             if (value > 0 && value <= BLOCK_COUNT)
             {
                 const Block::Block* block = Block::BlockList::getBlock(value);
-                traversableMaterial.insert(block->getMaterial().getId());
+                traversableMaterial.insert(block->GetMaterial().getId());
             }
         }
         break;
@@ -97,7 +97,7 @@ bool BlockFallingScript::isBlockTraversable(World::World* world, int x, i_height
     else
     {
         const Block::Block* block = Block::BlockList::getBlock(bottomBlockId);
-        if (traversableMaterial.find(block->getMaterial().getId()) != traversableMaterial.end())
+        if (traversableMaterial.find(block->GetMaterial().getId()) != traversableMaterial.end())
         {
             return true;
         }
