@@ -28,7 +28,7 @@ void StairScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y
     if (face == FACE_BOTTOM)
         data = 4;
 
-    if (cursorPositionY >= 8)
+    if (face != FACE_TOP && cursorPositionY >= 8)
         data = 4;
 
     switch (playerRotation)
