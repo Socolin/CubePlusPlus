@@ -64,11 +64,11 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
         };
     }
 
-    i_block currentBlock = world->GetBlockId(x, y, z);
-    if (currentBlock != 0)
+    i_block currentBlockId = world->GetBlockId(x, y, z);
+    if (currentBlockId != 0)
     {
-        const Block::Block* block = Block::BlockList::getBlock(AssociatedBlockId);
-        if (block && !block->GetMaterial().isReplacable())
+        const Block::Block* currentBlock = Block::BlockList::getBlock(currentBlockId);
+        if (currentBlock && !currentBlock->GetMaterial().isReplacable())
         {
             return false;
         }
