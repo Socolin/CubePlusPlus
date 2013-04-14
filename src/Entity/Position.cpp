@@ -19,4 +19,4 @@ Position::~Position()
 {
 }
 
-} /* namespace Network */
+} /* namespace World */

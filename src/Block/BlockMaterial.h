@@ -62,5 +62,5 @@ private:
     bool liquid;
 };
 
-} /* namespace Scripting */
+} /* namespace Block */
 #endif /* MATERIAL_H_ */

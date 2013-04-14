@@ -45,15 +45,15 @@ Block::Block(i_block blockId, const SoundBlock& sound, unsigned char lightOpacit
     fullBlock = ((maxX - minX) + (maxZ - minZ) + (maxZ - minZ)) >= 3;
 }
 
-void Block::OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+void Block::OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (script)
     {
-        script->OnBlockPlacedBy(player, x, y, z, face, blockId, data, CursorpositionX, CursorpositionY, CursorpositionZ);
+        script->OnBlockPlacedBy(player, x, y, z, face, blockId, data, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
 }
 
-void Block::UpdateTick(World::World* world, int x, i_height y, int z, i_data data)
+void Block::UpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
 {
     if (script)
     {
@@ -61,7 +61,7 @@ void Block::UpdateTick(World::World* world, int x, i_height y, int z, i_data dat
     }
 }
 
-bool Block::CanPlace(World::World* world, int x, i_height y, int z, char face)
+bool Block::CanPlace(World::World* world, int x, i_height y, int z, char face) const
 {
 	if (script)
     {
@@ -75,16 +75,16 @@ const SoundBlock& Block::GetSound() const
     return sound;
 }
 
-bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (script)
     {
-        return script->OnUseBlock(user, x, y, z, face, item, CursorpositionX, CursorpositionY, CursorpositionZ);
+        return script->OnUseBlock(user, x, y, z, face, item, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
     return false;
 }
 
-bool Block::GetIsOpaqueCube()
+bool Block::GetIsOpaqueCube() const
 {
     return isOpaqueCube;
 }
@@ -94,7 +94,7 @@ const BlockMaterial& Block::getMaterial() const
     return material;
 }
 
-TileEntity* Block::CreateNewTileEntity()
+TileEntity* Block::CreateNewTileEntity() const
 {
     if (script)
     {
@@ -103,7 +103,7 @@ TileEntity* Block::CreateNewTileEntity()
     return nullptr;
 }
 
-bool Block::UseTileEntity()
+bool Block::UseTileEntity() const
 {
     if (script)
     {
@@ -125,7 +125,7 @@ i_block Block::GetBlockId() const
     return blockId;
 }
 
-void Block::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList)
+void Block::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const
 {
     if (script)
     {
@@ -142,7 +142,7 @@ const Util::AABB Block::GetBoundingBox(int x, int y, int z) const
     return Util::AABB(x + minX, y + minY, z + minZ, maxX - minX, maxY - minY, maxZ - minZ);
 }
 
-void Block::NeighborChange(World::World* world, int x, i_height y, int z)
+void Block::NeighborChange(World::World* world, int x, i_height y, int z) const
 {
     if (script)
     {
@@ -150,7 +150,7 @@ void Block::NeighborChange(World::World* world, int x, i_height y, int z)
     }
 }
 
-void Block::Destroy(World::World* world, int x, i_height y, int z, i_data data)
+void Block::Destroy(World::World* world, int x, i_height y, int z, i_data data) const
 {
     if (script)
     {
@@ -158,9 +158,9 @@ void Block::Destroy(World::World* world, int x, i_height y, int z, i_data data)
     }
 }
 
-bool Block::isFullBlock()
+bool Block::isFullBlock() const
 {
     return fullBlock;
 }
 
-} /* namespace Inventory */
+} /* namespace Block */

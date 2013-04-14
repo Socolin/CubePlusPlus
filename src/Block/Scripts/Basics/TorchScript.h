@@ -14,9 +14,9 @@ public:
     TorchScript();
     virtual ~TorchScript();
     virtual BlockScript* Copy() override;
-    virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, char face) override;
-    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
-    virtual void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) override;
+    virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, char face) const override;
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
+    virtual void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const override;
 };
 
 } /* namespace Scripting */

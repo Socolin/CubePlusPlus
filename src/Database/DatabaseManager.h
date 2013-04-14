@@ -44,5 +44,5 @@ private:
     sql::Statement* stmt;
 };
 
-} /* namespace Scripting */
+} /* namespace Database */
 #endif /* DATABASEMANAGER_H_ */

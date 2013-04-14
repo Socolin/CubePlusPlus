@@ -30,7 +30,7 @@ void EntityFallingBlock::UpdateTick()
         i_block replaceBlockId = world->GetBlockId(std::floor(x), std::floor(y), std::floor(z));
         if (replaceBlockId)
         {
-            Block::Block* block = Block::BlockList::getBlock(replaceBlockId);
+            const Block::Block* block = Block::BlockList::getBlock(replaceBlockId);
             if (block)
             {
                 if (!block->getMaterial().isReplacable())
@@ -63,4 +63,4 @@ void EntityFallingBlock::GetCreatePacket(Network::NetworkPacket& packet)
             << (short)0 << (short)0 << (short)0;
 }
 
-} /* namespace Scripting */
+} /* namespace World */

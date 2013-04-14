@@ -32,5 +32,5 @@ public:
 
 };
 
-} /* namespace Util */
+} /* namespace Inventory */
 #endif /* ITEMLIST_H_ */

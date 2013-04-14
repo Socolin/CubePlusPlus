@@ -110,7 +110,7 @@ bool World::IsFullBlock(int x, i_height y, int z)
     i_block blockId = GetBlockId(x, y, z);
     if (blockId < BLOCK_COUNT)
     {
-        Block::Block* block = Block::BlockList::getBlock(blockId);
+        const Block::Block* block = Block::BlockList::getBlock(blockId);
         if (block)
         {
             return block->isFullBlock();

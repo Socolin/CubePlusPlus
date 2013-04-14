@@ -390,4 +390,4 @@ int Entity::getEntityId() const
     return entityId;
 }
 
-} /* namespace Network */
+} /* namespace World */

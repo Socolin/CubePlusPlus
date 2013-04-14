@@ -57,7 +57,7 @@ void EntityItem::UpdateTick()
                 blockBottomId = world->GetBlockId(floor(x), floor(y) - 1, floor(z));
             if (blockBottomId > 0)
             {
-                Block::Block* blockBottom = Block::BlockList::getBlock(blockBottomId);
+                const Block::Block* blockBottom = Block::BlockList::getBlock(blockBottomId);
                 if (blockBottom)
                 {
                     slowDown = blockBottom->getSlipperiness() * 0.98f;

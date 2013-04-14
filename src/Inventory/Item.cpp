@@ -23,11 +23,11 @@ Item::~Item()
 
 }
 
-bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
 {
     if (script != nullptr)
     {
-        return script->OnUseOnBlock(user, x, y, z, face, item, CursorpositionX, CursorpositionY, CursorpositionZ);
+        return script->OnUseOnBlock(user, x, y, z, face, item, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
     return false;
 }
@@ -41,4 +41,4 @@ bool Item::Use(World::EntityPlayer* user, ItemStack& item)
 	return false;
 }
 
-} /* namespace Scripting */
+} /* namespace Inventory */

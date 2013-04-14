@@ -25,18 +25,18 @@ BlockScript* BlockFallingScript::Copy()
     return new BlockFallingScript(*this);
 }
 
-void BlockFallingScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+void BlockFallingScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     assert(player->getWorld() != NULL);
     player->getWorld()->MarkBlockForUpdate(x, y, z, blockId, 5);
 }
 
-void BlockFallingScript::OnNeighborChange(World::World* world, int x, i_height y, int z)
+void BlockFallingScript::OnNeighborChange(World::World* world, int x, i_height y, int z) const
 {
     world->MarkBlockForUpdate(x, y, z, baseBlock->GetBlockId(), 5);
 }
 
-void BlockFallingScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data)
+void BlockFallingScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
 {
     if (y == 0)
         return;
@@ -71,7 +71,7 @@ void BlockFallingScript::InitParam(int paramId, const std::string& param)
             std::istringstream(each) >> value;
             if (value > 0 && value <= BLOCK_COUNT)
             {
-                Block::Block* block = Block::BlockList::getBlock(value);
+                const Block::Block* block = Block::BlockList::getBlock(value);
                 traversableMaterial.insert(block->getMaterial().getId());
             }
         }
@@ -83,7 +83,7 @@ void BlockFallingScript::InitParam(int paramId, const std::string& param)
     }
 }
 
-bool BlockFallingScript::isBlockTraversable(World::World* world, int x, i_height y, int z)
+bool BlockFallingScript::isBlockTraversable(World::World* world, int x, i_height y, int z) const
 {
     i_block bottomBlockId = world->GetBlockId(x, y, z);
     if (bottomBlockId == 0)
@@ -96,7 +96,7 @@ bool BlockFallingScript::isBlockTraversable(World::World* world, int x, i_height
     }
     else
     {
-        Block::Block* block = Block::BlockList::getBlock(bottomBlockId);
+        const Block::Block* block = Block::BlockList::getBlock(bottomBlockId);
         if (traversableMaterial.find(block->getMaterial().getId()) != traversableMaterial.end())
         {
             return true;

@@ -178,7 +178,7 @@ bool EntityHanging::isOnValidSurface()
            }
            if (blockId)
            {
-               Block::Block* block = Block::BlockList::getBlock(blockId);
+               const Block::Block* block = Block::BlockList::getBlock(blockId);
                if (block && !block->getMaterial().isSolid())
                {
                    return false;

@@ -24,14 +24,14 @@ ItemScript* ItemBlockScript::Copy()
     return new ItemBlockScript(*this);
 }
 
-bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
 {
     // Try activate block
     // If not, try use item on block
     World::World* world = user->getWorld();
 
     int clickedBlockId = world->GetBlockId(x, y, z);
-    Block::Block* clicketBlock = Block::BlockList::Instance()->blocks[clickedBlockId];
+    const Block::Block* clicketBlock = Block::BlockList::getBlock(clickedBlockId);
     if (clicketBlock != NULL && clicketBlock->getMaterial().isReplacable())
     {
         if (face == FACE_NONE)
@@ -67,7 +67,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     i_block currentBlock = world->GetBlockId(x, y, z);
     if (currentBlock != 0)
     {
-        Block::Block* block = Block::BlockList::Instance()->blocks[AssociatedBlockId];
+        const Block::Block* block = Block::BlockList::getBlock(AssociatedBlockId);
         if (block && !block->getMaterial().isReplacable())
         {
             return false;
@@ -81,10 +81,10 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     if (UseMetadata)
         metadata = item.getItemData() & 0xf;
 
-    Block::Block* block = Block::BlockList::Instance()->blocks[AssociatedBlockId];
+    const Block::Block* block = Block::BlockList::getBlock(AssociatedBlockId);
     if (block && block->CanPlace(user->getWorld(), x, y, z, face))
     {
-        block->OnBlockPlace(user, x, y, z,face, blockId, metadata, CursorpositionX, CursorpositionY, CursorpositionZ);
+        block->OnBlockPlace(user, x, y, z,face, blockId, metadata, cursorPositionX, cursorPositionY, cursorPositionZ);
         world->ChangeBlock(x, y, z, blockId, metadata, true);
         return true;
     }

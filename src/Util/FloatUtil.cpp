@@ -16,4 +16,4 @@ float randFloat(float min, float max)
     return min + (float) rand() / ((float) RAND_MAX / (max - min));
 }
 
-} /* namespace World */
+} /* namespace Util */

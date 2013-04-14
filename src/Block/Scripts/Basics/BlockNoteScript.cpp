@@ -23,7 +23,7 @@ BlockScript* BlockNoteScript::Copy()
 {
     return new BlockNoteScript(*this);
 }
-bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     World::World* world = user->getWorld();
     World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
@@ -37,7 +37,7 @@ bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, i
         {
             double note = noteTileEntity->nextNoteLevel();
             i_block bottomBlockId = chunk->getBlockAt(x & 0xf, y - 1, z & 0xf);
-            Block::Block* bottomBlock = Block::BlockList::getBlock(bottomBlockId);
+            const Block::Block* bottomBlock = Block::BlockList::getBlock(bottomBlockId);
             int materialSoundId = 4;
             if (bottomBlock)
             {
@@ -60,7 +60,7 @@ bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, i
 }
 
 
-Block::TileEntity* BlockNoteScript::CreateNewTileEntity()
+Block::TileEntity* BlockNoteScript::CreateNewTileEntity() const
 {
     return new Block::TileEntityNote();
 }
@@ -75,7 +75,7 @@ void BlockNoteScript::Init(Block::Block* baseBlock)
     materialId[4] = 0;
 }
 
-bool BlockNoteScript::UseTileEntity()
+bool BlockNoteScript::UseTileEntity() const
 {
     return true;
 }

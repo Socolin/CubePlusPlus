@@ -12,7 +12,19 @@ public:
         static T instance;
         return instance;
     }
+    virtual ~Singleton()
+    {
+
+    }
+    virtual void InitInstance()
+    {
+
+    }
+protected:
+    Singleton()
+    {
+    }
 };
 
-} /* namespace Scripting */
+} /* namespace Util */
 #endif /* SINGLETON_H_ */

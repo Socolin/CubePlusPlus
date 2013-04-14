@@ -21,5 +21,5 @@ private:
     i_data blockData;
 };
 
-} /* namespace Scripting */
+} /* namespace World */
 #endif /* ENTITYFALLINGBLOCK_H_ */

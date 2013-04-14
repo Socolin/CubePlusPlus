@@ -24,15 +24,15 @@ public:
     BlockDoorScript();
     virtual ~BlockDoorScript();
     virtual BlockScript* Copy() override;
-    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
-    virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
-    virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, char face) override;
-    virtual void InitParam(int paramId, int param) override;
-    virtual void OnDestroy(World::World* world, int x, i_height y, int z, i_data data) override;
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
+    virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
+    virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, char face) const override;
+    virtual void InitParam(int paramId, int param);
+    virtual void OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const override;
 private:
     i_block door_blockid;
     bool need_redstone;
 };
 
-} /* namespace Util */
+} /* namespace Scripting */
 #endif /* BLOCKDOORSCRIPT_H_ */

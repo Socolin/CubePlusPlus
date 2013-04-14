@@ -33,5 +33,5 @@ private:
     std::map<i_item, std::set<Painting>> paintingList;
 };
 
-} /* namespace Scripting */
+} /* namespace Database */
 #endif /* PAINTINGDATA_H_ */

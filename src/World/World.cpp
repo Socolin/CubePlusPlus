@@ -139,7 +139,7 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
     chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, blockData);
-    Block::Block* block = Block::BlockList::getBlock(blockId);
+    const Block::Block* block = Block::BlockList::getBlock(blockId);
     if (block)
     {
         if (playSound)
@@ -175,7 +175,7 @@ void World::RemoveBlock(int x, i_height y, int z)
     i_block blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
     if (blockId > 0)
     {
-        Block::Block* block = Block::BlockList::getBlock(blockId);
+        const Block::Block* block = Block::BlockList::getBlock(blockId);
         if (block)
         {
             i_data blockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
@@ -199,7 +199,7 @@ void World::RemoveBlock(int x, i_height y, int z)
 void World::NotifyNeighborBlockChange(int x, i_height y, int z)
 {
     i_block blockId = GetBlockId(x, y, z);
-    Block::Block* block = Block::BlockList::getBlock(blockId);
+    const Block::Block* block = Block::BlockList::getBlock(blockId);
     if (block)
     {
         block->NeighborChange(this, x, y, z);
@@ -239,7 +239,7 @@ void World::GetBlockBoundingBoxInRange(int x, int y, int z, int range, int range
                 s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
                 if (blockData.blockId > 0)
                 {
-                    Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+                    const Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
                     if (block)
                     {
                         block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
@@ -263,7 +263,7 @@ void World::GetBlockBoundingBoxInAABB(const Util::AABB& box, std::vector<Util::A
                 s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
                 if (blockData.blockId > 0)
                 {
-                    Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+                    const Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
                     if (block)
                     {
                         block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
@@ -282,7 +282,7 @@ void World::GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::A
                 s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
                 if (blockData.blockId > 0)
                 {
-                    Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+                    const Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
                     if (block)
                     {
                         block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
@@ -533,7 +533,7 @@ void World::updateLightByType(eLightType lightType, int x, i_height y, int z)
                             int blockSideX = blockToUpdateX + xOffsetsForSides[side];
                             int blockSideZ = blockToUpdateZ + zOffsetsForSides[side];
 
-                            Block::Block* block = Block::BlockList::getBlock(GetBlockId(blockSideX, blockSideY, blockSideZ));
+                            const Block::Block* block = Block::BlockList::getBlock(GetBlockId(blockSideX, blockSideY, blockSideZ));
 
                             i_lightvalue blockSideLightValue = 1;
                             if (block != nullptr)
@@ -623,7 +623,7 @@ i_lightvalue World::computeBlockLightValueUsingNeighbors(eLightType lightType, i
     i_block blockId = GetBlockId(x, y, z);
     i_lightvalue blockLightValue = 0;
     i_lightvalue blockLightOpacity = 0;
-    Block::Block* block = Block::BlockList::getBlock(blockId);
+    const Block::Block* block = Block::BlockList::getBlock(blockId);
     if (block != nullptr)
     {
         blockLightValue = block->getLightValue();

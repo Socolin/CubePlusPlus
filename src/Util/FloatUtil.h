@@ -7,5 +7,5 @@ float randFloat();
 float randFloat(float max);
 float randFloat(float min, float max);
 
-} /* namespace World */
+} /* namespace Util */
 #endif /* FLOATUTIL_H_ */

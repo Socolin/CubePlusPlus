@@ -31,7 +31,7 @@ int main(void)
         std::cerr << "Not started" << std::endl;
         return 1;
     }
-    Block::BlockList::InitInstance();
+    Block::BlockList::Instance().InitInstance();
     Inventory::ItemList::InitInstance();
     Database::PaintingData::Instance();
 

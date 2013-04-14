@@ -139,16 +139,16 @@ void NetworkSession::handlePlayerBlockPlacement() throw (NetworkException)
     }
 
 
-    char CursorpositionX = readByte();
-    char CursorpositionY = readByte();
-    char CursorpositionZ = readByte();
+    char cursorPositionX = readByte();
+    char cursorPositionY = readByte();
+    char cursorPositionZ = readByte();
     std::cout << "handlePlayerBlockPlacement x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << " blockId:" << blockId
-              << " cx:" << (int)CursorpositionX
-              << " cy:" << (int)CursorpositionY
-              << " cz:" << (int)CursorpositionZ
+              << " cx:" << (int)cursorPositionX
+              << " cy:" << (int)cursorPositionY
+              << " cz:" << (int)cursorPositionZ
               << std::endl;
 
-    player->PlaceBlock(x, y, z, face, CursorpositionX, CursorpositionY, CursorpositionZ);
+    player->PlaceBlock(x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
 }
 void NetworkSession::handleHeldItemChange() throw (NetworkException)
 {

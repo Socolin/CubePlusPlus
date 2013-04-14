@@ -21,7 +21,7 @@ public:
     ItemBlockScript();
     virtual ~ItemBlockScript();
     virtual ItemScript* Copy() override;
-    virtual bool OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
+    virtual bool OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) override;
     virtual void InitParam(int paramId, int param) override;
 private:
     i_block AssociatedBlockId;

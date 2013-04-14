@@ -25,13 +25,13 @@ public:
     virtual ~BlockFallingScript();
     virtual BlockScript* Copy() override;
 
-    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ) override;
-    virtual void OnNeighborChange(World::World* world, int x, i_height y, int z) override;
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
+    virtual void OnNeighborChange(World::World* world, int x, i_height y, int z) const override;
 
-    virtual void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) override;
+    virtual void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const override;
     virtual void InitParam(int paramId, const std::string& param) override;
 private:
-    bool isBlockTraversable(World::World* world, int x, i_height y, int z);
+    bool isBlockTraversable(World::World* world, int x, i_height y, int z) const;
     std::set<i_block> traversableBlock;
     std::set<unsigned int> traversableMaterial;
 };

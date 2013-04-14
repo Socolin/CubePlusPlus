@@ -23,7 +23,6 @@ BlockMaterial::BlockMaterial() :
 
 BlockMaterial::~BlockMaterial()
 {
-    // TODO Auto-generated destructor stub
 }
 
-} /* namespace Scripting */
+} /* namespace Block */

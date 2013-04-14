@@ -21,7 +21,7 @@ ItemScript* ItemFrameScript::Copy()
     return new ItemFrameScript(*this);
 }
 
-bool ItemFrameScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+bool ItemFrameScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
 {
     int orientation = -1;
     switch (face)
@@ -54,4 +54,4 @@ bool ItemFrameScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned ch
     return false;
 }
 
-} /* namespace World */
+} /* namespace Scripting */

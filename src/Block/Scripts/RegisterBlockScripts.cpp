@@ -26,4 +26,5 @@ void RegisterBlockScript()
     new StairScript();
 	new TorchScript();
 }
-}
+
+} /* namespace Scripting */

@@ -1,6 +1,8 @@
 #ifndef BLOCKLIST_H_
 #define BLOCKLIST_H_
 
+#include "Util/Singleton.h"
+
 #include <stdint.h>
 #include <map>
 
@@ -9,35 +11,26 @@
 
 namespace Block
 {
-class BlockList
+class BlockList : public Util::Singleton<BlockList>
 {
+    friend class Util::Singleton<BlockList>;
 public:
-    static void InitInstance()
+    static inline const Block* getBlock(i_block block)
     {
-        instance = new BlockList();
-        instance->Load();
+        return Instance().blocks[block];
     }
-    static BlockList* Instance()
-    {
-        return instance;
-    }
-
-    static inline Block* getBlock(i_block block)
-    {
-        return instance->blocks[block];
-    }
-    void Load();
-    void LoadSounds();
-    void LoadMaterials();
+    virtual ~BlockList();
+    void InitInstance() override;
 private:
     BlockList();
-    static BlockList* instance;
-    virtual ~BlockList();
+    void Initialize();
+    void LoadMaterials();
+    void LoadSounds();
 public:
     Block* blocks[BLOCK_COUNT];
     std::map<uint16_t, BlockMaterial> materialList;
     std::map<uint16_t, SoundBlock> soundList;
 };
 
-} /* namespace Inventory */
+} /* namespace Block */
 #endif /* BLOCKLIST_H_ */

@@ -198,25 +198,25 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
         }
     }
 }
-void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
 {
     if (!world)
         return;
     // TODO check 6 block in range
     int clickedBlockId = world->GetBlockId(x, y, z);
-    Block::Block* block = Block::BlockList::Instance()->blocks[clickedBlockId];
+    const Block::Block* block = Block::BlockList::Instance().getBlock(clickedBlockId);
     Inventory::ItemStack& itemstack = inventory.GetItemInHand();
     Inventory::Item* item = itemstack.getItem();
     if (face != FACE_NONE)
     {
         if (block)
         {
-            if (block->UseBlock(this, x, y, z, face, itemstack, CursorpositionX, CursorpositionY, CursorpositionZ))
+            if (block->UseBlock(this, x, y, z, face, itemstack, cursorPositionX, cursorPositionY, cursorPositionZ))
                 return;
         }
         if (item != nullptr)
         {
-            if (item->UseOnBlock(this, x, y, z, face, itemstack, CursorpositionX, CursorpositionY, CursorpositionZ))
+            if (item->UseOnBlock(this, x, y, z, face, itemstack, cursorPositionX, cursorPositionY, cursorPositionZ))
             {
 
             }

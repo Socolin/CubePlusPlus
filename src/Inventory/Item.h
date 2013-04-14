@@ -43,7 +43,7 @@ public:
         return maxStackSize;
     }
 
-    bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ);
+    bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ);
     bool Use(World::EntityPlayer* user, ItemStack& item);
 private:
     unsigned short itemId;
@@ -55,5 +55,5 @@ private:
     Scripting::ItemScript* script;
 };
 
-} /* namespace Scripting */
+} /* namespace Inventory */
 #endif /* ITEM_H_ */

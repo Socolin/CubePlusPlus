@@ -60,4 +60,4 @@ void PaintingData::load()
     }
 }
 
-} /* namespace Scripting */
+} /* namespace Database */

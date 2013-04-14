@@ -40,5 +40,5 @@ private:
     std::wstring placeSound;
 };
 
-} /* namespace Inventory */
+} /* namespace Block */
 #endif /* SOUNDBLOCK_H_ */

@@ -157,7 +157,7 @@ void Chunk::UpdateTick()
             }
             if (blockId > 0)
             {
-                Block::Block* block = Block::BlockList::getBlock(blockId);
+                const Block::Block* block = Block::BlockList::getBlock(blockId);
                 if (block)
                 {
                     if ((cellId & 0x1) == 0)
@@ -199,7 +199,7 @@ void Chunk::UpdateTick()
         }
         if (blockId == updateData.blockId && blockId > 0)
         {
-            Block::Block* block = Block::BlockList::getBlock(blockId);
+            const Block::Block* block = Block::BlockList::getBlock(blockId);
             if (block)
             {
                 if ((cellId & 0x1) == 0)
@@ -236,7 +236,7 @@ void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block bl
 {
     inCache = false;
     i_block previousBlockId = getBlockAt(x, y, z);
-    Block::Block* previousBlock = Block::BlockList::getBlock(previousBlockId);
+    const Block::Block* previousBlock = Block::BlockList::getBlock(previousBlockId);
     if (previousBlock && previousBlock->UseTileEntity())
     {
         RemoveTileEntity(x, y, z);
@@ -618,7 +618,7 @@ i_height Chunk::getFirstAvaibleChunkDataPositionFromTop()
 i_lightopacity Chunk::getBlockLightOpacity(i_small_coord x, i_height y, i_small_coord z)
 {
     i_block blockId = getBlockAt(x, y, z);
-    Block::Block* block = Block::BlockList::getBlock(blockId);
+    const Block::Block* block = Block::BlockList::getBlock(blockId);
     if (block)
     {
         return block->getLightOpacity();
@@ -631,4 +631,4 @@ i_height Chunk::getMinHeight() const
     return minHeight;
 }
 
-} /* namespace Network */
+} /* namespace World */

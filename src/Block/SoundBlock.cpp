@@ -23,4 +23,4 @@ SoundBlock::~SoundBlock()
 {
 }
 
-} /* namespace Inventory */
+} /* namespace Block */

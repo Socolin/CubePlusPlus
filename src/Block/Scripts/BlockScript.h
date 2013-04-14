@@ -13,10 +13,12 @@ namespace Block
 class Block;
 class TileEntity;
 }
+
 namespace Inventory
 {
 class ItemStack;
 }
+
 namespace World
 {
 class EntityPlayer;
@@ -40,18 +42,18 @@ public:
     virtual void InitParam(int paramId, float param) {}
     virtual void InitParam(int paramId, const std::string& param) {}
 
-    virtual bool CanPlace(World::World* world, int x, i_height y, int z, char face) {return true;}
-    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ) {}
-    virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ) {return false;}
-    virtual Block::TileEntity* CreateNewTileEntity() {return nullptr;}
-    virtual bool UseTileEntity() {return false;}
-    virtual void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data);
-    virtual void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) { bbList.push_back(baseBlock->GetBoundingBox(x, y, z)); }
-    virtual void OnNeighborChange(World::World* world, int x, i_height y, int z) {}
-    virtual void OnDestroy(World::World* world, int x, i_height y, int z, i_data data) {}
+    virtual bool CanPlace(World::World* world, int x, i_height y, int z, char face) const;
+    virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    virtual Block::TileEntity* CreateNewTileEntity() const;
+    virtual bool UseTileEntity() const;
+    virtual void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const;
+    virtual void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const;
+    virtual void OnNeighborChange(World::World* world, int x, i_height y, int z) const;
+    virtual void OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const;
 protected:
     Block::Block* baseBlock;
 };
 
-} /* namespace Inventory */
+} /* namespace Scripting */
 #endif /* BLOCKSCRIPTS_H_ */

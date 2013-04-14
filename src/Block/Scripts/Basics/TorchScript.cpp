@@ -20,7 +20,7 @@ BlockScript* TorchScript::Copy()
     return new TorchScript(*this);
 }
 
-bool TorchScript::CanPlace(World::World* world, int x, unsigned char y, int z, char face)
+bool TorchScript::CanPlace(World::World* world, int x, unsigned char y, int z, char face) const
 {
     switch (face)
     {
@@ -41,7 +41,7 @@ bool TorchScript::CanPlace(World::World* world, int x, unsigned char y, int z, c
         	break;
     };
 
-    Block::Block* clickedBlock = Block::BlockList::Instance()->blocks[world->GetBlockId(x, y, z)];
+    const Block::Block* clickedBlock = Block::BlockList::getBlock(world->GetBlockId(x, y, z));
     
     if(clickedBlock != NULL)
     {
@@ -54,7 +54,7 @@ bool TorchScript::CanPlace(World::World* world, int x, unsigned char y, int z, c
     return false;
 }
 
-void TorchScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+void TorchScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
 	switch (face)
     {
@@ -77,7 +77,7 @@ void TorchScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y
      };
 }
 
-void TorchScript::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList)
+void TorchScript::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const
 {
 }
 

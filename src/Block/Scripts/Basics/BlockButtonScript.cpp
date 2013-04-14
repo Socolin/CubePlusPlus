@@ -23,7 +23,7 @@ BlockScript* BlockButtonScript::Copy()
     return new BlockButtonScript(*this);
 }
 
-void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     switch (face)
     {
@@ -48,7 +48,7 @@ void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_he
      }
 }
 
-bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char CursorpositionX, char CursorpositionY, char CursorpositionZ)
+bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     World::World* world = user->getWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);
@@ -61,7 +61,7 @@ bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y,
     return true;
 }
 
-bool BlockButtonScript::CanPlace(World::World* world, int x, unsigned char y, int z, char face)
+bool BlockButtonScript::CanPlace(World::World* world, int x, unsigned char y, int z, char face) const
 {
     switch (face)
     {
@@ -82,8 +82,7 @@ bool BlockButtonScript::CanPlace(World::World* world, int x, unsigned char y, in
             break;
     };
 
-    Block::Block* clickedBlock = Block::BlockList::Instance()->blocks[world->GetBlockId(x, y, z)];
-
+    const Block::Block* clickedBlock = Block::BlockList::Instance().getBlock(world->GetBlockId(x, y, z));
     if(clickedBlock != NULL)
     {
         return clickedBlock->GetIsOpaqueCube() && clickedBlock->isRenderAsNormal();
@@ -92,7 +91,7 @@ bool BlockButtonScript::CanPlace(World::World* world, int x, unsigned char y, in
     return false;
 }
 
-void BlockButtonScript::OnNeighborChange(World::World* world, int x, i_height y, int z)
+void BlockButtonScript::OnNeighborChange(World::World* world, int x, i_height y, int z) const
 {
     i_data orientation = world->GetBlockData(x, y, z);
     orientation &= 0x7;
@@ -120,7 +119,7 @@ void BlockButtonScript::OnNeighborChange(World::World* world, int x, i_height y,
     }
 }
 
-void BlockButtonScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data)
+void BlockButtonScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
 {
     if (SCRIPT_BLOCK_BUTTON_ACTIVATED(data))
     {

@@ -8,15 +8,21 @@
 namespace Block
 {
 
-BlockList* BlockList::instance = nullptr;
 BlockList::BlockList()
+{
+
+}
+
+void BlockList::InitInstance()
+{
+    Initialize();
+}
+
+void BlockList::Initialize()
 {
     for (int i = 0; i < BLOCK_COUNT; i++)
         blocks[i] = nullptr;
-}
 
-void BlockList::Load()
-{
     Database::DatabaseManager* db = Database::DatabaseManager::Instance();
     db->connect();
     LoadSounds();
@@ -170,6 +176,8 @@ void BlockList::Load()
     }
 }
 
+
+
 void BlockList::LoadSounds()
 {
     Database::DatabaseManager* db = Database::DatabaseManager::Instance();
@@ -267,7 +275,7 @@ void BlockList::LoadMaterials()
                 << name << "\t"
                 << std::endl;
 
-        materialList[materialId] = BlockMaterial(materialId, canBurn, replacable, translucent, requiresNoTool, mobilityFlag, true, false);
+        materialList[materialId] = BlockMaterial(materialId, canBurn, replacable, translucent, requiresNoTool, mobilityFlag, true, false);//TODO; load in db true and flase
     }
 }
 
@@ -276,4 +284,4 @@ BlockList::~BlockList()
 
 }
 
-} /* namespace Inventory */
+} /* namespace Block */

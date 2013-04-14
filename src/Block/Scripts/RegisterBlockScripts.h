@@ -4,7 +4,7 @@
 namespace Scripting
 {
 void RegisterBlockScript();
-}
 
+} /* namespace Scripting */
 
 #endif /* REGISTERBLOCKSCRIPTS_H_ */

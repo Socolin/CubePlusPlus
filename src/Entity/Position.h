@@ -51,5 +51,5 @@ public:
     double z;
 };
 
-} /* namespace Entity */
+} /* namespace World */
 #endif /* POSITION_H_ */

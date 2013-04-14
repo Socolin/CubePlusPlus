@@ -124,5 +124,5 @@ protected:
     EntityMetadataManager metadataManager;
 };
 
-} /* namespace Network */
+} /* namespace World */
 #endif /* ENTITY_H_ */

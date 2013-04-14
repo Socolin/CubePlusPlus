@@ -22,8 +22,45 @@ void BlockScript::Init(Block::Block* baseBlock)
     this->baseBlock = baseBlock;
 }
 
-void BlockScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data)
+Block::TileEntity* BlockScript::CreateNewTileEntity() const
+{
+    return nullptr;
+}
+
+bool BlockScript::UseTileEntity() const
+{
+    return false;
+}
+
+void BlockScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
 {
 }
 
-} /* namespace Inventory */
+void BlockScript::OnNeighborChange(World::World* world, int x, i_height y, int z) const
+{
+}
+
+void BlockScript::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const
+{
+    bbList.push_back(baseBlock->GetBoundingBox(x, y, z));
+}
+
+void BlockScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+{
+}
+
+bool BlockScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+{
+    return false;
+}
+
+bool BlockScript::CanPlace(World::World* world, int x, i_height y, int z, char face) const
+{
+    return true;
+}
+
+void BlockScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
+{
+}
+
+} /* namespace Scripting */

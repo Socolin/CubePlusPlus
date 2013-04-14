@@ -129,10 +129,10 @@ ItemList::~ItemList()
 
 void ItemList::GenerateItemBlock()
 {
-    Block::BlockList* list = Block::BlockList::Instance();
+    Block::BlockList& list = Block::BlockList::Instance();
     for (int blockId = 0; blockId < BLOCK_COUNT; ++blockId)
     {
-        Block::Block* block = list->blocks[blockId];
+        const Block::Block* block = list.getBlock(blockId);
         if (!block)
             continue;
         Scripting::ItemBlockScript* blockScript = new Scripting::ItemBlockScript();
@@ -142,4 +142,4 @@ void ItemList::GenerateItemBlock()
 }
 
 
-} /* namespace Util */
+} /* namespace Inventory */

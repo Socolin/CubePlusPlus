@@ -102,4 +102,4 @@ sql::ResultSet* DatabaseManager::querry(sql::PreparedStatement* pstmt)
     return nullptr;
 }
 
-} /* namespace Scripting */
+} /* namespace Database */
