@@ -19,12 +19,12 @@ void RegisterBlockScript()
     new BlockDoorScript();
     new BlockFallingScript();
     new BlockJackOLanternScript();
-	new BlockJukeboxScript();
+    new BlockJukeboxScript();
     new BlockLeverScript();
     new BlockNoteScript();
+    new BlockStairScript();
+    new BlockTorchScript();
     new BlockWoodScript();
-    new StairScript();
-	new TorchScript();
 }
 
 } /* namespace Scripting */

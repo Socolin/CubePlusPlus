@@ -7,21 +7,21 @@
 namespace Scripting
 {
 
-StairScript::StairScript()
+BlockStairScript::BlockStairScript()
         : BlockScript("block_stair")
 {
 }
 
-StairScript::~StairScript()
+BlockStairScript::~BlockStairScript()
 {
 }
 
-BlockScript* StairScript::Copy()
+BlockScript* BlockStairScript::Copy()
 {
-    return new StairScript(*this);
+    return new BlockStairScript(*this);
 }
 
-void StairScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+void BlockStairScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
     data = 0;
