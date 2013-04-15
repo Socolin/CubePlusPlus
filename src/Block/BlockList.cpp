@@ -259,6 +259,8 @@ void BlockList::LoadMaterials()
               << "translu" << "\t"
               << "NoTool" << "\t"
               << "mobilit" << "\t"
+              << "solid" << "\t"
+              << "liquid" << "\t"
               << "name" << "\t"
               << UTIL_TEXT_SHELL_NONE
               << std::endl;
@@ -271,6 +273,8 @@ void BlockList::LoadMaterials()
         bool translucent = result->getBoolean(TableBlockMaterial::translucent);
         bool requiresNoTool = result->getBoolean(TableBlockMaterial::requiresNoTool);
         int mobilityFlag = result->getInt(TableBlockMaterial::mobilityFlag);
+        bool solid = result->getBoolean(TableBlockMaterial::solid);
+        bool liquid = result->getBoolean(TableBlockMaterial::liquid);
 
         std::cout
                 << materialId << "\t"
@@ -279,6 +283,8 @@ void BlockList::LoadMaterials()
                 << translucent << "\t"
                 << requiresNoTool << "\t"
                 << mobilityFlag << "\t"
+                << solid << "\t"
+                << liquid << "\t"
                 << name << "\t"
                 << std::endl;
 

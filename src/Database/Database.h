@@ -59,6 +59,8 @@ enum eDatabaseField
     translucent,
     requiresNoTool,
     mobilityFlag,
+    solid,
+    liquid,
 };
 }
 namespace TableItems
