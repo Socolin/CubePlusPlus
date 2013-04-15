@@ -1,0 +1,159 @@
+                                    Creative| Survival |Req
+1 tile.stone                        yes     | no       |           
+2 tile.grass                        yes     | no       |           
+3 tile.dirt                         yes     | no       |           
+4 tile.stonebrick                   yes     | no       |           
+5 tile.wood                         no      | no       |           
+6 tile.sapling                      no      | no       | WorldGenerator
+7 tile.bedrock                      yes     | no       |           
+8 tile.water                        no      | no       |           
+9 tile.water                        no      | no       |           
+10 tile.lava                        no      | no       |           
+11 tile.lava                        no      | no       |           
+12 tile.sand                        yes     | no       |           
+13 tile.gravel                      yes     | no       |           
+14 tile.oreGold                     yes     | no       |           
+15 tile.oreIron                     yes     | no       |           
+16 tile.oreCoal                     yes     | no       |           
+17 tile.log                         yes     | no       |           
+18 tile.leaves                      no      | no       |           
+19 tile.sponge                      no      | no       |           
+20 tile.glass                       yes     | no       |           
+21 tile.oreLapis                    yes     | no       |           
+22 tile.blockLapis                  yes     | no       |           
+23 tile.dispenser                   no      | no       | Redstone  
+24 tile.sandStone                   yes     | no       |           
+25 tile.musicBlock                  yes     | no       |           
+26 tile.bed                         no      | no       |           
+27 tile.goldenRail                  no      | no       | Redstone  
+28 tile.detectorRail                no      | no       | Redstone  
+29 tile.pistonStickyBase            no      | no       | Redstone 
+30 tile.web                         no      | no       |           
+31 tile.tallgrass                   yes     | no       |           
+32 tile.deadbush                    yes     | no       |           
+33 tile.pistonBase                  no      | no       | Redstone  
+34 tile.null                        no      | no       |           
+35 tile.cloth                       yes     | no       |           
+36 tile.null                        no      | no       |           
+37 tile.flower                      yes     | no       |           
+38 tile.rose                        yes     | no       |           
+39 tile.mushroom                    no      | no       | WorldGenerator
+40 tile.mushroom                    no      | no       | WorldGenerator
+41 tile.blockGold                   yes     | no       |           
+42 tile.blockIron                   yes     | no       |           
+43 tile.stoneSlab                   no      | no       |           
+44 tile.stoneSlab                   no      | no       |           
+45 tile.brick                       yes     | no       |           
+46 tile.tnt                         no      | no       |           
+47 tile.bookshelf                   yes     | no       |           
+48 tile.stoneMoss                   yes     | no       |           
+49 tile.obsidian                    yes     | no       |           
+50 tile.torch                       soon    | no       |           
+51 tile.fire                        no      | no       |           
+52 tile.mobSpawner                  no      | no       | Mob & UpdateTick tile entity
+53 tile.stairsWood                  yes     | no       |           
+54 tile.chest                       no      | no       | Window System
+55 tile.redstoneDust                no      | no       | Redstone  
+56 tile.oreDiamond                  yes     | no       |           
+57 tile.blockDiamond                yes     | no       |           
+58 tile.workbench                   no      | no       | Window System          
+59 tile.crops                       no      | no       |           
+60 tile.farmland                    no      | no       |           
+61 tile.furnace                     no      | no       | Window System          
+62 tile.furnace                     no      | no       | Window System          
+63 tile.sign                        yes     | no       | (But not fall if no block under)
+64 tile.doorWood                    yes     | no       | Except redstone part
+65 tile.ladder                      no      | no       |           
+66 tile.rail                        no      | no       | Redstone  
+67 tile.stairsStone                 yes     | no       |           
+68 tile.sign                        yes     | no       | (But not fall if no block under)         
+69 tile.lever                       yes     | no       | Redstone 
+70 tile.pressurePlate               no      | no       | Redstone  
+71 tile.doorIron                    no      | no       | Redstone
+72 tile.pressurePlate               no      | no       | Redstone  
+73 tile.oreRedstone                 no      | no       |           
+74 tile.oreRedstone                 no      | no       |           
+75 tile.notGate                     no      | no       | Redstone  
+76 tile.notGate                     no      | no       | Redstone  
+77 tile.button                      yes     | no       | (Not redstone part)
+78 tile.snow                        no      | no       | Weather   
+79 tile.ice                         no      | no       |           
+80 tile.snow                        no      | no       |           
+81 tile.cactus                      no      | no       |           
+82 tile.clay                        no      | no       |           
+83 tile.reeds                       no      | no       |           
+84 tile.jukebox                     yes     | no       |           
+85 tile.fence                       no      | no       |           
+86 tile.pumpkin                     yes     | no       |           
+87 tile.hellrock                    yes     | no       |           
+88 tile.hellsand                    no      | no       |           
+89 tile.lightgem                    yes     | no       |           
+90 tile.portal                      no      | no       |           
+91 tile.litpumpkin                  yes     | no       |           
+92 tile.cake                        no      | no       |           
+93 tile.diode                       no      | no       | Redstone  
+94 tile.diode                       no      | no       |           
+95 tile.lockedchest                 no      | no       |           
+96 tile.trapdoor                    no      | no       |           
+97 tile.monsterStoneEgg             no      | no       |           
+98 tile.stonebricksmooth            no      | no       |           
+99 tile.mushroom                    no      | no       | WorldGenerator
+100 tile.mushroom                   no      | no       | WorldGenerator
+101 tile.fenceIron                  no      | no       |           
+102 tile.thinGlass                  no      | no       |           
+103 tile.melon                      no      | no       |           
+104 tile.pumpkinStem                no      | no       |           
+105 tile.pumpkinStem                no      | no       |           
+106 tile.vine                       no      | no       |           
+107 tile.fenceGate                  no      | no       |           
+108 tile.stairsBrick                yes     | no       |           
+109 tile.stairsStoneBrickSmooth     yes     | no       |           
+110 tile.mycel                      no      | no       |           
+111 tile.waterlily                  no      | no       |           
+112 tile.netherBrick                no      | no       |           
+113 tile.netherFence                no      | no       |           
+114 tile.stairsNetherBrick          yes     | no       |           
+115 tile.netherStalk                no      | no       |           
+116 tile.enchantmentTable           no      | no       |           
+117 tile.brewingStand               no      | no       |           
+118 tile.cauldron                   no      | no       |           
+119 tile.null                       no      | no       |           
+120 tile.endPortalFrame             no      | no       |           
+121 tile.whiteStone                 no      | no       |           
+122 tile.dragonEgg                  no      | no       |           
+123 tile.redstoneLight              no      | no       | Redstone          
+124 tile.redstoneLight              no      | no       | Redstone          
+125 tile.woodSlab                   no      | no       |           
+126 tile.woodSlab                   no      | no       |           
+127 tile.cocoa                      no      | no       |           
+128 tile.stairsSandStone            yes     | no       |           
+129 tile.oreEmerald                 no      | no       |           
+130 tile.enderChest                 no      | no       |           
+131 tile.tripWireSource             no      | no       | Redstone 
+132 tile.tripWire                   no      | no       | Redstone  
+133 tile.blockEmerald               yes     | no       |           
+134 tile.stairsWoodSpruce           yes     | no       |           
+135 tile.stairsWoodBirch            yes     | no       |           
+136 tile.stairsWoodJungle           yes     | no       |           
+137 tile.commandBlock               no      | no       |           
+138 tile.beacon                     no      | no       |           
+139 tile.cobbleWall                 no      | no       |           
+140 tile.flowerPot                  no      | no       |           
+141 tile.carrots                    no      | no       |           
+142 tile.potatoes                   no      | no       |           
+143 tile.button                     no      | no       |           
+144 tile.skull                      no      | no       |           
+145 tile.anvil                      no      | no       |           
+146 tile.chestTrap                  no      | no       | Redstone  
+147 tile.weightedPlate_light        no      | no       | Redstone  
+148 tile.weightedPlate_heavy        no      | no       | Redstone  
+149 tile.comparator                 no      | no       | Redstone  
+150 tile.comparator                 no      | no       | Redstone  
+151 tile.daylightDetector           no      | no       | Redstone & Light with sun/night
+152 tile.blockRedstone              no      | no       | Redstone  
+153 tile.netherquartz               no      | no       |           
+154 tile.hopper                     no      | no       | Redstone  
+155 tile.quartzBlock                yes     | no       |           
+156 tile.stairsQuartz               yes     | no       |           
+157 tile.activatorRail              no      | no       | Redstone  
+158 tile.dropper                    no      | no       | Redstone 
