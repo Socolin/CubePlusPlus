@@ -9,6 +9,8 @@
 #include "Basics/BlockLeverScript.h"
 #include "Basics/BlockNoteScript.h"
 #include "Basics/BlockQuartzScript.h"
+#include "Basics/BlockSignGroundScript.h"
+#include "Basics/BlockSignWallScript.h"
 #include "Basics/BlockStairScript.h"
 #include "Basics/BlockTorchScript.h"
 #include "Basics/BlockWoodScript.h"
@@ -26,6 +28,8 @@ void RegisterBlockScript()
     new BlockLeverScript();
     new BlockNoteScript();
     new BlockQuartzScript();
+    new BlockSignGroundScript();
+    new BlockSignWallScript();
     new BlockStairScript();
     new BlockTorchScript();
     new BlockWoodScript();

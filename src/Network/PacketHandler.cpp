@@ -11,7 +11,9 @@
 #include <cryptopp/files.h>
 #include <cryptopp/cryptlib.h>
 
+#include "Block/TileEntities/TileEntitySign.h"
 #include "World/WorldManager.h"
+#include "World/World.h"
 #include "Entity/EntityPlayer.h"
 
 #define DEBUG_STR(str) std::wcout << L"DEBUG: str: size:"<< str.length() << L" value:\"" << str << L"\"" << std::endl;
@@ -209,13 +211,37 @@ void NetworkSession::handleEnchantItem() throw (NetworkException)
 }
 void NetworkSession::handleUpdateSign() throw (NetworkException)
 {
-    readInt();
-    readByte();
-    readInt();
+    int x = readInt();
+    i_height y = readShort();
+    int z = readInt();
+
+    DEBUG_INT(x);
+    DEBUG_SHORT(y);
+    DEBUG_INT(z);
+    World::World* world = player->getWorld();
+    if (world)
+    {
+        Block::TileEntity* tileEntity = world->GetTileEntity(x, y, z);
+        if (tileEntity != nullptr)
+        {
+            if (tileEntity->getType() == Block::TILEENTITY_TYPE_SIGN)
+            {
+                Block::TileEntitySign* sign = (Block::TileEntitySign*)tileEntity;
+                if (sign->Editable())
+                {
+                    for (int i = 0; i < 4; i++)
+                        sign->SetLine(i, readString(15));
+                    world->MarkForNetworkUpdateTileEntity(x, y, z);
+                    return;
+                }
+            }
+        }
+    }
     readString(15);
     readString(15);
     readString(15);
     readString(15);
+
 }
 void NetworkSession::handlePlayerAbilities() throw (NetworkException)
 {

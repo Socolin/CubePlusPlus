@@ -1,4 +1,4 @@
-#include "ItemBlockScript.h"
+#include "ItemSignScript.h"
 #include "Block/Block.h"
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
@@ -10,25 +10,26 @@
 namespace Scripting
 {
 
-ItemBlockScript::ItemBlockScript()
-    : ItemScript("item_block"), AssociatedBlockId(0), UseMetadata(false)
+ItemSignScript::ItemSignScript()
+    : ItemScript("item_sign"), groundBlockId(0), wallBlockId(0)
 {
 }
 
-ItemBlockScript::~ItemBlockScript()
+ItemSignScript::~ItemSignScript()
 {
 
 }
 
-ItemScript* ItemBlockScript::Copy()
+ItemScript* ItemSignScript::Copy()
 {
-    return new ItemBlockScript(*this);
+    return new ItemSignScript(*this);
 }
 
-bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
-    // Try activate block
-    // If not, try use item on block
+    if (face == FACE_BOTTOM)
+        return false;
+
     World::World* world = user->getWorld();
 
     int clickedBlockId = world->GetBlockId(x, y, z);
@@ -54,14 +55,13 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
         }
     }
 
+    i_block blockId = wallBlockId;
+    if (face == FACE_TOP)
+        blockId = groundBlockId;
 
     i_data metadata = 0;
-    i_block blockId = AssociatedBlockId;
 
-    if (UseMetadata)
-        metadata = item.getItemData() & 0xf;
-
-    const Block::Block* block = Block::BlockList::getBlock(AssociatedBlockId);
+    const Block::Block* block = Block::BlockList::getBlock(blockId);
     if (block && block->CanPlace(user->getWorld(), x, y, z, face))
     {
         block->OnBlockPlace(user, x, y, z,face, blockId, metadata, cursorPositionX, cursorPositionY, cursorPositionZ);
@@ -75,17 +75,19 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     return false;
 }
 
-void ItemBlockScript::InitParam(int paramId, int param)
+void ItemSignScript::InitParam(int paramId, int param)
 {
     switch (paramId)
     {
-    case SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID:
-        AssociatedBlockId = param;
-        if (AssociatedBlockId > BLOCK_COUNT)
-            AssociatedBlockId = 0;
+    case SCRIPTINGPARAM_ITEM_SIGN_GROUNDBLOCKID:
+        groundBlockId = param;
+        if (groundBlockId > BLOCK_COUNT)
+            groundBlockId = 0;
         break;
-    case SCRIPTINGPARAM_ITEM_BLOCK_USEMETADATA:
-        UseMetadata = param != 0;
+    case SCRIPTINGPARAM_ITEM_SIGN_WALLBLOCKID:
+        wallBlockId = param;
+        if (wallBlockId > BLOCK_COUNT)
+            wallBlockId = 0;
         break;
     default:
         std::cerr << "BAD PARAMETER ID: " << paramId << std::endl;

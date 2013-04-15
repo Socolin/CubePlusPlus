@@ -13,6 +13,7 @@ enum eTileEntityType
 {
     TILEENTITY_TYPE_NOTE,
     TILEENTITY_TYPE_JUKEBOX,
+    TILEENTITY_TYPE_SIGN,
 };
 
 class TileEntity
