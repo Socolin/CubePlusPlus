@@ -21,6 +21,12 @@ EntityFallingBlock::~EntityFallingBlock()
 
 void EntityFallingBlock::UpdateTick()
 {
+    if (dead)
+        return;
+
+    if (y < 0)
+        kill();
+
     motionY -= 0.03999999910593033;
     Move(0, motionY, 0);
     motionY *= 0.9800000190734863;
