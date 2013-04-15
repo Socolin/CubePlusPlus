@@ -3,8 +3,8 @@
 namespace Block
 {
 
-TileEntityNote::TileEntityNote():
-        noteLevel(0)
+TileEntityNote::TileEntityNote(int blockX, i_height blockY, int blockZ)
+        : TileEntity(TILEENTITY_TYPE_NOTE, blockX, blockY, blockZ), noteLevel(0)
 {
 }
 
@@ -17,6 +17,15 @@ void TileEntityNote::UpdateTick()
 }
 
 bool TileEntityNote::NeedUpdate()
+{
+    return false;
+}
+
+void TileEntityNote::GetDataPacket(Network::NetworkPacket& packet)
+{
+}
+
+bool TileEntityNote::HasNetworkData()
 {
     return false;
 }

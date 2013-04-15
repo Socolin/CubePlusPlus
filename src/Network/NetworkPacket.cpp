@@ -160,6 +160,12 @@ NetworkPacket& NetworkPacket::operator <<(const std::pair<char*, short>& pair)
     return *this;
 }
 
+NetworkPacket& NetworkPacket::operator <<(const NetworkPacket& packet)
+{
+    append(packet.packetData.data(), packet.packetSize);
+    return *this;
+}
+
 void NetworkPacket::dump() const
 {
     std::cout << "PACKET DUMP: size:" << packetSize << std::endl;

@@ -3,9 +3,10 @@
 namespace Block
 {
 
-TileEntityRecordPlayer::TileEntityRecordPlayer():
-			Record(0),
-			RecordItem(Inventory::ItemStack(0,0,0))
+TileEntityRecordPlayer::TileEntityRecordPlayer(int blockX, i_height blockY, int blockZ)
+        : TileEntity(TILEENTITY_TYPE_JUKEBOX, blockX, blockY, blockZ)
+        , Record(0)
+        , RecordItem(Inventory::ItemStack(0, 0, 0))
 {
 }
 
@@ -18,6 +19,15 @@ void TileEntityRecordPlayer::UpdateTick()
 }
 
 bool TileEntityRecordPlayer::NeedUpdate()
+{
+    return false;
+}
+
+void TileEntityRecordPlayer::GetDataPacket(Network::NetworkPacket& packet)
+{
+}
+
+bool TileEntityRecordPlayer::HasNetworkData()
 {
     return false;
 }

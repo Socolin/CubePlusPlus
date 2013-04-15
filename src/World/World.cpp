@@ -153,7 +153,7 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
         }
         if (block->UseTileEntity())
         {
-            Block::TileEntity* tileEntity = block->CreateNewTileEntity();
+            Block::TileEntity* tileEntity = block->CreateNewTileEntity(x, y, z);
             chunk->SetTileEntity(tileEntity ,x & 0xf, y, z & 0xf);
         }
     }
@@ -369,8 +369,13 @@ void World::RequestChunk(EntityPlayer* player, std::pair<int, int> chunkCoord)
 {
     Chunk* chunk = GetChunk(chunkCoord.first, chunkCoord.second);
     const Network::NetworkPacket& packet = chunk->GetPacket();
+
     //packet.dump();
     player->Send(packet);
+
+    Network::NetworkPacket tileEntitiesPacket;
+    chunk->GetTileEntityPacket(tileEntitiesPacket);
+    player->Send(tileEntitiesPacket);
 }
 
 int World::getViewDistance()
@@ -730,6 +735,25 @@ i_lightopacity World::GetBlockLightOpacity(int x, i_height y, int z)
 i_lightvalue World::GetRealLightValueAt(int x, i_height y, int z)
 {
     return recursiveGetRealLightValueAt(x, y, z, true);
+}
+
+void World::MarkForNetworkUpdateTileEntity(int x, i_height y, int z)
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        return chunk->MarkForNetworkUpdateTileEntity(x & 0xf, y, z & 0xf);
+    }
+}
+
+Block::TileEntity* World::GetTileEntity(int x, i_height y, int z)
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        return chunk->GetTileEntity(x & 0xf, y, z & 0xf);
+    }
+    return nullptr;
 }
 
 i_lightvalue World::recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall)

@@ -128,9 +128,12 @@ public:
 
     /**
      * Create a new TileEntity which will be associate to the block
+     * @param blockX
+     * @param blockY
+     * @param blockZ
      * @return nullptr or an object that inherits from TileEntity
      */
-    TileEntity* CreateNewTileEntity() const;
+    TileEntity* CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const;
 
     /**
      * Check if the block use a tile entity or not

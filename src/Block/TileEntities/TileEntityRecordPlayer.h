@@ -11,11 +11,13 @@ namespace Block
 class TileEntityRecordPlayer : public TileEntity
 {
 public:
-    TileEntityRecordPlayer();
+    TileEntityRecordPlayer(int blockX, i_height blockY, int blockZ);
     virtual ~TileEntityRecordPlayer();
 
     virtual void UpdateTick() override;
     virtual bool NeedUpdate() override;
+    virtual void GetDataPacket(Network::NetworkPacket& packet) override;
+    virtual bool HasNetworkData() override;
 
     void SetRecordItem(World::World* world, int x, i_height y, int z, Inventory::ItemStack item);
     Inventory::ItemStack GetRecordItem();

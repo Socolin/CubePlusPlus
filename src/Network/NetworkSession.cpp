@@ -112,8 +112,8 @@ short NetworkSession::readShort() throw (NetworkException)
     if (2 + startPosInBuffer > bufferSize)
         throw NetworkExceptionData("2 + startPosInBuffer > bufferSize");
     short result = 0;
-    result =  (short(buffer[startPosInBuffer])<<8 & 0xFF00) |
-              (short(buffer[startPosInBuffer + 1]) & 0x00FF);
+    result += (((short)buffer[startPosInBuffer]) & 0xff)  << 8;
+    result += (((short)buffer[startPosInBuffer + 1] & 0xff));
     startPosInBuffer += 2;
     return result;
 }

@@ -56,6 +56,7 @@ public:
     NetworkPacket& operator <<(const std::wstring& value);
     NetworkPacket& operator <<(const std::pair<char*, short>&);
     NetworkPacket& operator <<(const Inventory::ItemStack& item);
+    NetworkPacket& operator <<(const NetworkPacket& packet);
 
     const std::vector<char>& getPacketData() const
     {
@@ -70,6 +71,11 @@ public:
     void Reset()
     {
         packetSize = 1;
+    }
+
+    void Clear()
+    {
+        packetSize = 0;
     }
 
     void dump() const;

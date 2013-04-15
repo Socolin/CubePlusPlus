@@ -90,6 +90,9 @@ public:
     i_lightopacity GetBlockLightOpacity(int x, i_height y, int z);
     i_lightvalue GetRealLightValueAt(int x, i_height y, int z);
 
+    void MarkForNetworkUpdateTileEntity(int x, i_height y, int z);
+    Block::TileEntity* GetTileEntity(int x, i_height y, int z);
+
 private:
     void NotifyNeighborBlockChange(int x, i_height y, int z);
     void UpdateTime();

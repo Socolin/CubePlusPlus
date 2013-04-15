@@ -57,12 +57,16 @@ public:
     // Generate or get cached packet witch containing chunk datas
     const Network::NetworkPacket& GetPacket();
 
+    // Get data from tile entities
+    void GetTileEntityPacket(Network::NetworkPacket& packet);
 
     // Send all change done with ChangeBlock or ChangeData to client
     void SendUpdate();
 
     // Add new tile entity
     void SetTileEntity(Block::TileEntity* tileEntity, i_small_coord x, i_height y, i_small_coord z);
+    // Mark for update tile entity
+    void MarkForNetworkUpdateTileEntity(i_small_coord x, i_height y, i_small_coord z);
     // Delete a tileentity
     void RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z);
     // Retrive tile entity in block
@@ -218,6 +222,8 @@ private:
     short countChange;
     std::set<EntityPlayer*> playerList;
     std::map<unsigned short, Block::TileEntity*> tileEntities;
+    std::set<Block::TileEntity*> updatedTileEntities;
+    Network::NetworkPacket tileEntityUpdatePacket;
     World* world;
     unsigned int selfTickCounter;
     boost::heap::binomial_heap<UpdateBlockData,boost::heap::compare<CompateUpdateBlockData>> toUpdateBlockList;

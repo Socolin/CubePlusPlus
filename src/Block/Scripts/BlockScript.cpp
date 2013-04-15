@@ -22,7 +22,7 @@ void BlockScript::Init(Block::Block* baseBlock)
     this->baseBlock = baseBlock;
 }
 
-Block::TileEntity* BlockScript::CreateNewTileEntity() const
+Block::TileEntity* BlockScript::CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const
 {
     return nullptr;
 }

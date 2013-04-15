@@ -81,11 +81,11 @@ bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char f
     return false;
 }
 
-TileEntity* Block::CreateNewTileEntity() const
+TileEntity* Block::CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const
 {
     if (script)
     {
-        return script->CreateNewTileEntity();
+        return script->CreateNewTileEntity(blockX, blockY, blockZ);
     }
     return nullptr;
 }

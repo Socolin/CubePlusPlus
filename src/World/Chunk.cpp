@@ -232,6 +232,15 @@ const Network::NetworkPacket& Chunk::GetPacket()
     return cachePacket;
 }
 
+void Chunk::GetTileEntityPacket(Network::NetworkPacket& packet)
+{
+    for (auto tileEntityItr : tileEntities)
+    {
+        if (tileEntityItr.second->HasNetworkData())
+            tileEntityItr.second->GetDataPacket(packet);
+    }
+}
+
 void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData)
 {
     inCache = false;
@@ -324,20 +333,46 @@ void Chunk::SendUpdate()
     {
         blockChangePacket.UpdateAt(9, countChange);
         blockChangePacket.UpdateAt(11, (int)(countChange * 4));
-        blockChangePacket.dump();
         for (EntityPlayer* plr : playerList)
         {
             plr->Send(blockChangePacket);
         }
         ResetBlockChangePacket();
     }
+
+    tileEntityUpdatePacket.Clear();
+    for (Block::TileEntity* tileEntity: updatedTileEntities)
+    {
+        tileEntity->GetDataPacket(tileEntityUpdatePacket);
+    }
+    if (tileEntityUpdatePacket.getPacketSize() > 0)
+    {
+        for (EntityPlayer* plr : playerList)
+        {
+            plr->Send(tileEntityUpdatePacket);
+        }
+    }
+    updatedTileEntities.clear();
 }
 
 
 void Chunk::SetTileEntity(Block::TileEntity* tileEntity, i_small_coord x, i_height y, i_small_coord z)
 {
     tileEntities[TILEENTITY_KEY(x, y, z)] = tileEntity;
+    MarkForNetworkUpdateTileEntity(x, y, z);
 }
+
+
+void Chunk::MarkForNetworkUpdateTileEntity(i_small_coord x, i_height y, i_small_coord z)
+{
+    Block::TileEntity* tileEntity = GetTileEntity(x, y, z);
+    if (tileEntity != nullptr)
+    {
+        if (tileEntity->HasNetworkData())
+            updatedTileEntities.insert(tileEntity);
+    }
+}
+
 
 Block::TileEntity* Chunk::GetTileEntity(i_small_coord x, i_height y, i_small_coord z)
 {
@@ -356,6 +391,7 @@ void Chunk::RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z)
     {
         Block::TileEntity* tileEntity = it->second;
         tileEntities.erase(it);
+        updatedTileEntities.erase(tileEntity);
         delete tileEntity;
     }
 }
