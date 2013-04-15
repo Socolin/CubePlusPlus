@@ -168,6 +168,28 @@ Inventory::InventoryPlayer& EntityPlayer::GetInventory()
 {
     return inventory;
 }
+
+
+void EntityPlayer::DropItem(Inventory::ItemStack& itemstack)
+{
+    const Inventory::Item* item = itemstack.getItem();
+    if (item != nullptr)
+    {
+        const double speed = 0.3F;
+        double motionX = -sin(yaw/ 180.0F * M_PI) * cos(pitch / 180.0F * M_PI) * speed;
+        double motionZ = cos(yaw / 180.0F * M_PI) * cos(pitch / 180.0F * M_PI) * speed;
+        double motionY = -sin(pitch / 180.0F * M_PI) * speed + 0.1F;
+
+        double modifier = 0.02F;
+        float randomModifier =  Util::randFloat() * M_PI * 2.0F;
+        modifier *= Util::randFloat();
+        motionX += cos(randomModifier) * modifier;
+        motionY += (Util::randFloat() - Util::randFloat()) * 0.1f;
+        motionZ += sin(randomModifier) * modifier;
+        EntityItem* item = new EntityItem(this->x, this->y + getEyeHeight() - 0.3, this->z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()), motionX, motionY, motionZ);
+        world->AddEntity(item);
+    }
+}
 void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
 {
     if (!world)
@@ -178,24 +200,7 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
     }
     else if (state == 4)
     {
-        Inventory::ItemStack& itemstack = inventory.GetItemInHand();
-        const Inventory::Item* item = itemstack.getItem();
-        if (item != nullptr)
-        {
-            const double speed = 0.3F;
-            double motionX = -sin(yaw/ 180.0F * M_PI) * cos(pitch / 180.0F * M_PI) * speed;
-            double motionZ = cos(yaw / 180.0F * M_PI) * cos(pitch / 180.0F * M_PI) * speed;
-            double motionY = -sin(pitch / 180.0F * M_PI) * speed + 0.1F;
-
-            double modifier = 0.02F;
-            float randomModifier =  Util::randFloat() * M_PI * 2.0F;
-            modifier *= Util::randFloat();
-            motionX += cos(randomModifier) * modifier;
-            motionY += (Util::randFloat() - Util::randFloat()) * 0.1f;
-            motionZ += sin(randomModifier) * modifier;
-            EntityItem* item = new EntityItem(this->x, this->y + getEyeHeight() - 0.3, this->z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()), motionX, motionY, motionZ);
-            world->AddEntity(item);
-        }
+        DropItem(inventory.GetItemInHand());
     }
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
@@ -277,6 +282,7 @@ void EntityPlayer::UseEntity(int target, bool leftClick)
             entity->Interact(this);
     }
 }
+
 
 void EntityPlayer::PlayAnimation(char animationId)
 {

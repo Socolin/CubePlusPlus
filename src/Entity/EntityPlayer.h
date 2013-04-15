@@ -46,6 +46,7 @@ public:
     Inventory::InventoryPlayer& GetInventory();
     void PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY,char cursorPositionZ);
     void DigBlock(int state, int x, unsigned char y, int z, char face);
+    void DropItem(Inventory::ItemStack& itemstack);
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet);
 
     void UseEntity(int target, bool leftClick);

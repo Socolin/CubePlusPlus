@@ -15,9 +15,9 @@
 #include "Entity/EntityPlayer.h"
 
 #define DEBUG_STR(str) std::wcout << L"DEBUG: str: size:"<< str.length() << L" value:\"" << str << L"\"" << std::endl;
-#define DEBUG_SHORT(value) std::cout << "short:" << value << std::endl;
-#define DEBUG_INT(value) std::cout << "int:" << value << std::endl;
-#define DEBUG_CHAR(value) std::cout << "char:" << (int)value << std::endl;
+#define DEBUG_SHORT(value) std::cout << #value << "(short):" << value << std::endl;
+#define DEBUG_INT(value) std::cout << #value << "(int):" << value << std::endl;
+#define DEBUG_CHAR(value) std::cout << #value << "(char):" << (int)value << std::endl;
 
 
 namespace Network
@@ -254,12 +254,22 @@ void NetworkSession::readSlot(Inventory::ItemStack& itemStack) throw (NetworkExc
 void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
 {
     short slotId = readShort();
-    if (slotId < 0 || slotId > 44)
+    DEBUG_SHORT(slotId);
+    if (slotId < -1 || slotId > 44)
         throw NetworkException("handleCreativeInventoryAction: slotId < 0 || slotId > 44");
 
-    if (slotId == player->GetInventory().getHandSlotId())
-        player->ItemInHandHasChange();
-    readSlot(player->GetInventory().GetSlot(slotId));
+    Inventory::ItemStack receivedSlot;
+    readSlot(receivedSlot);
+    if (slotId == -1)
+    {
+        player->DropItem(receivedSlot);
+    }
+    else
+    {
+        if (slotId == player->GetInventory().getHandSlotId())
+            player->ItemInHandHasChange();
+        player->GetInventory().GetSlot(slotId) = receivedSlot;
+    }
 }
 void NetworkSession::handleClientSettings() throw (NetworkException)
 {
