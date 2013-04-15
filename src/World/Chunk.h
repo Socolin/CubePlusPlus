@@ -25,7 +25,7 @@ namespace World
 
 class EntityPlayer;
 class World;
-/*
+/**
  * This class store chunk data, block, metadata, light, tileentities etc...
  * A chunk is a block of 16 x 16 x 256, divide in 16 block of 16 x 16 x 16
  * All coordinate must be 0 <= [xz] <= 15
