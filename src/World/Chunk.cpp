@@ -143,34 +143,37 @@ void Chunk::UpdateTick()
         if (*chunkDataItr)
         {
             ChunkData* chunkData = (*chunkDataItr);
-            int random = Util::FastGenRandomInt();
-            unsigned int cellId = random & 0xfff;
-            i_block blockId;
-            i_data blockData;
-            if (chunkData->addData != NULL)
+            for (int count = 0; count < 3; count++)
             {
-                blockId = chunkData->blocks[cellId] | (chunkData->addData[cellId << 1] & (0xf << ((cellId & 0x1) << 2)));
-            }
-            else
-            {
-                blockId = chunkData->blocks[cellId];
-            }
-            if (blockId > 0)
-            {
-                const Block::Block* block = Block::BlockList::getBlock(blockId);
-                if (block)
+                int random = Util::FastGenRandomInt();
+                unsigned int cellId = (random >> 2) & 0xfff;
+                i_block blockId;
+                i_data blockData;
+                if (chunkData->addData != NULL)
                 {
-                    if ((cellId & 0x1) == 0)
+                    blockId = chunkData->blocks[cellId] | (chunkData->addData[cellId << 1] & (0xf << ((cellId & 0x1) << 2)));
+                }
+                else
+                {
+                    blockId = chunkData->blocks[cellId];
+                }
+                if (blockId > 0)
+                {
+                    const Block::Block* block = Block::BlockList::getBlock(blockId);
+                    if (block)
                     {
-                        blockData = chunkData->metadata[cellId >> 1] & 0xf;
-                    }
-                    else
-                    {
-                        blockData = (chunkData->metadata[cellId >> 1] & 0xf0) >> 4;
-                    }
-                    if (block->NeedsRandomTick())
-                    {
-                        block->UpdateTick(world, posXx16 + (cellId & 0xf), (i << 4) + ((cellId >> 8) & 0xf), posZx16 + ((cellId >> 4) & 0xf), blockData);
+                        if ((cellId & 0x1) == 0)
+                        {
+                            blockData = chunkData->metadata[cellId >> 1] & 0xf;
+                        }
+                        else
+                        {
+                            blockData = (chunkData->metadata[cellId >> 1] & 0xf0) >> 4;
+                        }
+                        if (block->NeedsRandomTick())
+                        {
+                            block->UpdateTick(world, posXx16 + (cellId & 0xf), (i << 4) + ((cellId >> 8) & 0xf), posZx16 + ((cellId >> 4) & 0xf), blockData);
+                        }
                     }
                 }
             }

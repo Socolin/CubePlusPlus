@@ -8,8 +8,8 @@ namespace Scripting
 BlockGrassScript::BlockGrassScript()
     : BlockScript("block_grass")
 {
-    dirtBlockId = BLOCKSCRIPT_BLOCKID_DIRT;
-    grassBlockId = BLOCKSCRIPT_BLOCKID_GRASS;
+    dirtBlockId = 0;
+    grassBlockId = 0;
 }
 
 BlockGrassScript::~BlockGrassScript()
@@ -49,5 +49,20 @@ void BlockGrassScript::OnUpdateTick(World::World* world, int x, i_height y, int 
     }
 }
 
+void BlockGrassScript::InitParam(int paramId, int param)
+{
+    switch (paramId)
+    {
+    case SCRIPTINGPARAM_BLOCK_GRASS_DIRTID:
+        dirtBlockId = param;
+        break;
+    case SCRIPTINGPARAM_BLOCK_GRASS_GRASSID:
+        grassBlockId = param;
+        break;
+    default:
+        std::cerr << "Bad param id:" << paramId << std::endl;
+        break;
+    }
+}
 
 } /* namespace Scripting */
