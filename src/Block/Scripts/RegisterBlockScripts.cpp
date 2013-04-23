@@ -1,6 +1,7 @@
 #include "RegisterBlockScripts.h"
 
 #include "Basics/BlockButtonScript.h"
+#include "Basics/BlockCactusScript.h"
 #include "Basics/BlockDoorScript.h"
 #include "Basics/BlockFallingScript.h"
 #include "Basics/BlockGrassScript.h"
@@ -20,6 +21,7 @@ namespace Scripting
 void RegisterBlockScript()
 {
     new BlockButtonScript();
+    new BlockCactusScript();
     new BlockDoorScript();
     new BlockFallingScript();
     new BlockGrassScript();
