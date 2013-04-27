@@ -19,7 +19,7 @@ public:
     virtual ~BlockCactusScript();
     virtual BlockScript* Copy() override;
     virtual bool CanPlace(World::World* world, int x, i_height y, int z, char face) const override;
-    virtual void OnNeighborChange(World::World* world, int x, i_height y, int z) const override;
+    virtual void OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const override;
     void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const;
     virtual void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const override;
     virtual void InitParam(int paramId, const std::string& param) override;

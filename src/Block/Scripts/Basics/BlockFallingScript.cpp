@@ -31,7 +31,7 @@ void BlockFallingScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_h
     player->getWorld()->MarkBlockForUpdate(x, y, z, blockId, 5);
 }
 
-void BlockFallingScript::OnNeighborChange(World::World* world, int x, i_height y, int z) const
+void BlockFallingScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
 {
     world->MarkBlockForUpdate(x, y, z, baseBlock->GetBlockId(), 5);
 }

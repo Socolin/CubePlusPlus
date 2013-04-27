@@ -10,6 +10,8 @@
 #include "Basics/BlockLeverScript.h"
 #include "Basics/BlockNoteScript.h"
 #include "Basics/BlockQuartzScript.h"
+#include "Basics/BlockRedstonePowered.h"
+#include "Basics/BlockRedstoneWireScript.h"
 #include "Basics/BlockSignGroundScript.h"
 #include "Basics/BlockSignWallScript.h"
 #include "Basics/BlockStairScript.h"
@@ -30,6 +32,8 @@ void RegisterBlockScript()
     new BlockLeverScript();
     new BlockNoteScript();
     new BlockQuartzScript();
+    new BlockRedstonePowered();
+    new BlockRedstoneWireScript();
     new BlockSignGroundScript();
     new BlockSignWallScript();
     new BlockStairScript();

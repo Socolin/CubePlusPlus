@@ -93,8 +93,18 @@ public:
     void MarkForNetworkUpdateTileEntity(int x, i_height y, int z);
     Block::TileEntity* GetTileEntity(int x, i_height y, int z);
 
+    void NotifyNeighborBlockChange(int x, i_height y, int z, i_block neighborBlockId);
+
+    bool IsNormalCube(int x, i_height y, int z);
+
+    i_powerlevel getBlockPower(int x, i_height y, int z, int direction);
+    i_powerlevel computePowerLevelFromAroundBlock(int x, i_height y, int z);
+    bool isBlockIndirectlyProvidingPowerTo(int x, i_height y, int z, int direction);
+    i_powerlevel getIndirectPowerLevel(int x, i_height y, int z, int direction);
+    bool isBlockIndirectlyGettingPowered(int x, i_height y, int z);
+    i_powerlevel getMaxPowerFromBlockArround(int x, i_height y, int z);
+
 private:
-    void NotifyNeighborBlockChange(int x, i_height y, int z);
     void UpdateTime();
     VirtualChunk* CreateVirtualChunk(int x, int z);
     VirtualSmallChunk* CreateVirtualSmallChunk(int x, int z);

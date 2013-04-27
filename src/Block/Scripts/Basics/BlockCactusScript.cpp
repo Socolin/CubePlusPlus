@@ -81,7 +81,7 @@ void BlockCactusScript::InitParam(int paramId, const std::string& param)
     }
 }
 
-void BlockCactusScript::OnNeighborChange(World::World* world, int x, i_height y, int z) const
+void BlockCactusScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
 {
 	if(!CheckSideBySideBlocks(world, x, y, z) || (BlockCactusScript::baseBlock->GetBlockId() != world->GetBlockId(x, y - 1, z) && allowed_to_grow_on.find(world->GetBlockId(x, y - 1, z)) == allowed_to_grow_on.end()))
 	{

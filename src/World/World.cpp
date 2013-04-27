@@ -151,6 +151,7 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
             VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(x >> 4, z >> 4);
             vSmallChunk->SendPacketToAllNearPlayer(soundPacket);
         }
+        block->OnBlockAddedInWorld(this, x, y, z);
         if (block->UseTileEntity())
         {
             Block::TileEntity* tileEntity = block->CreateNewTileEntity(x, y, z);
@@ -159,7 +160,7 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
     }
 
     FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
-        NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ);
+        NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, blockId);
     }
 
     updateAllLightTypes(x, y, z);
@@ -181,19 +182,19 @@ void World::RemoveBlock(int x, i_height y, int z)
         chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
 
         FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
-            NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ);
+            NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, 0);
         }
     }
     updateAllLightTypes(x, y, z);
 }
 
-void World::NotifyNeighborBlockChange(int x, i_height y, int z)
+void World::NotifyNeighborBlockChange(int x, i_height y, int z, i_block neighborBlockId)
 {
     i_block blockId = GetBlockId(x, y, z);
     const Block::Block* block = Block::BlockList::getBlock(blockId);
     if (block)
     {
-        block->NeighborChange(this, x, y, z);
+        block->NeighborChange(this, x, y, z, neighborBlockId);
     }
 }
 
@@ -756,6 +757,12 @@ Block::TileEntity* World::GetTileEntity(int x, i_height y, int z)
     return nullptr;
 }
 
+bool World::IsNormalCube(int x, i_height y, int z)
+{
+    i_block blockId = GetBlockId(x , y, z);
+    const Block::Block* block = Block::BlockList::getBlock(blockId);
+    return block && block->IsNormalCube();
+}
 i_lightvalue World::recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall)
 {
     if (firstCall)
@@ -816,5 +823,149 @@ void World::SetTime(long time)
 {
     currentTime = time;
 }
+
+
+
+
+/*
+    *
+   public int getBlockPower(int x, int y, int z, int direction)
+
+
+   public int computePowerLevelFromAroundBlock(int x, int y, int z)
+   {
+
+   }
+
+   public boolean isBlockIndirectlyProvidingPowerTo(int x, int y, int z, int direction)
+   {
+
+   }
+
+   public int getIndirectPowerLevel(int x, int y, int z, int direction)
+   {
+
+   }
+
+   public boolean isBlockIndirectlyGettingPowered(int x, int y, int z) {
+
+   }
+
+   public int getMaxPowerFromBlockArround(int x, int y, int z)
+   {
+
+   }
+ *
+ */
+i_powerlevel World::getBlockPower(int x, i_height y, int z, int direction)
+{
+    s_block_data blockData = GetBlockIdAndData(x, y, z);
+    const Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+    if (block)
+    {
+        return block->GetStrongPowerLevel(this, x, y, z, direction, blockData.blockData);
+    }
+    return 0;
+}
+i_powerlevel World::computePowerLevelFromAroundBlock(int x, i_height y, int z)
+{
+    i_powerlevel powerLevel = std::max(i_powerlevel(0), getBlockPower(x, y - 1, z, 0));
+
+    if (powerLevel >= 15)
+    {
+        return powerLevel;
+    }
+    else
+    {
+        powerLevel = std::max(powerLevel, getBlockPower(x, y + 1, z, 1));
+
+        if (powerLevel >= 15)
+        {
+            return powerLevel;
+        }
+        else
+        {
+            powerLevel = std::max(powerLevel, getBlockPower(x, y, z - 1, 2));
+
+            if (powerLevel >= 15)
+            {
+                return powerLevel;
+            }
+            else
+            {
+                powerLevel = std::max(powerLevel, getBlockPower(x, y, z + 1, 3));
+
+                if (powerLevel >= 15)
+                {
+                    return powerLevel;
+                }
+                else
+                {
+                    powerLevel = std::max(powerLevel, getBlockPower(x - 1, y, z, 4));
+
+                    if (powerLevel >= 15)
+                    {
+                        return powerLevel;
+                    }
+                    else
+                    {
+                        powerLevel = std::max(powerLevel, getBlockPower(x + 1, y, z, 5));
+                        return powerLevel >= 15 ? powerLevel : powerLevel;
+                    }
+                }
+            }
+        }
+    }
+}
+
+bool World::isBlockIndirectlyProvidingPowerTo(int x, i_height y, int z, int direction)
+{
+    return getIndirectPowerLevel(x, y, z, direction) > 0;
+}
+
+i_powerlevel World::getIndirectPowerLevel(int x, i_height y, int z, int direction)
+{
+    if (IsNormalCube(x, y, z))
+    {
+        return computePowerLevelFromAroundBlock(x, y, z);
+    }
+    else
+    {
+        s_block_data blockData = GetBlockIdAndData(x, y, z);
+        const Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+        if (block)
+        {
+            return block->GetWeakPowerLevel(this, x, y, z, direction, blockData.blockData);
+        }
+        return 0;
+    }
+}
+
+bool World::isBlockIndirectlyGettingPowered(int x, i_height y, int z)
+{
+    return getIndirectPowerLevel(x, y - 1, z, 0) > 0 ? true : (getIndirectPowerLevel(x, y + 1, z, 1) > 0 ? true : (getIndirectPowerLevel(x, y, z - 1, 2) > 0 ? true : (getIndirectPowerLevel(x, y, z + 1, 3) > 0 ? true : (getIndirectPowerLevel(x - 1, y, z, 4) > 0 ? true : getIndirectPowerLevel(x + 1, y, z, 5) > 0))));
+}
+
+i_powerlevel World::getMaxPowerFromBlockArround(int x, i_height y, int z)
+{
+    i_powerlevel maxValue = 0;
+
+    FOR_EACH_SIDE_YZX(x, y, z, blockSide)
+        int power = getIndirectPowerLevel(blockSideX, blockSideY, blockSideZ, side);
+
+        if (power >= 15)
+        {
+            return 15;
+        }
+
+        if (power > maxValue)
+        {
+            maxValue = power;
+        }
+    }
+
+    return maxValue;
+}
+
 
 } /* namespace World */

@@ -5,6 +5,7 @@
 #include "Util/AABB.h"
 #include "SoundBlock.h"
 #include "Scripts/BlockScript.h"
+#include "World/World.h"
 
 namespace Block
 {
@@ -53,6 +54,15 @@ void Block::OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, 
         script->OnBlockPlacedBy(player, x, y, z, face, blockId, data, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
 }
+
+void Block::OnBlockAddedInWorld(World::World* world, int x, i_height y, int z) const
+{
+    if (script)
+    {
+        script->OnBlockAdded(world, x, y, z);
+    }
+}
+
 
 void Block::UpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
 {
@@ -124,11 +134,11 @@ const Util::AABB Block::GetBoundingBox(int x, int y, int z) const
     return Util::AABB(x + minX, y + minY, z + minZ, maxX - minX, maxY - minY, maxZ - minZ);
 }
 
-void Block::NeighborChange(World::World* world, int x, i_height y, int z) const
+void Block::NeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
 {
     if (script)
     {
-        script->OnNeighborChange(world, x, y, z);
+        script->OnNeighborChange(world, x, y, z, neighborBlockId);
     }
 }
 
@@ -138,6 +148,62 @@ void Block::Destroy(World::World* world, int x, i_height y, int z, i_data data) 
     {
         script->OnDestroy(world, x, y, z, data);
     }
+}
+
+const bool Block::CanProvidePower() const
+{
+    if (script)
+    {
+        return script->CanProvidePower();
+    }
+    return false;
+}
+
+
+i_powerlevel Block::GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side) const
+{
+    i_data metadata = world->GetBlockData(x, y, z);
+    i_powerlevel level = GetWeakPowerLevel(world, x, y, z, side, metadata);
+    return level;
+}
+
+i_powerlevel Block::GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+{
+    if (script)
+    {
+        return script->GetWeakPowerLevel(world, x, y, z, side, metadata);
+    }
+    return 0;
+}
+
+i_powerlevel Block::GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side) const
+{
+    i_data metadata = world->GetBlockData(x, y, z);
+    i_powerlevel level = GetStrongPowerLevel(world, x, y, z, side, metadata);
+    return level;
+}
+
+i_powerlevel Block::GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+{
+    if (script)
+    {
+        return script->GetStrongPowerLevel(world, x, y, z, side, metadata);
+    }
+    return 0;
+}
+
+bool Block::HasSolidTopSurface(i_data metadata) const
+{
+    if (script)
+    {
+        return script->HasSolidTopSurface(metadata);
+    }
+    return !material.isTranslucent() && renderAsNormal;
+}
+
+bool Block::IsNormalCube() const
+{
+    return !material.isTranslucent() && renderAsNormal && !CanProvidePower();
 }
 
 } /* namespace Block */

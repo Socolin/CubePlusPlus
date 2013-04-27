@@ -48,4 +48,9 @@ void BlockStairScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_hei
     }
 }
 
+bool BlockStairScript::HasSolidTopSurface(i_data metadata) const
+{
+    return (metadata & 0x4);
+}
+
 } /* namespace Scripting */

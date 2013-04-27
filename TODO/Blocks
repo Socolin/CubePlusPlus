@@ -3,7 +3,7 @@
 2 tile.grass                        yes     | no       |           
 3 tile.dirt                         yes     | no       |           
 4 tile.stonebrick                   yes     | no       |           
-5 tile.wood                         no      | no       |           
+5 tile.wood                         yes     | no       |           
 6 tile.sapling                      no      | no       | WorldGenerator
 7 tile.bedrock                      yes     | no       |           
 8 tile.water                        no      | no       |           

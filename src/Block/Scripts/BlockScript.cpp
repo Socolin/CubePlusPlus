@@ -36,7 +36,7 @@ void BlockScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_
 {
 }
 
-void BlockScript::OnNeighborChange(World::World* world, int x, i_height y, int z) const
+void BlockScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
 {
 }
 
@@ -61,6 +61,30 @@ bool BlockScript::CanPlace(World::World* world, int x, i_height y, int z, char f
 
 void BlockScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
 {
+}
+
+bool BlockScript::CanProvidePower() const
+{
+    return false;
+}
+
+i_powerlevel BlockScript::GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+{
+    return 0;
+}
+
+void BlockScript::OnBlockAdded(World::World* world, int x, i_height y, int z) const
+{
+}
+
+bool BlockScript::HasSolidTopSurface(i_data metadata) const
+{
+    return !baseBlock->GetMaterial().isTranslucent() && baseBlock->IsRenderAsNormal();
+}
+
+i_powerlevel BlockScript::GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+{
+    return 0;
 }
 
 } /* namespace Scripting */

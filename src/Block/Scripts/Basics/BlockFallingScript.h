@@ -26,7 +26,7 @@ public:
     virtual BlockScript* Copy() override;
 
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
-    virtual void OnNeighborChange(World::World* world, int x, i_height y, int z) const override;
+    virtual void OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const override;
 
     virtual void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const override;
     virtual void InitParam(int paramId, const std::string& param) override;

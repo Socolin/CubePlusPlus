@@ -91,7 +91,7 @@ bool BlockButtonScript::CanPlace(World::World* world, int x, unsigned char y, in
     return false;
 }
 
-void BlockButtonScript::OnNeighborChange(World::World* world, int x, i_height y, int z) const
+void BlockButtonScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
 {
     i_data orientation = world->GetBlockData(x, y, z);
     orientation &= 0x7;

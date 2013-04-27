@@ -20,6 +20,7 @@ public:
     virtual ~BlockStairScript();
     virtual BlockScript* Copy() override;
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
+    virtual bool HasSolidTopSurface(i_data metadata) const override;
 };
 
 } /* namespace Scripting */

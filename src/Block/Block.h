@@ -65,6 +65,15 @@ public:
     void OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
     /**
+     * Called when a block has been place in world
+     * @param world the world
+     * @param x Position X of block
+     * @param y Position Y of block
+     * @param z Position Z of block
+     */
+    void OnBlockAddedInWorld(World::World* world, int x, i_height y, int z) const;
+
+    /**
      * Called when a player right click on a block, it call the script's method associated.
      * @param user The player which do the right click
      * @param x Position X of block
@@ -123,8 +132,9 @@ public:
      * @param x Position X of block
      * @param y Position Y of block
      * @param z Position Z of block
+     * @param neighborBlockId id of new block
      */
-    void NeighborChange(World::World* world, int x, i_height y, int z) const;
+    void NeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const;
 
     /**
      * Create a new TileEntity which will be associate to the block
@@ -158,9 +168,27 @@ public:
      * @param x Position X of block
      * @param y Position Y of block
      * @param z Position Z of block
-     * @return
+     * @return a bounding box
      */
     const Util::AABB GetBoundingBox(int x, int y, int z) const;
+
+    /**
+     * Get if a block can emit redstone signal or not
+     * @return if block can power a redstone system
+     */
+    const bool CanProvidePower() const;
+
+    i_powerlevel GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side) const;
+
+    i_powerlevel GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const;
+
+    i_powerlevel GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side) const;
+
+    i_powerlevel GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const;
+
+    bool HasSolidTopSurface(i_data metadata) const;
+
+    bool IsNormalCube() const;
 
     // Getters
     inline i_block GetBlockId() const;
