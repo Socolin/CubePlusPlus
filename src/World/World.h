@@ -58,6 +58,7 @@ public:
     inline s_block_data GetBlockIdAndData(int x, i_height y, int z) const;
 
     void ChangeDataNoEvent(int x, i_height y, int z, i_data blockData);
+    void ChangeDataNotify(int x, i_height y, int z, i_data blockData);
     void ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData);
     void ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockData, bool playSound = true);
     void RemoveBlock(int x, i_height y, int z);
@@ -93,6 +94,7 @@ public:
     void MarkForNetworkUpdateTileEntity(int x, i_height y, int z);
     Block::TileEntity* GetTileEntity(int x, i_height y, int z);
 
+    void NotifyNeighborsForBlockChange(int x, i_height y, int z, i_block blockId);
     void NotifyNeighborBlockChange(int x, i_height y, int z, i_block neighborBlockId);
 
     bool IsNormalCube(int x, i_height y, int z);

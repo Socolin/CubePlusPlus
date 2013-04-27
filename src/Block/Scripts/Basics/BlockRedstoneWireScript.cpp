@@ -36,8 +36,8 @@ bool BlockRedstoneWireScript::CanPlace(World::World* world, int x, i_height y, i
 void BlockRedstoneWireScript::OnBlockAdded(World::World* world, int x, i_height y, int z) const
 {
     const_cast<BlockRedstoneWireScript*>(this)->updateAndPropagateCurrentStrength(world, x, y, z);
-    world->NotifyNeighborBlockChange(x, y + 1, z, baseBlock->GetBlockId());
-    world->NotifyNeighborBlockChange(x, y - 1, z, baseBlock->GetBlockId());
+    world->NotifyNeighborsForBlockChange(x, y + 1, z, baseBlock->GetBlockId());
+    world->NotifyNeighborsForBlockChange(x, y - 1, z, baseBlock->GetBlockId());
     notifyWireNeighborsOfNeighborChange(world, x - 1, y, z);
     notifyWireNeighborsOfNeighborChange(world, x + 1, y, z);
     notifyWireNeighborsOfNeighborChange(world, x, y, z - 1);
@@ -83,12 +83,12 @@ void BlockRedstoneWireScript::OnBlockAdded(World::World* world, int x, i_height 
 void BlockRedstoneWireScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
 {
     i_block blockId = baseBlock->GetBlockId();
-    world->NotifyNeighborBlockChange(x, y + 1, z, blockId);
-    world->NotifyNeighborBlockChange(x, y - 1, z, blockId);
-    world->NotifyNeighborBlockChange(x + 1, y, z, blockId);
-    world->NotifyNeighborBlockChange(x - 1, y, z, blockId);
-    world->NotifyNeighborBlockChange(x, y, z + 1, blockId);
-    world->NotifyNeighborBlockChange(x, y, z - 1, blockId);
+    world->NotifyNeighborsForBlockChange(x, y + 1, z, blockId);
+    world->NotifyNeighborsForBlockChange(x, y - 1, z, blockId);
+    world->NotifyNeighborsForBlockChange(x + 1, y, z, blockId);
+    world->NotifyNeighborsForBlockChange(x - 1, y, z, blockId);
+    world->NotifyNeighborsForBlockChange(x, y, z + 1, blockId);
+    world->NotifyNeighborsForBlockChange(x, y, z - 1, blockId);
     const_cast<BlockRedstoneWireScript*>(this)->updateAndPropagateCurrentStrength(world, x, y, z);
     notifyWireNeighborsOfNeighborChange(world, x - 1, y, z);
     notifyWireNeighborsOfNeighborChange(world, x + 1, y, z);
@@ -224,7 +224,7 @@ void BlockRedstoneWireScript::updateAndPropagateCurrentStrength(World::World* wo
 
     for (s_block_position pos : updateList)
     {
-        world->NotifyNeighborBlockChange(pos.x, pos.y, pos.z, baseBlock->GetBlockId());
+        world->NotifyNeighborsForBlockChange(pos.x, pos.y, pos.z, baseBlock->GetBlockId());
     }
 }
 
@@ -327,15 +327,15 @@ void BlockRedstoneWireScript::notifyWireNeighborsOfNeighborChange(World::World* 
     i_block blockId = baseBlock->GetBlockId();
     if (world->GetBlockId(x, y, z) == blockId)
     {
-        world->NotifyNeighborBlockChange(x, y, z, blockId);
-        world->NotifyNeighborBlockChange(x - 1, y, z, blockId);
-        world->NotifyNeighborBlockChange(x + 1, y, z, blockId);
-        world->NotifyNeighborBlockChange(x, y, z - 1, blockId);
-        world->NotifyNeighborBlockChange(x, y, z + 1, blockId);
+        world->NotifyNeighborsForBlockChange(x, y, z, blockId);
+        world->NotifyNeighborsForBlockChange(x - 1, y, z, blockId);
+        world->NotifyNeighborsForBlockChange(x + 1, y, z, blockId);
+        world->NotifyNeighborsForBlockChange(x, y, z - 1, blockId);
+        world->NotifyNeighborsForBlockChange(x, y, z + 1, blockId);
         if (y > 0)
-            world->NotifyNeighborBlockChange(x, y - 1, z, blockId);
+            world->NotifyNeighborsForBlockChange(x, y - 1, z, blockId);
         if (y < 255)
-            world->NotifyNeighborBlockChange(x, y + 1, z, blockId);
+            world->NotifyNeighborsForBlockChange(x, y + 1, z, blockId);
     }
 }
 

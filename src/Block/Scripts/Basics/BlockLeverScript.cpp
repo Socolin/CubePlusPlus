@@ -57,8 +57,79 @@ bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, 
 {
     World::World* world = user->getWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);
-    world->ChangeDataNoEvent(x, y, z, clickedBlockData ^ 0x8);
+    world->ChangeDataNotify(x, y, z, clickedBlockData ^ 0x8);
+
+    int orientation = clickedBlockData & 7;
+    if (orientation == 1)
+    {
+       world->NotifyNeighborsForBlockChange(x - 1, y, z, baseBlock->GetBlockId());
+    }
+    else if (orientation == 2)
+    {
+       world->NotifyNeighborsForBlockChange(x + 1, y, z, baseBlock->GetBlockId());
+    }
+    else if (orientation == 3)
+    {
+       world->NotifyNeighborsForBlockChange(x, y, z - 1, baseBlock->GetBlockId());
+    }
+    else if (orientation == 4)
+    {
+       world->NotifyNeighborsForBlockChange(x, y, z + 1, baseBlock->GetBlockId());
+    }
+    else if (orientation != 5 && orientation != 6)
+    {
+       if (orientation == 0 || orientation == 7)
+       {
+           world->NotifyNeighborsForBlockChange(x, y + 1, z, baseBlock->GetBlockId());
+       }
+    }
+    else
+    {
+       world->NotifyNeighborsForBlockChange(x, y - 1, z, baseBlock->GetBlockId());
+    }
     return true;
+}
+
+
+bool BlockLeverScript::CanProvidePower() const
+{
+    return true;
+}
+
+i_powerlevel BlockLeverScript::GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+{
+    if (metadata & 8)
+        return 15;
+    return 0;
+}
+
+i_powerlevel BlockLeverScript::GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+{
+    if ((metadata & 8) == 0)
+    {
+        return 0;
+    }
+    else
+    {
+        int orientation = metadata & 7;
+        if (orientation == 0 && side == 0)
+            return 15;
+        if (orientation == 7 && side == 0)
+            return 15;
+        if (orientation == 6 && side == 1)
+            return 15;
+        if (orientation == 5 && side == 1)
+            return 15;
+        if (orientation == 4 && side == 2)
+            return 15;
+        if (orientation == 3 && side == 3)
+            return 15;
+        if (orientation == 2 && side == 4)
+            return 15;
+        if (orientation == 1 && side == 5)
+            return 15;
+    }
+    return 0;
 }
 
 } /* namespace Scripting */
