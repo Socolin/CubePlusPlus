@@ -117,9 +117,9 @@ bool BlockDoorScript::CanPlace(World::World* world, int x, unsigned char y, int 
     if (topBlock != 0)
         return false;
 
-    i_block bottomBlock_id = world->GetBlockId(x, y - 1, z);
-    const Block::Block* bottomBlock = Block::BlockList::getBlock(bottomBlock_id);
-    if (bottomBlock->IsOpaqueCube())
+    s_block_data bottomBlockData = world->GetBlockIdAndData(x, y - 1, z);
+    const Block::Block* bottomBlock = Block::BlockList::getBlock(bottomBlockData.blockId);
+    if (bottomBlock->HasSolidTopSurface(bottomBlockData.blockData))
         return true;
 
     return false;
@@ -147,6 +147,52 @@ void BlockDoorScript::OnDestroy(World::World* world, int x, i_height y, int z, i
     else
     {
         world->ChangeBlockNoEvent(x, y + 1, z, 0, 0);
+    }
+}
+
+void BlockDoorScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
+{
+    i_data data = world->GetBlockData(x, y, z);
+    if (SCRIPT_BLOCK_DOOR_ISTOP(data))
+    {
+        OnNeighborChange(world, x, y - 1, z, neighborBlockId);
+    }
+    else
+    {
+        // TODO: check top block
+
+        bool mustDrop = false;
+        s_block_data bottomBlockData = world->GetBlockIdAndData(x, y - 1, z);
+        const Block::Block* bottomBlock = Block::BlockList::getBlock(bottomBlockData.blockId);
+        if (!bottomBlock->HasSolidTopSurface(bottomBlockData.blockData))
+        {
+            mustDrop = true;
+        }
+
+        if (mustDrop)
+        {
+            // TODO
+        }
+        else
+        {
+            const Block::Block* neighborBlock = Block::BlockList::getBlock(neighborBlockId);
+            bool isPowered = world->isBlockIndirectlyGettingPowered(x, y, z) || world->isBlockIndirectlyGettingPowered(x, y + 1, z);
+
+            if ((isPowered || (neighborBlock && neighborBlock->CanProvidePower())) && neighborBlockId != baseBlock->GetBlockId())
+            {
+                onPoweredBlockChange(world, x, y, z, isPowered);
+            }
+        }
+    }
+}
+
+void BlockDoorScript::onPoweredBlockChange(World::World* world, int x, int y, int z, bool isPowered) const
+{
+    int metadata = world->GetBlockData(x, y, z);
+
+    if (SCRIPT_BLOCK_DOOR_ISOPEN(metadata) != isPowered)
+    {
+        world->ChangeDataNoEvent(x, y, z, metadata ^ 0x4);
     }
 }
 
