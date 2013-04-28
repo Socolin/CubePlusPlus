@@ -45,7 +45,7 @@ public:
     virtual bool CanPlace(World::World* world, int x, i_height y, int z, char face) const;
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
     virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
-    virtual void OnBlockAdded(World::World* world, int x, i_height y, int z) const;
+    virtual void OnBlockAdded(World::World* world, int x, i_height y, int z, i_data data) const;
     virtual Block::TileEntity* CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const;
     virtual bool UseTileEntity() const;
     virtual void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const;

@@ -151,6 +151,7 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
     chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, blockData);
+
     const Block::Block* block = Block::BlockList::getBlock(blockId);
     if (block)
     {
@@ -162,12 +163,6 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
                     << sound.GetVolume() << (char)(sound.GetModifier() * 63.f);
             VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(x >> 4, z >> 4);
             vSmallChunk->SendPacketToAllNearPlayer(soundPacket);
-        }
-        block->OnBlockAddedInWorld(this, x, y, z);
-        if (block->UseTileEntity())
-        {
-            Block::TileEntity* tileEntity = block->CreateNewTileEntity(x, y, z);
-            chunk->SetTileEntity(tileEntity ,x & 0xf, y, z & 0xf);
         }
     }
 
@@ -184,13 +179,6 @@ void World::RemoveBlock(int x, i_height y, int z)
     i_block blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
     if (blockId > 0)
     {
-        const Block::Block* block = Block::BlockList::getBlock(blockId);
-        if (block)
-        {
-            i_data blockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
-            block->Destroy(this, x, y, z, blockData);
-        }
-
         chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
 
         FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
@@ -930,7 +918,7 @@ i_powerlevel World::computePowerLevelFromAroundBlock(int x, i_height y, int z)
                     else
                     {
                         powerLevel = std::max(powerLevel, getBlockPower(x + 1, y, z, 5));
-                        return powerLevel >= 15 ? powerLevel : powerLevel;
+                        return powerLevel;
                     }
                 }
             }

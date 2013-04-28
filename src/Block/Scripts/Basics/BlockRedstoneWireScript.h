@@ -15,8 +15,9 @@ INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,
 INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,2,'redstoneRepeaterActiveBlockId',1);
 INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,3,'redstoneRepeaterIdleBlockId',1);
  */
-#define SCRIPTINGPARAM_BLOCK_DOOR_BLOCKID 1
-#define SCRIPTINGPARAM_BLOCK_DOOR_NEEDREDSTONE 2
+#define SCRIPTINGPARAM_BLOCK_REDSTONEWIRE_REDSTONEWIREBLOCKID 1
+#define SCRIPTINGPARAM_BLOCK_REDSTONEWIRE_REDSTONEREPEATERACTIVEBLOCKID 2
+#define CRIPTINGPARAM_BLOCK_REDSTONEWIRE_REDSTONEREPEATERIDLEBLOCKID 3
 
 
 class BlockRedstoneWireScript: public BlockScript
@@ -26,8 +27,10 @@ public:
     virtual ~BlockRedstoneWireScript();
     virtual BlockScript* Copy() override;
 
+    virtual void InitParam(int paramId, int param) override;
+
     virtual bool CanPlace(World::World* world, int x, i_height y, int z, char face) const override;
-    virtual void OnBlockAdded(World::World* world, int x, i_height y, int z) const override;
+    virtual void OnBlockAdded(World::World* world, int x, i_height y, int z, i_data data) const override;
     virtual void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const override;
     virtual void OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const override;
     virtual bool CanProvidePower() const override;

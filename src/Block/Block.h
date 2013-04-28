@@ -70,8 +70,9 @@ public:
      * @param x Position X of block
      * @param y Position Y of block
      * @param z Position Z of block
+     * @param data metadata of block
      */
-    void OnBlockAddedInWorld(World::World* world, int x, i_height y, int z) const;
+    void OnBlockAddedInWorld(World::World* world, int x, i_height y, int z, i_data blockData) const;
 
     /**
      * Called when a player right click on a block, it call the script's method associated.

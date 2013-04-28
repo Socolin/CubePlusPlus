@@ -248,13 +248,11 @@ void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block bl
 {
     inCache = false;
     i_block previousBlockId = getBlockAt(x, y, z);
-    const Block::Block* previousBlock = Block::BlockList::getBlock(previousBlockId);
-    if (previousBlock && previousBlock->UseTileEntity())
-    {
-        RemoveTileEntity(x, y, z);
-    }
+    i_data previousBlockkData = getDataAt(x, y, z);
+
     SetBlockAt(x, y, z, blockID);
     SetDataAt(x, y, z, blockData);
+
     unsigned int dataChange = 0;
     dataChange |= blockData       & 0x0000000f;
     dataChange |= (blockID << 4)  & 0x0000fff0;
@@ -263,6 +261,25 @@ void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block bl
     dataChange |= ((x & 0xf) << 28)       & 0xf0000000;
     blockChangePacket << dataChange;
     countChange++;
+
+    const Block::Block* previousBlock = Block::BlockList::getBlock(previousBlockId);
+    if (previousBlock)
+    {
+        previousBlock->Destroy(world, x + posXx16, y, z + posZx16, previousBlockkData);
+        if (previousBlock->UseTileEntity())
+            RemoveTileEntity(x, y, z);
+    }
+
+    const Block::Block* block = Block::BlockList::getBlock(blockID);
+    if (block)
+    {
+        block->OnBlockAddedInWorld(world, x + posXx16, y, z + posZx16, blockData);
+        if (block->UseTileEntity())
+        {
+            Block::TileEntity* tileEntity = block->CreateNewTileEntity(x + posXx16, y, z + posZx16);
+            SetTileEntity(tileEntity ,x, y, z);
+        }
+    }
 }
 void Chunk::ChangeData(i_small_coord x, i_height y, i_small_coord z, i_data blockData)
 {

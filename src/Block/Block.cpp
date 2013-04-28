@@ -55,11 +55,11 @@ void Block::OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, 
     }
 }
 
-void Block::OnBlockAddedInWorld(World::World* world, int x, i_height y, int z) const
+void Block::OnBlockAddedInWorld(World::World* world, int x, i_height y, int z, i_data data) const
 {
     if (script)
     {
-        script->OnBlockAdded(world, x, y, z);
+        script->OnBlockAdded(world, x, y, z, data);
     }
 }
 

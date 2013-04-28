@@ -11,6 +11,8 @@
 #include "Basics/BlockNoteScript.h"
 #include "Basics/BlockQuartzScript.h"
 #include "Basics/BlockRedstonePowered.h"
+#include "Basics/BlockRedstoneTorchActiveScript.h"
+#include "Basics/BlockRedstoneTorchIdleScript.h"
 #include "Basics/BlockRedstoneWireScript.h"
 #include "Basics/BlockSignGroundScript.h"
 #include "Basics/BlockSignWallScript.h"
@@ -33,6 +35,8 @@ void RegisterBlockScript()
     new BlockNoteScript();
     new BlockQuartzScript();
     new BlockRedstonePowered();
+    new BlockRedstoneTorchActiveScript();
+    new BlockRedstoneTorchIdleScript();
     new BlockRedstoneWireScript();
     new BlockSignGroundScript();
     new BlockSignWallScript();

@@ -16,6 +16,11 @@ BlockTorchScript::~BlockTorchScript()
 {
 }
 
+BlockTorchScript::BlockTorchScript(const char* scriptName)
+    : BlockScript(scriptName)
+{
+}
+
 BlockScript* BlockTorchScript::Copy()
 {
     return new BlockTorchScript(*this);
@@ -73,7 +78,7 @@ void BlockTorchScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_hei
          break;
      case FACE_NONE:
      default:
-         data = 0;
+         data = 5;
          return;
      };
 }

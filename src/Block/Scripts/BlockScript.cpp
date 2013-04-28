@@ -73,7 +73,7 @@ i_powerlevel BlockScript::GetWeakPowerLevel(World::World* world, int x, i_height
     return 0;
 }
 
-void BlockScript::OnBlockAdded(World::World* world, int x, i_height y, int z) const
+void BlockScript::OnBlockAdded(World::World* world, int x, i_height y, int z, i_data data) const
 {
 }
 

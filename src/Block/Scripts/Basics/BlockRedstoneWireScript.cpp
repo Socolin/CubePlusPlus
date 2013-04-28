@@ -33,7 +33,7 @@ bool BlockRedstoneWireScript::CanPlace(World::World* world, int x, i_height y, i
     return false;
 }
 
-void BlockRedstoneWireScript::OnBlockAdded(World::World* world, int x, i_height y, int z) const
+void BlockRedstoneWireScript::OnBlockAdded(World::World* world, int x, i_height y, int z, i_data data) const
 {
     const_cast<BlockRedstoneWireScript*>(this)->updateAndPropagateCurrentStrength(world, x, y, z);
     world->NotifyNeighborsForBlockChange(x, y + 1, z, baseBlock->GetBlockId());
@@ -206,7 +206,16 @@ i_powerlevel BlockRedstoneWireScript::GetWeakPowerLevel(World::World* world, int
             }
         }
 
-        return !isNorthBlockPowered && !isEaseBlockPowered && !isWestBlockPowered && !isSouthBlockPowered && side >= 2 && side <= 5 ? metadata : (side == 2 && isNorthBlockPowered && !isWestBlockPowered && !isEaseBlockPowered ? metadata : (side == 3 && isSouthBlockPowered && !isWestBlockPowered && !isEaseBlockPowered ? metadata : (side == 4 && isWestBlockPowered && !isNorthBlockPowered && !isSouthBlockPowered ? metadata : (side == 5 && isEaseBlockPowered && !isNorthBlockPowered && !isSouthBlockPowered ? metadata : 0))));
+        if (!isNorthBlockPowered && !isEaseBlockPowered && !isWestBlockPowered && !isSouthBlockPowered && side >= 2 && side <= 5)
+            return metadata;
+        if (side == 2 && isNorthBlockPowered && !isWestBlockPowered && !isEaseBlockPowered)
+            return metadata;
+        if (side == 3 && isSouthBlockPowered && !isWestBlockPowered && !isEaseBlockPowered)
+            return metadata;
+        if (side == 4 && isWestBlockPowered && !isNorthBlockPowered && !isSouthBlockPowered)
+            return metadata;
+        if (side == 5 && isEaseBlockPowered && !isNorthBlockPowered && !isSouthBlockPowered)
+            return metadata;
     }
     return 0;
 }
@@ -310,7 +319,7 @@ void BlockRedstoneWireScript::calculateCurrentChanges(World::World* world, int x
 
     if (blockMetadata != blockPower)
     {
-        world->ChangeDataNoEvent(x, y, z, blockPower);
+        world->ChangeDataNotify(x, y, z, blockPower);
         blocksToUpdate.emplace_back(x, y, z);
         blocksToUpdate.emplace_back(x - 1, y, z);
         blocksToUpdate.emplace_back(x + 1, y, z);
@@ -351,7 +360,7 @@ bool BlockRedstoneWireScript::isPowerProviderOrWire(World::World* world, int x, 
     {
         return false;
     }
-    else if (blockId == redstoneRepeaterActiveBlockId || blockId == redstoneRepeaterIdleBlockId)
+    else if (blockId != redstoneRepeaterActiveBlockId && blockId != redstoneRepeaterIdleBlockId)
     {
         const Block::Block* block = Block::BlockList::getBlock(blockId);
         return block != nullptr && block->CanProvidePower() && side != -1;
@@ -383,6 +392,22 @@ bool BlockRedstoneWireScript::isPoweredOrRepeater(World::World* world, int x, i_
         {
             return false;
         }
+    }
+}
+
+void BlockRedstoneWireScript::InitParam(int paramId, int param)
+{
+    switch (paramId)
+    {
+    case SCRIPTINGPARAM_BLOCK_REDSTONEWIRE_REDSTONEWIREBLOCKID:
+        redstoneWireBlockId = param;
+        break;
+    case SCRIPTINGPARAM_BLOCK_REDSTONEWIRE_REDSTONEREPEATERACTIVEBLOCKID:
+        redstoneRepeaterActiveBlockId = param;
+        break;
+    case CRIPTINGPARAM_BLOCK_REDSTONEWIRE_REDSTONEREPEATERIDLEBLOCKID:
+        redstoneRepeaterIdleBlockId = param;
+        break;
     }
 }
 

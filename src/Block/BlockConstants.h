@@ -38,6 +38,18 @@ const int zOffsetsForSidesXYZ[6] = {0, 0, 0, 0, -1, 1};
             int VarName##X = BlocX + xOffsetsForSidesXYZ[side];     \
             int VarName##Z = BlocZ + zOffsetsForSidesXYZ[side];     \
 
+const int xOffsetsForSidesYXZ[6] = {0, 0, -1, 1, 0, 0};
+const int yOffsetsForSidesYXZ[6] = {-1, 1, 0, 0, 0, 0};
+const int zOffsetsForSidesYXZ[6] = {0, 0, 0, 0, -1, 1};
+
+#define FOR_EACH_SIDE_YXZ(BlocX, BlocY, BlocZ, VarName)             \
+        for (int side = 0; side < 6; side++)                        \
+        {                                                           \
+            int VarName##Y = BlocY + yOffsetsForSidesYXZ[side];     \
+            if (VarName##Y < 0 || VarName##Y > 255)                 \
+                continue;                                           \
+            int VarName##X = BlocX + xOffsetsForSidesYXZ[side];     \
+            int VarName##Z = BlocZ + zOffsetsForSidesYXZ[side];     \
 
 #define BLOCK_COUNT 256
 
