@@ -23,7 +23,9 @@ public:
     virtual bool CanProvidePower() const override;
     virtual i_powerlevel GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const override;
     virtual i_powerlevel GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const override;
-
+    virtual void OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const override;
+private:
+    void notifyNearBlock(World::World* world, int x, i_height y, int z, i_data data) const;
 };
 
 } /* namespace Scripting */

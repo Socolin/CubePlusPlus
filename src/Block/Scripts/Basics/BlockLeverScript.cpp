@@ -59,34 +59,7 @@ bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, 
     i_data clickedBlockData = world->GetBlockData(x, y, z);
     world->ChangeDataNotify(x, y, z, clickedBlockData ^ 0x8);
 
-    int orientation = clickedBlockData & 7;
-    if (orientation == 1)
-    {
-       world->NotifyNeighborsForBlockChange(x - 1, y, z, baseBlock->GetBlockId());
-    }
-    else if (orientation == 2)
-    {
-       world->NotifyNeighborsForBlockChange(x + 1, y, z, baseBlock->GetBlockId());
-    }
-    else if (orientation == 3)
-    {
-       world->NotifyNeighborsForBlockChange(x, y, z - 1, baseBlock->GetBlockId());
-    }
-    else if (orientation == 4)
-    {
-       world->NotifyNeighborsForBlockChange(x, y, z + 1, baseBlock->GetBlockId());
-    }
-    else if (orientation != 5 && orientation != 6)
-    {
-       if (orientation == 0 || orientation == 7)
-       {
-           world->NotifyNeighborsForBlockChange(x, y + 1, z, baseBlock->GetBlockId());
-       }
-    }
-    else
-    {
-       world->NotifyNeighborsForBlockChange(x, y - 1, z, baseBlock->GetBlockId());
-    }
+    notifyNearBlock(world, x, y, z, clickedBlockData);
     return true;
 }
 
@@ -130,6 +103,44 @@ i_powerlevel BlockLeverScript::GetStrongPowerLevel(World::World* world, int x, i
             return 15;
     }
     return 0;
+}
+
+void BlockLeverScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
+{
+    notifyNearBlock(world, x, y, z, data);
+}
+
+
+void BlockLeverScript::notifyNearBlock(World::World* world, int x, i_height y, int z, i_data data) const
+{
+    int orientation = data & 7;
+    if (orientation == 1)
+    {
+       world->NotifyNeighborsForBlockChange(x - 1, y, z, baseBlock->GetBlockId());
+    }
+    else if (orientation == 2)
+    {
+       world->NotifyNeighborsForBlockChange(x + 1, y, z, baseBlock->GetBlockId());
+    }
+    else if (orientation == 3)
+    {
+       world->NotifyNeighborsForBlockChange(x, y, z - 1, baseBlock->GetBlockId());
+    }
+    else if (orientation == 4)
+    {
+       world->NotifyNeighborsForBlockChange(x, y, z + 1, baseBlock->GetBlockId());
+    }
+    else if (orientation != 5 && orientation != 6)
+    {
+       if (orientation == 0 || orientation == 7)
+       {
+           world->NotifyNeighborsForBlockChange(x, y + 1, z, baseBlock->GetBlockId());
+       }
+    }
+    else
+    {
+       world->NotifyNeighborsForBlockChange(x, y - 1, z, baseBlock->GetBlockId());
+    }
 }
 
 } /* namespace Scripting */
