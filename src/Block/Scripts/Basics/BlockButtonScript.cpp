@@ -54,7 +54,8 @@ bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y,
     i_data clickedBlockData = world->GetBlockData(x, y, z);
     if (!SCRIPT_BLOCK_BUTTON_ACTIVATED(clickedBlockData))
     {
-        world->ChangeDataNoEvent(x, y, z, clickedBlockData | 0x8);
+        world->ChangeDataNotify(x, y, z, clickedBlockData | 0x8);
+        notifyNeighborsUsingOrientation(world, x, y, z, clickedBlockData & 0x7);
         world->MarkBlockForUpdate(x, y, z, baseBlock->GetBlockId(), 20);
         world->PlaySound((double)x + 0.5, (double)y + 0.5, (double)z + 0.5, soundClick, 0.3, 0.6 * 63, 2);
     }
@@ -123,9 +124,64 @@ void BlockButtonScript::OnUpdateTick(World::World* world, int x, i_height y, int
 {
     if (SCRIPT_BLOCK_BUTTON_ACTIVATED(data))
     {
-        world->ChangeDataNoEvent(x, y, z, data & 0x7);
-        world->MarkBlockForUpdate(x, y, z, baseBlock->GetBlockId(), 20);
+        world->ChangeDataNotify(x, y, z, data & 0x7);
+        notifyNeighborsUsingOrientation(world, x, y, z, data & 0x7);
         world->PlaySound((double)x + 0.5, (double)y + 0.5, (double)z + 0.5, soundClick, 0.3, 0.6 * 63, 2);
+    }
+}
+
+bool BlockButtonScript::CanProvidePower() const
+{
+    return true;
+}
+
+i_powerlevel BlockButtonScript::GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+{
+    if (SCRIPT_BLOCK_BUTTON_ACTIVATED(metadata))
+        return 15;
+    return 0;
+}
+
+i_powerlevel BlockButtonScript::GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+{
+    if (SCRIPT_BLOCK_BUTTON_ACTIVATED(metadata))
+    {
+        int orientation = metadata & 7;
+        if (orientation == 5 && side == 1)
+            return 15;
+        if (orientation == 4 && side == 2)
+            return 15;
+        if (orientation == 3 && side == 3)
+            return 15;
+        if (orientation == 2 && side == 4)
+            return 15;
+        if (orientation == 1 && side == 5)
+            return 15;
+    }
+    return 0;
+}
+
+void BlockButtonScript::notifyNeighborsUsingOrientation(World::World* world, int x, i_height y, int z, int orientation) const
+{
+    if (orientation == 1)
+    {
+        world->NotifyNeighborsForBlockChange(x - 1, y, z, baseBlock->GetBlockId());
+    }
+    else if (orientation == 2)
+    {
+        world->NotifyNeighborsForBlockChange(x + 1, y, z, baseBlock->GetBlockId());
+    }
+    else if (orientation == 3)
+    {
+        world->NotifyNeighborsForBlockChange(x, y, z - 1, baseBlock->GetBlockId());
+    }
+    else if (orientation == 4)
+    {
+        world->NotifyNeighborsForBlockChange(x, y, z + 1, baseBlock->GetBlockId());
+    }
+    else
+    {
+        world->NotifyNeighborsForBlockChange(x, y - 1, z, baseBlock->GetBlockId());
     }
 }
 

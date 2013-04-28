@@ -23,6 +23,12 @@ public:
     virtual bool CanPlace(World::World* world, int x, unsigned char y, int z, char face) const override;
     virtual void OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const override;
     virtual void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const override;
+
+    virtual bool CanProvidePower() const override;
+    virtual i_powerlevel GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const override;
+    virtual i_powerlevel GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const override;
+private:
+    void notifyNeighborsUsingOrientation(World::World* world, int x, i_height y, int z, int orientation) const;
 private:
     std::wstring soundClick;
 };
