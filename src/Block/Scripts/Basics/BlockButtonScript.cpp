@@ -23,7 +23,7 @@ BlockScript* BlockButtonScript::Copy()
     return new BlockButtonScript(*this);
 }
 
-void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x*/, i_height /*y*/, int /*z*/, int face, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     switch (face)
     {
@@ -48,7 +48,7 @@ void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_he
      }
 }
 
-bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, Inventory::ItemStack& /*item*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->getWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);
@@ -92,7 +92,7 @@ bool BlockButtonScript::CanPlace(World::World* world, int x, unsigned char y, in
     return false;
 }
 
-void BlockButtonScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
+void BlockButtonScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block /*neighborBlockId*/) const
 {
     i_data orientation = world->GetBlockData(x, y, z);
     orientation &= 0x7;
@@ -135,14 +135,14 @@ bool BlockButtonScript::CanProvidePower() const
     return true;
 }
 
-i_powerlevel BlockButtonScript::GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+i_powerlevel BlockButtonScript::GetWeakPowerLevel(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int /*side*/, i_data metadata) const
 {
     if (SCRIPT_BLOCK_BUTTON_ACTIVATED(metadata))
         return 15;
     return 0;
 }
 
-i_powerlevel BlockButtonScript::GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+i_powerlevel BlockButtonScript::GetStrongPowerLevel(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int side, i_data metadata) const
 {
     if (SCRIPT_BLOCK_BUTTON_ACTIVATED(metadata))
     {

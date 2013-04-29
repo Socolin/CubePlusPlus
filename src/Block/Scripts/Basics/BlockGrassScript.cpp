@@ -20,7 +20,7 @@ BlockScript* BlockGrassScript::Copy()
 {
     return new BlockGrassScript(*this);
 }
-void BlockGrassScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
+void BlockGrassScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
     i_lightvalue blockRealLightValue = world->GetRealLightValueAt(x, y + 1, z) ;
     if (blockRealLightValue < 4 && world->GetBlockLightOpacity(x, y + 1, z) > 2)

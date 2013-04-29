@@ -25,13 +25,13 @@ BlockScript* BlockFallingScript::Copy()
     return new BlockFallingScript(*this);
 }
 
-void BlockFallingScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+void BlockFallingScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int /*face*/, i_block& blockId, i_data& /*data*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     assert(player->getWorld() != NULL);
     player->getWorld()->MarkBlockForUpdate(x, y, z, blockId, 5);
 }
 
-void BlockFallingScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
+void BlockFallingScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block /*neighborBlockId*/) const
 {
     world->MarkBlockForUpdate(x, y, z, baseBlock->GetBlockId(), 5);
 }

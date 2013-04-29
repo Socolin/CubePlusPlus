@@ -21,7 +21,7 @@ bool TileEntityNote::NeedUpdate()
     return false;
 }
 
-void TileEntityNote::GetDataPacket(Network::NetworkPacket& packet)
+void TileEntityNote::GetDataPacket(Network::NetworkPacket& /*packet*/)
 {
 }
 

@@ -3,7 +3,7 @@
 namespace Block
 {
 
-SoundBlock::SoundBlock(std::wstring& breakSound, std::wstring& stepSound, std::wstring& placeSound, float volume, float modifier)
+SoundBlock::SoundBlock(std::wstring& /*breakSound*/, std::wstring& stepSound, std::wstring& placeSound, float volume, float modifier)
     : volume(volume)
     , modifier(modifier)
     , stepSound(stepSound)

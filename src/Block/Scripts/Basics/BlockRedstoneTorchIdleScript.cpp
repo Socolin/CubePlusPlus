@@ -40,7 +40,7 @@ void BlockRedstoneTorchIdleScript::OnUpdateTick(World::World* world, int x, i_he
     }
 }
 
-void BlockRedstoneTorchIdleScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
+void BlockRedstoneTorchIdleScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block /*neighborBlockId*/) const
 {
     // TODO: check can stay with parent_type
     i_data data = world->GetBlockData(x, y, z);

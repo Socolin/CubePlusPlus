@@ -34,7 +34,7 @@ void EntityPainting::GetCreatePacket(Network::NetworkPacket& packet)
     metadataManager.Write(packet);
 }
 
-void EntityPainting::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
+void EntityPainting::GetSpecificUpdatePacket(Network::NetworkPacket& /*packet*/)
 {
 }
 

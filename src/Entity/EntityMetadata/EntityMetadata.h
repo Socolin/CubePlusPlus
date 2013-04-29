@@ -26,7 +26,7 @@ public:
     EntityMetadata(int valueId, eDataType type);
     virtual ~EntityMetadata();
     virtual void Write(Network::NetworkPacket& packet) = 0;
-    const eDataType getType() const;
+    eDataType getType() const;
 protected:
     int valueId;
     const eDataType type;

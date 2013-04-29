@@ -190,7 +190,7 @@ void EntityPlayer::DropItem(Inventory::ItemStack& itemstack)
         world->AddEntity(item);
     }
 }
-void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char face)
+void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*face*/)
 {
     if (!world)
         return;

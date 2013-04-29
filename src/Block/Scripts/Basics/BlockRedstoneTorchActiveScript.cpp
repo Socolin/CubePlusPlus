@@ -49,7 +49,7 @@ void BlockRedstoneTorchActiveScript::OnUpdateTick(World::World* world, int x, i_
     }
 }
 
-void BlockRedstoneTorchActiveScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
+void BlockRedstoneTorchActiveScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block /*neighborBlockId*/) const
 {
     // TODO: check can stay with parent_type
     i_data data = world->GetBlockData(x, y, z);
@@ -59,14 +59,14 @@ void BlockRedstoneTorchActiveScript::OnNeighborChange(World::World* world, int x
     }
 }
 
-void BlockRedstoneTorchActiveScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
+void BlockRedstoneTorchActiveScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
     FOR_EACH_SIDE_YXZ(x, y, z, BlockSide)
         world->NotifyNeighborsForBlockChange(BlockSideX, BlockSideY, BlockSideZ, baseBlock->GetBlockId());
     }
 }
 
-i_powerlevel BlockRedstoneTorchActiveScript::GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+i_powerlevel BlockRedstoneTorchActiveScript::GetWeakPowerLevel(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int side, i_data metadata) const
 {
     if (metadata == 5 && side == 1)
         return 0;

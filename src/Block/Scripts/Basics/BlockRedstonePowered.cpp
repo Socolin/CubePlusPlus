@@ -22,7 +22,7 @@ bool BlockRedstonePowered::CanProvidePower() const
     return true;
 }
 
-i_powerlevel BlockRedstonePowered::GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+i_powerlevel BlockRedstonePowered::GetWeakPowerLevel(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int /*side*/, i_data /*metadata*/) const
 {
     return 15;
 }

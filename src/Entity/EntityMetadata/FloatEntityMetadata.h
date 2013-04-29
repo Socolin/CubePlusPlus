@@ -12,7 +12,7 @@ public:
     FloatEntityMetadata(int valueId, float value);
     virtual ~FloatEntityMetadata();
     virtual void Write(Network::NetworkPacket& packet) override;
-    const float getValue() const;
+    float getValue() const;
 
 private:
     const float value;

@@ -150,7 +150,7 @@ void Block::Destroy(World::World* world, int x, i_height y, int z, i_data data) 
     }
 }
 
-const bool Block::CanProvidePower() const
+bool Block::CanProvidePower() const
 {
     if (script)
     {

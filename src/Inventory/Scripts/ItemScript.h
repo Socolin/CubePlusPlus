@@ -25,9 +25,9 @@ public:
 
     void Init(Inventory::Item* item);
 
-    virtual void InitParam(int paramId, int param) {}
-    virtual void InitParam(int paramId, float param) {}
-    virtual void InitParam(int paramId, const std::string& param) {}
+    virtual void InitParam(int /*paramId*/, int /*param*/) {}
+    virtual void InitParam(int /*paramId*/, float /*param*/) {}
+    virtual void InitParam(int /*paramId*/, const std::string& /*param*/) {}
 
     // Return false if nothing done, return true if item has been used
     virtual bool OnUse(World::EntityPlayer* user, Inventory::ItemStack& item) const;

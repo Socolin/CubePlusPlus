@@ -31,7 +31,7 @@ bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, 
     return false;
 }
 
-bool Item::Use(World::EntityPlayer* user, ItemStack& item) const
+bool Item::Use(World::EntityPlayer* /*user*/, ItemStack& /*item*/) const
 {
 	if (script != nullptr)
 	{

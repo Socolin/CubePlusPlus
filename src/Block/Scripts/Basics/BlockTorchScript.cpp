@@ -60,7 +60,7 @@ bool BlockTorchScript::CanPlace(World::World* world, int x, unsigned char y, int
     return false;
 }
 
-void BlockTorchScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+void BlockTorchScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x*/, i_height /*y*/, int /*z*/, int face, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
 	switch (face)
     {
@@ -83,7 +83,7 @@ void BlockTorchScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_hei
      };
 }
 
-void BlockTorchScript::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const
+void BlockTorchScript::GetBoundingBoxes(int /*x*/, int /*y*/, int /*z*/, i_data /*data*/, std::vector<Util::AABB>& /*bbList*/) const
 {
 }
 

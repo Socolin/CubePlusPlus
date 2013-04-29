@@ -177,7 +177,7 @@ public:
      * Get if a block can emit redstone signal or not
      * @return if block can power a redstone system
      */
-    const bool CanProvidePower() const;
+    bool CanProvidePower() const;
 
     i_powerlevel GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side) const;
 

@@ -23,7 +23,7 @@ bool TileEntityRecordPlayer::NeedUpdate()
     return false;
 }
 
-void TileEntityRecordPlayer::GetDataPacket(Network::NetworkPacket& packet)
+void TileEntityRecordPlayer::GetDataPacket(Network::NetworkPacket& /*packet*/)
 {
 }
 

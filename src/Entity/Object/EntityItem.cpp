@@ -87,7 +87,7 @@ void EntityItem::UpdateTick()
 
 }
 
-void EntityItem::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
+void EntityItem::GetSpecificUpdatePacket(Network::NetworkPacket& /*packet*/)
 {
 }
 

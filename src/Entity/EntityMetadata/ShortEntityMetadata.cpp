@@ -21,7 +21,7 @@ void ShortEntityMetadata::Write(Network::NetworkPacket& packet)
     packet << header << value;
 }
 
-const short ShortEntityMetadata::getValue() const
+short ShortEntityMetadata::getValue() const
 {
     return value;
 }

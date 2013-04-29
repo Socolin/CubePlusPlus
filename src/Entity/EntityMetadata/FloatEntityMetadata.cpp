@@ -21,7 +21,7 @@ void FloatEntityMetadata::Write(Network::NetworkPacket& packet)
     packet << header << value;
 }
 
-const float FloatEntityMetadata::getValue() const
+float FloatEntityMetadata::getValue() const
 {
     return value;
 }

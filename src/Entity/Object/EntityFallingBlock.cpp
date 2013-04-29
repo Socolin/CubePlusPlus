@@ -51,7 +51,7 @@ void EntityFallingBlock::UpdateTick()
     }
 }
 
-void EntityFallingBlock::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
+void EntityFallingBlock::GetSpecificUpdatePacket(Network::NetworkPacket& /*packet*/)
 {
 }
 

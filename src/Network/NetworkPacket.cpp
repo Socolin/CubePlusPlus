@@ -182,7 +182,7 @@ void NetworkPacket::dump() const
             std::cout << " |";
             for (int b = startline; b < startline + 16; b++)
             {
-                if (packetData[b] >= 32 && packetData[b] <= 127)
+                if (packetData[b] >= 32)
                     std::cout << packetData[b];
                 else
                     std::cout << ".";
@@ -199,7 +199,7 @@ void NetworkPacket::dump() const
         std::cout << "|";
         for (unsigned b = startline; b < packetSize; b++)
         {
-            if (packetData[b] >= 32 && packetData[b] <= 127)
+            if (packetData[b] >= 32)
                 std::cout << packetData[b];
             else
                 std::cout << ".";

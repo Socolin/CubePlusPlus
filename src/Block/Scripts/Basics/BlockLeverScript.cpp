@@ -21,7 +21,7 @@ BlockScript* BlockLeverScript::Copy()
     return new BlockLeverScript(*this);
 }
 
-void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i_height /*y*/, int /*z*/, int face, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     switch (face)
     {
@@ -53,7 +53,7 @@ void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_hei
      }
 }
 
-bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, Inventory::ItemStack& /*item*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->getWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);
@@ -69,14 +69,14 @@ bool BlockLeverScript::CanProvidePower() const
     return true;
 }
 
-i_powerlevel BlockLeverScript::GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+i_powerlevel BlockLeverScript::GetWeakPowerLevel(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int /*side*/, i_data metadata) const
 {
     if (metadata & 8)
         return 15;
     return 0;
 }
 
-i_powerlevel BlockLeverScript::GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const
+i_powerlevel BlockLeverScript::GetStrongPowerLevel(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int side, i_data metadata) const
 {
     if ((metadata & 8) == 0)
     {

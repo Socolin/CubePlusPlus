@@ -11,7 +11,7 @@ public:
     CharEntityMetadata(int valueId, char value);
     virtual ~CharEntityMetadata();
     virtual void Write(Network::NetworkPacket& packet) override;
-    const char getValue() const;
+    char getValue() const;
 private:
     const char value;
 };

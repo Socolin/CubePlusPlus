@@ -21,7 +21,7 @@ void CharEntityMetadata::Write(Network::NetworkPacket& packet)
     packet << header << value;
 }
 
-const char CharEntityMetadata::getValue() const
+char CharEntityMetadata::getValue() const
 {
     return value;
 }

@@ -13,7 +13,7 @@ EntityMetadata::~EntityMetadata()
 {
 }
 
-const EntityMetadata::eDataType EntityMetadata::getType() const
+EntityMetadata::eDataType EntityMetadata::getType() const
 {
     return type;
 }

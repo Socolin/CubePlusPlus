@@ -12,7 +12,7 @@ public:
     ShortEntityMetadata(int valueId, short value);
     virtual ~ShortEntityMetadata();
     virtual void Write(Network::NetworkPacket& packet) override;
-    const short getValue() const;
+    short getValue() const;
 
 private:
     const short value;

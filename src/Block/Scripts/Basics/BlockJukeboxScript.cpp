@@ -22,7 +22,7 @@ BlockScript* BlockJukeboxScript::Copy()
 {
     return new BlockJukeboxScript(*this);
 }
-bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, Inventory::ItemStack& item, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->getWorld();
     World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
@@ -62,7 +62,7 @@ bool BlockJukeboxScript::UseTileEntity() const
     return true;
 }
 
-void BlockJukeboxScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
+void BlockJukeboxScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
 	EjectRecord(world, x, y, z);
 }

@@ -153,7 +153,7 @@ void Entity::Move(double dx, double dy, double dz)
     motionZ = dz;
 }
 
-void Entity::Teleport(double x, double y, double z, float yaw, float pitch)
+void Entity::Teleport(double x, double y, double z, float /*yaw*/, float /*pitch*/)
 {
     Relocate(x, y, z);
     // TODO
@@ -266,7 +266,7 @@ void Entity::moveToChunk(int newChunkX, int newChunkZ)
     vChunk->AddEntity(this);
 }
 
-void Entity::Interact(EntityPlayer* player)
+void Entity::Interact(EntityPlayer* /*player*/)
 {
 }
 

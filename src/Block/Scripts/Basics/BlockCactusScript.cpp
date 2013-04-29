@@ -22,7 +22,7 @@ BlockScript* BlockCactusScript::Copy()
     return new BlockCactusScript(*this);
 }
 
-bool BlockCactusScript::CanPlace(World::World* world, int x, i_height y, int z, char face) const
+bool BlockCactusScript::CanPlace(World::World* world, int x, i_height y, int z, char /*face*/) const
 {
     if((BlockCactusScript::baseBlock->GetBlockId() == world->GetBlockId(x, y - 1, z) || allowed_to_grow_on.find(world->GetBlockId(x, y - 1, z)) != allowed_to_grow_on.end()) && CheckSideBySideBlocks(world, x, y, z))
     	return true;
@@ -30,7 +30,7 @@ bool BlockCactusScript::CanPlace(World::World* world, int x, i_height y, int z, 
     return false;
 }
 
-void BlockCactusScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
+void BlockCactusScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
 	//If the cactus can grow
 	if(y+1 < 255 && world->GetBlockId(x, y + 1, z) == 0)
@@ -59,7 +59,7 @@ void BlockCactusScript::OnUpdateTick(World::World* world, int x, i_height y, int
 	}
 }
 
-void BlockCactusScript::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const
+void BlockCactusScript::GetBoundingBoxes(int /*x*/, int /*y*/, int /*z*/, i_data /*data*/, std::vector<Util::AABB>& /*bbList*/) const
 {
 }
 
@@ -81,7 +81,7 @@ void BlockCactusScript::InitParam(int paramId, const std::string& param)
     }
 }
 
-void BlockCactusScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
+void BlockCactusScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block /*neighborBlockId*/) const
 {
 	if(!CheckSideBySideBlocks(world, x, y, z) || (BlockCactusScript::baseBlock->GetBlockId() != world->GetBlockId(x, y - 1, z) && allowed_to_grow_on.find(world->GetBlockId(x, y - 1, z)) == allowed_to_grow_on.end()))
 	{

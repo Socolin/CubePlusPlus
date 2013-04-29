@@ -21,7 +21,7 @@ void IntegerEntityMetadata::Write(Network::NetworkPacket& packet)
     packet << header << value;
 }
 
-const int IntegerEntityMetadata::getValue() const
+int IntegerEntityMetadata::getValue() const
 {
     return value;
 }

@@ -19,7 +19,7 @@ BlockScript* BlockRedstoneWireScript::Copy()
     return new BlockRedstoneWireScript(*this);
 }
 
-bool BlockRedstoneWireScript::CanPlace(World::World* world, int x, i_height y, int z, char face) const
+bool BlockRedstoneWireScript::CanPlace(World::World* world, int x, i_height y, int z, char /*face*/) const
 {
     if (y == 0)
         return false;
@@ -33,7 +33,7 @@ bool BlockRedstoneWireScript::CanPlace(World::World* world, int x, i_height y, i
     return false;
 }
 
-void BlockRedstoneWireScript::OnBlockAdded(World::World* world, int x, i_height y, int z, i_data data) const
+void BlockRedstoneWireScript::OnBlockAdded(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
     const_cast<BlockRedstoneWireScript*>(this)->updateAndPropagateCurrentStrength(world, x, y, z);
     world->NotifyNeighborsForBlockChange(x, y + 1, z, baseBlock->GetBlockId());
@@ -80,7 +80,7 @@ void BlockRedstoneWireScript::OnBlockAdded(World::World* world, int x, i_height 
     }
 }
 
-void BlockRedstoneWireScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
+void BlockRedstoneWireScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
     i_block blockId = baseBlock->GetBlockId();
     world->NotifyNeighborsForBlockChange(x, y + 1, z, blockId);
@@ -140,11 +140,11 @@ void BlockRedstoneWireScript::OnDestroy(World::World* world, int x, i_height y, 
     }
 }
 
-void BlockRedstoneWireScript::GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const
+void BlockRedstoneWireScript::GetBoundingBoxes(int /*x*/, int /*y*/, int /*z*/, i_data /*data*/, std::vector<Util::AABB>& /*bbList*/) const
 {
 }
 
-void BlockRedstoneWireScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
+void BlockRedstoneWireScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block /*neighborBlockId*/) const
 {
     bool canStay = CanPlace(world, x, y, z, 0);
 

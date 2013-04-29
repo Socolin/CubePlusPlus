@@ -23,7 +23,7 @@ BlockScript* BlockNoteScript::Copy()
 {
     return new BlockNoteScript(*this);
 }
-bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, Inventory::ItemStack& /*item*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->getWorld();
     Block::TileEntity* tileEntity = world->GetTileEntity(x, y, z);

@@ -447,7 +447,7 @@ bool World::isChunksExistInRange(int x, i_height y, int z, int range)
 
 }
 
-bool World::isChunksExist(int xmin, i_height ymin, int zmin, int xmax, i_height ymax, int zmax)
+bool World::isChunksExist(int xmin, i_height /*ymin*/, int zmin, int xmax, i_height /*ymax*/, int zmax)
 {
     xmin >>= 4;
     zmin >>= 4;

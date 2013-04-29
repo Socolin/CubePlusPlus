@@ -38,9 +38,9 @@ public:
 
     virtual void Init(Block::Block* baseBlock);
 
-    virtual void InitParam(int paramId, int param) {}
-    virtual void InitParam(int paramId, float param) {}
-    virtual void InitParam(int paramId, const std::string& param) {}
+    virtual void InitParam(int /*paramId*/, int /*param*/) {}
+    virtual void InitParam(int /*paramId*/, float /*param*/) {}
+    virtual void InitParam(int /*paramId*/, const std::string& /*param*/) {}
 
     virtual bool CanPlace(World::World* world, int x, i_height y, int z, char face) const;
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;

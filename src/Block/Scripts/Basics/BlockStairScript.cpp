@@ -21,7 +21,7 @@ BlockScript* BlockStairScript::Copy()
     return new BlockStairScript(*this);
 }
 
-void BlockStairScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+void BlockStairScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i_height /*y*/, int /*z*/, int face, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char cursorPositionY, char /*cursorPositionZ*/) const
 {
     int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
     data = 0;
