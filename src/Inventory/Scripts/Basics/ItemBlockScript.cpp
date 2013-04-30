@@ -1,11 +1,13 @@
 #include "ItemBlockScript.h"
+
 #include "Block/Block.h"
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
 #include "Entity/EntityPlayer.h"
+#include "Util/AssertUtil.h"
+#include "Util/BlockUtil.h"
 #include "World/World.h"
 #include "World/Chunk.h"
-#include "Util/BlockUtil.h"
 
 namespace Scripting
 {
@@ -88,7 +90,7 @@ void ItemBlockScript::InitParam(int paramId, int param)
         UseMetadata = param != 0;
         break;
     default:
-        std::cerr << "BAD PARAMETER ID: " << paramId << std::endl;
+        AssertSwitchBadDefault(paramId)
         break;
     }
 }

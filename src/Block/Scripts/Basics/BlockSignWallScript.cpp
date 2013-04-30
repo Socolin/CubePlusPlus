@@ -2,6 +2,7 @@
 
 #include "Block/BlockConstants.h"
 #include "Block/TileEntities/TileEntitySign.h"
+#include "Util/AssertUtil.h"
 
 namespace Scripting
 {
@@ -41,6 +42,9 @@ void BlockSignWallScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /
          break;
      case FACE_NONE:
          return;
+     default:
+         AssertSwitchBadDefault(face)
+         break;
      };
 }
 

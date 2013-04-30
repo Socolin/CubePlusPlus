@@ -2,6 +2,7 @@
 
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
+#include "Util/AssertUtil.h"
 #include "World/World.h"
 #include "Inventory/InventoryPlayer.h"
 
@@ -65,19 +66,22 @@ void BlockCactusScript::GetBoundingBoxes(int /*x*/, int /*y*/, int /*z*/, i_data
 
 void BlockCactusScript::InitParam(int paramId, const std::string& param)
 {
-    if(paramId == 1)
+    switch (paramId)
     {
-    	std::istringstream allowed_to_grow_on_list(param);
-    	int value;
-    	for(std::string each; std::getline(allowed_to_grow_on_list, each, ',');)
-    	{
-    		std::istringstream(each) >> value;
-    		allowed_to_grow_on.insert(value);
-    	}
+    case SCRIPTINGPARAM_BLOCK_CACTUS_ALLOWEDTOGROWON:
+    {
+        std::istringstream allowed_to_grow_on_list(param);
+        int value;
+        for (std::string each; std::getline(allowed_to_grow_on_list, each, ',');)
+        {
+            std::istringstream(each) >> value;
+            allowed_to_grow_on.insert(value);
+        }
+        break;
     }
-    else
-    {
-    	std::cerr << "BAD PARAMETER ID: " << paramId << std::endl;
+    default:
+        AssertSwitchBadDefault (paramId)
+        break;
     }
 }
 

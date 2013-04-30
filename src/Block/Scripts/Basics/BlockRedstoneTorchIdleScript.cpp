@@ -1,5 +1,6 @@
 #include "BlockRedstoneTorchIdleScript.h"
 
+#include "Util/AssertUtil.h"
 #include "World/World.h"
 
 namespace Scripting
@@ -27,6 +28,9 @@ void BlockRedstoneTorchIdleScript::InitParam(int paramId, int param)
     {
     case SCRIPTINGPARAM_BLOCK_REDSTONETORCHIDLE_REDSTONETORCHACTIVEBLOCKID:
         redstoneTorchActiveBlockId = param;
+        break;
+    default:
+        AssertSwitchBadDefault(paramId)
         break;
     }
 }

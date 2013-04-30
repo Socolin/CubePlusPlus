@@ -3,9 +3,10 @@
 #include <cassert>
 #include <iostream>
 
+#include "Block/BlockConstants.h"
 #include "Entity/EntityPlayer.h"
 #include "Entity/Object/EntityFallingBlock.h"
-#include "Block/BlockConstants.h"
+#include "Util/AssertUtil.h"
 #include "World/World.h"
 
 namespace Scripting
@@ -78,7 +79,7 @@ void BlockFallingScript::InitParam(int paramId, const std::string& param)
         break;
     }
     default:
-        std::cerr << "BAD PARAMETER ID: " << paramId << std::endl;
+        AssertSwitchBadDefault(paramId)
         break;
     }
 }

@@ -4,6 +4,7 @@
 #include "World/Chunk.h"
 #include "World/World.h"
 #include "Entity/EntityPlayer.h"
+#include "Util/AssertUtil.h"
 
 namespace Scripting
 {
@@ -45,6 +46,9 @@ void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x
          break;
      case FACE_NONE:
          return;
+     default:
+         AssertSwitchBadDefault(face)
+         break;
      }
 }
 
@@ -110,6 +114,9 @@ void BlockButtonScript::OnNeighborChange(World::World* world, int x, i_height y,
         break;
     case 4:
         face = FACE_NORTH;
+        break;
+    default:
+        AssertSwitchBadDefault(orientation)
         break;
     }
 

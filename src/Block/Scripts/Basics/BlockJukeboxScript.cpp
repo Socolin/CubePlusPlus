@@ -1,10 +1,11 @@
 #include "BlockJukeboxScript.h"
 
-#include "World/World.h"
+#include "Block/TileEntities/TileEntityRecordPlayer.h"
 #include "Block/BlockList.h"
 #include "Block/BlockMaterial.h"
 #include "Entity/EntityPlayer.h"
-#include "Block/TileEntities/TileEntityRecordPlayer.h"
+#include "Util/AssertUtil.h"
+#include "World/World.h"
 
 namespace Scripting
 {
@@ -83,7 +84,9 @@ void BlockJukeboxScript::EjectRecord(World::World* world, int x, i_height y, int
 
 void BlockJukeboxScript::InitParam(int paramId, const std::string& param)
 {
-    if(paramId == 1)
+    switch (paramId)
+    {
+    case SCRIPTINGPARAM_BLOCK_JUKEBOX_ITEMLIST:
     {
     	std::istringstream allowed_items(param);
     	int value;
@@ -92,10 +95,11 @@ void BlockJukeboxScript::InitParam(int paramId, const std::string& param)
     		std::istringstream(each) >> value;
     		item_list.insert(value);
     	}
+    	break;
     }
-    else
-    {
-    	std::cerr << "BAD PARAMETER ID: " << paramId << std::endl;
+    default:
+        AssertSwitchBadDefault (paramId)
+        break;
     }
 }
 

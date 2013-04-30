@@ -12,6 +12,7 @@ namespace Scripting
  * SET @scriptId = LAST_INSERT_ID();
  * INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,1,'allowed_to_grow_on',0);
  */
+#define SCRIPTINGPARAM_BLOCK_CACTUS_ALLOWEDTOGROWON 1
 class BlockCactusScript : public BlockScript
 {
 public:

@@ -1,8 +1,10 @@
 #include "BlockLeverScript.h"
+
 #include "Block/BlockConstants.h"
+#include "Entity/EntityPlayer.h"
+#include "Util/AssertUtil.h"
 #include "World/Chunk.h"
 #include "World/World.h"
-#include "Entity/EntityPlayer.h"
 
 namespace Scripting
 {
@@ -50,6 +52,9 @@ void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i
          break;
      case FACE_NONE:
          return;
+     default:
+         AssertSwitchBadDefault(face)
+         break;
      }
 }
 

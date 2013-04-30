@@ -14,6 +14,7 @@ INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('block_jukebox',1);
 SET @scriptId = LAST_INSERT_ID();
 INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,1,'item_list',0);
  */
+#define SCRIPTINGPARAM_BLOCK_JUKEBOX_ITEMLIST 1
 class BlockJukeboxScript : public BlockScript
 {
 public:

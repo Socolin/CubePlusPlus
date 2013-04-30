@@ -1,3 +1,4 @@
+# This script fix -Wunused-parameter
 # $1 = gcc output file generate with: make 2&>1 | tee /tmp/loggcc
 while read line
 do

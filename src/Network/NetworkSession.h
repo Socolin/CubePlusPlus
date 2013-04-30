@@ -24,6 +24,7 @@ namespace Network
 #define INTERVAL_SEND_KEEPALIVE 20
 #define CURRENT_VERSION_PROTOCOL 60
 #define CURRENT_VERSION_PROTOCOL_WSTR L"60"
+#define MAX_STRING_SIZE 256
 
 enum eSessionState
 {
@@ -115,10 +116,10 @@ private:
     int readInt() throw (NetworkException);
     long readLong() throw (NetworkException);
     buffer_t readBuffer() throw (NetworkException);
-    std::wstring readString(int maxSize) throw (NetworkException);
+    std::wstring readString(const int maxSize) throw (NetworkException);
     float readFloat() throw (NetworkException);
     double readDouble() throw (NetworkException);
-    void readSlot(Inventory::ItemStack& ItemStack)  throw (NetworkException);;
+    void readSlot(Inventory::ItemStack& ItemStack)  throw (NetworkException);
 
     int socket;
     std::vector<char> buffer;

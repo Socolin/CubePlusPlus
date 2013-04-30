@@ -1,8 +1,9 @@
 #include "BlockStairScript.h"
 
 #include <cmath>
-#include "Entity/EntityPlayer.h"
 #include "Block/BlockConstants.h"
+#include "Entity/EntityPlayer.h"
+#include "Util/AssertUtil.h"
 
 namespace Scripting
 {
@@ -44,6 +45,9 @@ void BlockStairScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i
         break;
     case 3:
         data |= 0;
+        break;
+    default:
+        AssertSwitchBadDefault(playerRotation)
         break;
     }
 }

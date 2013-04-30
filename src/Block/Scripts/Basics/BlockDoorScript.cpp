@@ -2,11 +2,12 @@
 
 #include <cmath>
 
-#include "Entity/EntityPlayer.h"
 #include "Block/Block.h"
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
 #include "Block/TileEntities/TileEntityNote.h"
+#include "Entity/EntityPlayer.h"
+#include "Util/AssertUtil.h"
 #include "World/Chunk.h"
 #include "World/World.h"
 
@@ -58,6 +59,9 @@ void BlockDoorScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_heig
         data = 0;
         leftBlockZ--;
         rightBlockZ++;
+        break;
+    default:
+        AssertSwitchBadDefault(playerRotation)
         break;
     }
 
@@ -135,6 +139,9 @@ void BlockDoorScript::InitParam(int paramId, int param)
     case SCRIPTINGPARAM_BLOCK_DOOR_NEEDREDSTONE:
     	need_redstone = (param != 0);
     	break;
+    default:
+        AssertSwitchBadDefault(paramId)
+        break;
     }
 }
 

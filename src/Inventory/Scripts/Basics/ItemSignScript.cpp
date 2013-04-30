@@ -1,11 +1,13 @@
 #include "ItemSignScript.h"
+
 #include "Block/Block.h"
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
 #include "Entity/EntityPlayer.h"
+#include "Util/AssertUtil.h"
+#include "Util/BlockUtil.h"
 #include "World/World.h"
 #include "World/Chunk.h"
-#include "Util/BlockUtil.h"
 
 namespace Scripting
 {
@@ -90,7 +92,7 @@ void ItemSignScript::InitParam(int paramId, int param)
             wallBlockId = 0;
         break;
     default:
-        std::cerr << "BAD PARAMETER ID: " << paramId << std::endl;
+        AssertSwitchBadDefault(paramId)
         break;
     }
 }

@@ -221,8 +221,11 @@ void NetworkSession::SendPacket(const NetworkPacket& packet)
     }
 }
 
-std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)
+std::wstring NetworkSession::readString(const int maxSize) throw (NetworkException)
 {
+    static wchar_t utf16Text[MAX_STRING_SIZE];
+    assert(maxSize > MAX_STRING_SIZE);
+
     short length = readShort();
     if (length < 0)
         throw NetworkException("String length < 0");
@@ -233,7 +236,6 @@ std::wstring NetworkSession::readString(int maxSize) throw (NetworkException)
     if ((length * 2) + startPosInBuffer >= bufferSize)
         throw NetworkExceptionData("String length < 0");
 
-    wchar_t utf16Text[length];
     for (int i = 0; i < length; i++)
         utf16Text[i] = (short(buffer[startPosInBuffer + (i * 2)]) << 8 & 0xFF00)
                        | (short(buffer[startPosInBuffer + (i * 2 + 1)]) & 0x00FF);

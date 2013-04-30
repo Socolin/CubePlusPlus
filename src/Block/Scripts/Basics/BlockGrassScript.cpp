@@ -1,6 +1,7 @@
 #include "BlockGrassScript.h"
 
 #include "World/World.h"
+#include "Util/AssertUtil.h"
 
 namespace Scripting
 {
@@ -60,7 +61,7 @@ void BlockGrassScript::InitParam(int paramId, int param)
         grassBlockId = param;
         break;
     default:
-        std::cerr << "Bad param id:" << paramId << std::endl;
+        AssertSwitchBadDefault(paramId)
         break;
     }
 }

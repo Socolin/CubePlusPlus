@@ -3,6 +3,7 @@
 #include <cmath>
 #include "Entity/EntityPlayer.h"
 #include "Block/BlockConstants.h"
+#include "Util/AssertUtil.h"
 
 namespace Scripting
 {
@@ -39,6 +40,9 @@ void BlockJackOLanternScript::OnBlockPlacedBy(World::EntityPlayer* player, int /
         break;
     case 3:
         data |= 1;
+        break;
+    default:
+        AssertSwitchBadDefault(playerRotation)
         break;
     }
 }

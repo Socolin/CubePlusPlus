@@ -1,5 +1,7 @@
 #include "BlockWoodScript.h"
+
 #include "Block/BlockConstants.h"
+#include "Util/AssertUtil.h"
 
 namespace Scripting
 {
@@ -35,6 +37,9 @@ void BlockWoodScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x*/
          break;
      case FACE_NONE:
          return;
+     default:
+         AssertSwitchBadDefault(face)
+         break;
      };
 }
 

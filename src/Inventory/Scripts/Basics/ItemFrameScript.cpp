@@ -1,7 +1,9 @@
 #include "ItemFrameScript.h"
+
 #include "Block/BlockConstants.h"
 #include "Entity/Object/Hanging/EntityHangingFrame.h"
 #include "Entity/EntityPlayer.h"
+#include "Util/AssertUtil.h"
 #include "World/World.h"
 
 namespace Scripting
@@ -41,6 +43,9 @@ bool ItemFrameScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned ch
         break;
     case FACE_EAST: // +X
         orientation = 3;
+        break;
+    default:
+        AssertSwitchBadDefault(face)
         break;
     };
 

@@ -3,6 +3,7 @@
 #include "Block/BlockConstants.h"
 #include "Entity/Object/Hanging/EntityPainting.h"
 #include "Entity/EntityPlayer.h"
+#include "Util/AssertUtil.h"
 #include "World/World.h"
 
 namespace Scripting
@@ -44,6 +45,9 @@ bool ItemPaintingScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned
         break;
     case FACE_EAST: // +X
         orientation = 3;
+        break;
+    default:
+        AssertSwitchBadDefault(face)
         break;
     };
 

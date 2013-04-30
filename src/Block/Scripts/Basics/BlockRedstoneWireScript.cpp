@@ -1,5 +1,6 @@
 #include "BlockRedstoneWireScript.h"
 
+#include "Util/AssertUtil.h"
 #include "World/World.h"
 
 namespace Scripting
@@ -407,6 +408,9 @@ void BlockRedstoneWireScript::InitParam(int paramId, int param)
         break;
     case CRIPTINGPARAM_BLOCK_REDSTONEWIRE_REDSTONEREPEATERIDLEBLOCKID:
         redstoneRepeaterIdleBlockId = param;
+        break;
+    default:
+        AssertSwitchBadDefault(paramId)
         break;
     }
 }

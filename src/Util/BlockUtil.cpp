@@ -1,6 +1,7 @@
 #include "BlockUtil.h"
 
 #include "Block/BlockConstants.h"
+#include "AssertUtil.h"
 
 namespace Util
 {
@@ -33,6 +34,9 @@ bool UpdateXYZForSide(int side, int& x, i_height& y, int& z)
         break;
     case FACE_NONE:
         return false;
+    default:
+        AssertSwitchBadDefault(side)
+        break;
     };
     return true;
 }
