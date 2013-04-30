@@ -224,7 +224,7 @@ void NetworkSession::SendPacket(const NetworkPacket& packet)
 std::wstring NetworkSession::readString(const int maxSize) throw (NetworkException)
 {
     static wchar_t utf16Text[MAX_STRING_SIZE];
-    assert(maxSize > MAX_STRING_SIZE);
+    assert(maxSize < MAX_STRING_SIZE);
 
     short length = readShort();
     if (length < 0)
