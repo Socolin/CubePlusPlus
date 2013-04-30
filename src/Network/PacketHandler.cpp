@@ -48,7 +48,7 @@ void NetworkSession::handleHandShake() throw (NetworkException)
         throw NetworkException("Bad protocol version, use 1.5");
 
     username = readString(16);
-    std::wstring serverHost = readString(512);
+    std::wstring serverHost = readString(255);
     readInt();
 
     DEBUG_STR(username)
