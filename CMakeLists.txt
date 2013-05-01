@@ -17,7 +17,7 @@ ENDIF (ZLIB_FOUND)
 
 # Initialize CXXFLAGS.
 set(CMAKE_CXX_FLAGS                "-Wall -std=c++0x")
-set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g -Wall -Wextra -Wpedantic -Wswitch-default")
+set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g -Wall -Wextra -Wpedantic  -Wswitch-default")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
