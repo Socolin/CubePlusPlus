@@ -11,6 +11,8 @@
 #include "Entity/EntityConstants.h"
 #include "World/WorldConstants.h"
 
+#include "Block/Scripts/Basics/BlockRedstoneTorchBurnoutMgr.h"
+
 #define CHUNK_KEY(X,Z) ((((long)X << 32) & 0xffffffff00000000)| ((long)Z & 0x00000000ffffffff))
 
 namespace Network
@@ -106,6 +108,8 @@ public:
     bool isBlockIndirectlyGettingPowered(int x, i_height y, int z);
     i_powerlevel getMaxPowerFromBlockArround(int x, i_height y, int z);
 
+    Scripting::BlockRedstoneTorchBurnoutMgr* GetRedstoneTorchBurnoutMgr() const;
+
 private:
     void UpdateTime();
     VirtualChunk* CreateVirtualChunk(int x, int z);
@@ -153,6 +157,7 @@ private:
     };
     Util::BufferedRewindableQueue<struct LightUpdateData, 32768> updateLightQueue;
     i_lightvalue sunReduceValue;
+    Scripting::BlockRedstoneTorchBurnoutMgr* redstoneTorchBurnoutMgr;
 };
 
 } /* namespace World */

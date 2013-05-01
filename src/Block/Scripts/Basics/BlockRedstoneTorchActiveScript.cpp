@@ -49,7 +49,7 @@ void BlockRedstoneTorchActiveScript::OnUpdateTick(World::World* world, int x, i_
     if (isIndirectlyPowered(world, x, y, z, data))
     {
         world->ChangeBlock(x, y, z, redstoneTorchIdleBlockId, data, false);
-        // TODO: check for burnout
+        world->GetRedstoneTorchBurnoutMgr()->ChangeTorchState(x, y, z);
     }
 }
 

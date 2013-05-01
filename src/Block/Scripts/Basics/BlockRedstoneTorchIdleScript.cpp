@@ -39,8 +39,8 @@ void BlockRedstoneTorchIdleScript::OnUpdateTick(World::World* world, int x, i_he
 {
     if (!isIndirectlyPowered(world, x, y, z, data))
     {
-        // TODO: check for burnout
-        world->ChangeBlock(x, y, z, redstoneTorchActiveBlockId, data, false);
+        if (!world->GetRedstoneTorchBurnoutMgr()->CheckTorchBurnout(x, y, z))
+            world->ChangeBlock(x, y, z, redstoneTorchActiveBlockId, data, false);
     }
 }
 

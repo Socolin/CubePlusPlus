@@ -23,10 +23,12 @@ namespace World
 World::World() :
     viewDistance(10), currentEntityId(10), ageOfWorld(0), currentTime(0),sunReduceValue(0)
 {
+    redstoneTorchBurnoutMgr = new Scripting::BlockRedstoneTorchBurnoutMgr();
 }
 
 World::~World()
 {
+    delete redstoneTorchBurnoutMgr;
 }
 // Called each tick
 void World::UpdateTick()
@@ -48,6 +50,7 @@ for (std::pair<long, Chunk*> chunk : chunkMap)
         chunk.second->SendUpdate();
     }
 
+    redstoneTorchBurnoutMgr->UpdateTick();
     UpdateTime();
 }
 
@@ -973,6 +976,12 @@ i_powerlevel World::getMaxPowerFromBlockArround(int x, i_height y, int z)
     }
 
     return maxValue;
+}
+
+
+Scripting::BlockRedstoneTorchBurnoutMgr* World::GetRedstoneTorchBurnoutMgr() const
+{
+    return redstoneTorchBurnoutMgr;
 }
 
 
