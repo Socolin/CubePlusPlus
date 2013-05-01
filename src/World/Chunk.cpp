@@ -23,7 +23,7 @@ namespace World
 Chunk::Chunk(int x, int z, World* world) :
     posX(x), posZ(z), loaded(false)
     , cachePacket(Network::OP_CHUNK_DATA), blockChangePacket(Network::OP_MULTI_BLOCK_CHANGE)
-    , flagSectionExists(0), flagSectionUseAdd(0), inCache(false), countChange(0), world(world)
+    , flagSectionExists(0), flagSectionUseAdd(0), inCache(false), countChange(0), world(world), selfTickCounter(0)
     , minHeight(0), skylightNeedUpdate(false), skylightColumnsToUpdate{false}
 {
     posXx16 = x * 16;
@@ -187,7 +187,6 @@ void Chunk::UpdateTick()
         const UpdateBlockData& updateData = toUpdateBlockList.top();
         if (updateData.updateTick > selfTickCounter)
             break;
-        toUpdateBlockList.pop();
         unsigned int cellId = updateData.coord.cellId & 0xfff;
         i_block blockId;
         i_data blockData;
@@ -219,6 +218,7 @@ void Chunk::UpdateTick()
                         posZx16 + updateData.coord.coord.z, blockData);
             }
         }
+        toUpdateBlockList.pop();
     }
 
     selfTickCounter++;
