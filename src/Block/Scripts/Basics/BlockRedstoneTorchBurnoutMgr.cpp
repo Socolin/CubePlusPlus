@@ -19,7 +19,7 @@ void BlockRedstoneTorchBurnoutMgr::UpdateTick()
     while (!torchHistory.empty())
     {
         TorchData& front = torchHistory.front();
-        if (front.tick > current_tick + 60)
+        if (front.tick < current_tick - 60)
         {
             torchHistory.pop_front();
         }
