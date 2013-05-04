@@ -140,7 +140,7 @@ private:
                 *data = 0xff;
                 data++;
             }
-            addData = NULL;
+            addData = nullptr;
         }
         void clearAddData()
         {
