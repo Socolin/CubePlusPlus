@@ -22,8 +22,8 @@ NetworkManager::NetworkManager()
     sfd = 0;
     s = 0;
     efd = 0;
-    events = NULL;
-    event = epoll_event {0,epoll_data_t{0}};
+    events = nullptr;
+    event = epoll_event {0,epoll_data_t{nullptr}};
 }
 
 NetworkManager::~NetworkManager()

@@ -57,7 +57,7 @@ int WorldManager::getPlayerCount()
 }
 
 WorldManager::WorldManager() :
-    world(NULL), isRunning(true)
+    world(nullptr), isRunning(true)
 {
 
 }
@@ -71,7 +71,7 @@ WorldManager::~WorldManager()
 {
     world->Unload();
     delete world;
-    world = NULL;
+    world = nullptr;
 }
 
 void WorldManager::UpdateTick() const

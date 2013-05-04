@@ -18,7 +18,7 @@ namespace World
 {
 
 Entity::Entity(eEntityType entityType, double x, double y, double z) :
-    Position(x, y, z), entityType(entityType), world(0), entityId(0)
+    Position(x, y, z), entityType(entityType), world(nullptr), entityId(0)
     , yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false)
     , stopMoving(false), noclip(false),onGround(false)
     , motionX(0), motionY(0), motionZ(0)

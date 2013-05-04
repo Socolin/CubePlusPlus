@@ -14,7 +14,7 @@ struct OpcodeHandler
     {
         name = "UNK_OPCODE";
         state = STATE_NEVER;
-        handler = NULL;
+        handler = nullptr;
         debug = true;
     }
     OpcodeHandler(char const* name,int state,void (NetworkSession::*handler)())

@@ -29,7 +29,7 @@ Chunk::Chunk(int x, int z, World* world) :
     posXx16 = x * 16;
     posZx16 = z * 16;
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
-        datas[i] = NULL;
+        datas[i] = nullptr;
     ResetBlockChangePacket();
 }
 
@@ -89,7 +89,7 @@ void Chunk::Load()
             *data = 0x0;
             data++;
         }
-        chunkData->addData = NULL;
+        chunkData->addData = nullptr;
         datas[0] = chunkData;
         flagSectionExists |= 1;
     }
@@ -121,7 +121,7 @@ void Chunk::Load()
             *data = 0;
             data++;
         }
-        chunkData->addData = NULL;
+        chunkData->addData = nullptr;
         datas[1] = chunkData;
         flagSectionExists |= (1 << 1);
     }
