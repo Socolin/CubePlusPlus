@@ -10,7 +10,7 @@ do
         VARIABLE=`echo $line | sed -r 's/.*parameter ‘(.*)’.*/\1/g'`
         FILE=`echo $line | sed -r 's/(.*[hp]):.*/\1/g'`
         echo $FILE
-        sed -ir "${LINE}s@ ${VARIABLE}\(,\|\\\)\)@ /*${VARIABLE}*/\1@g" $FILE
+        sed -ir "${LINE}s@ ${VARIABLE}\(,\|)\)@ /*${VARIABLE}*/\1@g" $FILE
     fi
 done < $1
  
