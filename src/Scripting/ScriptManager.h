@@ -9,6 +9,7 @@ namespace Scripting
 
 class BlockScript;
 class ItemScript;
+class WindowScript;
 
 class ScriptManager
 {
@@ -24,6 +25,9 @@ public:
     void RegisterScript(std::string scriptName, ItemScript* script);
     ItemScript* GetItemScript(std::string scriptName);
 
+    void RegisterScript(std::string scriptName, WindowScript* script);
+    WindowScript* GetWindowScript(std::string scriptName);
+
     void LoadScriptsIds();
     std::string GetScriptName(int scriptId);
 private:
@@ -32,6 +36,7 @@ private:
 
     std::unordered_map<std::string, BlockScript*> blockScript;
     std::unordered_map<std::string, ItemScript*> itemScript;
+    std::unordered_map<std::string, WindowScript*> windowScript;
     std::unordered_map<int, std::string> scriptsIds;
 };
 

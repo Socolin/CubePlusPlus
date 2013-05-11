@@ -12,6 +12,11 @@ TileEntity::~TileEntity()
 {
 }
 
+Inventory::Inventory* TileEntity::GetInventory()
+{
+    return nullptr;
+}
+
 eTileEntityType TileEntity::getType() const
 {
     return type;

@@ -10,6 +10,10 @@ typedef unsigned char i_data;
 typedef unsigned char i_height;
 typedef unsigned char i_small_coord; // Use to represent x and z < 16
 typedef unsigned char i_powerlevel;
+typedef short i_slot;
+typedef int i_windowId;
+typedef int i_windowDataId;
+typedef int i_entityId;
 typedef struct
 {
     i_data blockData;

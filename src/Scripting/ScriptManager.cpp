@@ -5,6 +5,8 @@
 #include "Inventory/Scripts/RegisterItemScripts.h"
 #include "Inventory/Scripts/ItemScript.h"
 #include "Database/DatabaseManager.h"
+#include "Window/Script/RegisterWindowScript.h"
+#include "Window/Script/WindowScript.h"
 
 
 #include <iostream>
@@ -46,11 +48,24 @@ ItemScript* ScriptManager::GetItemScript(std::string scriptName)
     return NULL;
 }
 
+void ScriptManager::RegisterScript(std::string scriptName, WindowScript* script)
+{
+    windowScript[scriptName] = script;
+}
+WindowScript* ScriptManager::GetWindowScript(std::string scriptName)
+{
+    auto it = windowScript.find(scriptName);
+    if (it != windowScript.end())
+        return it->second->Copy();
+    return NULL;
+}
+
 void ScriptManager::RegisterAllScripts()
 {
     std::cout << "Start registering scripts";
     RegisterBlockScript();
     RegisterItemScripts();
+    RegisterWindowScript();
 }
 
 void ScriptManager::LoadScriptsIds()

@@ -2,9 +2,8 @@
 #define INVENTORYPLAYER_H_
 
 #include "Inventory.h"
-#include "ItemStack.h"
 
-#define PLAYER_INVENTORY_SIZE 100
+#define PLAYER_INVENTORY_SIZE 100 //TODO change this
 
 namespace Inventory
 {
@@ -15,15 +14,12 @@ public:
     InventoryPlayer();
     virtual ~InventoryPlayer();
 
-    virtual ItemStack& GetSlot(int slotId);
-    virtual void SetSlot(int slotId, const ItemStack& itemStack);
-
     void setHandSlot(int slotId);
     int getHandSlotId();
     ItemStack& GetItemInHand();
 
+    void SendInventoryTo(World::EntityPlayer* entityPlayer);
 private:
-    ItemStack slot[PLAYER_INVENTORY_SIZE];
     int handSlot;
 };
 

@@ -4,6 +4,10 @@
 #include "Util/types.h"
 #include "Network/NetworkPacket.h"
 
+namespace Inventory
+{
+class Inventory;
+}
 namespace Block
 {
 
@@ -26,6 +30,7 @@ public:
     virtual bool NeedUpdate() = 0;
     virtual void GetDataPacket(Network::NetworkPacket& packet) = 0;
     virtual bool HasNetworkData() = 0;
+    virtual Inventory::Inventory* GetInventory();
     eTileEntityType getType() const;
 
     // Add tickFrequence ?
