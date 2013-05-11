@@ -98,7 +98,7 @@ void World::RemoveEntity(Entity* entity)
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
     vChunk->RemoveEntity(entity);
     entityById[entity->getEntityId()] = nullptr;
-    entity->setWorld(NULL, 0);
+    entity->setWorld(nullptr, 0);
 }
 
 void World::RemovePlayer(EntityPlayer* player)
@@ -121,7 +121,7 @@ void World::RemovePlayer(EntityPlayer* player)
 
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->RemovePlayer(player);
-    player->setWorld(NULL, 0);
+    player->setWorld(nullptr, 0);
     entityById[player->getEntityId()] = nullptr;
 }
 
