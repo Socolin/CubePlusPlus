@@ -18,6 +18,8 @@ enum eTileEntityType
     TILEENTITY_TYPE_NOTE,
     TILEENTITY_TYPE_JUKEBOX,
     TILEENTITY_TYPE_SIGN,
+    TILEENTITY_TYPE_FURNACE,
+    TILEENTITY_TYPE_MAX // Keep it at end of enum
 };
 
 class TileEntity

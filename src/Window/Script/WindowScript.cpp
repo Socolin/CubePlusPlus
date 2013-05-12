@@ -1,5 +1,6 @@
 #include "WindowScript.h"
 
+#include "Entity/EntityPlayer.h"
 #include "Scripting/ScriptManager.h"
 #include "Window/Window.h"
 
@@ -16,11 +17,12 @@ WindowScript::~WindowScript()
 {
 }
 
-void WindowScript::Init(Window::Window* /*baseWindow*/)
+void WindowScript::Init(Window::Window* baseWindow)
 {
+    this->baseWindow = baseWindow;
 }
 
-void WindowScript::OnOpenWindow(World::EntityPlayer* /*player*/)
+void WindowScript::OnOpenWindow(World::EntityPlayer* player)
 {
 }
 
@@ -28,19 +30,11 @@ void WindowScript::OnOpenWindow(World::EntityPlayer* /*player*/, Block::TileEnti
 {
 }
 
-void WindowScript::OnCloseWindow(World::EntityPlayer* /*player*/)
+void WindowScript::OnCloseWindow(World::EntityPlayer* player)
 {
 }
 
 void WindowScript::OnClickOnWindow(World::EntityPlayer* /*player*/, short /*slotId*/, char /*button*/, short /*action*/, char /*mode*/, const Inventory::ItemStack& /*slot*/)
-{
-}
-
-void WindowScript::OnSetSlot(World::EntityPlayer* /*player*/, short /*slotId*/, const Inventory::ItemStack& /*slot*/)
-{
-}
-
-void WindowScript::OnSetWindowItems(World::EntityPlayer* /*player*/, short /*slotId*/, const Inventory::ItemStack& /*slot*/)
 {
 }
 

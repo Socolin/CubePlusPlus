@@ -6,7 +6,7 @@ namespace Scripting
 {
 
 ItemScript::ItemScript(const char* scriptName)
-    : baseItem(0)
+    : baseItem(nullptr)
 {
     ScriptManager::GetInstance()->RegisterScript(scriptName, this);
 }

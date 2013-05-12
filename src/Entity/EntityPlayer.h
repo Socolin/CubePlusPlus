@@ -11,7 +11,10 @@ namespace Network
 {
 class NetworkSession;
 }
-
+namespace Window
+{
+class Window;
+}
 namespace World
 {
 #define DEFAULT_WALKING_SPEED 12
@@ -56,12 +59,23 @@ public:
         hasChangeItemInHand = true;
     }
     void PlayAnimation(char animationId);
+    const Inventory::ItemStack& GetClickedItem() const;
+    void SetClickedItem(const Inventory::ItemStack& clickedItem);
+    i_windowId GetCurrentWindow() const;
+    i_windowId GetNextAndSetCurrentWindowId();
+    void SetCurrentWindow(i_windowId currentWindow);
+
+    void OpenWindow(Window::Window* window);
+    void CloseWindow(i_windowId windowId);
 private:
     std::wstring name;
     std::queue<std::pair<int, int> > chunkToSend;
     Network::NetworkSession* session;
     Inventory::InventoryPlayer inventory;
+    Inventory::ItemStack clickedItem;
+    i_windowId currentWindowId;
     char animationId;
+    Window::Window* currentWindow;
 };
 
 } /* namespace World */

@@ -174,7 +174,8 @@ void NetworkSession::handleEntityAction() throw (NetworkException)
 }
 void NetworkSession::handleCloseWindow() throw (NetworkException)
 {
-    readByte();
+    char windowId = readByte();
+    player->CloseWindow(windowId);
 }
 void NetworkSession::handleClickWindow() throw (NetworkException)
 {

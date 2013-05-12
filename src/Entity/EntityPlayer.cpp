@@ -12,6 +12,8 @@
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "Util/FloatUtil.h"
+#include "Window/Window.h"
+#include "Window/WindowStaticData.h"
 #include "World/VirtualChunk.h"
 #include "World/VirtualSmallChunk.h"
 #include "World/World.h"
@@ -19,8 +21,12 @@
 namespace World
 {
 
-EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& name, Network::NetworkSession* session) :
-    LivingEntity(ENTITY_TYPE_PLAYER, x, y, z), name(name), session(session),animationId(-1)
+EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& name, Network::NetworkSession* session)
+    : LivingEntity(ENTITY_TYPE_PLAYER, x, y, z)
+    , name(name)
+    , session(session)
+    , currentWindowId(0)
+    , animationId(-1)
 {
 }
 
@@ -287,6 +293,47 @@ void EntityPlayer::UseEntity(int target, bool leftClick)
 void EntityPlayer::PlayAnimation(char animationId)
 {
     this->animationId = animationId;
+}
+
+const Inventory::ItemStack& EntityPlayer::GetClickedItem() const
+{
+    return clickedItem;
+}
+
+void EntityPlayer::SetClickedItem(const Inventory::ItemStack& clickedItem)
+{
+    this->clickedItem = clickedItem;
+}
+
+i_windowId EntityPlayer::GetCurrentWindow() const
+{
+    return currentWindowId;
+}
+
+void EntityPlayer::SetCurrentWindow(i_windowId currentWindow)
+{
+    this->currentWindowId = currentWindow;
+}
+
+i_windowId EntityPlayer::GetNextAndSetCurrentWindowId()
+{
+    this->currentWindowId = (this->currentWindowId % 100) + 1;
+    return this->currentWindowId;
+}
+
+void EntityPlayer::OpenWindow(Window::Window* window)
+{
+    currentWindow = window;
+}
+
+void EntityPlayer::CloseWindow(i_windowId windowId)
+{
+    if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
+    {
+        currentWindow->CloseWindow(this, true);
+        delete currentWindow;
+        currentWindow = nullptr;
+    }
 }
 
 } /* namespace World */

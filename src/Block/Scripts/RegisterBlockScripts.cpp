@@ -4,6 +4,7 @@
 #include "Basics/BlockCactusScript.h"
 #include "Basics/BlockDoorScript.h"
 #include "Basics/BlockFallingScript.h"
+#include "Basics/BlockFurnaceScript.h"
 #include "Basics/BlockGrassScript.h"
 #include "Basics/BlockJackOLanternScript.h"
 #include "Basics/BlockJukeboxScript.h"
@@ -28,6 +29,7 @@ void RegisterBlockScript()
     new BlockCactusScript();
     new BlockDoorScript();
     new BlockFallingScript();
+    new BlockFurnaceScript();
     new BlockGrassScript();
     new BlockJackOLanternScript();
     new BlockJukeboxScript();

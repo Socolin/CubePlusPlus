@@ -7,6 +7,8 @@
 #include "Database/DatabaseManager.h"
 #include "Database/MiscData/PaintingData.h"
 #include "Scripting/ScriptManager.h"
+#include "Window/WindowList.h"
+
 #include <iostream>
 #include <ctime>
 
@@ -35,6 +37,7 @@ int main(void)
     // Load data
     Block::BlockList::Instance().InitInstance();
     Inventory::ItemList::Instance().InitInstance();
+    Window::WindowList::Instance().InitInstance();
     Database::PaintingData::Instance().InitInstance();
 
     // Tick time management

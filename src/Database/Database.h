@@ -133,4 +133,16 @@ enum eDatabaseField
 };
 }
 
+namespace TableWindow
+{
+enum eDatabaseField
+{
+    id = 1,
+    name,
+    maxSlot,
+    script,
+    clientWindowId,
+};
+}
+
 #endif /* DATABASE_H_ */
