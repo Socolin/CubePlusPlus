@@ -3,7 +3,7 @@
 
 #include "Inventory.h"
 
-#define PLAYER_INVENTORY_SIZE 100 //TODO change this
+#define PLAYER_INVENTORY_SIZE 36 //TODO change this
 
 namespace Inventory
 {
@@ -17,8 +17,6 @@ public:
     void setHandSlot(int slotId);
     int getHandSlotId();
     ItemStack& GetItemInHand();
-
-    void SendInventoryTo(World::EntityPlayer* entityPlayer);
 private:
     int handSlot;
 };

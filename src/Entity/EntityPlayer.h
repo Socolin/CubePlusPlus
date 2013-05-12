@@ -59,14 +59,16 @@ public:
         hasChangeItemInHand = true;
     }
     void PlayAnimation(char animationId);
-    const Inventory::ItemStack& GetClickedItem() const;
-    void SetClickedItem(const Inventory::ItemStack& clickedItem);
+    Inventory::ItemStack& GetClickedItem();
+    void SetClickedItem(Inventory::ItemStack clickedItem);
     i_windowId GetCurrentWindow() const;
     i_windowId GetNextAndSetCurrentWindowId();
     void SetCurrentWindow(i_windowId currentWindow);
 
     void OpenWindow(Window::Window* window);
     void CloseWindow(i_windowId windowId);
+    void ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack& slot);
+
 private:
     std::wstring name;
     std::queue<std::pair<int, int> > chunkToSend;

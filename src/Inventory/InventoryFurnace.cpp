@@ -27,8 +27,4 @@ int InventoryFurnace::GetInputSlotId()
     return INVENTORY_FURNACE_INPUT_SLOT;
 }
 
-void InventoryFurnace::SendInventoryTo(World::EntityPlayer* /*entityPlayer*/)
-{
-}
-
 } /* namespace Inventory */

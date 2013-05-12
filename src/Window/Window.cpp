@@ -55,6 +55,14 @@ void Window::OpenWindow(World::EntityPlayer* player, int x, i_height y, int z)
     Network::NetworkPacket openWindowPacket(Network::OP_OPEN_WINDOW);
     openWindowPacket << id << windowData->GetClientWindowId() << windowData->getName() << windowData->getMaxSlot() << true;
     player->Send(openWindowPacket);
+
+    Network::NetworkPacket setWindowItemPacket(Network::OP_SET_WINDOW_ITEMS);
+    setWindowItemPacket << id << (short)        windowData->getMaxSlot();
+    for (Inventory::Inventory* inv : inventoryList)
+    {
+        inv->SendInventoryTo(player, setWindowItemPacket);
+    }
+    player->Send(setWindowItemPacket);
 }
 
 void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
@@ -65,7 +73,7 @@ void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
     {
         inv->CloseInventory(player);
     }
-    player->GetInventory().OpenInventory(player, 0);
+    player->GetInventory().OpenInventory(player, 0, 9);
 
     if (!askByPlayer)
     {
@@ -75,14 +83,45 @@ void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
     }
 }
 
-void Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack& slot)
+bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack& slot)
 {
-    if (slotId < windowData->getMaxSlot())
+    if (slotId >= 0 && slotId < windowData->getMaxSlot())
     {
         script->OnClickOnWindow(player, slotId, button, action, mode, slot);
 
-        // lot of thing to do here
+        int slotOffsetInInventory = 0;
+        Inventory::Inventory* inventory = nullptr;
+        for (Inventory::Inventory* inv : inventoryList)
+        {
+            int maxSlot = inv->GetMaxSlot();
+            if (maxSlot + slotOffsetInInventory > slotId)
+            {
+                inventory = inv;
+                break;
+            }
+            slotOffsetInInventory += maxSlot;
+        }
+        if (inventory == nullptr)
+        {
+            return false;
+        }
+        Inventory::ItemStack clickedItem = player->GetClickedItem();
+        Inventory::ItemStack itemInSlot = inventory->GetSlot(slotId - slotOffsetInInventory);
+        if (mode == 0)
+        {
+            if (button == 0)
+            {
+                player->SetClickedItem(itemInSlot);
+                inventory->SetSlot(slotId - slotOffsetInInventory, clickedItem);
+                return true;
+            }
+        }
     }
+    else if (slotId == -999)
+    {
+
+    }
+    return false;
 }
 
 void Window::ConfirmTransaction(World::EntityPlayer* player, short action, bool accepted)
@@ -105,10 +144,10 @@ void Window::AddInventory(World::EntityPlayer* player, Inventory::Inventory* inv
 {
     // maybe TODO: check order in list with offset.
     inventoryList.push_back(inventory);
-    inventory->OpenInventory(player, offset);
+    inventory->OpenInventory(player, offset, id);
 }
 
-const i_windowId Window::GetId() const
+i_windowId Window::GetId() const
 {
     return id;
 }

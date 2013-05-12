@@ -1,5 +1,9 @@
 #include "Inventory.h"
 
+#include "Entity/EntityPlayer.h"
+#include "Network/NetworkPacket.h"
+#include "Network/OpcodeList.h"
+
 namespace Inventory
 {
 
@@ -12,10 +16,9 @@ Inventory::~Inventory()
 {
 }
 
-void Inventory::OpenInventory(World::EntityPlayer* entityPlayer, int offset)
+void Inventory::OpenInventory(World::EntityPlayer* entityPlayer, int offset, i_windowId windowId)
 {
-    playerWithOffsetList[entityPlayer] = offset;
-    SendInventoryTo(entityPlayer);
+    playerWithOffsetList[entityPlayer] = {offset, windowId};
 }
 
 void Inventory::CloseInventory(World::EntityPlayer* entityPlayer)
@@ -32,23 +35,43 @@ void Inventory::SendUpdateToAllViewer()
 {
     if (!updatedSlot.empty())
     {
+        Network::NetworkPacket updatePacket;
         for (auto playerItr : playerWithOffsetList)
         {
+            int offset = playerItr.second.offsetSlot;
+            i_windowId windowId = playerItr.second.windowId;
             for (i_slot slotId : updatedSlot)
             {
-                // TODO:
-                //playerItr->first;
-                //playerItr.second + slotId << value of slotId to send to player;
+                updatePacket << (unsigned char)Network::OP_SET_SLOT << windowId << short(slotId + offset) << slot[slotId];
             }
+            playerItr.first->Send(updatePacket);
+            updatePacket.Clear();
         }
         updatedSlot.clear();
     }
 }
 
-void Inventory::SetSlot(int slotId, const ItemStack& itemStack)
+void Inventory::SetSlot(int slotId, const ItemStack itemStack)
 {
     slot[slotId] = itemStack;
     updatedSlot.push_back(slotId);
+    SendUpdateToAllViewer();// Move it or remove updatedSlot system
+}
+
+void Inventory::SendInventoryTo(World::EntityPlayer* entityPlayer, Network::NetworkPacket& packet)
+{
+    auto playerData = playerWithOffsetList[entityPlayer];
+    int offset = playerData.offsetSlot;
+    i_windowId windowId = playerData.windowId;
+    for (const ItemStack& item : slot)
+    {
+        packet << item;
+    }
+}
+
+int Inventory::GetMaxSlot() const
+{
+    return maxSlot;
 }
 
 } /* namespace Inventory */

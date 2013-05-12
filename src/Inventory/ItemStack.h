@@ -56,6 +56,15 @@ public:
             return nullptr;
         return ItemList::Instance().getItem(itemId);
     }
+
+    bool IsEmpty() const
+    {
+        return itemId == -1;
+    }
+    void Clear()
+    {
+        itemId = -1;
+    }
 private:
     int itemId;
     int stackSize;

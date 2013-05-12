@@ -15,18 +15,18 @@ namespace Window
 class WindowStaticData
 {
 public:
-    WindowStaticData(i_windowDataId id, int maxSlot,std::wstring name, int clientWindowId, Scripting::WindowScript* script);
+    WindowStaticData(i_windowDataId id, char maxSlot,std::wstring name, int clientWindowId, Scripting::WindowScript* script);
     virtual ~WindowStaticData();
     i_windowDataId getId() const;
-    unsigned char getMaxSlot() const;
+    char getMaxSlot() const;
     const std::wstring& getName() const;
     const Scripting::WindowScript* GetScript() const;
     unsigned char GetClientWindowId() const;
 
 private:
     i_windowDataId id;
+    char maxSlot;
     std::wstring name;
-    unsigned char maxSlot;
     unsigned char clientWindowId;
     Scripting::WindowScript* script;
 };

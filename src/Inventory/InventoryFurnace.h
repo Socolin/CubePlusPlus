@@ -19,8 +19,6 @@ public:
     int GetResultSlotId();
     int GetFuelSlotId();
     int GetInputSlotId();
-
-    void SendInventoryTo(World::EntityPlayer* entityPlayer);
 };
 
 } /* namespace Inventory */

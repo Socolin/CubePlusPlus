@@ -27,7 +27,9 @@ EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& nam
     , session(session)
     , currentWindowId(0)
     , animationId(-1)
+    , currentWindow(nullptr)
 {
+    inventory.OpenInventory(this, 0, 9);
 }
 
 EntityPlayer::~EntityPlayer()
@@ -295,14 +297,16 @@ void EntityPlayer::PlayAnimation(char animationId)
     this->animationId = animationId;
 }
 
-const Inventory::ItemStack& EntityPlayer::GetClickedItem() const
+Inventory::ItemStack& EntityPlayer::GetClickedItem()
 {
     return clickedItem;
 }
 
-void EntityPlayer::SetClickedItem(const Inventory::ItemStack& clickedItem)
+void EntityPlayer::SetClickedItem(Inventory::ItemStack clickedItem)
 {
     this->clickedItem = clickedItem;
+    Network::NetworkPacket setSlotPacket(Network::OP_SET_SLOT);
+    setSlotPacket << char(-1) << short(-1) << clickedItem;
 }
 
 i_windowId EntityPlayer::GetCurrentWindow() const
@@ -333,6 +337,17 @@ void EntityPlayer::CloseWindow(i_windowId windowId)
         currentWindow->CloseWindow(this, true);
         delete currentWindow;
         currentWindow = nullptr;
+    }
+}
+
+void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack& slot)
+{
+    if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
+    {
+        bool result = currentWindow->ClickOnWindow(this, slotId, button, action, mode, slot);
+        Network::NetworkPacket confirmTransactionPacket(Network::OP_CONFIRM_TRANSACTION);
+        confirmTransactionPacket << windowId << action << result;
+        Send(confirmTransactionPacket);
     }
 }
 

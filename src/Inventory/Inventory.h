@@ -7,6 +7,10 @@
 #include "ItemStack.h"
 #include "Util/types.h"
 
+namespace Network
+{
+class NetworkPacket;
+}
 namespace World
 {
 class EntityPlayer;
@@ -20,16 +24,23 @@ public:
     Inventory(int maxSlot);
     virtual ~Inventory();
 
-    void OpenInventory(World::EntityPlayer* entityPlayer, int offset);
+    void OpenInventory(World::EntityPlayer* entityPlayer, int offset, i_windowId windowId);
     void CloseInventory(World::EntityPlayer* entityPlayer);
     void SendUpdateToAllViewer();
 
     virtual ItemStack& GetSlot(int slotId);
-    virtual void SetSlot(int slotId, const ItemStack& itemStack);
+    virtual void SetSlot(int slotId, const ItemStack itemStack);
 
-    virtual void SendInventoryTo(World::EntityPlayer* entityPlayer) = 0;
+    void SendInventoryTo(World::EntityPlayer* entityPlayer, Network::NetworkPacket& packet);
+    int GetMaxSlot() const;
+
 protected:
-    std::map<World::EntityPlayer*, int /*offset slot*/> playerWithOffsetList;
+    struct playerData
+    {
+        int offsetSlot;
+        i_windowId windowId;
+    };
+    std::map<World::EntityPlayer*, playerData> playerWithOffsetList;
     std::vector<i_slot> updatedSlot; // TODO: see to use set instead vector
     std::vector<ItemStack> slot;
     int maxSlot;

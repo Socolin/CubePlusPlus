@@ -179,25 +179,19 @@ void NetworkSession::handleCloseWindow() throw (NetworkException)
 }
 void NetworkSession::handleClickWindow() throw (NetworkException)
 {
-    readByte();
-    readShort();
-    readByte();
-    readShort();
-    readByte();
-    short blockId = readShort();
-    if (blockId != -1)
-    {
-        readByte();
-        readShort();
-        short nbtDataLength = readShort();
-        if (nbtDataLength != -1)
-        {
-            for (int i = 0; i < nbtDataLength; i++)
-                readByte();
-        }
-    }
-
-
+    i_windowId windowId = readByte();
+    i_slot slotId = readShort();
+    char button = readByte();
+    short action = readShort();
+    char mode = readByte();
+    Inventory::ItemStack itemStack;
+    readSlot(itemStack);
+    DEBUG_CHAR(windowId);
+    DEBUG_SHORT(slotId);
+    DEBUG_CHAR(button);
+    DEBUG_SHORT(action);
+    DEBUG_CHAR(mode);
+    player->ClickOnWindow(windowId, slotId, button, action, mode, itemStack);
 }
 void NetworkSession::handleConfirmTransaction() throw (NetworkException)
 {
@@ -295,7 +289,12 @@ void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
     {
         if (slotId == player->GetInventory().getHandSlotId())
             player->ItemInHandHasChange();
-        player->GetInventory().GetSlot(slotId) = receivedSlot;
+        if (slotId >= 9)
+            player->GetInventory().SetSlot(slotId - 9, receivedSlot);
+        else
+        {
+            // TODO armor...
+        }
     }
 }
 void NetworkSession::handleClientSettings() throw (NetworkException)
@@ -310,7 +309,6 @@ void NetworkSession::handleClientSettings() throw (NetworkException)
     DEBUG_CHAR(chatFlag)
     DEBUG_CHAR(difficulty)
     DEBUG_CHAR(showCape)
-
 }
 void NetworkSession::handleClientStatuses() throw (NetworkException)
 {
