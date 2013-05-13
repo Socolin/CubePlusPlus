@@ -25,8 +25,12 @@ ItemScript* ItemPaintingScript::Copy()
 }
 
 
-bool ItemPaintingScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, Inventory::ItemStack& item, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+bool ItemPaintingScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
+    const Inventory::ItemStack* item = user->GetInventory().LookSlot(user->GetInventory().getHandSlotId());
+    if (item == nullptr)
+        return false;
+
     int orientation = -1;
     switch (face)
     {

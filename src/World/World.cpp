@@ -286,9 +286,11 @@ void World::GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::A
             }
 }
 
-void World::DropItemstackWithRandomDirection(double x, double y, double z, const Inventory::ItemStack& itemstack)
+void World::DropItemstackWithRandomDirection(double x, double y, double z, Inventory::ItemStack* itemstack)
 {
-    const Inventory::Item* item = itemstack.getItem();
+    if (itemstack == nullptr)
+        return;
+    const Inventory::Item* item = itemstack->getItem();
     if (item != nullptr)
     {
         float randomDistance = Util::randFloat() * 0.5;
@@ -298,7 +300,7 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, const
         double motionZ = cos(randomAngle) * randomDistance;
         double motionY = 0.20000000298023224;
 
-        EntityItem* item = new EntityItem(x, y, z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()), motionX, motionY, motionZ);
+        EntityItem* item = new EntityItem(x, y, z, itemstack, motionX, motionY, motionZ);
         AddEntity(item);
     }
 }

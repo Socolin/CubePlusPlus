@@ -6,7 +6,7 @@
 namespace World
 {
 
-EntityPainting::EntityPainting(int x, i_height y, int z, int direction, Inventory::ItemStack& item, World* world)
+EntityPainting::EntityPainting(int x, i_height y, int z, int direction, const Inventory::ItemStack* item, World* world)
     : EntityHanging(ENTITY_TYPE_PAINTING,  x, y, z, direction)
 {
     this->world = world;
@@ -39,9 +39,9 @@ void EntityPainting::GetSpecificUpdatePacket(Network::NetworkPacket& /*packet*/)
 }
 
 
-void EntityPainting::SelectRandomPainting(Inventory::ItemStack& itemStack)
+void EntityPainting::SelectRandomPainting(const Inventory::ItemStack* itemStack)
 {
-    std::set<Database::PaintingData::Painting> paintingList = Database::PaintingData::Instance().getPainting(itemStack.getItemId());
+    std::set<Database::PaintingData::Painting> paintingList = Database::PaintingData::Instance().getPainting(itemStack->getItemId());
     if (paintingList.empty())
     {
         kill();
@@ -52,7 +52,7 @@ void EntityPainting::SelectRandomPainting(Inventory::ItemStack& itemStack)
         std::vector<Database::PaintingData::Painting> compatibleArtList;
         for (Database::PaintingData::Painting painting : paintingList)
         {
-            if (painting.itemData != itemStack.getItemData())
+            if (painting.itemData != itemStack->getItemData())
                 continue;
             art = painting;
             setDirection(direction);

@@ -73,7 +73,7 @@ void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
     {
         inv->CloseInventory(player);
     }
-    player->GetInventory().OpenInventory(player, 0, 9);
+    player->GetInventory().OpenInventory(player, i_windowId(9), 0);
 
     if (!askByPlayer)
     {
@@ -83,7 +83,7 @@ void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
     }
 }
 
-bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack& slot)
+bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
 {
     if (slotId >= 0 && slotId < windowData->getMaxSlot())
     {
@@ -105,14 +105,15 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
         {
             return false;
         }
-        Inventory::ItemStack clickedItem = player->GetClickedItem();
-        Inventory::ItemStack itemInSlot = inventory->GetSlot(slotId - slotOffsetInInventory);
+//        const Inventory::ItemStack* clickedItem = player->GetClickedItem().LookSlot(0);
+//        const Inventory::ItemStack* itemInSlot = inventory->LookSlot(slotId - slotOffsetInInventory);
         if (mode == 0)
         {
             if (button == 0)
             {
-                player->SetClickedItem(itemInSlot);
-                inventory->SetSlot(slotId - slotOffsetInInventory, clickedItem);
+                Inventory::ItemStack* clickedItem =  player->GetClickedItem().TakeSlot(0);
+                Inventory::ItemStack* itemInSlot = inventory->TakeAndSetSlot(slotId - slotOffsetInInventory, clickedItem);
+                player->GetClickedItem().ClearAndSetSlot(0, itemInSlot);
                 return true;
             }
         }
@@ -132,11 +133,11 @@ void Window::DoAction(World::EntityPlayer* player, short action)
 {
 }
 
-void Window::SetSlot(World::EntityPlayer* player, short slotId, const Inventory::ItemStack& slot)
+void Window::SetSlot(World::EntityPlayer* player, short slotId, const Inventory::ItemStack* slot)
 {
 }
 
-void Window::SetWindowItems(World::EntityPlayer* player, short slotId, const Inventory::ItemStack& slot)
+void Window::SetWindowItems(World::EntityPlayer* player, short slotId, const Inventory::ItemStack* slot)
 {
 }
 
@@ -144,7 +145,7 @@ void Window::AddInventory(World::EntityPlayer* player, Inventory::Inventory* inv
 {
     // maybe TODO: check order in list with offset.
     inventoryList.push_back(inventory);
-    inventory->OpenInventory(player, offset, id);
+    inventory->OpenInventory(player, id, offset);
 }
 
 i_windowId Window::GetId() const

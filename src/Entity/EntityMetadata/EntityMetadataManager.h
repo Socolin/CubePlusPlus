@@ -27,16 +27,15 @@ public:
     void SetEntityMetadata(int valueId, short value);
     void SetEntityMetadata(int valueId, int value);
     void SetEntityMetadata(int valueId, float value);
-    void SetEntityMetadata(int valueId, const Inventory::ItemStack& value);
+    void SetEntityMetadata(int valueId, const Inventory::ItemStack* value);
 
     char GetCharEntityMetadata(int valueId);
     short GetShortEntityMetadata(int valueId);
     int GetIntEntityMetadata(int valueId);
     float GetFloatEntityMetadata(int valueId);
-    const Inventory::ItemStack& GetItemEntityMetadata(int valueId);
+    const Inventory::ItemStack* GetItemEntityMetadata(int valueId);
 private:
     std::map<int, EntityMetadata*> metadataList;
-    Inventory::ItemStack invalidItem;
 };
 
 } /* namespace World */

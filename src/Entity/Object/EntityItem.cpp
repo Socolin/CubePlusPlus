@@ -8,17 +8,18 @@
 namespace World
 {
 
-EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack itemStack, double motionX, double motionY, double motionZ)
+EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack* itemStack, double motionX, double motionY, double motionZ)
     : Entity(ENTITY_TYPE_ITEM, x, y, z)
     , liveTime(0)
-    , itemStack(itemStack)
+    , storedItem(1)
 {
     SetWidthHeight(0.25, 0.25);
     boundingBox.SetPositionCenteredXZ(x, y, z);
     this->motionX = motionX;
     this->motionY = motionY;
     this->motionZ = motionZ;
-    metadataManager.SetEntityMetadata(10, itemStack);
+    storedItem.ClearAndSetSlot(0, itemStack);
+    metadataManager.SetEntityMetadata(10, itemStack->Copy());
 }
 
 EntityItem::~EntityItem()

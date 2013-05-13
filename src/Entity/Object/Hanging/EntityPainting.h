@@ -13,10 +13,10 @@ class World;
 class EntityPainting : public EntityHanging
 {
 public:
-    EntityPainting(int x, i_height y, int z, int direction, Inventory::ItemStack& item, World* world);
+    EntityPainting(int x, i_height y, int z, int direction, const Inventory::ItemStack* item, World* world);
     virtual ~EntityPainting();
 
-    void SelectRandomPainting(Inventory::ItemStack& itemStack);
+    void SelectRandomPainting(const Inventory::ItemStack* itemStack);
     void GetCreatePacket(Network::NetworkPacket& packet);
     void GetSpecificUpdatePacket(Network::NetworkPacket& packet);
 protected:

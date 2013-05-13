@@ -184,14 +184,14 @@ void NetworkSession::handleClickWindow() throw (NetworkException)
     char button = readByte();
     short action = readShort();
     char mode = readByte();
-    Inventory::ItemStack itemStack;
-    readSlot(itemStack);
+    const Inventory::ItemStack* itemStack = readSlot();
     DEBUG_CHAR(windowId);
     DEBUG_SHORT(slotId);
     DEBUG_CHAR(button);
     DEBUG_SHORT(action);
     DEBUG_CHAR(mode);
     player->ClickOnWindow(windowId, slotId, button, action, mode, itemStack);
+    delete itemStack;
 }
 void NetworkSession::handleConfirmTransaction() throw (NetworkException)
 {
@@ -250,7 +250,7 @@ void NetworkSession::handleTabComplete() throw (NetworkException)
     readByte();
     readByte();
 }
-void NetworkSession::readSlot(Inventory::ItemStack& itemStack) throw (NetworkException)
+Inventory::ItemStack* NetworkSession::readSlot() throw (NetworkException)
 {
     short blockId = readShort();
     if (blockId < -1)
@@ -265,11 +265,11 @@ void NetworkSession::readSlot(Inventory::ItemStack& itemStack) throw (NetworkExc
             for (int i = 0; i < nbtDataLength; i++)
                 readByte();
         }
-        itemStack.setItem(blockId, data, count);
+        return new Inventory::ItemStack(blockId, data, count);
     }
     else
     {
-        itemStack.setItem(blockId, 0, 0);
+        return nullptr;
     }
 }
 void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
@@ -279,8 +279,7 @@ void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
     if (slotId < -1 || slotId > 44)
         throw NetworkException("handleCreativeInventoryAction: slotId < 0 || slotId > 44");
 
-    Inventory::ItemStack receivedSlot;
-    readSlot(receivedSlot);
+    Inventory::ItemStack* receivedSlot = readSlot();
     if (slotId == -1)
     {
         player->DropItem(receivedSlot);
@@ -290,7 +289,9 @@ void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
         if (slotId == player->GetInventory().getHandSlotId())
             player->ItemInHandHasChange();
         if (slotId >= 9)
-            player->GetInventory().SetSlot(slotId - 9, receivedSlot);
+        {
+            player->GetInventory().ClearAndSetSlot(slotId - 9, receivedSlot);
+        }
         else
         {
             // TODO armor...

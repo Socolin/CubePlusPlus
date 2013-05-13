@@ -23,10 +23,4 @@ int InventoryPlayer::getHandSlotId()
     return 27 + (handSlot % 9);
 }
 
-ItemStack& InventoryPlayer::GetItemInHand()
-{
-    return slot[27 + (handSlot % 9)];
-}
-
-
 } /* namespace Inventory */

@@ -52,7 +52,7 @@ void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x
      }
 }
 
-bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, Inventory::ItemStack& /*item*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->getWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);
@@ -122,7 +122,7 @@ void BlockButtonScript::OnNeighborChange(World::World* world, int x, i_height y,
 
     if (!CanPlace(world, x, y, z, face))
     {
-        world->DropItemstackWithRandomDirection(x + 0.5, y + 0.5, z + 0.5, Inventory::ItemStack(baseBlock->GetBlockId(), 1, 0));
+        world->DropItemstackWithRandomDirection(x + 0.5, y + 0.5, z + 0.5, new Inventory::ItemStack(baseBlock->GetBlockId(), 1, 0));
         world->ChangeBlockNoEvent(x, y, z, 0, 0);
     }
 }

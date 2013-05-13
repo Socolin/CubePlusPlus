@@ -82,11 +82,11 @@ bool Block::CanPlace(World::World* world, int x, i_height y, int z, char face) c
 }
 
 
-bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (script)
     {
-        return script->OnUseBlock(user, x, y, z, face, item, cursorPositionX, cursorPositionY, cursorPositionZ);
+        return script->OnUseBlock(user, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
     return false;
 }

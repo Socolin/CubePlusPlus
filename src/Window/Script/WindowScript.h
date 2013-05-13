@@ -40,7 +40,7 @@ public:
     virtual void OnOpenWindow(World::EntityPlayer* player);
     virtual void OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity);
     virtual void OnCloseWindow(World::EntityPlayer* player);
-    virtual void OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack& slot);
+    virtual void OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
     virtual void OnConfirmTransaction(World::EntityPlayer* player, short action, bool accepted);
     virtual void OnDoAction(World::EntityPlayer* player, short action);
 protected:

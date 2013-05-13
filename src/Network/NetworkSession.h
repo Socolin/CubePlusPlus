@@ -119,7 +119,7 @@ private:
     std::wstring readString(const int maxSize) throw (NetworkException);
     float readFloat() throw (NetworkException);
     double readDouble() throw (NetworkException);
-    void readSlot(Inventory::ItemStack& ItemStack)  throw (NetworkException);
+    Inventory::ItemStack* readSlot()  throw (NetworkException);
 
     int socket;
     std::vector<char> buffer;

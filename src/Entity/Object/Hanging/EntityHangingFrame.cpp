@@ -12,7 +12,7 @@ EntityHangingFrame::EntityHangingFrame(int x, i_height y, int z, int direction)
     : EntityHanging(ENTITY_TYPE_HANGINGFRAME,  x, y, z, direction)
     , hasItemChange(false)
 {
-    metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM, Inventory::ItemStack());
+    metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM, (Inventory::ItemStack*)nullptr);
     metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM_ROTATION, (char)0);
     setDirection(direction);
 }
@@ -23,11 +23,11 @@ EntityHangingFrame::~EntityHangingFrame()
 
 void EntityHangingFrame::Interact(EntityPlayer* player)
 {
-    const Inventory::ItemStack& itemContained = metadataManager.GetItemEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM);
-    if (itemContained.getItemId() == -1)
+    const Inventory::ItemStack* itemContained = metadataManager.GetItemEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM);
+    if (itemContained == nullptr)
     {
-        Inventory::ItemStack newItem = player->GetInventory().GetItemInHand();
-        if (newItem.getItemId() > 0)
+        Inventory::ItemStack* newItem = player->GetInventory().TakeSomeItemInSlot(player->GetInventory().getHandSlotId(),1);
+        if (newItem != nullptr)
         {
             metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM, newItem);
             metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM_ROTATION, (char)0);

@@ -3,7 +3,7 @@
 
 #include "Entity/Entity.h"
 
-#include "Inventory/ItemStack.h"
+#include "Inventory/Inventory.h"
 
 namespace World
 {
@@ -11,7 +11,7 @@ namespace World
 class EntityItem : public Entity
 {
 public:
-    EntityItem(double x, double y, double z, Inventory::ItemStack itemStack, double motionX, double motionY, double motionZ);
+    EntityItem(double x, double y, double z, Inventory::ItemStack* itemStack, double motionX, double motionY, double motionZ);
     virtual ~EntityItem();
 
     virtual void UpdateTick() override;
@@ -20,7 +20,7 @@ public:
     virtual void GetCreatePacket(Network::NetworkPacket& packet);
 private:
     unsigned int liveTime;
-    Inventory::ItemStack itemStack;
+    Inventory::Inventory storedItem;
 };
 
 } /* namespace World */

@@ -13,6 +13,11 @@ public:
     ItemStack(int id, int stackSize, int itemData);
     virtual ~ItemStack();
 
+    ItemStack* Copy()
+    {
+        return new ItemStack(*this);
+    }
+
     int getItemData() const
     {
         return itemData;

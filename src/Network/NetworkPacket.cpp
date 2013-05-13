@@ -110,12 +110,19 @@ NetworkPacket& NetworkPacket::operator <<(long value)
     return *this;
 }
 
-NetworkPacket& NetworkPacket::operator <<(const Inventory::ItemStack& item)
+NetworkPacket& NetworkPacket::operator <<(const Inventory::ItemStack* item)
 {
-    *this << (short)item.getItemId();
-    if (item.getItemId() > 0)
+    if (item == nullptr)
     {
-        *this << (char)item.getStackSize() << (short)item.getItemData() << (short)-1 /*No nbt data*/;
+        *this << short(-1);
+    }
+    else
+    {
+        *this << (short)item->getItemId();
+        if (item->getItemId() > 0)
+        {
+            *this << (char)item->getStackSize() << (short)item->getItemData() << (short)-1 /*No nbt data*/;
+        }
     }
     return *this;
 }

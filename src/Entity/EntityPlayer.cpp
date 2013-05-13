@@ -25,11 +25,13 @@ EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& nam
     : LivingEntity(ENTITY_TYPE_PLAYER, x, y, z)
     , name(name)
     , session(session)
+    , clickedItem(1)
     , currentWindowId(0)
     , animationId(-1)
     , currentWindow(nullptr)
 {
-    inventory.OpenInventory(this, 0, 9);
+    inventory.OpenInventory(this, i_windowId(0), 9);
+    clickedItem.OpenInventory(this, i_windowId(-1), -1);
 }
 
 EntityPlayer::~EntityPlayer()
@@ -110,8 +112,8 @@ void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
     packet << (char)0 << (char)0 << (unsigned char)127; // TODO: classe metadata
     packet << (unsigned char) Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
 
-    const Inventory::ItemStack& itemInHand = inventory.GetItemInHand();
-    if (itemInHand.getItemId() != -1)
+    const Inventory::ItemStack* itemInHand = inventory.LookSlot(inventory.getHandSlotId());
+    if (itemInHand != nullptr)
         packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << itemInHand;
 }
 
@@ -178,9 +180,11 @@ Inventory::InventoryPlayer& EntityPlayer::GetInventory()
 }
 
 
-void EntityPlayer::DropItem(Inventory::ItemStack& itemstack)
+void EntityPlayer::DropItem(Inventory::ItemStack* itemToDrop)
 {
-    const Inventory::Item* item = itemstack.getItem();
+    if (itemToDrop == nullptr)
+        return;
+    const Inventory::Item* item = itemToDrop->getItem();
     if (item != nullptr)
     {
         const double speed = 0.3F;
@@ -194,7 +198,7 @@ void EntityPlayer::DropItem(Inventory::ItemStack& itemstack)
         motionX += cos(randomModifier) * modifier;
         motionY += (Util::randFloat() - Util::randFloat()) * 0.1f;
         motionZ += sin(randomModifier) * modifier;
-        EntityItem* item = new EntityItem(this->x, this->y + getEyeHeight() - 0.3, this->z, Inventory::ItemStack(itemstack.getItemId(), 1, itemstack.getItemData()), motionX, motionY, motionZ);
+        EntityItem* item = new EntityItem(this->x, this->y + getEyeHeight() - 0.3, this->z, itemToDrop, motionX, motionY, motionZ);
         world->AddEntity(item);
     }
 }
@@ -208,7 +212,7 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*fac
     }
     else if (state == 4)
     {
-        DropItem(inventory.GetItemInHand());
+        DropItem(inventory.TakeSomeItemInSlot(inventory.getHandSlotId(),1));
     }
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
@@ -218,18 +222,22 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
     // TODO check 6 block in range
     int clickedBlockId = world->GetBlockId(x, y, z);
     const Block::Block* block = Block::BlockList::Instance().getBlock(clickedBlockId);
-    Inventory::ItemStack& itemstack = inventory.GetItemInHand();
-    const Inventory::Item* item = itemstack.getItem();
+    const Inventory::ItemStack* itemstack = inventory.LookSlot(inventory.getHandSlotId());
+    const Inventory::Item* item = nullptr;
+    if (itemstack != nullptr)
+    {
+        item = itemstack->getItem();
+    }
     if (face != FACE_NONE)
     {
         if (block)
         {
-            if (block->UseBlock(this, x, y, z, face, itemstack, cursorPositionX, cursorPositionY, cursorPositionZ))
+            if (block->UseBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ))
                 return;
         }
         if (item != nullptr)
         {
-            if (item->UseOnBlock(this, x, y, z, face, itemstack, cursorPositionX, cursorPositionY, cursorPositionZ))
+            if (item->UseOnBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ))
             {
 
             }
@@ -243,7 +251,7 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
     {
         if (item != nullptr)
         {
-            if (item->Use(this, itemstack))
+            if (item->Use(this))
             {
 
             }
@@ -256,7 +264,7 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
     if (hasChangeItemInHand)
     {
         hasChangeItemInHand = false;
-        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << inventory.GetItemInHand();
+        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << inventory.LookSlot(inventory.getHandSlotId());
     }
     if (animationId >= 0)
     {
@@ -297,17 +305,11 @@ void EntityPlayer::PlayAnimation(char animationId)
     this->animationId = animationId;
 }
 
-Inventory::ItemStack& EntityPlayer::GetClickedItem()
+Inventory::Inventory& EntityPlayer::GetClickedItem()
 {
     return clickedItem;
 }
 
-void EntityPlayer::SetClickedItem(Inventory::ItemStack clickedItem)
-{
-    this->clickedItem = clickedItem;
-    Network::NetworkPacket setSlotPacket(Network::OP_SET_SLOT);
-    setSlotPacket << char(-1) << short(-1) << clickedItem;
-}
 
 i_windowId EntityPlayer::GetCurrentWindow() const
 {
@@ -340,7 +342,7 @@ void EntityPlayer::CloseWindow(i_windowId windowId)
     }
 }
 
-void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack& slot)
+void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
 {
     if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
     {

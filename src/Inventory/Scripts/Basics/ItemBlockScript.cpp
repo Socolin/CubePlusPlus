@@ -27,10 +27,12 @@ ItemScript* ItemBlockScript::Copy()
     return new ItemBlockScript(*this);
 }
 
-bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
-    // Try activate block
-    // If not, try use item on block
+    const Inventory::ItemStack* item = user->GetInventory().LookSlot(user->GetInventory().getHandSlotId());
+    if (item == nullptr)
+        return false;
+
     World::World* world = user->getWorld();
 
     int clickedBlockId = world->GetBlockId(x, y, z);
@@ -61,7 +63,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     i_block blockId = AssociatedBlockId;
 
     if (UseMetadata)
-        metadata = item.getItemData() & 0xf;
+        metadata = item->getItemData() & 0xf;
 
     const Block::Block* block = Block::BlockList::getBlock(AssociatedBlockId);
     if (block && block->CanPlace(user->getWorld(), x, y, z, face))

@@ -27,7 +27,7 @@ ItemScript* ItemSignScript::Copy()
     return new ItemSignScript(*this);
 }
 
-bool ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& /*item*/, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (face == FACE_BOTTOM)
         return false;

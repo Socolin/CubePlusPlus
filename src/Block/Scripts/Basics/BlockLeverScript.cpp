@@ -58,7 +58,7 @@ void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i
      }
 }
 
-bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, Inventory::ItemStack& /*item*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->getWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);

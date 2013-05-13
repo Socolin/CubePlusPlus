@@ -4,9 +4,9 @@ namespace Block
 {
 
 TileEntityRecordPlayer::TileEntityRecordPlayer(int blockX, i_height blockY, int blockZ)
-        : TileEntity(TILEENTITY_TYPE_JUKEBOX, blockX, blockY, blockZ)
-        , Record(0)
-        , RecordItem(Inventory::ItemStack(0, 0, 0))
+    : TileEntity(TILEENTITY_TYPE_JUKEBOX, blockX, blockY, blockZ)
+    , Record(0)
+    , recordSlot(1)
 {
 }
 
@@ -32,22 +32,19 @@ bool TileEntityRecordPlayer::HasNetworkData()
     return false;
 }
 
-void TileEntityRecordPlayer::SetRecordItem(World::World* world, int x, i_height y, int z, Inventory::ItemStack item)
+void TileEntityRecordPlayer::SetRecordItem(World::World* world, int x, i_height y, int z, Inventory::ItemStack* item)
 {
-	RecordItem = item;
-	Record = item.getItemId();
-
-	world->PlaySoundOrParticleEffect(x, y, z, 1005 /*TODO enum*/, Record, false, 5);
-
-	if(item.getItemId() != 0)
-		world->ChangeDataNoEvent(x, y, z, 1);
-	else
-		world->ChangeDataNoEvent(x, y, z, 0);
+    if (item != nullptr)
+    {
+        Record = item->getItemId();
+        world->PlaySoundOrParticleEffect(x, y, z, 1005 /*TODO enum*/, Record, false, 5);
+    }
+    recordSlot.ClearAndSetSlot(0, item);
 }
 
-Inventory::ItemStack TileEntityRecordPlayer::GetRecordItem()
+Inventory::Inventory& TileEntityRecordPlayer::GetRecordItem()// TODO use const ref, and move extern operation on this, into the class...
 {
-	return RecordItem;
+    return recordSlot;
 }
 
 } /* namespace Block */

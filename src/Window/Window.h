@@ -30,12 +30,12 @@ public:
     virtual ~Window();
     void OpenWindow(World::EntityPlayer* player, int x, i_height y, int z);
     void CloseWindow(World::EntityPlayer* player, bool askByPlayer);
-    bool ClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack& slot);
+    bool ClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
     void ConfirmTransaction(World::EntityPlayer* player, short action, bool accepted);
     void DoAction(World::EntityPlayer* player, short action);
 
-    void SetSlot(World::EntityPlayer* player, short slotId, const Inventory::ItemStack& slot);
-    void SetWindowItems(World::EntityPlayer* player, short slotId, const Inventory::ItemStack& slot);
+    void SetSlot(World::EntityPlayer* player, short slotId, const Inventory::ItemStack* slot);
+    void SetWindowItems(World::EntityPlayer* player, short slotId, const Inventory::ItemStack* slot);
 
     void AddInventory(World::EntityPlayer* player, Inventory::Inventory* inventory, int offset);
 

@@ -16,7 +16,6 @@ public:
 
     void setHandSlot(int slotId);
     int getHandSlotId();
-    ItemStack& GetItemInHand();
 private:
     int handSlot;
 };

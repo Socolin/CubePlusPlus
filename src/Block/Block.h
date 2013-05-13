@@ -81,13 +81,12 @@ public:
      * @param y Position Y of block
      * @param z Position Z of block
      * @param face The clicked face of block
-     * @param item The item stack that the player has in hand when he click, it's a reference
      * @param cursorPositionX Position of player cursor when he place block
      * @param cursorPositionY Position of player cursor when he place block
      * @param cursorPositionZ Position of player cursor when he place block
      * @return
      */
-    bool UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    bool UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
     /**
      * This method is use for update a block, it can be call when block is in "to update list"

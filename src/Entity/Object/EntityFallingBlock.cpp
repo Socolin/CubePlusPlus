@@ -46,7 +46,7 @@ void EntityFallingBlock::UpdateTick()
         if (canPlaceBlock)
             world->ChangeBlock(std::floor(x), std::floor(y), std::floor(z), blockId, blockData, false);
         else
-            world->DropItemstackWithRandomDirection(x, y, z, Inventory::ItemStack(blockId, 1, blockData));
+            world->DropItemstackWithRandomDirection(x, y, z, new Inventory::ItemStack(blockId, 1, blockData));
         kill();
     }
 }

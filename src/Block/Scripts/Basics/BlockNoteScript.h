@@ -16,7 +16,7 @@ public:
     virtual ~BlockNoteScript();
     virtual BlockScript* Copy() override;
     virtual void Init(Block::Block* baseBlock) override;
-    virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
+    virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
     virtual Block::TileEntity* CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const override;
     virtual bool UseTileEntity() const override;
 private:

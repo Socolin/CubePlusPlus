@@ -22,16 +22,16 @@ Item::~Item()
 {
 }
 
-bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (script != nullptr)
     {
-        return script->OnUseOnBlock(user, x, y, z, face, item, cursorPositionX, cursorPositionY, cursorPositionZ);
+        return script->OnUseOnBlock(user, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
     return false;
 }
 
-bool Item::Use(World::EntityPlayer* /*user*/, ItemStack& /*item*/) const
+bool Item::Use(World::EntityPlayer* /*user*/) const
 {
 	if (script != nullptr)
 	{

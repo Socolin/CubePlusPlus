@@ -54,7 +54,7 @@ void BlockCactusScript::OnUpdateTick(World::World* world, int x, i_height y, int
 			} //But if the top of the cactus is in contact with a side by side block, let's pop!
 			else
 			{
-				world->DropItemstackWithRandomDirection(x + 0.5, y + 1.5, z + 0.5, Inventory::ItemStack(BlockCactusScript::baseBlock->GetBlockId(),1,0));
+				world->DropItemstackWithRandomDirection(x + 0.5, y + 1.5, z + 0.5, new Inventory::ItemStack(BlockCactusScript::baseBlock->GetBlockId(),1,0));
 			}
 		}
 	}
@@ -90,7 +90,7 @@ void BlockCactusScript::OnNeighborChange(World::World* world, int x, i_height y,
 	if(!CheckSideBySideBlocks(world, x, y, z) || (BlockCactusScript::baseBlock->GetBlockId() != world->GetBlockId(x, y - 1, z) && allowed_to_grow_on.find(world->GetBlockId(x, y - 1, z)) == allowed_to_grow_on.end()))
 	{
 		world->ChangeBlock(x, y, z, 0, 0, false);
-		world->DropItemstackWithRandomDirection(x + 0.5, y + 0.5, z + 0.5, Inventory::ItemStack(BlockCactusScript::baseBlock->GetBlockId(),1,0));
+		world->DropItemstackWithRandomDirection(x + 0.5, y + 0.5, z + 0.5, new Inventory::ItemStack(BlockCactusScript::baseBlock->GetBlockId(),1,0));
 	}
 }
 

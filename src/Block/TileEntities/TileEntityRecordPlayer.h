@@ -8,7 +8,7 @@
 namespace Block
 {
 
-class TileEntityRecordPlayer : public TileEntity
+class TileEntityRecordPlayer: public TileEntity
 {
 public:
     TileEntityRecordPlayer(int blockX, i_height blockY, int blockZ);
@@ -19,11 +19,11 @@ public:
     virtual void GetDataPacket(Network::NetworkPacket& packet) override;
     virtual bool HasNetworkData() override;
 
-    void SetRecordItem(World::World* world, int x, i_height y, int z, Inventory::ItemStack item);
-    Inventory::ItemStack GetRecordItem();
+    void SetRecordItem(World::World* world, int x, i_height y, int z, Inventory::ItemStack* item);
+    Inventory::Inventory& GetRecordItem();
 private:
     i_block Record;
-    Inventory::ItemStack RecordItem;
+    Inventory::Inventory recordSlot;
 };
 
 } /* namespace Block */

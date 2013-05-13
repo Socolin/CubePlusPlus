@@ -49,7 +49,7 @@ void BlockScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x*/, i_
 {
 }
 
-bool BlockScript::OnUseBlock(World::EntityPlayer* /*user*/, int /*x*/, i_height /*y*/, int /*z*/, char /*face*/, Inventory::ItemStack& /*item*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+bool BlockScript::OnUseBlock(World::EntityPlayer* /*user*/, int /*x*/, i_height /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     return false;
 }

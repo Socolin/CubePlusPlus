@@ -49,7 +49,7 @@ bool BlockFurnaceScript::UseTileEntity() const
     return true;
 }
 
-bool BlockFurnaceScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, Inventory::ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool BlockFurnaceScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     const Window::WindowStaticData* windowData = Window::WindowList::getWindowData(windowDataId);
     if (windowData != nullptr)

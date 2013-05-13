@@ -20,17 +20,17 @@ void ItemScript::Init(Inventory::Item* item)
     baseItem = item;
 }
 
-bool ItemScript::OnUse(World::EntityPlayer* /*user*/, Inventory::ItemStack& /*item*/) const
+bool ItemScript::OnUse(World::EntityPlayer* /*user*/) const
 {
     return false;
 }
 
-bool ItemScript::OnUseOnEntity(World::EntityPlayer* /*user*/, World::Entity* /*target*/, Inventory::ItemStack& /*item*/) const
+bool ItemScript::OnUseOnEntity(World::EntityPlayer* /*user*/, World::Entity* /*target*/) const
 {
     return false;
 }
 
-bool ItemScript::OnUseOnBlock(World::EntityPlayer* /*user*/, int /*x*/, unsigned char /*y*/, int /*z*/, char /*face*/, Inventory::ItemStack& /*item*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+bool ItemScript::OnUseOnBlock(World::EntityPlayer* /*user*/, int /*x*/, unsigned char /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     return false;
 }

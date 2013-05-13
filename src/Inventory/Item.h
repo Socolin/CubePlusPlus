@@ -18,8 +18,8 @@ public:
     Item(unsigned short itemId, unsigned int maxStackSize, unsigned int maxDamage, bool hasSubType, unsigned short containerId, Scripting::ItemScript* script);
     virtual ~Item();
 
-    bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, ItemStack& item, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
-    bool Use(World::EntityPlayer* user, ItemStack& item) const;
+    bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    bool Use(World::EntityPlayer* user) const;
 
     inline unsigned short getContainerId() const;
     inline bool isHasSubType() const;

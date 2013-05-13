@@ -60,7 +60,7 @@ void EntityMetadataManager::SetEntityMetadata(int valueId, float value)
         delete oldMetadata;
 }
 
-void EntityMetadataManager::SetEntityMetadata(int valueId, const Inventory::ItemStack& value)
+void EntityMetadataManager::SetEntityMetadata(int valueId, const Inventory::ItemStack* value)
 {
     EntityMetadata* oldMetadata = metadataList[valueId];
     metadataList[valueId] = new ItemStackEntityMetadata(valueId, value);
@@ -124,7 +124,7 @@ float EntityMetadataManager::GetFloatEntityMetadata(int valueId)
     return 0;
 }
 
-const Inventory::ItemStack& EntityMetadataManager::GetItemEntityMetadata(int valueId)
+const Inventory::ItemStack* EntityMetadataManager::GetItemEntityMetadata(int valueId)
 {
     EntityMetadata* metadata = metadataList[valueId];
     if (metadata != nullptr)
@@ -135,7 +135,7 @@ const Inventory::ItemStack& EntityMetadataManager::GetItemEntityMetadata(int val
             return itemMetadata->getValue();
         }
     }
-    return invalidItem;
+    return nullptr;
 }
 
 } /* namespace World */

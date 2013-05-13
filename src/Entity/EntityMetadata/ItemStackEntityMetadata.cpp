@@ -4,7 +4,7 @@
 namespace World
 {
 
-ItemStackEntityMetadata::ItemStackEntityMetadata(int valueId,const Inventory::ItemStack& value)
+ItemStackEntityMetadata::ItemStackEntityMetadata(int valueId,const Inventory::ItemStack* value)
     : EntityMetadata(valueId, DATATYPE_ITEMSTACK)
     , value(value)
 {
@@ -12,6 +12,7 @@ ItemStackEntityMetadata::ItemStackEntityMetadata(int valueId,const Inventory::It
 
 ItemStackEntityMetadata::~ItemStackEntityMetadata()
 {
+    delete value;
 }
 
 void ItemStackEntityMetadata::Write(Network::NetworkPacket& packet)
@@ -20,7 +21,7 @@ void ItemStackEntityMetadata::Write(Network::NetworkPacket& packet)
     packet << header << value;
 }
 
-const Inventory::ItemStack& ItemStackEntityMetadata::getValue() const
+const Inventory::ItemStack* ItemStackEntityMetadata::getValue() const
 {
     return value;
 }

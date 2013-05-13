@@ -49,7 +49,12 @@ public:
     Inventory::InventoryPlayer& GetInventory();
     void PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY,char cursorPositionZ);
     void DigBlock(int state, int x, unsigned char y, int z, char face);
-    void DropItem(Inventory::ItemStack& itemstack);
+    /**
+     * Drop an item, using player orientation
+     * @param itemstack the item stack wich will be linked to entity
+     *          this item could be deleted so make a copy before or remove other reference to it
+     */
+    void DropItem(Inventory::ItemStack* itemstack);
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet);
 
     void UseEntity(int target, bool leftClick);
@@ -59,22 +64,21 @@ public:
         hasChangeItemInHand = true;
     }
     void PlayAnimation(char animationId);
-    Inventory::ItemStack& GetClickedItem();
-    void SetClickedItem(Inventory::ItemStack clickedItem);
+    Inventory::Inventory& GetClickedItem();
     i_windowId GetCurrentWindow() const;
     i_windowId GetNextAndSetCurrentWindowId();
     void SetCurrentWindow(i_windowId currentWindow);
 
     void OpenWindow(Window::Window* window);
     void CloseWindow(i_windowId windowId);
-    void ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack& slot);
+    void ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
 
 private:
     std::wstring name;
     std::queue<std::pair<int, int> > chunkToSend;
     Network::NetworkSession* session;
     Inventory::InventoryPlayer inventory;
-    Inventory::ItemStack clickedItem;
+    Inventory::Inventory clickedItem;
     i_windowId currentWindowId;
     char animationId;
     Window::Window* currentWindow;
