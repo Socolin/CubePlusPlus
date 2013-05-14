@@ -128,6 +128,59 @@ ItemStack* Inventory::TakeSomeItemInSlot(int slotId, int count)
     return newStack;
 }
 
+ItemStack* Inventory::Merge(int slotId, ItemStack* itemStack, int count)
+{
+    ItemStack* oldItem = slot[slotId];
+    if (itemStack == nullptr)
+    {
+        return nullptr;
+    }
+    if (count < 0)
+    {
+        count = itemStack->getStackSize();
+    }
+    else
+    {
+        if (count > itemStack->getStackSize())
+            count = itemStack->getStackSize();
+    }
+    ItemStack* returnItem = itemStack;
+    if (oldItem == nullptr)
+    {
+        oldItem = itemStack->Copy();
+        oldItem->setStackSize(count);
+        itemStack->setStackSize(itemStack->getStackSize() - count);
+        slot[slotId] = oldItem;
+    }
+    else
+    {
+        if (!oldItem->IsSoftEqual(itemStack))
+        {
+            return itemStack;
+        }
+
+        if (oldItem->GetMaxStackSize() >= (count + oldItem->getStackSize()))
+        {
+            oldItem->setStackSize(oldItem->getStackSize() + count);
+            itemStack->setStackSize(itemStack->getStackSize() - count);
+        }
+        else
+        {
+            int freeSpace = oldItem->GetMaxStackSize() - oldItem->getStackSize();
+            oldItem->setStackSize(oldItem->getStackSize() + freeSpace);
+            itemStack->setStackSize(itemStack->getStackSize() - freeSpace);
+        }
+    }
+    if (itemStack->getStackSize() == 0)
+    {
+        delete itemStack;
+        returnItem = nullptr;
+    }
+    updatedSlot.insert(slotId);
+
+    return returnItem;
+}
+
 int Inventory::GetMaxSlot() const
 {
     return maxSlot;

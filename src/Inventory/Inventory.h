@@ -76,6 +76,15 @@ public:
      */
     void ClearSlot(int slotId);
 
+    /**
+     * Fill stack in inventory to complete the stack, and return the non stackable item
+     * @param slotId the id of the slot
+     * @param itemStack The item to place in slot, no other reference must be keep on it
+     * @param count quantity to item to stack
+     * @return The not stacked item
+     */
+    ItemStack* Merge(int slotId, ItemStack* itemStack, int count = -1);
+
     void SendInventoryTo(World::EntityPlayer* entityPlayer, Network::NetworkPacket& packet);
     int GetMaxSlot() const;
 

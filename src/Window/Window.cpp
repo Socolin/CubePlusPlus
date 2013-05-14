@@ -105,15 +105,48 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
         {
             return false;
         }
-//        const Inventory::ItemStack* clickedItem = player->GetClickedItem().LookSlot(0);
-//        const Inventory::ItemStack* itemInSlot = inventory->LookSlot(slotId - slotOffsetInInventory);
+        i_slot inventorySlotId = slotId - slotOffsetInInventory;
+        const Inventory::ItemStack* lookedClickedItem = player->GetClickedItem().LookSlot(0);
+        const Inventory::ItemStack* lookedItemInSlot = inventory->LookSlot(inventorySlotId);
         if (mode == 0)
         {
             if (button == 0)
             {
                 Inventory::ItemStack* clickedItem =  player->GetClickedItem().TakeSlot(0);
-                Inventory::ItemStack* itemInSlot = inventory->TakeAndSetSlot(slotId - slotOffsetInInventory, clickedItem);
-                player->GetClickedItem().ClearAndSetSlot(0, itemInSlot);
+                if (lookedClickedItem != nullptr && lookedItemInSlot != nullptr && lookedClickedItem->IsSoftEqual(lookedItemInSlot))
+                {
+                    Inventory::ItemStack* mergeResult = inventory->Merge(inventorySlotId, clickedItem);
+                    player->GetClickedItem().ClearAndSetSlot(0, mergeResult);
+                }
+                else
+                {
+                    Inventory::ItemStack* itemInSlot = inventory->TakeAndSetSlot(slotId - slotOffsetInInventory, clickedItem);
+                    player->GetClickedItem().ClearAndSetSlot(0, itemInSlot);
+                }
+                return true;
+            }
+            else if (button == 1)
+            {
+                if (lookedClickedItem == nullptr)
+                {
+                    if (lookedItemInSlot == nullptr)
+                    {
+                        return true;
+                    }
+                    else
+                    {
+                        int count = lookedItemInSlot->getStackSize();
+                        Inventory::ItemStack* halfStackFromSlot = inventory->TakeSomeItemInSlot(inventorySlotId, (count + 1) / 2);
+                        player->GetClickedItem().ClearAndSetSlot(0, halfStackFromSlot);
+                        return true;
+                    }
+                }
+                else
+                {
+                    Inventory::ItemStack* clickedItem =  player->GetClickedItem().TakeSlot(0);
+                    Inventory::ItemStack* mergeResult = inventory->Merge(inventorySlotId, clickedItem, 1);
+                    player->GetClickedItem().ClearAndSetSlot(0, mergeResult);
+                }
                 return true;
             }
         }

@@ -13,63 +13,17 @@ public:
     ItemStack(int id, int stackSize, int itemData);
     virtual ~ItemStack();
 
-    ItemStack* Copy()
-    {
-        return new ItemStack(*this);
-    }
-
-    int getItemData() const
-    {
-        return itemData;
-    }
-
-    void setItemData(int itemData)
-    {
-        this->itemData = itemData;
-    }
-
-    int getItemId() const
-    {
-        return itemId;
-    }
-
-    void setItemId(int itemId)
-    {
-        this->itemId = itemId;
-    }
-
-    int getStackSize() const
-    {
-        return stackSize;
-    }
-
-    void setStackSize(int stackSize)
-    {
-        this->stackSize = stackSize;
-    }
-
-    void setItem(int id, int stackSize, int itemData)
-    {
-        this->itemId = id;
-        this->itemData = itemData;
-        this->stackSize = stackSize;
-    }
-
-    const Item* getItem() const
-    {
-        if (itemId < 0 || itemId >= ITEM_COUNT)
-            return nullptr;
-        return ItemList::Instance().getItem(itemId);
-    }
-
-    bool IsEmpty() const
-    {
-        return itemId == -1;
-    }
-    void Clear()
-    {
-        itemId = -1;
-    }
+    ItemStack* Copy();
+    int getItemData() const;
+    void setItemData(int itemData);
+    int getItemId() const;
+    void setItemId(int itemId);
+    int getStackSize() const;
+    void setStackSize(int stackSize);
+    void setItem(int id, int stackSize, int itemData);
+    const Item* getItem() const;
+    int GetMaxStackSize();
+    bool IsSoftEqual(const ItemStack* otherStack) const;
 private:
     int itemId;
     int stackSize;
