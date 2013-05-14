@@ -31,6 +31,15 @@ void Inventory::CloseInventory(World::EntityPlayer* entityPlayer)
     playerWithOffsetList.erase(entityPlayer);
 }
 
+void Inventory::CloseInventoryForDelete()
+{
+    for (auto playerItr : playerWithOffsetList)
+    {
+        if (playerItr.second.windowId != 0)
+            playerItr.first->CloseWindow(playerItr.second.windowId);
+    }
+}
+
 const ItemStack* Inventory::LookSlot(int slotId) const
 {
     return slot[slotId];
@@ -180,6 +189,7 @@ ItemStack* Inventory::Merge(int slotId, ItemStack* itemStack, int count)
 
     return returnItem;
 }
+
 
 int Inventory::GetMaxSlot() const
 {

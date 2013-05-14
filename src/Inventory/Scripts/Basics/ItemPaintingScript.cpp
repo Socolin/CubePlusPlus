@@ -27,7 +27,7 @@ ItemScript* ItemPaintingScript::Copy()
 
 bool ItemPaintingScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    const Inventory::ItemStack* item = user->GetInventory().LookSlot(user->GetInventory().getHandSlotId());
+    const Inventory::ItemStack* item = user->GetInventory()->LookSlot(user->GetInventory()->getHandSlotId());
     if (item == nullptr)
         return false;
 

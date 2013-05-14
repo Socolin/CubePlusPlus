@@ -27,6 +27,9 @@ public:
 
     void OpenInventory(World::EntityPlayer* entityPlayer, i_windowId windowId, int offset);
     void CloseInventory(World::EntityPlayer* entityPlayer);
+
+    void CloseInventoryForDelete();
+
     void SendUpdateToAllViewer();
 
 

@@ -16,8 +16,9 @@ public:
     virtual ~WindowFurnaceScript();
     virtual WindowScript* Copy() const;
 
-    virtual void OnOpenWindow(World::EntityPlayer* player);
-    virtual void OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity);
+    virtual void OnOpenWindow(World::EntityPlayer* player) override;
+    virtual void OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity) override;
+
 };
 
 } /* namespace Scripting */

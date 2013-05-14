@@ -45,7 +45,7 @@ bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
             }
             else
             {
-                Inventory::ItemStack* item = user->GetInventory().TakeSomeItemInSlot(user->GetInventory().getHandSlotId(), 1);
+                Inventory::ItemStack* item = user->GetInventory()->TakeSomeItemInSlot(user->GetInventory()->getHandSlotId(), 1);
                 if (item != nullptr)
                 {
                     if (item_list.find(item->getItemId()) != item_list.end())

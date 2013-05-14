@@ -18,14 +18,14 @@ WindowFurnaceScript::~WindowFurnaceScript()
 {
 }
 
-void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* player)
-{
-    baseWindow->AddInventory(player, &player->GetInventory(), 3);
-}
-
 WindowScript* WindowFurnaceScript::Copy() const
 {
     return new WindowFurnaceScript(*this);
+}
+
+void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* player)
+{
+    baseWindow->AddInventory(player, player->GetInventory(), 3);
 }
 
 void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity)

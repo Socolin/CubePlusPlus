@@ -15,6 +15,7 @@
 #include "World/WorldManager.h"
 #include "World/World.h"
 #include "Entity/EntityPlayer.h"
+#include "Window/Window.h"
 
 #define DEBUG_STR(str) std::wcout << L"DEBUG: str: size:"<< str.length() << L" value:\"" << str << L"\"" << std::endl;
 #define DEBUG_SHORT(value) std::cout << #value << "(short):" << value << std::endl;
@@ -157,7 +158,7 @@ void NetworkSession::handleHeldItemChange() throw (NetworkException)
     int slotId = readShort();
     if (slotId > 8 || slotId < 0)
         throw NetworkException("handleHeldItemChange: SlotID > 8 || < 0");
-    player->GetInventory().setHandSlot(slotId);
+    player->GetInventory()->setHandSlot(slotId);
     player->ItemInHandHasChange();
 }
 void NetworkSession::handleAnimation() throw (NetworkException)
@@ -280,22 +281,25 @@ void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
         throw NetworkException("handleCreativeInventoryAction: slotId < 0 || slotId > 44");
 
     Inventory::ItemStack* receivedSlot = readSlot();
-    if (slotId == -1)
+    if (player->GetGameMode() == World::EntityPlayer::GAMEMODE_CREATVE)
     {
-        player->DropItem(receivedSlot);
+        if (receivedSlot != nullptr)
+        {
+            if (slotId == -1)
+            {
+                player->DropItem(receivedSlot);
+            }
+            else
+            {
+                if (slotId == player->GetInventory()->getHandSlotId())
+                    player->ItemInHandHasChange();
+                player->GetInventoryWindow()->SetSlot(player, slotId, receivedSlot);
+            }
+        }
     }
     else
     {
-        if (slotId == player->GetInventory().getHandSlotId())
-            player->ItemInHandHasChange();
-        if (slotId >= 9)
-        {
-            player->GetInventory().ClearAndSetSlot(slotId - 9, receivedSlot);
-        }
-        else
-        {
-            // TODO armor...
-        }
+        delete receivedSlot;
     }
 }
 void NetworkSession::handleClientSettings() throw (NetworkException)

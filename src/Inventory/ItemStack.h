@@ -13,7 +13,7 @@ public:
     ItemStack(int id, int stackSize, int itemData);
     virtual ~ItemStack();
 
-    ItemStack* Copy();
+    ItemStack* Copy() const;
     int getItemData() const;
     void setItemData(int itemData);
     int getItemId() const;
@@ -22,7 +22,7 @@ public:
     void setStackSize(int stackSize);
     void setItem(int id, int stackSize, int itemData);
     const Item* getItem() const;
-    int GetMaxStackSize();
+    int GetMaxStackSize() const;
     bool IsSoftEqual(const ItemStack* otherStack) const;
 private:
     int itemId;

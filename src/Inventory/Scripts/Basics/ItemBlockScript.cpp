@@ -29,7 +29,7 @@ ItemScript* ItemBlockScript::Copy()
 
 bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
-    const Inventory::ItemStack* item = user->GetInventory().LookSlot(user->GetInventory().getHandSlotId());
+    const Inventory::ItemStack* item = user->GetInventory()->LookSlot(user->GetInventory()->getHandSlotId());
     if (item == nullptr)
         return false;
 

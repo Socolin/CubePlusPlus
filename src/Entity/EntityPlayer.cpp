@@ -13,6 +13,7 @@
 #include "Network/OpcodeList.h"
 #include "Util/FloatUtil.h"
 #include "Window/Window.h"
+#include "Window/WindowList.h"
 #include "Window/WindowStaticData.h"
 #include "World/VirtualChunk.h"
 #include "World/VirtualSmallChunk.h"
@@ -23,19 +24,36 @@ namespace World
 
 EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& name, Network::NetworkSession* session)
     : LivingEntity(ENTITY_TYPE_PLAYER, x, y, z)
+    , gameMode(GAMEMODE_CREATVE)
     , name(name)
     , session(session)
-    , clickedItem(1)
     , currentWindowId(0)
     , animationId(-1)
     , currentWindow(nullptr)
 {
-    inventory.OpenInventory(this, i_windowId(0), 9);
-    clickedItem.OpenInventory(this, i_windowId(-1), -1);
+    inventory = new Inventory::InventoryPlayer();
+    clickedItem = new Inventory::Inventory(1);
+    armorInventory = new Inventory::Inventory(4);//TODO: special inventory
+    craftingInventory = new Inventory::Inventory(5);//TODO: special inventory
+
+    inventoryWindow = new Window::Window(0, Window::WindowList::getWindowData(0));
+    inventoryWindow->AddInventory(this, craftingInventory, 0);
+    inventoryWindow->AddInventory(this, armorInventory, 5);
+    inventoryWindow->AddInventory(this, inventory, 9);
 }
 
 EntityPlayer::~EntityPlayer()
 {
+    delete inventoryWindow;
+    craftingInventory->CloseInventoryForDelete();
+    armorInventory->CloseInventoryForDelete();
+    clickedItem->CloseInventoryForDelete();
+    inventory->CloseInventoryForDelete();
+
+    delete craftingInventory;
+    delete armorInventory;
+    delete clickedItem;
+    delete inventory;
 }
 
 void EntityPlayer::AddChunkToSend(int x, int z)
@@ -90,11 +108,7 @@ void EntityPlayer::OnJoinWorld()
 
     session->SendSetExperience(0, 0.f, 0);
 
-    Network::NetworkPacket packetSetInventory(Network::OP_SET_WINDOW_ITEMS);
-    unsigned char windowId = 0; // 0 = player inventory
-    short countItem = 0;
-    packetSetInventory << windowId << countItem;
-    session->SendPacket(packetSetInventory);
+    inventoryWindow->OpenWindow(this, false);
 }
 
 void EntityPlayer::Send(const Network::NetworkPacket& packet) const
@@ -112,7 +126,7 @@ void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
     packet << (char)0 << (char)0 << (unsigned char)127; // TODO: classe metadata
     packet << (unsigned char) Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
 
-    const Inventory::ItemStack* itemInHand = inventory.LookSlot(inventory.getHandSlotId());
+    const Inventory::ItemStack* itemInHand = inventory->LookSlot(inventory->getHandSlotId());
     if (itemInHand != nullptr)
         packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << itemInHand;
 }
@@ -169,16 +183,16 @@ void EntityPlayer::Kick()
         session->disconnect("kick");
 }
 
+EntityPlayer::eGameMode EntityPlayer::GetGameMode() const
+{
+    return gameMode;
+}
+
+
 const std::wstring& EntityPlayer::GetUsername()
 {
     return name;
 }
-
-Inventory::InventoryPlayer& EntityPlayer::GetInventory()
-{
-    return inventory;
-}
-
 
 void EntityPlayer::DropItem(Inventory::ItemStack* itemToDrop)
 {
@@ -212,17 +226,20 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*fac
     }
     else if (state == 4)
     {
-        DropItem(inventory.TakeSomeItemInSlot(inventory.getHandSlotId(),1));
+        DropItem(inventory->TakeSomeItemInSlot(inventory->getHandSlotId(),1));
     }
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
 {
     if (!world)
         return;
+
     // TODO check 6 block in range
     int clickedBlockId = world->GetBlockId(x, y, z);
+
     const Block::Block* block = Block::BlockList::Instance().getBlock(clickedBlockId);
-    const Inventory::ItemStack* itemstack = inventory.LookSlot(inventory.getHandSlotId());
+
+    const Inventory::ItemStack* itemstack = inventory->LookSlot(inventory->getHandSlotId());
     const Inventory::Item* item = nullptr;
     if (itemstack != nullptr)
     {
@@ -264,7 +281,7 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
     if (hasChangeItemInHand)
     {
         hasChangeItemInHand = false;
-        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << inventory.LookSlot(inventory.getHandSlotId());
+        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << inventory->LookSlot(inventory->getHandSlotId());
     }
     if (animationId >= 0)
     {
@@ -280,11 +297,11 @@ void EntityPlayer::ResetBlock(int x, unsigned char y, int z)
     int blockData = world->GetBlockData(x, y, z);
     int blockID = world->GetBlockId(x, y, z);
     unsigned int dataChange = 0;
-    dataChange |= blockData       & 0x0000000f;
-    dataChange |= (blockID << 4)  & 0x0000fff0;
-    dataChange |= ((int)y << 16)  & 0x00ff0000;
-    dataChange |= ((z & 0xf) << 24)       & 0x0f000000;
-    dataChange |= ((x & 0xf) << 28)       & 0xf0000000;
+    dataChange |= blockData             & 0x0000000f;
+    dataChange |= (blockID << 4)        & 0x0000fff0;
+    dataChange |= ((int)y << 16)        & 0x00ff0000;
+    dataChange |= ((z & 0xf) << 24)     & 0x0f000000;
+    dataChange |= ((x & 0xf) << 28)     & 0xf0000000;
     packet << dataChange;
     Send(packet);
 }
@@ -299,17 +316,35 @@ void EntityPlayer::UseEntity(int target, bool leftClick)
     }
 }
 
+void EntityPlayer::ItemInHandHasChange()
+{
+    hasChangeItemInHand = true;
+}
 
 void EntityPlayer::PlayAnimation(char animationId)
 {
     this->animationId = animationId;
 }
 
-Inventory::Inventory& EntityPlayer::GetClickedItem()
+void EntityPlayer::OpenWindow(Window::Window* window)
 {
-    return clickedItem;
+    if (currentWindow != nullptr)
+    {
+        CloseWindow(currentWindow->GetId());
+    }
+    currentWindow = window;
 }
 
+void EntityPlayer::CloseWindow(i_windowId windowId)
+{
+    if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
+    {
+        currentWindow->CloseWindow(this, true);
+        delete currentWindow;
+        currentWindow = nullptr;
+        inventoryWindow->ReOpenAllInventories(this);
+    }
+}
 
 i_windowId EntityPlayer::GetCurrentWindow() const
 {
@@ -327,27 +362,6 @@ i_windowId EntityPlayer::GetNextAndSetCurrentWindowId()
     return this->currentWindowId;
 }
 
-void EntityPlayer::OpenWindow(Window::Window* window)
-{
-    currentWindow = window;
-}
-
-void EntityPlayer::CloseWindow(i_windowId windowId)
-{
-    if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
-    {
-        currentWindow->CloseWindow(this, true);
-        delete currentWindow;
-        currentWindow = nullptr;
-    }
-}
-
-void EntityPlayer::UpdateInventories()
-{
-    inventory.SendUpdateToAllViewer();
-    clickedItem.SendUpdateToAllViewer();
-}
-
 void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
 {
     if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
@@ -359,6 +373,35 @@ void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button,
     }
 }
 
+Inventory::Inventory* EntityPlayer::GetClickedItem() const
+{
+    return clickedItem;
+}
 
+Inventory::Inventory* EntityPlayer::GetCraftingInventory() const
+{
+    return craftingInventory;
+}
+
+Inventory::Inventory* EntityPlayer::GetArmorInventory() const
+{
+    return armorInventory;
+}
+
+Inventory::InventoryPlayer* EntityPlayer::GetInventory() const
+{
+    return inventory;
+}
+
+void EntityPlayer::UpdateInventories()
+{
+    inventory->SendUpdateToAllViewer();
+    clickedItem->SendUpdateToAllViewer();
+}
+
+Window::Window* EntityPlayer::GetInventoryWindow() const
+{
+    return inventoryWindow;
+}
 
 } /* namespace World */

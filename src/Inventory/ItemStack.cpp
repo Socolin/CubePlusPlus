@@ -22,7 +22,7 @@ ItemStack::~ItemStack()
     // TODO Auto-generated destructor stub
 }
 
-ItemStack* ItemStack::Copy()
+ItemStack* ItemStack::Copy() const
 {
     return new ItemStack(*this);
 }
@@ -71,7 +71,7 @@ const Item* ItemStack::getItem() const
     return ItemList::Instance().getItem(itemId);
 }
 
-int ItemStack::GetMaxStackSize()
+int ItemStack::GetMaxStackSize() const
 {
     const Item* item = getItem();
     if (item == nullptr)

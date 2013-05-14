@@ -17,10 +17,12 @@ Window::Window(i_windowId id, const WindowStaticData* windowData)
     : id(id), windowData(windowData)
 {
    assert(windowData);
-   assert(windowData->GetScript());
-   script = windowData->GetScript()->Copy();
-   assert(script);
-   script->Init(this);
+   if (windowData->GetScript() != nullptr)
+   {
+       script = windowData->GetScript()->Copy();
+       if (script)
+           script->Init(this);
+   }
 }
 
 Window::~Window()
@@ -47,14 +49,22 @@ void Window::OpenWindow(World::EntityPlayer* player, int x, i_height y, int z)
             }
         }
     }
-    script->OnOpenWindow(player);
 
     player->OpenWindow(this);
+    if (script)
+        script->OnOpenWindow(player);
 
-    // TODO: move this in player and add getOpenPacket in script or something to rename window
-    Network::NetworkPacket openWindowPacket(Network::OP_OPEN_WINDOW);
-    openWindowPacket << id << windowData->GetClientWindowId() << windowData->getName() << windowData->getMaxSlot() << true;
-    player->Send(openWindowPacket);
+    OpenWindow(player, true);
+}
+
+void Window::OpenWindow(World::EntityPlayer* player, bool sendOpenPacket)
+{
+    if (sendOpenPacket)
+    {
+        Network::NetworkPacket openWindowPacket(Network::OP_OPEN_WINDOW);
+        openWindowPacket << id << windowData->GetClientWindowId() << windowData->getName() << windowData->getMaxSlot() << true;
+        player->Send(openWindowPacket);
+    }
 
     Network::NetworkPacket setWindowItemPacket(Network::OP_SET_WINDOW_ITEMS);
     setWindowItemPacket << id << (short)        windowData->getMaxSlot();
@@ -67,13 +77,13 @@ void Window::OpenWindow(World::EntityPlayer* player, int x, i_height y, int z)
 
 void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
 {
-    script->OnCloseWindow(player);
-
     for (Inventory::Inventory* inv : inventoryList)
     {
         inv->CloseInventory(player);
     }
-    player->GetInventory().OpenInventory(player, i_windowId(9), 0);
+
+    if (script)
+        script->OnCloseWindow(player);
 
     if (!askByPlayer)
     {
@@ -87,7 +97,8 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
 {
     if (slotId >= 0 && slotId < windowData->getMaxSlot())
     {
-        script->OnClickOnWindow(player, slotId, button, action, mode, slot);
+        if (script)
+            script->OnClickOnWindow(player, slotId, button, action, mode, slot);
 
         int slotOffsetInInventory = 0;
         Inventory::Inventory* inventory = nullptr;
@@ -106,22 +117,22 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
             return false;
         }
         i_slot inventorySlotId = slotId - slotOffsetInInventory;
-        const Inventory::ItemStack* lookedClickedItem = player->GetClickedItem().LookSlot(0);
+        const Inventory::ItemStack* lookedClickedItem = player->GetClickedItem()->LookSlot(0);
         const Inventory::ItemStack* lookedItemInSlot = inventory->LookSlot(inventorySlotId);
         if (mode == 0)
         {
             if (button == 0)
             {
-                Inventory::ItemStack* clickedItem =  player->GetClickedItem().TakeSlot(0);
+                Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
                 if (lookedClickedItem != nullptr && lookedItemInSlot != nullptr && lookedClickedItem->IsSoftEqual(lookedItemInSlot))
                 {
                     Inventory::ItemStack* mergeResult = inventory->Merge(inventorySlotId, clickedItem);
-                    player->GetClickedItem().ClearAndSetSlot(0, mergeResult);
+                    player->GetClickedItem()->ClearAndSetSlot(0, mergeResult);
                 }
                 else
                 {
                     Inventory::ItemStack* itemInSlot = inventory->TakeAndSetSlot(slotId - slotOffsetInInventory, clickedItem);
-                    player->GetClickedItem().ClearAndSetSlot(0, itemInSlot);
+                    player->GetClickedItem()->ClearAndSetSlot(0, itemInSlot);
                 }
                 return true;
             }
@@ -137,23 +148,78 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
                     {
                         int count = lookedItemInSlot->getStackSize();
                         Inventory::ItemStack* halfStackFromSlot = inventory->TakeSomeItemInSlot(inventorySlotId, (count + 1) / 2);
-                        player->GetClickedItem().ClearAndSetSlot(0, halfStackFromSlot);
+                        player->GetClickedItem()->ClearAndSetSlot(0, halfStackFromSlot);
                         return true;
                     }
                 }
                 else
                 {
-                    Inventory::ItemStack* clickedItem =  player->GetClickedItem().TakeSlot(0);
+                    Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
                     Inventory::ItemStack* mergeResult = inventory->Merge(inventorySlotId, clickedItem, 1);
-                    player->GetClickedItem().ClearAndSetSlot(0, mergeResult);
+                    player->GetClickedItem()->ClearAndSetSlot(0, mergeResult);
                 }
                 return true;
+            }
+        }
+        else if (mode == 1)
+        {
+
+        }
+        else if (mode == 2)
+        {
+
+        }
+        else if (mode == 3) // Middle click
+        {
+            if (player->GetGameMode() == World::EntityPlayer::GAMEMODE_CREATVE)
+            {
+                if (lookedClickedItem == nullptr && lookedItemInSlot != nullptr)
+                {
+                    Inventory::ItemStack* duplicatedItem = lookedItemInSlot->Copy();
+                    duplicatedItem->setStackSize(lookedItemInSlot->GetMaxStackSize());
+                    player->GetClickedItem()->ClearAndSetSlot(0, duplicatedItem);
+                }
+            }
+        }
+        else if (mode == 4)
+        {
+            if (lookedItemInSlot != nullptr)
+            {
+                if (button == 0)
+                {
+                    Inventory::ItemStack* droppedItem = inventory->TakeSomeItemInSlot(inventorySlotId, 1);
+                    if (droppedItem != nullptr)
+                        player->DropItem(droppedItem);
+                }
+                else if (button == 1)
+                {
+                    Inventory::ItemStack* itemInSlot=  inventory->TakeSlot(inventorySlotId);
+                    player->DropItem(itemInSlot);
+                }
             }
         }
     }
     else if (slotId == -999)
     {
+        const Inventory::ItemStack* lookedClickedItem = player->GetClickedItem()->LookSlot(0);
 
+        if (mode == 0)
+        {
+            if (lookedClickedItem != nullptr)
+            {
+                if (button == 0)
+                {
+                    Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
+                    player->DropItem(clickedItem);
+                }
+                else if (button == 1)
+                {
+                    Inventory::ItemStack* droppedItem = player->GetClickedItem()->TakeSomeItemInSlot(0, 1);
+                    if (droppedItem != nullptr)
+                        player->DropItem(droppedItem);
+                }
+            }
+        }
     }
     player->UpdateInventories();
     UpdateInventories();
@@ -162,14 +228,39 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
 
 void Window::ConfirmTransaction(World::EntityPlayer* player, short action, bool accepted)
 {
+    if (script)
+        script->OnConfirmTransaction(player, action, accepted);
 }
 
 void Window::DoAction(World::EntityPlayer* player, short action)
 {
+    if (script)
+        script->OnDoAction(player, action);
 }
 
 void Window::SetSlot(World::EntityPlayer* player, short slotId, const Inventory::ItemStack* slot)
 {
+    if (slotId >= 0 && slotId < windowData->getMaxSlot())
+    {
+        int slotOffsetInInventory = 0;
+        Inventory::Inventory* inventory = nullptr;
+        for (Inventory::Inventory* inv : inventoryList)
+        {
+            int maxSlot = inv->GetMaxSlot();
+            if (maxSlot + slotOffsetInInventory > slotId)
+            {
+                inventory = inv;
+                break;
+            }
+            slotOffsetInInventory += maxSlot;
+        }
+        if (inventory == nullptr)
+        {
+            return;
+        }
+        i_slot inventorySlotId = slotId - slotOffsetInInventory;
+        inventory->ClearAndSetSlot(inventorySlotId, slot->Copy());
+    }
 }
 
 void Window::SetWindowItems(World::EntityPlayer* player, short slotId, const Inventory::ItemStack* slot)
@@ -191,6 +282,16 @@ i_windowId Window::GetId() const
 const WindowStaticData* Window::GetWindowData() const
 {
     return windowData;
+}
+
+void Window::ReOpenAllInventories(World::EntityPlayer* player)
+{
+    int offset = 0;
+    for (Inventory::Inventory* inv : inventoryList)
+    {
+        inv->OpenInventory(player, id, offset);
+        offset += inv->GetMaxSlot();
+    }
 }
 
 void Window::UpdateInventories()
