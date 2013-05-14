@@ -79,6 +79,7 @@ void EntityPlayer::UpdateTick()
             }
         }
     }
+    UpdateInventories();
 }
 
 void EntityPlayer::Respawn(double x, double y, double z)
@@ -226,7 +227,7 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*fac
     }
     else if (state == 4)
     {
-        DropItem(inventory->TakeSomeItemInSlot(inventory->getHandSlotId(),1));
+        DropItem(inventory->TakeSomeItemInSlot(inventory->getHandSlotId(), 1));
     }
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
