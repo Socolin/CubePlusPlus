@@ -79,7 +79,7 @@ public:
     void PlayAnimation(char animationId);
 
     void OpenWindow(Window::Window* window);
-    void CloseWindow(i_windowId windowId);
+    void CloseWindow(i_windowId windowId, bool force = false);
     void ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
     i_windowId GetCurrentWindow() const;
     void SetCurrentWindow(i_windowId currentWindow);

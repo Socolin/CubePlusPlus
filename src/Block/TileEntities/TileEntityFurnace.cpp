@@ -14,7 +14,7 @@ TileEntityFurnace::TileEntityFurnace(int blockX, i_height blockY, int blockZ)
 
 TileEntityFurnace::~TileEntityFurnace()
 {
-    //TODO: close inventory for player
+    inventory->CloseInventoryForDelete();
     delete inventory;
 }
 

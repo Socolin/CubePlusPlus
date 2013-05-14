@@ -67,7 +67,7 @@ void Window::OpenWindow(World::EntityPlayer* player, bool sendOpenPacket)
     }
 
     Network::NetworkPacket setWindowItemPacket(Network::OP_SET_WINDOW_ITEMS);
-    setWindowItemPacket << id << (short)        windowData->getMaxSlot();
+    setWindowItemPacket << id << (short) windowData->getMaxSlot();
     for (Inventory::Inventory* inv : inventoryList)
     {
         inv->SendInventoryTo(player, setWindowItemPacket);
@@ -87,7 +87,7 @@ void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
 
     if (!askByPlayer)
     {
-        Network::NetworkPacket closeWindowPacket(Network::OP_CLICK_WINDOW);
+        Network::NetworkPacket closeWindowPacket(Network::OP_CLOSE_WINDOW);
         closeWindowPacket << id;
         player->Send(closeWindowPacket);
     }
@@ -95,6 +95,7 @@ void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
 
 bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
 {
+    bool returnValue = false;
     if (slotId >= 0 && slotId < windowData->getMaxSlot())
     {
         if (script)
@@ -134,7 +135,7 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
                     Inventory::ItemStack* itemInSlot = inventory->TakeAndSetSlot(slotId - slotOffsetInInventory, clickedItem);
                     player->GetClickedItem()->ClearAndSetSlot(0, itemInSlot);
                 }
-                return true;
+                returnValue = true;
             }
             else if (button == 1)
             {
@@ -142,14 +143,14 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
                 {
                     if (lookedItemInSlot == nullptr)
                     {
-                        return true;
+                        returnValue = true;
                     }
                     else
                     {
                         int count = lookedItemInSlot->getStackSize();
                         Inventory::ItemStack* halfStackFromSlot = inventory->TakeSomeItemInSlot(inventorySlotId, (count + 1) / 2);
                         player->GetClickedItem()->ClearAndSetSlot(0, halfStackFromSlot);
-                        return true;
+                        returnValue = true;
                     }
                 }
                 else
@@ -157,8 +158,8 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
                     Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
                     Inventory::ItemStack* mergeResult = inventory->Merge(inventorySlotId, clickedItem, 1);
                     player->GetClickedItem()->ClearAndSetSlot(0, mergeResult);
+                    returnValue = true;
                 }
-                return true;
             }
         }
         else if (mode == 1)
@@ -178,6 +179,7 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
                     Inventory::ItemStack* duplicatedItem = lookedItemInSlot->Copy();
                     duplicatedItem->setStackSize(lookedItemInSlot->GetMaxStackSize());
                     player->GetClickedItem()->ClearAndSetSlot(0, duplicatedItem);
+                    returnValue = true;
                 }
             }
         }
@@ -190,11 +192,13 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
                     Inventory::ItemStack* droppedItem = inventory->TakeSomeItemInSlot(inventorySlotId, 1);
                     if (droppedItem != nullptr)
                         player->DropItem(droppedItem);
+                    returnValue = true;
                 }
                 else if (button == 1)
                 {
                     Inventory::ItemStack* itemInSlot=  inventory->TakeSlot(inventorySlotId);
                     player->DropItem(itemInSlot);
+                    returnValue = true;
                 }
             }
         }
@@ -211,19 +215,21 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
                 {
                     Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
                     player->DropItem(clickedItem);
+                    returnValue = true;
                 }
                 else if (button == 1)
                 {
                     Inventory::ItemStack* droppedItem = player->GetClickedItem()->TakeSomeItemInSlot(0, 1);
                     if (droppedItem != nullptr)
                         player->DropItem(droppedItem);
+                    returnValue = true;
                 }
             }
         }
     }
     player->UpdateInventories();
     UpdateInventories();
-    return false;
+    return returnValue;
 }
 
 void Window::ConfirmTransaction(World::EntityPlayer* player, short action, bool accepted)

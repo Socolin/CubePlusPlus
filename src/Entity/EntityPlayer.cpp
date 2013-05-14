@@ -336,11 +336,11 @@ void EntityPlayer::OpenWindow(Window::Window* window)
     currentWindow = window;
 }
 
-void EntityPlayer::CloseWindow(i_windowId windowId)
+void EntityPlayer::CloseWindow(i_windowId windowId, bool force)
 {
     if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
     {
-        currentWindow->CloseWindow(this, true);
+        currentWindow->CloseWindow(this, force ? false : true);
         delete currentWindow;
         currentWindow = nullptr;
         inventoryWindow->ReOpenAllInventories(this);

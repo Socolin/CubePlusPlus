@@ -36,7 +36,7 @@ void Inventory::CloseInventoryForDelete()
     for (auto playerItr : playerWithOffsetList)
     {
         if (playerItr.second.windowId != 0)
-            playerItr.first->CloseWindow(playerItr.second.windowId);
+            playerItr.first->CloseWindow(playerItr.second.windowId, true);
     }
 }
 
