@@ -2,6 +2,7 @@
 #define INVENTORY_H_
 
 #include <map>
+#include <set>
 #include <vector>
 
 #include "ItemStack.h"
@@ -85,7 +86,7 @@ protected:
         i_windowId windowId;
     };
     std::map<World::EntityPlayer*, playerData> playerWithOffsetList;
-    std::vector<i_slot> updatedSlot; // TODO: see to use set instead vector
+    std::set<i_slot> updatedSlot;
     std::vector<ItemStack*> slot;
     int maxSlot;
 };

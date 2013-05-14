@@ -42,6 +42,8 @@ public:
     i_windowId GetId() const;
     const WindowStaticData* GetWindowData() const;
 
+    void UpdateInventories();
+
 private:
     const i_windowId id;
     Scripting::WindowScript* script;

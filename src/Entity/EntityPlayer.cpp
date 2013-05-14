@@ -342,6 +342,12 @@ void EntityPlayer::CloseWindow(i_windowId windowId)
     }
 }
 
+void EntityPlayer::UpdateInventories()
+{
+    inventory.SendUpdateToAllViewer();
+    clickedItem.SendUpdateToAllViewer();
+}
+
 void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
 {
     if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
@@ -352,5 +358,7 @@ void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button,
         Send(confirmTransactionPacket);
     }
 }
+
+
 
 } /* namespace World */

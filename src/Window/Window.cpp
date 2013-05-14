@@ -122,6 +122,8 @@ bool Window::ClickOnWindow(World::EntityPlayer* player, short slotId, char butto
     {
 
     }
+    player->UpdateInventories();
+    UpdateInventories();
     return false;
 }
 
@@ -156,6 +158,14 @@ i_windowId Window::GetId() const
 const WindowStaticData* Window::GetWindowData() const
 {
     return windowData;
+}
+
+void Window::UpdateInventories()
+{
+    for (Inventory::Inventory* inv : inventoryList)
+    {
+        inv->SendUpdateToAllViewer();
+    }
 }
 
 } /* namespace Window */

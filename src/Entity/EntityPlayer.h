@@ -65,6 +65,7 @@ public:
     }
     void PlayAnimation(char animationId);
     Inventory::Inventory& GetClickedItem();
+    void UpdateInventories();
     i_windowId GetCurrentWindow() const;
     i_windowId GetNextAndSetCurrentWindowId();
     void SetCurrentWindow(i_windowId currentWindow);

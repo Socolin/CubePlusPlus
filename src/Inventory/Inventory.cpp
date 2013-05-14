@@ -8,13 +8,13 @@ namespace Inventory
 {
 
 Inventory::Inventory(int maxSlot)
-    : updatedSlot(4), slot(maxSlot, nullptr), maxSlot(maxSlot)
+    : slot(maxSlot, nullptr), maxSlot(maxSlot)
 {
 }
 
 Inventory::~Inventory()
 {
-    for (int i = 0; i < slot.size(); i++)
+    for (size_t i = 0; i < slot.size(); i++)
     {
         delete slot[i];
     }
@@ -71,16 +71,16 @@ ItemStack* Inventory::TakeSlot(int slotId)
 {
     ItemStack* oldItem = slot[slotId];
     slot[slotId] = nullptr;
-    updatedSlot.push_back(slotId);
-    SendUpdateToAllViewer();// Move it or remove updatedSlot system}
+    updatedSlot.insert(slotId);
+
     return oldItem;
 }
 ItemStack* Inventory::TakeAndSetSlot(int slotId, ItemStack* itemStack)
 {
     ItemStack* oldItem = slot[slotId];
     slot[slotId] = itemStack;
-    updatedSlot.push_back(slotId);
-    SendUpdateToAllViewer();// Move it or remove updatedSlot system}
+    updatedSlot.insert(slotId);
+
     return oldItem;
 }
 
@@ -89,8 +89,8 @@ void Inventory::ClearAndSetSlot(int slotId, ItemStack* itemStack)
     ItemStack* oldItem = slot[slotId];
     delete oldItem;
     slot[slotId] = itemStack;
-    updatedSlot.push_back(slotId);
-    SendUpdateToAllViewer();// Move it or remove updatedSlot system}
+    updatedSlot.insert(slotId);
+
 }
 
 void Inventory::ClearSlot(int slotId)
@@ -98,8 +98,8 @@ void Inventory::ClearSlot(int slotId)
     ItemStack* oldItem = slot[slotId];
     delete oldItem;
     slot[slotId] = nullptr;
-    updatedSlot.push_back(slotId);
-    SendUpdateToAllViewer();// Move it or remove updatedSlot system}
+    updatedSlot.insert(slotId);
+
 }
 
 ItemStack* Inventory::TakeSomeItemInSlot(int slotId, int count)
@@ -123,8 +123,8 @@ ItemStack* Inventory::TakeSomeItemInSlot(int slotId, int count)
         newStack->setStackSize(count);
         oldItem->setStackSize(oldItem->getStackSize() - count);
     }
-    updatedSlot.push_back(slotId);
-    SendUpdateToAllViewer();// Move it or remove updatedSlot system}
+    updatedSlot.insert(slotId);
+
     return newStack;
 }
 
