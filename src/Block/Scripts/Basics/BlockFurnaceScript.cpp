@@ -49,7 +49,7 @@ bool BlockFurnaceScript::UseTileEntity() const
     return true;
 }
 
-bool BlockFurnaceScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool BlockFurnaceScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     const Window::WindowStaticData* windowData = Window::WindowList::getWindowData(windowDataId);
     if (windowData != nullptr)
@@ -60,7 +60,7 @@ bool BlockFurnaceScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
     return true;
 }
 
-void BlockFurnaceScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+void BlockFurnaceScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i_height /*y*/, int /*z*/, int /*face*/, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
     data = 0;
@@ -85,7 +85,7 @@ void BlockFurnaceScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_h
 }
 
 // On click open window using id in parameter of script from database
-void BlockFurnaceScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
+void BlockFurnaceScript::OnDestroy(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, i_data /*data*/) const
 {
     // TODO: Drop item in tile entity
 }

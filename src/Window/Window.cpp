@@ -244,7 +244,7 @@ void Window::DoAction(World::EntityPlayer* player, short action)
         script->OnDoAction(player, action);
 }
 
-void Window::SetSlot(World::EntityPlayer* player, short slotId, const Inventory::ItemStack* slot)
+void Window::SetSlot(World::EntityPlayer* /*player*/, short slotId, const Inventory::ItemStack* slot)
 {
     if (slotId >= 0 && slotId < windowData->getMaxSlot())
     {
@@ -269,7 +269,7 @@ void Window::SetSlot(World::EntityPlayer* player, short slotId, const Inventory:
     }
 }
 
-void Window::SetWindowItems(World::EntityPlayer* player, short slotId, const Inventory::ItemStack* slot)
+void Window::SetWindowItems(World::EntityPlayer* /*player*/, short /*slotId*/, const Inventory::ItemStack* /*slot*/)
 {
 }
 

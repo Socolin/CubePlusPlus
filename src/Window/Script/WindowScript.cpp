@@ -22,7 +22,7 @@ void WindowScript::Init(Window::Window* baseWindow)
     this->baseWindow = baseWindow;
 }
 
-void WindowScript::OnOpenWindow(World::EntityPlayer* player)
+void WindowScript::OnOpenWindow(World::EntityPlayer* /*player*/)
 {
 }
 
@@ -30,7 +30,7 @@ void WindowScript::OnOpenWindow(World::EntityPlayer* /*player*/, Block::TileEnti
 {
 }
 
-void WindowScript::OnCloseWindow(World::EntityPlayer* player)
+void WindowScript::OnCloseWindow(World::EntityPlayer* /*player*/)
 {
 }
 
