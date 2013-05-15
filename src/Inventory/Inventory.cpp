@@ -65,11 +65,8 @@ void Inventory::SendUpdateToAllViewer()
     }
 }
 
-void Inventory::SendInventoryTo(World::EntityPlayer* entityPlayer, Network::NetworkPacket& packet)
+void Inventory::SendInventoryTo(Network::NetworkPacket& packet)
 {
-    auto playerData = playerWithOffsetList[entityPlayer];
-    int offset = playerData.offsetSlot;
-    i_windowId windowId = playerData.windowId;
     for (const ItemStack* item : slot)
     {
         packet << item;

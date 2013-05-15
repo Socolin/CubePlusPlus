@@ -186,6 +186,11 @@ public:
 
     i_powerlevel GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const;
 
+    /**
+     * Return if the top of this block has a solid surface, ex: reversed stairs, or slab
+     * @param metadata current metadata of block
+     * @return true if the top face is solid
+     */
     bool HasSolidTopSurface(i_data metadata) const;
 
     bool IsNormalCube() const;

@@ -75,7 +75,7 @@ void Window::OpenWindow(World::EntityPlayer* player, bool sendOpenPacket)
     player->Send(setWindowItemPacket);
 }
 
-void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
+void Window::CloseWindow(World::EntityPlayer* player, bool sendPacket)
 {
     for (Inventory::Inventory* inv : inventoryList)
     {
@@ -85,7 +85,7 @@ void Window::CloseWindow(World::EntityPlayer* player, bool askByPlayer)
     if (script)
         script->OnCloseWindow(player);
 
-    if (!askByPlayer)
+    if (sendPacket)
     {
         Network::NetworkPacket closeWindowPacket(Network::OP_CLOSE_WINDOW);
         closeWindowPacket << id;

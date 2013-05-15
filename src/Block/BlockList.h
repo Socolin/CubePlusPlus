@@ -12,15 +12,27 @@
 
 namespace Block
 {
+/**
+ * This class store all the blocks, it's a singleton so you can acces it anywhere
+ * It load blocks' data, sound and material from database
+ */
 class BlockList : public Util::Singleton<BlockList>
 {
     friend class Util::Singleton<BlockList>;
 public:
-    static const Block* getBlock(i_block block)
+    /**
+     * Get block from blockid, blockId must be valid (0 < blockId < MAX_BLOCK_COUNT)
+     * @param block blockId
+     * @return
+     */
+    static const Block* getBlock(i_block blockId)
     {
-        return Instance().blocks[block];
+        return Instance().blocks[blockId];
     }
     virtual ~BlockList();
+    /**
+     * Load blocks from database
+     */
     void InitInstance() override;
 private:
     BlockList();

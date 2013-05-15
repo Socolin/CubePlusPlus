@@ -20,7 +20,7 @@ WorldManager* WorldManager::GetInstance()
 
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
 {
-    EntityPlayer* player = new EntityPlayer(0, 100, 0, name, session);
+    EntityPlayer* player = new EntityPlayer(0, 35, 0, name, session);
 
     world->AddPlayer(player);
 

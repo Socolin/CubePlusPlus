@@ -22,16 +22,40 @@ class ItemStack;
 class Inventory
 {
 public:
+	/**
+	 * Create a new inventory with maxSlot slot number
+	 * @param maxSlot number of slot in inventory
+	 */
     Inventory(int maxSlot);
+
+    /**
+     * Destroy all item in inventory, if inventory must drop item, it must be done before
+     */
     virtual ~Inventory();
 
+    /**
+     * Open inventory for player, so the player is added to a list and he receive all change done in this inventory
+     * @param entityPlayer the player which open inventory
+     * @param windowId the window id in which this inventory is contained for player
+     * @param offset offset of first slot for player inventory
+     */
     void OpenInventory(World::EntityPlayer* entityPlayer, i_windowId windowId, int offset);
+
+    /**
+     * Remove player from looker list
+     * @param entityPlayer
+     */
     void CloseInventory(World::EntityPlayer* entityPlayer);
 
+    /**
+     * Close inventory and ask to all player with this inventory open, to close the windows which use it
+     */
     void CloseInventoryForDelete();
 
+    /**
+     * Send update packet for all slot which has been change from last time
+     */
     void SendUpdateToAllViewer();
-
 
     /**
      * Get the count of item from the slot
@@ -88,8 +112,19 @@ public:
      */
     ItemStack* Merge(int slotId, ItemStack* itemStack, int count = -1);
 
-    void SendInventoryTo(World::EntityPlayer* entityPlayer, Network::NetworkPacket& packet);
+    /**
+     * Fill packet with all slot of inventory, same empty slot
+     * @param packet packet to fill
+     */
+    void SendInventoryTo(Network::NetworkPacket& packet);
+
+    /**
+     * Get slot count in inventory
+     * @return number of slot in inventory
+     */
     int GetMaxSlot() const;
+
+    //TODO: DropInventory
 
 protected:
     struct playerData

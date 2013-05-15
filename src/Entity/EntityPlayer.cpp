@@ -56,6 +56,14 @@ EntityPlayer::~EntityPlayer()
     delete inventory;
 }
 
+void EntityPlayer::Send(const Network::NetworkPacket& packet) const
+{
+    if (session != NULL)
+    {
+        session->SendPacket(packet);
+    }
+}
+
 void EntityPlayer::AddChunkToSend(int x, int z)
 {
     chunkToSend.push(std::pair<int, int>(x, z));
@@ -84,6 +92,7 @@ void EntityPlayer::UpdateTick()
 
 void EntityPlayer::Respawn(double x, double y, double z)
 {
+	//TODO: override relocate to handle well movement etc...
     Relocate(x, y, z);
     Network::NetworkPacket packet;
 
@@ -95,12 +104,14 @@ void EntityPlayer::Respawn(double x, double y, double z)
 
 void EntityPlayer::OnJoinWorld()
 {
-    Network::NetworkPacket packetRespawn(Network::OP_SPAWN_POSITION);
-    packetRespawn << (int) 0 << (int) 100 << (int) 0;
-    session->SendPacket(packetRespawn);
+	// TODO: get it from world
+    Network::NetworkPacket packetSpawnPosition(Network::OP_SPAWN_POSITION);
+    packetSpawnPosition << (int) x << (int) y << (int) z;
+    session->SendPacket(packetSpawnPosition);
 
     session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
 
+    // TODO: use world value
     session->SendUpdateTime(0, 0);
 
     session->SendSetPositionAndLook(x, y, y + 1.62, z, 0.f, 0.f, false);
@@ -110,14 +121,6 @@ void EntityPlayer::OnJoinWorld()
     session->SendSetExperience(0, 0.f, 0);
 
     inventoryWindow->OpenWindow(this, false);
-}
-
-void EntityPlayer::Send(const Network::NetworkPacket& packet) const
-{
-    if (session != NULL)
-    {
-        session->SendPacket(packet);
-    }
 }
 
 void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
@@ -331,30 +334,20 @@ void EntityPlayer::OpenWindow(Window::Window* window)
 {
     if (currentWindow != nullptr)
     {
-        CloseWindow(currentWindow->GetId());
+        CloseWindow(currentWindow->GetId(), true);
     }
     currentWindow = window;
 }
 
-void EntityPlayer::CloseWindow(i_windowId windowId, bool force)
+void EntityPlayer::CloseWindow(i_windowId windowId, bool sendPacket)
 {
     if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
     {
-        currentWindow->CloseWindow(this, force ? false : true);
+        currentWindow->CloseWindow(this, sendPacket);
         delete currentWindow;
         currentWindow = nullptr;
         inventoryWindow->ReOpenAllInventories(this);
     }
-}
-
-i_windowId EntityPlayer::GetCurrentWindow() const
-{
-    return currentWindowId;
-}
-
-void EntityPlayer::SetCurrentWindow(i_windowId currentWindow)
-{
-    this->currentWindowId = currentWindow;
 }
 
 i_windowId EntityPlayer::GetNextAndSetCurrentWindowId()
@@ -365,13 +358,18 @@ i_windowId EntityPlayer::GetNextAndSetCurrentWindowId()
 
 void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
 {
-    if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
+	bool result = false;
+	if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
     {
-        bool result = currentWindow->ClickOnWindow(this, slotId, button, action, mode, slot);
-        Network::NetworkPacket confirmTransactionPacket(Network::OP_CONFIRM_TRANSACTION);
-        confirmTransactionPacket << windowId << action << result;
-        Send(confirmTransactionPacket);
+        result = currentWindow->ClickOnWindow(this, slotId, button, action, mode, slot);
     }
+    else if (currentWindow == nullptr)
+    {
+        result = inventoryWindow->ClickOnWindow(this, slotId, button, action, mode, slot);
+    }
+	Network::NetworkPacket confirmTransactionPacket(Network::OP_CONFIRM_TRANSACTION);
+	confirmTransactionPacket << windowId << action << result;
+	Send(confirmTransactionPacket);
 }
 
 Inventory::Inventory* EntityPlayer::GetClickedItem() const

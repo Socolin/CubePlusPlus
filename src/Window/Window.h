@@ -30,7 +30,7 @@ public:
     virtual ~Window();
     void OpenWindow(World::EntityPlayer* player, int x, i_height y, int z);
     void OpenWindow(World::EntityPlayer* player, bool sendOpenPacket);
-    void CloseWindow(World::EntityPlayer* player, bool askByPlayer);
+    void CloseWindow(World::EntityPlayer* player, bool sendPacket);
     bool ClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
     void ConfirmTransaction(World::EntityPlayer* player, short action, bool accepted);
     void DoAction(World::EntityPlayer* player, short action);
