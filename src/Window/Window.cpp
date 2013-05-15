@@ -70,7 +70,7 @@ void Window::OpenWindow(World::EntityPlayer* player, bool sendOpenPacket)
     setWindowItemPacket << id << (short) windowData->getMaxSlot();
     for (Inventory::Inventory* inv : inventoryList)
     {
-        inv->SendInventoryTo(player, setWindowItemPacket);
+        inv->SendInventoryTo(setWindowItemPacket);
     }
     player->Send(setWindowItemPacket);
 }

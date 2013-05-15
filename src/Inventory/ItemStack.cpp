@@ -6,13 +6,9 @@ namespace Inventory
 {
 
 ItemStack::ItemStack(int id, int stackSize, int itemData)
-        : itemId(id), stackSize(stackSize), itemData(itemData)
-{
-
-}
-
-ItemStack::ItemStack()
-        : itemId(-1), stackSize(0), itemData(0)
+        : itemId(id)
+        , itemData(itemData)
+        , stackSize(stackSize)
 {
 
 }
@@ -27,40 +23,28 @@ ItemStack* ItemStack::Copy() const
     return new ItemStack(*this);
 }
 
-int ItemStack::getItemData() const
+i_damage ItemStack::getItemData() const
 {
     return itemData;
 }
 
-void ItemStack::setItemData(int itemData)
+void ItemStack::setItemData(i_damage itemData)
 {
     this->itemData = itemData;
 }
 
-int ItemStack::getItemId() const
+i_item ItemStack::getItemId() const
 {
     return itemId;
 }
 
-void ItemStack::setItemId(int itemId)
-{
-    this->itemId = itemId;
-}
-
-int ItemStack::getStackSize() const
+char ItemStack::getStackSize() const
 {
     return stackSize;
 }
 
-void ItemStack::setStackSize(int stackSize)
+void ItemStack::setStackSize(char stackSize)
 {
-    this->stackSize = stackSize;
-}
-
-void ItemStack::setItem(int id, int stackSize, int itemData)
-{
-    this->itemId = id;
-    this->itemData = itemData;
     this->stackSize = stackSize;
 }
 
