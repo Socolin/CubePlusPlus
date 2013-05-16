@@ -54,8 +54,8 @@ bool BlockFurnaceScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
     const Window::WindowStaticData* windowData = Window::WindowList::getWindowData(windowDataId);
     if (windowData != nullptr)
     {
-        Window::Window* window = new Window::Window(user->GetNextAndSetCurrentWindowId(), windowData);
-        window->OpenWindow(user, x, y, z);
+        Window::Window* window = new Window::Window(user->GetNextAndSetCurrentWindowId(), user, windowData);
+        window->OpenWindow(x, y, z);
     }
     return true;
 }

@@ -31,15 +31,17 @@ EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& nam
     , animationId(-1)
     , currentWindow(nullptr)
 {
-    inventory = new Inventory::InventoryPlayer();
+    mainInventory = new Inventory::Inventory(27);
+    handsInventory = new Inventory::InventoryPlayer();
     clickedItem = new Inventory::Inventory(1);
     armorInventory = new Inventory::Inventory(4);//TODO: special inventory
     craftingInventory = new Inventory::Inventory(5);//TODO: special inventory
 
-    inventoryWindow = new Window::Window(0, Window::WindowList::getWindowData(0));
-    inventoryWindow->AddInventory(this, craftingInventory, 0);
-    inventoryWindow->AddInventory(this, armorInventory, 5);
-    inventoryWindow->AddInventory(this, inventory, 9);
+    inventoryWindow = new Window::Window(0, this, Window::WindowList::getWindowData(0));
+    inventoryWindow->AddInventory(craftingInventory);
+    inventoryWindow->AddInventory(armorInventory);
+    inventoryWindow->AddInventory(mainInventory);
+    inventoryWindow->AddInventory(handsInventory);
 }
 
 EntityPlayer::~EntityPlayer()
@@ -48,12 +50,14 @@ EntityPlayer::~EntityPlayer()
     craftingInventory->CloseInventoryForDelete();
     armorInventory->CloseInventoryForDelete();
     clickedItem->CloseInventoryForDelete();
-    inventory->CloseInventoryForDelete();
+    handsInventory->CloseInventoryForDelete();
+    mainInventory->CloseInventoryForDelete();
 
     delete craftingInventory;
     delete armorInventory;
     delete clickedItem;
-    delete inventory;
+    delete handsInventory;
+    delete mainInventory;
 }
 
 void EntityPlayer::Send(const Network::NetworkPacket& packet) const
@@ -120,7 +124,7 @@ void EntityPlayer::OnJoinWorld()
 
     session->SendSetExperience(0, 0.f, 0);
 
-    inventoryWindow->OpenWindow(this, false);
+    inventoryWindow->OpenWindow(false);
 }
 
 void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
@@ -130,7 +134,7 @@ void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
     packet << (char)0 << (char)0 << (unsigned char)127; // TODO: classe metadata
     packet << (unsigned char) Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
 
-    const Inventory::ItemStack* itemInHand = inventory->LookSlot(inventory->getHandSlotId());
+    const Inventory::ItemStack* itemInHand = handsInventory->LookSlot(handsInventory->getHandSlotId());
     if (itemInHand != nullptr)
         packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << itemInHand;
 }
@@ -230,7 +234,7 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*fac
     }
     else if (state == 4)
     {
-        DropItem(inventory->TakeSomeItemInSlot(inventory->getHandSlotId(), 1));
+        DropItem(handsInventory->TakeSomeItemInSlot(handsInventory->getHandSlotId(), 1));
     }
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
@@ -243,7 +247,7 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
 
     const Block::Block* block = Block::BlockList::Instance().getBlock(clickedBlockId);
 
-    const Inventory::ItemStack* itemstack = inventory->LookSlot(inventory->getHandSlotId());
+    const Inventory::ItemStack* itemstack = handsInventory->LookSlot(handsInventory->getHandSlotId());
     const Inventory::Item* item = nullptr;
     if (itemstack != nullptr)
     {
@@ -285,7 +289,7 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
     if (hasChangeItemInHand)
     {
         hasChangeItemInHand = false;
-        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << inventory->LookSlot(inventory->getHandSlotId());
+        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << handsInventory->LookSlot(handsInventory->getHandSlotId());
     }
     if (animationId >= 0)
     {
@@ -343,7 +347,7 @@ void EntityPlayer::CloseWindow(i_windowId windowId, bool sendPacket)
 {
     if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
     {
-        currentWindow->CloseWindow(this, sendPacket);
+        currentWindow->CloseWindow(sendPacket);
         delete currentWindow;
         currentWindow = nullptr;
         inventoryWindow->ReOpenAllInventories(this);
@@ -361,11 +365,11 @@ void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button,
     bool result = false;
     if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
     {
-        result = currentWindow->ClickOnWindow(this, slotId, button, action, mode, slot);
+        result = currentWindow->ClickOnWindow(slotId, button, action, mode, slot);
     }
     else if (currentWindow == nullptr)
     {
-        result = inventoryWindow->ClickOnWindow(this, slotId, button, action, mode, slot);
+        result = inventoryWindow->ClickOnWindow(slotId, button, action, mode, slot);
     }
     Network::NetworkPacket confirmTransactionPacket(Network::OP_CONFIRM_TRANSACTION);
     confirmTransactionPacket << windowId << action << result;
@@ -387,14 +391,20 @@ Inventory::Inventory* EntityPlayer::GetArmorInventory() const
     return armorInventory;
 }
 
-Inventory::InventoryPlayer* EntityPlayer::GetInventory() const
+Inventory::Inventory* EntityPlayer::GetMainInventory() const
 {
-    return inventory;
+    return mainInventory;
+}
+
+Inventory::InventoryPlayer* EntityPlayer::GetHandsInventory() const
+{
+    return handsInventory;
 }
 
 void EntityPlayer::UpdateInventories()
 {
-    inventory->SendUpdateToAllViewer();
+    mainInventory->SendUpdateToAllViewer();
+    handsInventory->SendUpdateToAllViewer();
     clickedItem->SendUpdateToAllViewer();
 }
 

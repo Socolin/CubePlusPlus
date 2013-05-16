@@ -26,7 +26,8 @@ void EntityHangingFrame::Interact(EntityPlayer* player)
     const Inventory::ItemStack* itemContained = metadataManager.GetItemEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM);
     if (itemContained == nullptr)
     {
-        Inventory::ItemStack* newItem = player->GetInventory()->TakeSomeItemInSlot(player->GetInventory()->getHandSlotId(),1);
+        Inventory::InventoryPlayer* handInventory = player->GetHandsInventory();
+        Inventory::ItemStack* newItem = handInventory->TakeSomeItemInSlot(handInventory->getHandSlotId(), 1);
         if (newItem != nullptr)
         {
             metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM, newItem);

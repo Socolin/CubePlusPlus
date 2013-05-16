@@ -20,7 +20,7 @@ void InventoryPlayer::setHandSlot(int slotId)
 
 int InventoryPlayer::getHandSlotId()
 {
-    return 27 + (handSlot % 9);
+    return handSlot % 9;
 }
 
 } /* namespace Inventory */

@@ -158,7 +158,7 @@ void NetworkSession::handleHeldItemChange() throw (NetworkException)
     int slotId = readShort();
     if (slotId > 8 || slotId < 0)
         throw NetworkException("handleHeldItemChange: SlotID > 8 || < 0");
-    player->GetInventory()->setHandSlot(slotId);
+    player->GetHandsInventory()->setHandSlot(slotId);
     player->ItemInHandHasChange();
 }
 void NetworkSession::handleAnimation() throw (NetworkException)
@@ -291,9 +291,9 @@ void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
             }
             else
             {
-                if (slotId == player->GetInventory()->getHandSlotId())
+                if (slotId == player->GetHandsInventory()->getHandSlotId())
                     player->ItemInHandHasChange();
-                player->GetInventoryWindow()->SetSlot(player, slotId, receivedSlot);
+                player->GetInventoryWindow()->SetSlot(slotId, receivedSlot);
             }
         }
     }

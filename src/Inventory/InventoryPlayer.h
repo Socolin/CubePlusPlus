@@ -3,7 +3,7 @@
 
 #include "Inventory.h"
 
-#define PLAYER_INVENTORY_SIZE 36 //TODO change this
+#define PLAYER_INVENTORY_SIZE 9
 
 namespace Inventory
 {

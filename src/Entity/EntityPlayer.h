@@ -198,10 +198,16 @@ public:
     Inventory::Inventory* GetArmorInventory() const;
 
     /**
-     * Get the main inventory of player, made with 36 slots
+     * Get the main inventory of player, made with 27 slots
      * @return a non null inventory
      */
-    Inventory::InventoryPlayer* GetInventory() const;
+    Inventory::Inventory* GetMainInventory() const;
+
+    /**
+     * Get the hand inventory of player, made with 9 slots
+     * @return a non null inventory
+     */
+    Inventory::InventoryPlayer* GetHandsInventory() const;
 
     /**
      * Update slot of main inventory and clicked item
@@ -223,7 +229,8 @@ private:
     std::wstring name;
     std::queue<std::pair<int, int> > chunkToSend;//TODO: use heap to send the nearest chunk in first
     Network::NetworkSession* session;
-    Inventory::InventoryPlayer* inventory;
+    Inventory::Inventory* mainInventory;
+    Inventory::InventoryPlayer* handsInventory;
     Inventory::Inventory* clickedItem;
     Inventory::Inventory* armorInventory;
     Inventory::Inventory* craftingInventory;

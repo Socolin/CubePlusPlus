@@ -25,14 +25,15 @@ WindowScript* WindowFurnaceScript::Copy() const
 
 void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* player)
 {
-    baseWindow->AddInventory(player, player->GetInventory(), 3);
+    baseWindow->AddInventory(player->GetMainInventory());
+    baseWindow->AddInventory(player->GetHandsInventory());
 }
 
 void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity)
 {
     assert(tileEntity->getType() == Block::TILEENTITY_TYPE_FURNACE);
     Inventory::Inventory* furnaceInventory = tileEntity->GetInventory();
-    baseWindow->AddInventory(player, furnaceInventory, 0);
+    baseWindow->AddInventory(furnaceInventory);
 }
 
 } /* namespace Scripting */
