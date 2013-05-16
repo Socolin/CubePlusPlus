@@ -211,7 +211,15 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
         {
             if (button == 0)
             {
-
+                Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
+                if (clickedItem != nullptr)
+                {
+                    for (Inventory::Inventory* inv : inventoryList)
+                    {
+                        inv->TakeStackableItemAndFillStack(clickedItem);
+                    }
+                }
+                player->GetClickedItem()->ClearAndSetSlot(0, clickedItem);
             }
         }
         else

@@ -29,7 +29,7 @@ void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* player)
     baseWindow->AddInventory(player->GetHandsInventory());
 }
 
-void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity)
+void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* /*player*/, Block::TileEntity* tileEntity)
 {
     assert(tileEntity->getType() == Block::TILEENTITY_TYPE_FURNACE);
     Inventory::Inventory* furnaceInventory = tileEntity->GetInventory();

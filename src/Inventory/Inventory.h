@@ -134,6 +134,8 @@ public:
      */
     void DropInventory(World::World* world, double x, double y, double z);
 
+    void TakeStackableItemAndFillStack(ItemStack* itemStack);
+
 protected:
     struct playerData
     {

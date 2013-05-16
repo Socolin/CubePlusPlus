@@ -63,6 +63,7 @@ public:
     /**
      * Check if itemId && itemData are equals
      * TODO: check also nbt data when it will be possible
+     * TODO: rename
      * @param otherStack
      * @return true if two item can be stackable
      */

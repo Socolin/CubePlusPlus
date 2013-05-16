@@ -209,4 +209,34 @@ void Inventory::DropInventory(World::World* world, double x, double y, double z)
     }
 }
 
+void Inventory::TakeStackableItemAndFillStack(ItemStack* itemStack)
+{
+    int avaibleSpace = itemStack->GetMaxStackSize() - itemStack->getStackSize();
+    for (size_t slotId = 0; slotId < slot.size() && avaibleSpace > 0; slotId++)
+    {
+        if (avaibleSpace == 0)
+            return;
+        ItemStack* currentItemStack = slot[slotId];
+        if (currentItemStack != nullptr && currentItemStack->IsSoftEqual(itemStack))
+        {
+            int currentStackSize = currentItemStack->getStackSize();
+            if (currentStackSize < currentItemStack->GetMaxStackSize())
+            {
+                int toTakeCount = std::min(avaibleSpace, currentStackSize);
+
+                itemStack->setStackSize(itemStack->getStackSize() + toTakeCount);
+                if (toTakeCount < currentStackSize)
+                    currentItemStack->setStackSize(currentItemStack->getStackSize() - toTakeCount);
+                else
+                {
+                    delete currentItemStack;
+                    slot[slotId] = nullptr;
+                }
+                avaibleSpace -= toTakeCount;
+                updatedSlot.insert(slotId);
+            }
+        }
+    }
+}
+
 } /* namespace Inventory */
