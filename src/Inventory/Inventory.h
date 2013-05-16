@@ -15,6 +15,7 @@ class NetworkPacket;
 namespace World
 {
 class EntityPlayer;
+class World;
 }
 namespace Inventory
 {
@@ -22,10 +23,10 @@ class ItemStack;
 class Inventory
 {
 public:
-	/**
-	 * Create a new inventory with maxSlot slot number
-	 * @param maxSlot number of slot in inventory
-	 */
+    /**
+     * Create a new inventory with maxSlot slot number
+     * @param maxSlot number of slot in inventory
+     */
     Inventory(int maxSlot);
 
     /**
@@ -124,7 +125,14 @@ public:
      */
     int GetMaxSlot() const;
 
-    //TODO: DropInventory
+    /**
+     * Drop all inventory at coordinate x y z in specified world
+     * @param world the world
+     * @param x coordinate
+     * @param y coordinate
+     * @param z coordinate
+     */
+    void DropInventory(World::World* world, double x, double y, double z);
 
 protected:
     struct playerData

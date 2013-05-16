@@ -3,7 +3,7 @@
 
 namespace Inventory
 {
-unsigned short Item::getContainerId() const
+i_item Item::getContainerId() const
 {
     return containerId;
 }
@@ -13,17 +13,17 @@ bool Item::isHasSubType() const
     return hasSubType;
 }
 
-unsigned short Item::getItemId() const
+i_item Item::getItemId() const
 {
     return itemId;
 }
 
-unsigned int Item::getMaxDamage() const
+i_data Item::getMaxDamage() const
 {
     return maxDamage;
 }
 
-unsigned int Item::getMaxStackSize() const
+unsigned char Item::getMaxStackSize() const
 {
     return maxStackSize;
 }

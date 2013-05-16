@@ -8,7 +8,7 @@
 
 namespace Inventory
 {
-Item::Item(unsigned short itemId, unsigned int maxStackSize, unsigned int maxDamage, bool hasSubType, unsigned short containerId, Scripting::ItemScript* script)
+Item::Item(i_item itemId, unsigned char maxStackSize, i_data maxDamage, bool hasSubType, unsigned short containerId, Scripting::ItemScript* script)
     : itemId(itemId)
     , maxStackSize(maxStackSize)
     , maxDamage(maxDamage)
@@ -33,11 +33,11 @@ bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, 
 
 bool Item::Use(World::EntityPlayer* /*user*/) const
 {
-	if (script != nullptr)
-	{
-		// TODO
-	}
-	return false;
+    if (script != nullptr)
+    {
+        // TODO
+    }
+    return false;
 }
 
 } /* namespace Inventory */

@@ -69,7 +69,7 @@ void BlockDoorScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_heig
     i_block blockTop = world->GetBlockId(x, y + 1, z);
     if (blockTop == 0)
     {
-		i_block blockLeft = world->GetBlockId(leftBlockX, y, leftBlockZ);
+        i_block blockLeft = world->GetBlockId(leftBlockX, y, leftBlockZ);
         i_block blockRight = world->GetBlockId(rightBlockX, y, rightBlockZ);
         i_block blockRightTop = world->GetBlockId(rightBlockX, y + 1, rightBlockZ);
         if (blockLeft == door_blockid || (blockLeft == 0 && (blockRight || blockRightTop)))
@@ -83,8 +83,8 @@ void BlockDoorScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_heig
 
 bool BlockDoorScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-	if (need_redstone)
-		return false;
+    if (need_redstone)
+        return false;
 
     World::World* world = user->getWorld();
     World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
@@ -137,8 +137,8 @@ void BlockDoorScript::InitParam(int paramId, int param)
         door_blockid = param;
         break;
     case SCRIPTINGPARAM_BLOCK_DOOR_NEEDREDSTONE:
-    	need_redstone = (param != 0);
-    	break;
+        need_redstone = (param != 0);
+        break;
     default:
         AssertSwitchBadDefault(paramId)
         break;

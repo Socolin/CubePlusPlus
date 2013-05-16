@@ -3,6 +3,7 @@
 #include "Entity/EntityPlayer.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
+#include "World/World.h"
 
 namespace Inventory
 {
@@ -191,6 +192,21 @@ ItemStack* Inventory::Merge(int slotId, ItemStack* itemStack, int count)
 int Inventory::GetMaxSlot() const
 {
     return maxSlot;
+}
+
+void Inventory::DropInventory(World::World* world, double x, double y, double z)
+{
+    for (ItemStack* item : slot)
+    {
+        if (item != nullptr)
+        {
+            world->DropItemstackWithRandomDirection(x, y, z, item);
+        }
+    }
+    for (size_t i = 0; i < slot.size(); i++)
+    {
+        slot[i] = nullptr;
+    }
 }
 
 } /* namespace Inventory */

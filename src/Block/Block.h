@@ -35,8 +35,8 @@ class TileEntity;
 class Block
 {
 public:
-    Block(i_block blockId,const SoundBlock& sound, unsigned char lightOpacity,
-          unsigned char lightValue, float blockResistance, float blockHardness,
+    Block(i_block blockId,const SoundBlock& sound, i_lightopacity lightOpacity,
+          i_lightvalue lightValue, float blockResistance, float blockHardness,
           bool needsRandomTick, float slipperiness,
           bool isCollidable, bool isOpaqueCube,
           bool renderAsNormal,

@@ -26,38 +26,38 @@ BlockScript* BlockCactusScript::Copy()
 bool BlockCactusScript::CanPlace(World::World* world, int x, i_height y, int z, char /*face*/) const
 {
     if((BlockCactusScript::baseBlock->GetBlockId() == world->GetBlockId(x, y - 1, z) || allowed_to_grow_on.find(world->GetBlockId(x, y - 1, z)) != allowed_to_grow_on.end()) && CheckSideBySideBlocks(world, x, y, z))
-    	return true;
+        return true;
     
     return false;
 }
 
 void BlockCactusScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
-	//If the cactus can grow
-	if(y+1 < 255 && world->GetBlockId(x, y + 1, z) == 0)
-	{
-		//Then check the cactus height block by block
-		int height = 1;
+    //If the cactus can grow
+    if(y+1 < 255 && world->GetBlockId(x, y + 1, z) == 0)
+    {
+        //Then check the cactus height block by block
+        int height = 1;
 
-		for(int i = 1; i < 3 && y - i > 0; i++)
-		{
-			if(BlockCactusScript::baseBlock->GetBlockId() == world->GetBlockId(x, y - i, z))
-				height++;
-		}
+        for(int i = 1; i < 3 && y - i > 0; i++)
+        {
+            if(BlockCactusScript::baseBlock->GetBlockId() == world->GetBlockId(x, y - i, z))
+                height++;
+        }
 
-		//If the cactus height is inferior to three, then we try to add a cactus block on the top
-		if(height < 3)
-		{
-			if(CheckSideBySideBlocks(world, x, y+1, z))
-			{
-				world->ChangeBlock(x, y+1, z, BlockCactusScript::baseBlock->GetBlockId(), 0, false);
-			} //But if the top of the cactus is in contact with a side by side block, let's pop!
-			else
-			{
-				world->DropItemstackWithRandomDirection(x + 0.5, y + 1.5, z + 0.5, new Inventory::ItemStack(BlockCactusScript::baseBlock->GetBlockId(),1,0));
-			}
-		}
-	}
+        //If the cactus height is inferior to three, then we try to add a cactus block on the top
+        if(height < 3)
+        {
+            if(CheckSideBySideBlocks(world, x, y+1, z))
+            {
+                world->ChangeBlock(x, y+1, z, BlockCactusScript::baseBlock->GetBlockId(), 0, false);
+            } //But if the top of the cactus is in contact with a side by side block, let's pop!
+            else
+            {
+                world->DropItemstackWithRandomDirection(x + 0.5, y + 1.5, z + 0.5, new Inventory::ItemStack(BlockCactusScript::baseBlock->GetBlockId(),1,0));
+            }
+        }
+    }
 }
 
 void BlockCactusScript::GetBoundingBoxes(int /*x*/, int /*y*/, int /*z*/, i_data /*data*/, std::vector<Util::AABB>& /*bbList*/) const
@@ -87,20 +87,20 @@ void BlockCactusScript::InitParam(int paramId, const std::string& param)
 
 void BlockCactusScript::OnNeighborChange(World::World* world, int x, i_height y, int z, i_block /*neighborBlockId*/) const
 {
-	if(!CheckSideBySideBlocks(world, x, y, z) || (BlockCactusScript::baseBlock->GetBlockId() != world->GetBlockId(x, y - 1, z) && allowed_to_grow_on.find(world->GetBlockId(x, y - 1, z)) == allowed_to_grow_on.end()))
-	{
-		world->ChangeBlock(x, y, z, 0, 0, false);
-		world->DropItemstackWithRandomDirection(x + 0.5, y + 0.5, z + 0.5, new Inventory::ItemStack(BlockCactusScript::baseBlock->GetBlockId(),1,0));
-	}
+    if(!CheckSideBySideBlocks(world, x, y, z) || (BlockCactusScript::baseBlock->GetBlockId() != world->GetBlockId(x, y - 1, z) && allowed_to_grow_on.find(world->GetBlockId(x, y - 1, z)) == allowed_to_grow_on.end()))
+    {
+        world->ChangeBlock(x, y, z, 0, 0, false);
+        world->DropItemstackWithRandomDirection(x + 0.5, y + 0.5, z + 0.5, new Inventory::ItemStack(BlockCactusScript::baseBlock->GetBlockId(),1,0));
+    }
 }
 
 bool BlockCactusScript::CheckSideBySideBlocks(World::World* world, int x, i_height y, int z) const
 {
-	//Return false if there is a block in contact with the cactus
-	if(world->GetBlockId(x - 1, y, z) != 0 || world->GetBlockId(x + 1, y, z) != 0 || world->GetBlockId(x, y, z - 1) != 0 || world->GetBlockId(x, y, z + 1) != 0)
-		return false;
+    //Return false if there is a block in contact with the cactus
+    if(world->GetBlockId(x - 1, y, z) != 0 || world->GetBlockId(x + 1, y, z) != 0 || world->GetBlockId(x, y, z - 1) != 0 || world->GetBlockId(x, y, z + 1) != 0)
+        return false;
 
-	return true;
+    return true;
 }
 
 } /* namespace Scripting */

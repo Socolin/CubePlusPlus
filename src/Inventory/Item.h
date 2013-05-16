@@ -1,6 +1,8 @@
 #ifndef ITEM_H_
 #define ITEM_H_
 
+#include "Util/types.h"
+
 namespace World
 {
 class EntityPlayer;
@@ -15,25 +17,80 @@ class ItemStack;
 class Item
 {
 public:
-    Item(unsigned short itemId, unsigned int maxStackSize, unsigned int maxDamage, bool hasSubType, unsigned short containerId, Scripting::ItemScript* script);
+    /**
+     * Create new item
+     * @param itemId the id of item
+     * @param maxStackSize the stack size of item
+     * @param maxDamage the max durability of item
+     * @param hasSubType if item has subtype
+     * @param containerId the container item id
+     * @param script the item script
+     */
+    Item(i_item itemId, unsigned char maxStackSize, i_data maxDamage, bool hasSubType, i_item containerId, Scripting::ItemScript* script);
+
+    /**
+     * Destructor
+     */
     virtual ~Item();
 
+    /**
+     * Use item on a block: do a right click on block while holding an item
+     * @param user the player who use the item
+     * @param x clicked block x
+     * @param y clicked block y
+     * @param z clicked block z
+     * @param face clicked face
+     * @param cursorPositionX position on block where player click [0;16[
+     * @param cursorPositionY position on block where player click [0;16[
+     * @param cursorPositionZ position on block where player click [0;16[
+     * @return true if item has been used
+     */
     bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+
+    /**
+     * Use item in air: do right click, targeting no block.
+     * @param user player who use item
+     * @return true if item has been use
+     */
     bool Use(World::EntityPlayer* user) const;
 
+    /**
+     * Get the container item, like for bucket of water, the container is bucket, so when crafting something with
+     * bucket of water, only 'water' is used
+     */
     inline unsigned short getContainerId() const;
+
+    /**
+     * Return true if item use data to define different item, like for charcoal and coal, so they can't be stack
+     * @return if item has subtype
+     */
     inline bool isHasSubType() const;
-    inline unsigned short getItemId() const;
-    inline unsigned int getMaxDamage() const;
-    inline unsigned int getMaxStackSize() const;
+
+    /**
+     * Return id of item
+     * @return
+     */
+    inline i_item getItemId() const;
+
+    /**
+     * Return the max durability of item
+     * @return
+     */
+    inline i_data getMaxDamage() const;
+
+    /**
+     * Get max item that can be stack
+     * @return
+     */
+    inline unsigned char getMaxStackSize() const;
 
 private:
-    unsigned short itemId;
-    unsigned int maxStackSize;
-    unsigned int maxDamage;
+    i_item itemId;
+    unsigned char maxStackSize;
+    i_data maxDamage;
     bool hasSubType;
     // For bucket, when crafting, we use content (this item) and take back container, for example a bucket
-    unsigned short containerId;
+    i_item containerId;
     Scripting::ItemScript* script;
 };
 

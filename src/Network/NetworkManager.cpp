@@ -236,7 +236,7 @@ void NetworkManager::StopServer()
 {
     for (auto session : sessionList)
     {
-    	OnDisconnectClient(session.first);
+        OnDisconnectClient(session.first);
     }
     sessionList.clear();
     free(events);

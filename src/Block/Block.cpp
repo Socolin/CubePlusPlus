@@ -15,8 +15,8 @@ Block::~Block()
 {
 }
 
-Block::Block(i_block blockId, const SoundBlock& sound, unsigned char lightOpacity,
-             unsigned char lightValue, float blockResistance, float blockHardness, bool needsRandomTick,
+Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpacity,
+             i_lightvalue lightValue, float blockResistance, float blockHardness, bool needsRandomTick,
              float slipperiness, bool isCollidable, bool isOpaqueCube, bool renderAsNormal,
              float minX, float minY, float minZ,
              float maxX, float maxY, float maxZ,
@@ -74,10 +74,10 @@ void Block::UpdateTick(World::World* world, int x, i_height y, int z, i_data dat
 
 bool Block::CanPlace(World::World* world, int x, i_height y, int z, char face) const
 {
-	if (script)
+    if (script)
     {
         return script->CanPlace(world, x, y, z, face);
-	}
+    }
     return true;
 }
 

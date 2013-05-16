@@ -92,7 +92,7 @@ void EntityPlayer::UpdateTick()
 
 void EntityPlayer::Respawn(double x, double y, double z)
 {
-	//TODO: override relocate to handle well movement etc...
+    //TODO: override relocate to handle well movement etc...
     Relocate(x, y, z);
     Network::NetworkPacket packet;
 
@@ -104,7 +104,7 @@ void EntityPlayer::Respawn(double x, double y, double z)
 
 void EntityPlayer::OnJoinWorld()
 {
-	// TODO: get it from world
+    // TODO: get it from world
     Network::NetworkPacket packetSpawnPosition(Network::OP_SPAWN_POSITION);
     packetSpawnPosition << (int) x << (int) y << (int) z;
     session->SendPacket(packetSpawnPosition);
@@ -358,8 +358,8 @@ i_windowId EntityPlayer::GetNextAndSetCurrentWindowId()
 
 void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
 {
-	bool result = false;
-	if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
+    bool result = false;
+    if (windowId == currentWindowId && currentWindow != nullptr && currentWindow->GetId() == windowId)
     {
         result = currentWindow->ClickOnWindow(this, slotId, button, action, mode, slot);
     }
@@ -367,9 +367,9 @@ void EntityPlayer::ClickOnWindow(i_windowId windowId, short slotId, char button,
     {
         result = inventoryWindow->ClickOnWindow(this, slotId, button, action, mode, slot);
     }
-	Network::NetworkPacket confirmTransactionPacket(Network::OP_CONFIRM_TRANSACTION);
-	confirmTransactionPacket << windowId << action << result;
-	Send(confirmTransactionPacket);
+    Network::NetworkPacket confirmTransactionPacket(Network::OP_CONFIRM_TRANSACTION);
+    confirmTransactionPacket << windowId << action << result;
+    Send(confirmTransactionPacket);
 }
 
 Inventory::Inventory* EntityPlayer::GetClickedItem() const

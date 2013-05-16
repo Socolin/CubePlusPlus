@@ -43,18 +43,18 @@ bool BlockTorchScript::CanPlace(World::World* world, int x, unsigned char y, int
             x--;
             break;
         default:
-        	y--;
-        	break;
+            y--;
+            break;
     };
 
     const Block::Block* clickedBlock = Block::BlockList::getBlock(world->GetBlockId(x, y, z));
     
     if(clickedBlock != NULL)
     {
-    	if(clickedBlock->IsOpaqueCube())
-    	{
-    		return true;
-    	}
+        if(clickedBlock->IsOpaqueCube())
+        {
+            return true;
+        }
     }
     
     return false;
@@ -62,7 +62,7 @@ bool BlockTorchScript::CanPlace(World::World* world, int x, unsigned char y, int
 
 void BlockTorchScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x*/, i_height /*y*/, int /*z*/, int face, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-	switch (face)
+    switch (face)
     {
      case FACE_NORTH: // -Z
          data = 4;
