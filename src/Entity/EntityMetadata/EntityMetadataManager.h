@@ -34,8 +34,12 @@ public:
     int GetIntEntityMetadata(int valueId);
     float GetFloatEntityMetadata(int valueId);
     const Inventory::ItemStack* GetItemEntityMetadata(int valueId);
+
+    bool HasChanged();
+    void ClearChange();
 private:
     std::map<int, EntityMetadata*> metadataList;
+    bool hasChanged; // TODO: maybe change it and use list of change
 };
 
 } /* namespace World */

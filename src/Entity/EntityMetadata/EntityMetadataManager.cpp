@@ -12,6 +12,7 @@ namespace World
 {
 
 EntityMetadataManager::EntityMetadataManager()
+    : hasChanged(false)
 {
 }
 
@@ -34,6 +35,7 @@ void EntityMetadataManager::SetEntityMetadata(int valueId, char value)
     metadataList[valueId] = new CharEntityMetadata(valueId, value);
     if (oldMetadata)
         delete oldMetadata;
+    hasChanged = true;
 }
 
 void EntityMetadataManager::SetEntityMetadata(int valueId, short value)
@@ -42,6 +44,7 @@ void EntityMetadataManager::SetEntityMetadata(int valueId, short value)
     metadataList[valueId] = new ShortEntityMetadata(valueId, value);
     if (oldMetadata)
         delete oldMetadata;
+    hasChanged = true;
 }
 
 void EntityMetadataManager::SetEntityMetadata(int valueId, int value)
@@ -50,6 +53,7 @@ void EntityMetadataManager::SetEntityMetadata(int valueId, int value)
     metadataList[valueId] = new IntegerEntityMetadata(valueId, value);
     if (oldMetadata)
         delete oldMetadata;
+    hasChanged = true;
 }
 
 void EntityMetadataManager::SetEntityMetadata(int valueId, float value)
@@ -58,6 +62,7 @@ void EntityMetadataManager::SetEntityMetadata(int valueId, float value)
     metadataList[valueId] = new FloatEntityMetadata(valueId, value);
     if (oldMetadata)
         delete oldMetadata;
+    hasChanged = true;
 }
 
 void EntityMetadataManager::SetEntityMetadata(int valueId, const Inventory::ItemStack* value)
@@ -66,6 +71,7 @@ void EntityMetadataManager::SetEntityMetadata(int valueId, const Inventory::Item
     metadataList[valueId] = new ItemStackEntityMetadata(valueId, value);
     if (oldMetadata)
         delete oldMetadata;
+    hasChanged = true;
 }
 
 char EntityMetadataManager::GetCharEntityMetadata(int valueId)
@@ -136,6 +142,16 @@ const Inventory::ItemStack* EntityMetadataManager::GetItemEntityMetadata(int val
         }
     }
     return nullptr;
+}
+
+bool EntityMetadataManager::HasChanged()
+{
+    return hasChanged;
+}
+
+void EntityMetadataManager::ClearChange()
+{
+    hasChanged = false;
 }
 
 } /* namespace World */

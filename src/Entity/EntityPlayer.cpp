@@ -136,6 +136,10 @@ void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
     const Inventory::ItemStack* itemInHand = handsInventory->LookSlot(handsInventory->getHandSlotId());
     if (itemInHand != nullptr)
         packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << itemInHand;
+
+    packet << (unsigned char) Network::OP_ENTITY_METADATA
+            << entityId;
+    metadataManager.Write(packet);
 }
 
 void EntityPlayer::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
@@ -299,6 +303,14 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
     {
         packet << (unsigned char) Network::OP_ANIMATION << entityId << animationId;
         animationId = -1;
+    }
+
+    if (metadataManager.HasChanged())
+    {
+        metadataManager.ClearChange();
+        packet << (unsigned char) Network::OP_ENTITY_METADATA
+                << entityId;
+        metadataManager.Write(packet);
     }
 }
 
