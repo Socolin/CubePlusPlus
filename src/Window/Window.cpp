@@ -190,7 +190,21 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
         }
         else if (mode == WINDOW_CLICK_MODE_KEYBOARD)
         {
-
+            if (button >= 0 && button <= 9)
+            {
+                for (Inventory::Inventory* inv : inventoryList)
+                {
+                    if (inv->GetInventoryType() == Inventory::INVENTORY_TYPE_PLAYER_HANDS)
+                    {
+                        Inventory::ItemStack* itemUnderMouse =  inventory->TakeSlot(inventorySlotId);
+                        Inventory::ItemStack* swappedItem =  inv->TakeAndSetSlot(button, itemUnderMouse);
+                        if (swappedItem != nullptr)
+                            inventory->ClearAndSetSlot(inventorySlotId, swappedItem);
+                        break;
+                    }
+                }
+                returnValue = true;
+            }
         }
         else if (mode == WINDOW_CLICK_MODE_MIDDLE)
         {
