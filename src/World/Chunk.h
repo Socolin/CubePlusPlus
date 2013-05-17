@@ -222,6 +222,7 @@ private:
     short countChange;
     std::set<EntityPlayer*> playerList;
     std::map<unsigned short, Block::TileEntity*> tileEntities;
+    std::set<Block::TileEntity*> activeTileEntities;
     std::set<Block::TileEntity*> updatedTileEntities;
     Network::NetworkPacket tileEntityUpdatePacket;
     World* world;

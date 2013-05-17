@@ -68,6 +68,10 @@ public:
      * @return true if two item can be stackable
      */
     bool IsSoftEqual(const ItemStack* otherStack) const;
+
+    bool IsStackable(i_item otherItemId, i_damage otherItemData) const;
+
+    bool Full() const;
 private:
     i_item itemId;
     i_damage itemData;

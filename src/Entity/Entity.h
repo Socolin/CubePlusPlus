@@ -33,6 +33,7 @@ class Entity: public Position
         ENTITY_FLAG_RIDING      = 0x4,
         ENTITY_FLAG_SPRINTING   = 0x8,
         ENTITY_FLAG_EATING      = 0x10,
+        ENTITY_FLAG_INVISIBLE   = 0x20,
     };
 public:
     Entity(eEntityType entityType, double x, double y, double z);

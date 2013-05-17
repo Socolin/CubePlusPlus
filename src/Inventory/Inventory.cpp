@@ -135,6 +135,24 @@ ItemStack* Inventory::TakeSomeItemInSlot(int slotId, int count)
     return newStack;
 }
 
+
+void Inventory::RemoveSomeItemInSlot(int slotId, int count)
+{
+    ItemStack* oldItem = slot[slotId];
+    if (oldItem == nullptr)
+    {
+        return;
+    }
+    oldItem->setStackSize(oldItem->getStackSize() - count);
+    if (oldItem->getStackSize() <= 0)
+    {
+        delete oldItem;
+        slot[slotId] = nullptr;
+    }
+    updatedSlot.insert(slotId);
+}
+
+
 ItemStack* Inventory::Merge(int slotId, ItemStack* itemStack, int count)
 {
     ItemStack* oldItem = slot[slotId];

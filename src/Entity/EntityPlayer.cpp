@@ -305,7 +305,7 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
         animationId = -1;
     }
 
-    if (metadataManager.HasChanged())
+    if (metadataManager.HasChanged())// Move it to entity class
     {
         metadataManager.ClearChange();
         packet << (unsigned char) Network::OP_ENTITY_METADATA

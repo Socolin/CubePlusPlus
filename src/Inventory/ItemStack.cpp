@@ -68,4 +68,18 @@ bool ItemStack::IsSoftEqual(const ItemStack* otherStack) const
 {
     return otherStack->itemId == itemId && otherStack->itemData == itemData;
 }
+
+bool ItemStack::IsStackable(i_item otherItemId, i_damage otherItemData) const
+{
+    return otherItemId == itemId && otherItemData == itemData;
+}
+
+bool ItemStack::Full() const
+{
+    const Item* item = getItem();
+    if (item == nullptr)
+        return true;
+    return item->getMaxStackSize() <= stackSize;
+}
+
 } /* namespace Inventory */

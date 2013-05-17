@@ -6,6 +6,7 @@
 #include "Inventory/ItemList.h"
 #include "Database/DatabaseManager.h"
 #include "Database/MiscData/PaintingData.h"
+#include "Database/MiscData/FurnaceRecipes.h"
 #include "Scripting/ScriptManager.h"
 #include "Window/WindowList.h"
 
@@ -39,6 +40,7 @@ int main(void)
     Inventory::ItemList::Instance().InitInstance();
     Window::WindowList::Instance().InitInstance();
     Database::PaintingData::Instance().InitInstance();
+    Database::FurnaceRecipes::Instance().InitInstance();
 
     // Tick time management
     clock_t time = std::clock();

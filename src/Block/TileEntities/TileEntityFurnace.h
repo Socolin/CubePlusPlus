@@ -6,6 +6,7 @@
 namespace Inventory
 {
     class Inventory;
+    class InventoryFurnace;
 }
 namespace Block
 {
@@ -22,8 +23,9 @@ public:
     virtual bool HasNetworkData();
     virtual Inventory::Inventory* GetInventory();
 private:
-    Inventory::Inventory* inventory;
+    Inventory::InventoryFurnace* inventory;
     int fuel;
+    int maxfuel;
     int progress;
 };
 

@@ -221,6 +221,11 @@ void Chunk::UpdateTick()
         toUpdateBlockList.pop();
     }
 
+    for (auto tileEntity: activeTileEntities)
+    {
+        tileEntity->UpdateTick();
+    }
+
     selfTickCounter++;
 }
 
@@ -380,6 +385,8 @@ void Chunk::SetTileEntity(Block::TileEntity* tileEntity, i_small_coord x, i_heig
 {
     tileEntities[TILEENTITY_KEY(x, y, z)] = tileEntity;
     MarkForNetworkUpdateTileEntity(x, y, z);
+    if (tileEntity->NeedUpdate())
+        activeTileEntities.insert(tileEntity);
 }
 
 
@@ -412,6 +419,7 @@ void Chunk::RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z)
         Block::TileEntity* tileEntity = it->second;
         tileEntities.erase(it);
         updatedTileEntities.erase(tileEntity);
+        activeTileEntities.erase(tileEntity);
         delete tileEntity;
     }
 }

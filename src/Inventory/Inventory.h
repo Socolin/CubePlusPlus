@@ -67,6 +67,8 @@ public:
      */
     ItemStack* TakeSomeItemInSlot(int slotId, int count);
 
+    void RemoveSomeItemInSlot(int slotId, int count);
+
     /**
      * Return the item in slot, it must only be use to "look"
      * it must not be use to insert in another slot or store it in other place
