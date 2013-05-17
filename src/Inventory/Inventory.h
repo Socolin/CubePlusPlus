@@ -144,6 +144,8 @@ public:
     eInventoryType GetInventoryType();
 
     virtual bool CanPlayerPlaceItemAt(i_slot slotId);
+
+    virtual void UpdateWindowProperty(short property, short value);
 protected:
     struct playerData
     {

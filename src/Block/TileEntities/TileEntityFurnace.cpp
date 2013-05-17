@@ -34,7 +34,8 @@ void TileEntityFurnace::UpdateTick()
                 const Database::FurnaceRecipes::Recipe& recipe = Database::FurnaceRecipes::Instance().GetRecipe(lookedInputItem->getItemId(), lookedInputItem->getItemData());
                 if (recipe.itemId > 0)
                 {
-                    fuel += fuelType->getBurningTime();
+                    fuel = fuelType->getBurningTime();
+                    maxfuel = fuel;
                     if (fuelType->getContainerId())
                     {
                         inventory->ClearAndSetSlot(inventory->GetFuelSlotId(), new Inventory::ItemStack(fuelType->getContainerId(), 1, 0));
@@ -44,6 +45,7 @@ void TileEntityFurnace::UpdateTick()
                         inventory->RemoveSomeItemInSlot(inventory->GetFuelSlotId(), 1);
                     }
                     inventory->SendUpdateToAllViewer();
+                    inventory->UpdateWindowProperty(1, fuel * 200 / maxfuel);
                 }
             }
         }
@@ -87,6 +89,8 @@ void TileEntityFurnace::UpdateTick()
             progress = 0;
         }
         fuel--;
+        inventory->UpdateWindowProperty(0, progress);
+        inventory->UpdateWindowProperty(1, fuel * 200 / maxfuel);
     }
 }
 

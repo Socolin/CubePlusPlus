@@ -294,4 +294,18 @@ bool Inventory::CanPlayerPlaceItemAt(i_slot /*slotId*/)
     return true;
 }
 
+void Inventory::UpdateWindowProperty(short property, short value)
+{
+    Network::NetworkPacket updatePacket;
+    for (auto playerItr : playerWithOffsetList)
+    {
+        int offset = playerItr.second.offsetSlot;
+        i_windowId windowId = playerItr.second.windowId;
+        updatePacket << (unsigned char)Network::OP_UPDATE_WINDOW_PROPERTY << windowId << property << value;
+        playerItr.first->Send(updatePacket);
+        updatePacket.Clear();
+    }
+    updatedSlot.clear();
+}
+
 } /* namespace Inventory */
