@@ -1,6 +1,7 @@
 #ifndef WINDOWSCRIPT_H_
 #define WINDOWSCRIPT_H_
 
+#include "Inventory/InventoryConstants.h"
 #include "Window/WindowStaticData.h"
 
 #include <vector>
@@ -43,6 +44,7 @@ public:
     virtual void OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
     virtual void OnConfirmTransaction(World::EntityPlayer* player, short action, bool accepted);
     virtual void OnDoAction(World::EntityPlayer* player, short action);
+    virtual int GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack);
 protected:
     Window::Window* baseWindow;
 };

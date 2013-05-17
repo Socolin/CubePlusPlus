@@ -4,7 +4,7 @@ namespace Inventory
 {
 
 InventoryFurnace::InventoryFurnace()
-    : Inventory(INVENTORY_FURNACE_SIZE)
+    : Inventory(INVENTORY_FURNACE_SIZE, INVENTORY_TYPE_FURNACE)
 {
 }
 

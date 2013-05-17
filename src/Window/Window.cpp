@@ -91,6 +91,7 @@ void Window::CloseWindow(bool sendPacket)
         closeWindowPacket << id;
         player->Send(closeWindowPacket);
     }
+    //TODO drop item clicked
 }
 
 bool Window::ClickOnWindow(short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
@@ -154,7 +155,38 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
         }
         else if (mode == WINDOW_CLICK_MODE_SHIFT)
         {
-
+            if (button == 0 || button == 1)
+            {
+                if (lookedItemInSlot != nullptr)
+                {
+                    Inventory::eInventoryType invType = inventory->GetInventoryType();
+                    if (script)
+                    {
+                        i_slot targetSlot = 0;
+                        int inventoryTypeFlag = script->GetInventoryAndSlotShiftClickTarget(invType, slotId, targetSlot, lookedItemInSlot);
+                        for (Inventory::Inventory* inv : inventoryList)
+                        {
+                            if ((inventoryTypeFlag & inv->GetInventoryType()) != 0)
+                            {
+                                if (targetSlot == -1)
+                                {
+                                    Inventory::ItemStack* shiftClickedItem =  inventory->TakeSlot(inventorySlotId);
+                                    Inventory::ItemStack* mergeResult = inv->StackStackableItemFromStack(shiftClickedItem);
+                                    if (mergeResult != nullptr)
+                                        inventory->ClearAndSetSlot(0, mergeResult);
+                                }
+                                else
+                                {
+                                    Inventory::ItemStack* shiftClickedItem =  inventory->TakeSlot(inventorySlotId);
+                                    Inventory::ItemStack* mergeResult = inv->Merge(targetSlot, shiftClickedItem, 1);
+                                    inventory->ClearAndSetSlot(0, mergeResult);
+                                }
+                            }
+                        }
+                    }
+                    returnValue = true;
+                }
+            }
         }
         else if (mode == WINDOW_CLICK_MODE_KEYBOARD)
         {
@@ -200,7 +232,7 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
             int paintAction = button & 0x3;
             if (paintAction == PAINTING_ACTION_PROGRESS)
             {
-                return progressPainting(slotId, action);
+                returnValue = progressPainting(slotId, action);
             }
             else
             {
@@ -220,6 +252,7 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
                     }
                 }
                 player->GetClickedItem()->ClearAndSetSlot(0, clickedItem);
+                returnValue = true;
             }
         }
         else
@@ -260,9 +293,11 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
             switch (paintAction)
             {
             case PAINTING_ACTION_START:
-                return startPainting(mouseButton, action);
+                returnValue = startPainting(mouseButton, action);
+                break;
             case PAINTING_ACTION_END:
-                return endPainting(action);
+                returnValue = endPainting(action);
+                break;
             default:
                 std::cerr << "Bad value: paintAction: " << paintAction << "with slot=-999" << std::endl;
                 break;

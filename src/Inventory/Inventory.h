@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 
+#include "InventoryConstants.h"
 #include "ItemStack.h"
 #include "Util/types.h"
 
@@ -27,7 +28,7 @@ public:
      * Create a new inventory with maxSlot slot number
      * @param maxSlot number of slot in inventory
      */
-    Inventory(int maxSlot);
+    Inventory(int maxSlot, eInventoryType inventoryType = INVENTORY_TYPE_DEFAULT);
 
     /**
      * Destroy all item in inventory, if inventory must drop item, it must be done before
@@ -136,6 +137,9 @@ public:
 
     void TakeStackableItemAndFillStack(ItemStack* itemStack);
 
+    ItemStack* StackStackableItemFromStack(ItemStack* itemStack);
+
+    eInventoryType GetInventoryType();
 protected:
     struct playerData
     {
@@ -146,6 +150,7 @@ protected:
     std::set<i_slot> updatedSlot;
     std::vector<ItemStack*> slot;
     int maxSlot;
+    eInventoryType inventoryType;
 };
 
 } /* namespace Inventory */

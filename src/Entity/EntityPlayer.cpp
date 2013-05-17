@@ -31,7 +31,7 @@ EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& nam
     , animationId(-1)
     , currentWindow(nullptr)
 {
-    mainInventory = new Inventory::Inventory(27);
+    mainInventory = new Inventory::Inventory(27, Inventory::INVENTORY_TYPE_PLAYER_MAIN);
     handsInventory = new Inventory::InventoryPlayer();
     clickedItem = new Inventory::Inventory(1);
     armorInventory = new Inventory::Inventory(4);//TODO: special inventory
@@ -67,7 +67,6 @@ void EntityPlayer::Send(const Network::NetworkPacket& packet) const
         session->SendPacket(packet);
     }
 }
-
 void EntityPlayer::AddChunkToSend(int x, int z)
 {
     chunkToSend.push(std::pair<int, int>(x, z));

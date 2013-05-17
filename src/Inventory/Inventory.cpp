@@ -8,8 +8,8 @@
 namespace Inventory
 {
 
-Inventory::Inventory(int maxSlot)
-    : slot(maxSlot, nullptr), maxSlot(maxSlot)
+Inventory::Inventory(int maxSlot, eInventoryType inventoryType)
+    : slot(maxSlot, nullptr), maxSlot(maxSlot), inventoryType(inventoryType)
 {
 }
 
@@ -237,6 +237,23 @@ void Inventory::TakeStackableItemAndFillStack(ItemStack* itemStack)
             }
         }
     }
+}
+
+ItemStack* Inventory::StackStackableItemFromStack(ItemStack* itemStack)
+{
+    if (itemStack != nullptr)
+    {
+        for (size_t slotId = 0; slotId < slot.size() && itemStack != nullptr && itemStack->getStackSize() > 0; slotId++)
+        {
+            itemStack = Merge(slotId, itemStack);
+        }
+    }
+    return itemStack;
+}
+
+eInventoryType Inventory::GetInventoryType()
+{
+    return inventoryType;
 }
 
 } /* namespace Inventory */
