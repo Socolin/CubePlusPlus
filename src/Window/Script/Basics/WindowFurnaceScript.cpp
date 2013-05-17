@@ -3,8 +3,10 @@
 #include <cassert>
 
 #include "Block/TileEntities/TileEntity.h"
+#include "Database/MiscData/FurnaceRecipes.h"
 #include "Entity/EntityPlayer.h"
 #include "Inventory/InventoryFurnace.h"
+#include "Inventory/Item.h"
 #include "Window/Window.h"
 
 namespace Scripting
@@ -53,14 +55,36 @@ int WindowFurnaceScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInvento
     }
     else if (clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_MAIN)
     {
+        const Inventory::Item* item = slotItemStack->getItem();
         reverseOrder = false;
         targetSlot = -1;
+        if (item && item->getBurningTime())
+        {
+            targetSlot = furnaceInventory->GetFuelSlotId();
+            return Inventory::INVENTORY_TYPE_FURNACE;
+        }
+        if (Database::FurnaceRecipes::Instance().IsValidInput(slotItemStack))
+        {
+            targetSlot = furnaceInventory->GetInputSlotId();
+            return Inventory::INVENTORY_TYPE_FURNACE;
+        }
         return Inventory::INVENTORY_TYPE_PLAYER_HANDS;
     }
     else if (clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_HANDS)
     {
+        const Inventory::Item* item = slotItemStack->getItem();
         reverseOrder = false;
         targetSlot = -1;
+        if (item && item->getBurningTime())
+        {
+            targetSlot = furnaceInventory->GetFuelSlotId();
+            return Inventory::INVENTORY_TYPE_FURNACE;
+        }
+        if (Database::FurnaceRecipes::Instance().IsValidInput(slotItemStack))
+        {
+            targetSlot = furnaceInventory->GetInputSlotId();
+            return Inventory::INVENTORY_TYPE_FURNACE;
+        }
         return Inventory::INVENTORY_TYPE_PLAYER_MAIN;
     }
     return 0;

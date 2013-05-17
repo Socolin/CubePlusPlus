@@ -1,6 +1,7 @@
 #include "FurnaceRecipes.h"
 
 #include "Database/DatabaseManager.h"
+#include "Inventory/ItemStack.h"
 #include "Util/StringUtil.h"
 
 namespace Database
@@ -31,6 +32,25 @@ const FurnaceRecipes::Recipe& FurnaceRecipes::GetRecipe(i_item itemId, i_damage 
 void FurnaceRecipes::InitInstance()
 {
     load();
+}
+
+bool FurnaceRecipes::IsValidInput(const Inventory::ItemStack* itemStack) const
+{
+    int key = itemStack->getItemId();
+    key = key << 16;
+    key = (key | itemStack->getItemData());
+    if (recipeList.find(key) != recipeList.end())
+        return true;
+
+    key = itemStack->getItemId();
+    key = key << 16;
+    key = (key | i_damage(-1));
+    auto itr = recipeList.find(key);
+    if (itr != recipeList.end())
+    {
+        return !(itr->second.strictData);
+    }
+    return false;
 }
 
 void FurnaceRecipes::load()

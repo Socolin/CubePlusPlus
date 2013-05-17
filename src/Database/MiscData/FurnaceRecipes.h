@@ -7,6 +7,11 @@
 #include "Util/types.h"
 #include "Util/Singleton.h"
 
+namespace Inventory
+{
+class ItemStack;
+}
+
 namespace Database
 {
 
@@ -51,6 +56,7 @@ public:
         float experience;
     };
 
+    bool IsValidInput(const Inventory::ItemStack* itemStack) const;
     const Recipe& GetRecipe(i_item itemId, i_damage itemData);
 private:
     void load();

@@ -138,6 +138,14 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
                         Inventory::ItemStack* itemInSlot = inventory->TakeAndSetSlot(inventorySlotId, clickedItem);
                         player->GetClickedItem()->ClearAndSetSlot(0, itemInSlot);
                     }
+                    else
+                    {
+                        if (lookedClickedItem == nullptr)
+                        {
+                            Inventory::ItemStack* itemInSlot = inventory->TakeSlot(inventorySlotId);
+                            player->GetClickedItem()->ClearAndSetSlot(0, itemInSlot);
+                        }
+                    }
                 }
                 returnValue = true;
             }
@@ -214,7 +222,7 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
                                     else
                                     {
                                         Inventory::ItemStack* shiftClickedItem =  inventory->TakeSlot(inventorySlotId);
-                                        Inventory::ItemStack* mergeResult = inv->Merge(targetSlot, shiftClickedItem, 1);
+                                        Inventory::ItemStack* mergeResult = inv->Merge(targetSlot, shiftClickedItem);
                                         inventory->ClearAndSetSlot(inventorySlotId, mergeResult);
                                     }
                                 }
