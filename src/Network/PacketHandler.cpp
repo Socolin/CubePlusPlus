@@ -247,9 +247,7 @@ void NetworkSession::handlePlayerAbilities() throw (NetworkException)
 }
 void NetworkSession::handleTabComplete() throw (NetworkException)
 {
-    readByte();
-    readByte();
-    readByte();
+    readString(255);
 }
 Inventory::ItemStack* NetworkSession::readSlot() throw (NetworkException)
 {
