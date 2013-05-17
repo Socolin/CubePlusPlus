@@ -26,6 +26,34 @@ namespace Window
 
 class Window
 {
+public:
+    enum ePriority
+    {
+        PRIORITY_MEDIUM,
+        PRIORITY_HIGH,
+    };
+public:
+    //TODO: use i_slot
+    Window(i_windowId id, World::EntityPlayer* player, const WindowStaticData* windowData);
+    virtual ~Window();
+    void OpenWindow(int x, i_height y, int z);
+    void OpenWindow(bool sendOpenPacket);
+    void CloseWindow(bool sendPacket);
+    bool ClickOnWindow(short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
+    void ConfirmTransaction(short action, bool accepted);
+    void DoAction(short action);
+
+    void SetSlot(short slotId, const Inventory::ItemStack* slot);
+    void SetWindowItems(short slotId, const Inventory::ItemStack* slot);
+
+    void AddInventory(Inventory::Inventory* inventory, ePriority priority = PRIORITY_MEDIUM);
+
+    i_windowId GetId() const;
+    const WindowStaticData* GetWindowData() const;
+
+    void ReOpenAllInventories(World::EntityPlayer* player);
+    void UpdateInventories();
+private:
     enum eWindowClickMode
     {
         WINDOW_CLICK_MODE_CLICK,
@@ -42,28 +70,6 @@ class Window
         PAINTING_ACTION_PROGRESS,
         PAINTING_ACTION_END,
     };
-public:
-    //TODO: use i_slot
-    Window(i_windowId id, World::EntityPlayer* player, const WindowStaticData* windowData);
-    virtual ~Window();
-    void OpenWindow(int x, i_height y, int z);
-    void OpenWindow(bool sendOpenPacket);
-    void CloseWindow(bool sendPacket);
-    bool ClickOnWindow(short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
-    void ConfirmTransaction(short action, bool accepted);
-    void DoAction(short action);
-
-    void SetSlot(short slotId, const Inventory::ItemStack* slot);
-    void SetWindowItems(short slotId, const Inventory::ItemStack* slot);
-
-    void AddInventory(Inventory::Inventory* inventory);
-
-    i_windowId GetId() const;
-    const WindowStaticData* GetWindowData() const;
-
-    void ReOpenAllInventories(World::EntityPlayer* player);
-    void UpdateInventories();
-
 private:
     bool startPainting(int mouseButton, int action);
     bool progressPainting(i_slot slotId, int action);
@@ -75,6 +81,7 @@ private:
     World::EntityPlayer* player;
     Scripting::WindowScript* script;
     std::vector<Inventory::Inventory*> inventoryList;
+    std::vector<Inventory::Inventory*> inventoryListByPriority;
     const WindowStaticData* windowData;
     int offset;
 

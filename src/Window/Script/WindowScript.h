@@ -44,7 +44,7 @@ public:
     virtual void OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
     virtual void OnConfirmTransaction(World::EntityPlayer* player, short action, bool accepted);
     virtual void OnDoAction(World::EntityPlayer* player, short action);
-    virtual int GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack);
+    virtual int GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseOrder);
 protected:
     Window::Window* baseWindow;
 };

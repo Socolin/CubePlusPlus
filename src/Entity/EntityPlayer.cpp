@@ -41,7 +41,7 @@ EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& nam
     inventoryWindow->AddInventory(craftingInventory);
     inventoryWindow->AddInventory(armorInventory);
     inventoryWindow->AddInventory(mainInventory);
-    inventoryWindow->AddInventory(handsInventory);
+    inventoryWindow->AddInventory(handsInventory, Window::Window::PRIORITY_HIGH);
 }
 
 EntityPlayer::~EntityPlayer()

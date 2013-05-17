@@ -137,7 +137,7 @@ public:
 
     void TakeStackableItemAndFillStack(ItemStack* itemStack);
 
-    ItemStack* StackStackableItemFromStack(ItemStack* itemStack);
+    ItemStack* StackStackableItemFromStack(ItemStack* itemStack, bool reverseOrder, bool fillEmptySlot);
 
     eInventoryType GetInventoryType();
 protected:

@@ -3,6 +3,10 @@
 
 #include "Window/Script/WindowScript.h"
 
+namespace Inventory
+{
+class InventoryFurnace;
+}
 namespace Scripting
 {
 /*
@@ -18,7 +22,9 @@ public:
 
     virtual void OnOpenWindow(World::EntityPlayer* player) override;
     virtual void OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity) override;
-
+    virtual int GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseOrder) override;
+private:
+    Inventory::InventoryFurnace* furnaceInventory;
 };
 
 } /* namespace Scripting */

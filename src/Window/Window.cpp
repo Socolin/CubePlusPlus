@@ -163,25 +163,47 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
                     if (script)
                     {
                         i_slot targetSlot = 0;
-                        int inventoryTypeFlag = script->GetInventoryAndSlotShiftClickTarget(invType, slotId, targetSlot, lookedItemInSlot);
-                        for (Inventory::Inventory* inv : inventoryList)
+                        bool reverseOrder = false;
+                        int inventoryTypeFlag = script->GetInventoryAndSlotShiftClickTarget(invType, inventorySlotId, targetSlot, lookedItemInSlot, reverseOrder);
+
+                        bool fillEmptySlot = false;
+                        int start = 0;
+                        int step = 1;
+
+                        if (reverseOrder)
                         {
-                            if ((inventoryTypeFlag & inv->GetInventoryType()) != 0)
+                            start = inventoryListByPriority.size() - 1;
+                            step = -1;
+                        }
+                        // Two pass, first filling all non empty slot, second fill empty slot
+                        for (int i = 0; i < 2; i++)
+                        {
+                            for (size_t invId = start; invId < inventoryListByPriority.size(); invId += step)
                             {
-                                if (targetSlot == -1)
+                                Inventory::Inventory* inv = inventoryListByPriority[invId];
+
+                                if ((inventoryTypeFlag & inv->GetInventoryType()) != 0)
                                 {
-                                    Inventory::ItemStack* shiftClickedItem =  inventory->TakeSlot(inventorySlotId);
-                                    Inventory::ItemStack* mergeResult = inv->StackStackableItemFromStack(shiftClickedItem);
-                                    if (mergeResult != nullptr)
-                                        inventory->ClearAndSetSlot(0, mergeResult);
-                                }
-                                else
-                                {
-                                    Inventory::ItemStack* shiftClickedItem =  inventory->TakeSlot(inventorySlotId);
-                                    Inventory::ItemStack* mergeResult = inv->Merge(targetSlot, shiftClickedItem, 1);
-                                    inventory->ClearAndSetSlot(0, mergeResult);
+                                    if (targetSlot == -1)
+                                    {
+                                        Inventory::ItemStack* shiftClickedItem =  inventory->TakeSlot(inventorySlotId);
+                                        if (shiftClickedItem == nullptr)
+                                        {
+                                            break;
+                                        }
+                                        Inventory::ItemStack* mergeResult = inv->StackStackableItemFromStack(shiftClickedItem, reverseOrder, fillEmptySlot);
+                                        if (mergeResult != nullptr)
+                                            inventory->ClearAndSetSlot(inventorySlotId, mergeResult);
+                                    }
+                                    else
+                                    {
+                                        Inventory::ItemStack* shiftClickedItem =  inventory->TakeSlot(inventorySlotId);
+                                        Inventory::ItemStack* mergeResult = inv->Merge(targetSlot, shiftClickedItem, 1);
+                                        inventory->ClearAndSetSlot(inventorySlotId, mergeResult);
+                                    }
                                 }
                             }
+                            fillEmptySlot = true;
                         }
                     }
                     returnValue = true;
@@ -358,11 +380,19 @@ void Window::SetWindowItems(short /*slotId*/, const Inventory::ItemStack* /*slot
 {
 }
 
-void Window::AddInventory(Inventory::Inventory* inventory)
+void Window::AddInventory(Inventory::Inventory* inventory, Window::ePriority priority)
 {
     inventoryList.push_back(inventory);
     inventory->OpenInventory(player, id, offset);
     offset += inventory->GetMaxSlot();
+    if (priority == PRIORITY_MEDIUM)
+    {
+        inventoryListByPriority.push_back(inventory);
+    }
+    else
+    {
+        inventoryListByPriority.insert(inventoryListByPriority.begin(), inventory);
+    }
 }
 
 i_windowId Window::GetId() const

@@ -4,6 +4,7 @@
 
 #include "Block/TileEntities/TileEntity.h"
 #include "Entity/EntityPlayer.h"
+#include "Inventory/InventoryFurnace.h"
 #include "Window/Window.h"
 
 namespace Scripting
@@ -11,6 +12,7 @@ namespace Scripting
 
 WindowFurnaceScript::WindowFurnaceScript()
     : WindowScript("window_furnace")
+    , furnaceInventory(nullptr)
 {
 }
 
@@ -34,6 +36,34 @@ void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* /*player*/, Block::T
     assert(tileEntity->getType() == Block::TILEENTITY_TYPE_FURNACE);
     Inventory::Inventory* furnaceInventory = tileEntity->GetInventory();
     baseWindow->AddInventory(furnaceInventory);
+    this->furnaceInventory = dynamic_cast<Inventory::InventoryFurnace*>(furnaceInventory);
+}
+
+int WindowFurnaceScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseOrder)
+{
+    if (furnaceInventory == nullptr)
+    {
+        return parent_type::GetInventoryAndSlotShiftClickTarget(clickedInventoryType, slotId, targetSlot, slotItemStack, reverseOrder);
+    }
+    if (clickedInventoryType == Inventory::INVENTORY_TYPE_FURNACE)
+    {
+        reverseOrder = (slotId == furnaceInventory->GetResultSlotId());
+        targetSlot = -1;
+        return (Inventory::INVENTORY_TYPE_PLAYER_HANDS | Inventory::INVENTORY_TYPE_PLAYER_MAIN);
+    }
+    else if (clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_MAIN)
+    {
+        reverseOrder = false;
+        targetSlot = -1;
+        return Inventory::INVENTORY_TYPE_PLAYER_HANDS;
+    }
+    else if (clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_HANDS)
+    {
+        reverseOrder = false;
+        targetSlot = -1;
+        return Inventory::INVENTORY_TYPE_PLAYER_MAIN;
+    }
+    return 0;
 }
 
 } /* namespace Scripting */

@@ -239,13 +239,28 @@ void Inventory::TakeStackableItemAndFillStack(ItemStack* itemStack)
     }
 }
 
-ItemStack* Inventory::StackStackableItemFromStack(ItemStack* itemStack)
+ItemStack* Inventory::StackStackableItemFromStack(ItemStack* itemStack, bool reverseOrder, bool fillEmptySlot)
 {
     if (itemStack != nullptr)
     {
-        for (size_t slotId = 0; slotId < slot.size() && itemStack != nullptr && itemStack->getStackSize() > 0; slotId++)
+        size_t start = 0;
+        int step = 1;
+        if (reverseOrder)
         {
-            itemStack = Merge(slotId, itemStack);
+            start = slot.size() - 1;
+            step = -1;
+        }
+        for (size_t slotId = start; slotId < slot.size() && itemStack != nullptr && itemStack->getStackSize() > 0; slotId += step)
+        {
+            if (fillEmptySlot)
+            {
+                itemStack = Merge(slotId, itemStack);
+            }
+            else
+            {
+                if (slot[slotId] != nullptr)
+                    itemStack = Merge(slotId, itemStack);
+            }
         }
     }
     return itemStack;
