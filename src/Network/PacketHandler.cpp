@@ -171,7 +171,8 @@ void NetworkSession::handleAnimation() throw (NetworkException)
 void NetworkSession::handleEntityAction() throw (NetworkException)
 {
     readInt();
-    readByte();
+    char action = readByte();
+    player->DoAction(action);
 }
 void NetworkSession::handleCloseWindow() throw (NetworkException)
 {

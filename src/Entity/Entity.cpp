@@ -280,6 +280,50 @@ Util::AABB Entity::GetBoundingBox() const
     return boundingBox;
 }
 
+bool Entity::IsSneak()
+{
+    return GetFlag() & ENTITY_FLAG_SNEAKING;
+}
+
+void Entity::SetSneak(bool sneak)
+{
+    if (sneak)
+    {
+        SetFlag(GetFlag() | ENTITY_FLAG_SNEAKING);
+    }
+    else
+    {
+        SetFlag(GetFlag() & !ENTITY_FLAG_SNEAKING);
+    }
+}
+
+bool Entity::IsSprinting()
+{
+    return GetFlag() & ENTITY_FLAG_SPRINTING;
+}
+
+void Entity::SetSprinting(bool sprinting)
+{
+    if (sprinting)
+    {
+        SetFlag(GetFlag() | ENTITY_FLAG_SPRINTING);
+    }
+    else
+    {
+        SetFlag(GetFlag() & !ENTITY_FLAG_SPRINTING);
+    }
+}
+
+char Entity::GetFlag()
+{
+    return metadataManager.GetCharEntityMetadata(0);
+}
+
+void Entity::SetFlag(char flag)
+{
+    metadataManager.SetEntityMetadata(0, flag);
+}
+
 bool Entity::PushOutOfBlock(double x, double y, double z)
 {
     int blockX = floor(x);

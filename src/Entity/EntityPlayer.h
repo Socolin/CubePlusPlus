@@ -37,6 +37,15 @@ public:
         GAMEMODE_CREATVE,
         GAMEMODE_ADVENTURE
     };
+
+    enum eAction
+    {
+        ACTION_CROUCH = 1,
+        ACTION_UNCROUCH,
+        ACTION_LEAVE_BED,
+        ACTION_START_SPRINTING,
+        ACTION_STOP_SPRINTING,
+    };
 public:
     EntityPlayer(double x, double y, double z, const std::wstring& name, Network::NetworkSession* session);
     virtual ~EntityPlayer();
@@ -111,6 +120,8 @@ public:
      * @param face from network packet
      */
     void DigBlock(int state, int x, unsigned char y, int z, char face);
+
+    void DoAction(char action);
 
     /**
      * Get player gamemode, survival, creative, adventure
@@ -223,7 +234,6 @@ public:
      * @return window with id = 0
      */
     Window::Window* GetInventoryWindow() const;
-
 private:
     eGameMode gameMode;
     std::wstring name;

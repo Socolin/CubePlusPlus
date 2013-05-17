@@ -254,7 +254,7 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
     }
     if (face != FACE_NONE)
     {
-        if (block)
+        if (block && !IsSneak())
         {
             if (block->UseBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ))
                 return;
@@ -263,12 +263,17 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
         {
             if (item->UseOnBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ))
             {
-
+                return;
             }
             else
             {
                 ResetBlock(x, y, z);
             }
+        }
+        if (block && IsSneak())
+        {
+            if (block->UseBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ))
+                return;
         }
     }
     else
@@ -405,6 +410,31 @@ void EntityPlayer::UpdateInventories()
     mainInventory->SendUpdateToAllViewer();
     handsInventory->SendUpdateToAllViewer();
     clickedItem->SendUpdateToAllViewer();
+}
+
+void EntityPlayer::DoAction(char action)
+{
+    switch (action)
+    {
+    case ACTION_CROUCH:
+        SetSneak(true);
+        break;
+    case ACTION_UNCROUCH:
+        SetSneak(false);
+        break;
+    case ACTION_LEAVE_BED:
+        // TODO
+        break;
+    case ACTION_START_SPRINTING:
+        SetSprinting(true);
+        break;
+    case ACTION_STOP_SPRINTING:
+        SetSprinting(false);
+        break;
+    default:
+        std::cerr << "Invalid action:" << action << std::endl;
+        break;
+    }
 }
 
 Window::Window* EntityPlayer::GetInventoryWindow() const

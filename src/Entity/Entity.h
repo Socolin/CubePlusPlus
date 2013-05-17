@@ -26,6 +26,14 @@ class World;
 class EntityPlayer;
 class Entity: public Position
 {
+    enum eEntityFlags
+    {
+        ENTITY_FLAG_BURNING     = 0x1,
+        ENTITY_FLAG_SNEAKING    = 0x2,
+        ENTITY_FLAG_RIDING      = 0x4,
+        ENTITY_FLAG_SPRINTING   = 0x8,
+        ENTITY_FLAG_EATING      = 0x10,
+    };
 public:
     Entity(eEntityType entityType, double x, double y, double z);
     virtual ~Entity();
@@ -83,6 +91,12 @@ public:
     void kill();
     int getEntityId() const;
 
+    char GetFlag();
+    void SetFlag(char flag);
+    bool IsSneak();
+    void SetSneak(bool sneak);
+    bool IsSprinting();
+    void SetSprinting(bool sprinting);
 protected:
     bool PushOutOfBlock(double x, double y, double z);
 
