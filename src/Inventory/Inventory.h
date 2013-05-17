@@ -140,6 +140,8 @@ public:
     ItemStack* StackStackableItemFromStack(ItemStack* itemStack, bool reverseOrder, bool fillEmptySlot);
 
     eInventoryType GetInventoryType();
+
+    virtual bool CanPlayerPlaceItemAt(i_slot slotId);
 protected:
     struct playerData
     {

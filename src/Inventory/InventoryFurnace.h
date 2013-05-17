@@ -19,6 +19,8 @@ public:
     int GetResultSlotId();
     int GetFuelSlotId();
     int GetInputSlotId();
+
+    virtual bool CanPlayerPlaceItemAt(i_slot slotId);
 };
 
 } /* namespace Inventory */

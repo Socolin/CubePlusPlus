@@ -271,4 +271,9 @@ eInventoryType Inventory::GetInventoryType()
     return inventoryType;
 }
 
+bool Inventory::CanPlayerPlaceItemAt(i_slot slotId)
+{
+    return true;
+}
+
 } /* namespace Inventory */

@@ -115,16 +115,29 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
         {
             if (button == 0)
             {
-                Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
                 if (lookedClickedItem != nullptr && lookedItemInSlot != nullptr && lookedClickedItem->IsSoftEqual(lookedItemInSlot))
                 {
-                    Inventory::ItemStack* mergeResult = inventory->Merge(inventorySlotId, clickedItem);
-                    player->GetClickedItem()->ClearAndSetSlot(0, mergeResult);
+                    if (inventory->CanPlayerPlaceItemAt(inventorySlotId))
+                    {
+                        Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
+                        Inventory::ItemStack* mergeResult = inventory->Merge(inventorySlotId, clickedItem);
+                        player->GetClickedItem()->ClearAndSetSlot(0, mergeResult);
+                    }
+                    else
+                    {
+                        Inventory::ItemStack* inSlotItem =  inventory->TakeSlot(inventorySlotId);
+                        Inventory::ItemStack* mergeResult =  player->GetClickedItem()->Merge(0, inSlotItem);
+                        inventory->ClearAndSetSlot(inventorySlotId, mergeResult);
+                    }
                 }
                 else
                 {
-                    Inventory::ItemStack* itemInSlot = inventory->TakeAndSetSlot(inventorySlotId, clickedItem);
-                    player->GetClickedItem()->ClearAndSetSlot(0, itemInSlot);
+                    if (inventory->CanPlayerPlaceItemAt(inventorySlotId))
+                    {
+                        Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
+                        Inventory::ItemStack* itemInSlot = inventory->TakeAndSetSlot(inventorySlotId, clickedItem);
+                        player->GetClickedItem()->ClearAndSetSlot(0, itemInSlot);
+                    }
                 }
                 returnValue = true;
             }
@@ -146,10 +159,13 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
                 }
                 else
                 {
-                    Inventory::ItemStack* clickedItem =  player->GetClickedItem()->TakeSlot(0);
-                    Inventory::ItemStack* mergeResult = inventory->Merge(inventorySlotId, clickedItem, 1);
-                    player->GetClickedItem()->ClearAndSetSlot(0, mergeResult);
-                    returnValue = true;
+                    if (inventory->CanPlayerPlaceItemAt(inventorySlotId))
+                    {
+                        Inventory::ItemStack* clickedItem = player->GetClickedItem()->TakeSlot(0);
+                        Inventory::ItemStack* mergeResult = inventory->Merge(inventorySlotId, clickedItem, 1);
+                        player->GetClickedItem()->ClearAndSetSlot(0, mergeResult);
+                        returnValue = true;
+                    }
                 }
             }
         }
@@ -214,16 +230,23 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
         {
             if (button >= 0 && button <= 9)
             {
-                for (Inventory::Inventory* inv : inventoryList)
+                if (inventory->CanPlayerPlaceItemAt(inventorySlotId))
                 {
-                    if (inv->GetInventoryType() == Inventory::INVENTORY_TYPE_PLAYER_HANDS)
+                    for (Inventory::Inventory* inv : inventoryList)
                     {
-                        Inventory::ItemStack* itemUnderMouse =  inventory->TakeSlot(inventorySlotId);
-                        Inventory::ItemStack* swappedItem =  inv->TakeAndSetSlot(button, itemUnderMouse);
-                        if (swappedItem != nullptr)
-                            inventory->ClearAndSetSlot(inventorySlotId, swappedItem);
-                        break;
+                        if (inv->GetInventoryType() == Inventory::INVENTORY_TYPE_PLAYER_HANDS)
+                        {
+                            Inventory::ItemStack* itemUnderMouse =  inventory->TakeSlot(inventorySlotId);
+                            Inventory::ItemStack* swappedItem =  inv->TakeAndSetSlot(button, itemUnderMouse);
+                            if (swappedItem != nullptr)
+                                inventory->ClearAndSetSlot(inventorySlotId, swappedItem);
+                            break;
+                        }
                     }
+                }
+                else
+                {
+                    // TODO: special case
                 }
                 returnValue = true;
             }

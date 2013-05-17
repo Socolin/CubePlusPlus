@@ -27,4 +27,9 @@ int InventoryFurnace::GetInputSlotId()
     return INVENTORY_FURNACE_INPUT_SLOT;
 }
 
+bool InventoryFurnace::CanPlayerPlaceItemAt(i_slot slotId)
+{
+    return slotId != INVENTORY_FURNACE_RESULT_SLOT;
+}
+
 } /* namespace Inventory */
