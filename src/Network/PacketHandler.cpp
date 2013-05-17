@@ -283,18 +283,18 @@ void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
     Inventory::ItemStack* receivedSlot = readSlot();
     if (player->GetGameMode() == World::EntityPlayer::GAMEMODE_CREATVE)
     {
-        if (receivedSlot != nullptr)
+        if (slotId == -1)
         {
-            if (slotId == -1)
+            if (receivedSlot != nullptr)
             {
                 player->DropItem(receivedSlot);
             }
-            else
-            {
-                if (slotId == player->GetHandsInventory()->getHandSlotId())
-                    player->ItemInHandHasChange();
-                player->GetInventoryWindow()->SetSlot(slotId, receivedSlot);
-            }
+        }
+        else
+        {
+            if (slotId == player->GetHandsInventory()->getHandSlotId())
+                player->ItemInHandHasChange();
+            player->GetInventoryWindow()->SetSlot(slotId, receivedSlot);
         }
     }
     else

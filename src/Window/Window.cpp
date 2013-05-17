@@ -289,26 +289,19 @@ void Window::DoAction(short action)
 
 void Window::SetSlot(short slotId, const Inventory::ItemStack* slot)
 {
-    if (slotId >= 0 && slotId < windowData->getMaxSlot())
+    i_slot inventorySlotId = 0;
+    Inventory::Inventory* inventory = getInventoryForSlot(slotId, inventorySlotId);
+    if (inventory != nullptr)
     {
-        int slotOffsetInInventory = 0;
-        Inventory::Inventory* inventory = nullptr;
-        for (Inventory::Inventory* inv : inventoryList)
+        if (slot == nullptr)
         {
-            int maxSlot = inv->GetMaxSlot();
-            if (maxSlot + slotOffsetInInventory > slotId)
-            {
-                inventory = inv;
-                break;
-            }
-            slotOffsetInInventory += maxSlot;
+            inventory->ClearSlot(inventorySlotId);
         }
-        if (inventory == nullptr)
+        else
         {
-            return;
+            inventory->ClearAndSetSlot(inventorySlotId, slot->Copy());
         }
-        i_slot inventorySlotId = slotId - slotOffsetInInventory;
-        inventory->ClearAndSetSlot(inventorySlotId, slot->Copy());
+        return;
     }
 }
 
