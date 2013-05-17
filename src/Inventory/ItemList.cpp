@@ -48,6 +48,7 @@ void ItemList::Initialize()
               << "MDamage" << "\t"
               << "SubType" << "\t"
               << "ctnerId" << "\t"
+              << "burning" << "\t"
               << "script" << "\t"
               << "name" << "\t"
               << UTIL_TEXT_SHELL_NONE
@@ -60,6 +61,7 @@ void ItemList::Initialize()
         int maxDamage = result->getInt(TableItems::maxDamage);
         bool hasSubType = result->getBoolean(TableItems::hasSubType);
         int containerId = result->getInt(TableItems::containerId);
+        int burningTime = result->getInt(TableItems::burningTime);
         int scriptId = result->getInt(TableItems::script);
 
         Scripting::ItemScript* script = nullptr;
@@ -115,7 +117,7 @@ void ItemList::Initialize()
                 std::cerr << "ERROR: Script:" << scriptName << " not found" << std::endl;
             }
         }
-        Item* item = new Item(itemId, maxStackSize, maxDamage, hasSubType, containerId, script);
+        Item* item = new Item(itemId, maxStackSize, maxDamage, hasSubType, containerId, burningTime, script);
         if (script != nullptr)
             script->Init(item);
         std::cout << itemId << "\t"
@@ -123,6 +125,7 @@ void ItemList::Initialize()
                   << maxDamage << "\t"
                   << hasSubType << "\t"
                   << containerId << "\t"
+                  << burningTime << "\t"
                   << scriptId << "\t"
                   << name << "\t"
                   << std::endl;
@@ -142,7 +145,7 @@ void ItemList::GenerateItemBlock()
             continue;
         Scripting::ItemBlockScript* blockScript = new Scripting::ItemBlockScript();
         blockScript->InitParam(SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID, blockId);
-        items[blockId] = new Item(blockId, 64, 0, false, 0, blockScript);
+        items[blockId] = new Item(blockId, 64, 0, false, 0, 0, blockScript);
     }
 }
 

@@ -24,9 +24,10 @@ public:
      * @param maxDamage the max durability of item
      * @param hasSubType if item has subtype
      * @param containerId the container item id
+     * @param burningTime burning time in tick as fuel in furnace
      * @param script the item script
      */
-    Item(i_item itemId, unsigned char maxStackSize, i_data maxDamage, bool hasSubType, i_item containerId, Scripting::ItemScript* script);
+    Item(i_item itemId, unsigned char maxStackSize, i_data maxDamage, bool hasSubType, i_item containerId, int burningTime, Scripting::ItemScript* script);
 
     /**
      * Destructor
@@ -84,6 +85,8 @@ public:
      */
     inline unsigned char getMaxStackSize() const;
 
+    inline int getBurningTime() const;
+
 private:
     i_item itemId;
     unsigned char maxStackSize;
@@ -91,6 +94,7 @@ private:
     bool hasSubType;
     // For bucket, when crafting, we use content (this item) and take back container, for example a bucket
     i_item containerId;
+    int burningTime;
     Scripting::ItemScript* script;
 };
 

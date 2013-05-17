@@ -8,12 +8,13 @@
 
 namespace Inventory
 {
-Item::Item(i_item itemId, unsigned char maxStackSize, i_data maxDamage, bool hasSubType, unsigned short containerId, Scripting::ItemScript* script)
+Item::Item(i_item itemId, unsigned char maxStackSize, i_data maxDamage, bool hasSubType, unsigned short containerId, int burningTime, Scripting::ItemScript* script)
     : itemId(itemId)
     , maxStackSize(maxStackSize)
     , maxDamage(maxDamage)
     , hasSubType(hasSubType)
     , containerId(containerId)
+    , burningTime(burningTime)
     , script(script)
 {
 }

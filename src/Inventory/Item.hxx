@@ -28,6 +28,11 @@ unsigned char Item::getMaxStackSize() const
     return maxStackSize;
 }
 
+int Item::getBurningTime() const
+{
+    return burningTime;
+}
+
 } /* namespace Inventory */
 
 #endif /* ITEM_HXX_ */

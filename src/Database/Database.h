@@ -63,6 +63,18 @@ enum eDatabaseField
     liquid,
 };
 }
+namespace TableFurnaceRecipe
+{
+enum eDatabaseField
+{
+    itemId = 1,
+    itemData,
+    resultId,
+    resultData,
+    resultQuantity,
+    experience,
+};
+}
 namespace TableItems
 {
 enum eDatabaseField
@@ -73,6 +85,7 @@ enum eDatabaseField
     maxDamage,
     hasSubType,
     containerId,
+    burningTime,
     script,
 };
 }
