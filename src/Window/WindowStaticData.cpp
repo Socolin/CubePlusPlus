@@ -3,9 +3,10 @@
 namespace Window
 {
 
-WindowStaticData::WindowStaticData(i_windowDataId id, char maxSlot, std::wstring name, int clientWindowId, Scripting::WindowScript* script)
+WindowStaticData::WindowStaticData(i_windowDataId id, char maxSlot, char networkMaxSlot, std::wstring name, int clientWindowId, Scripting::WindowScript* script)
     : id(id)
     , maxSlot(maxSlot)
+    , networkMaxSlot(networkMaxSlot)
     , name(name)
     , clientWindowId(clientWindowId)
     , script(script)
@@ -24,6 +25,11 @@ i_windowDataId WindowStaticData::getId() const
 char WindowStaticData::getMaxSlot() const
 {
     return maxSlot;
+}
+
+char WindowStaticData::getNetworkMaxSlot() const
+{
+    return networkMaxSlot;
 }
 
 const std::wstring& WindowStaticData::getName() const

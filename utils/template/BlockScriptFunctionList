@@ -12,3 +12,4 @@
     virtual bool CanProvidePower() const override;
     virtual i_powerlevel GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const override;
     virtual i_powerlevel GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const override;
+    virtual void OnNotifyTileEntityStateChange(World::World* world, int x, i_height y, int z, int action);

@@ -154,6 +154,7 @@ enum eDatabaseField
     id = 1,
     name,
     maxSlot,
+    networkMaxSlot,
     script,
     clientWindowId,
 };
