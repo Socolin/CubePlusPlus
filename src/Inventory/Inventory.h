@@ -60,13 +60,19 @@ public:
     void SendUpdateToAllViewer();
 
     /**
-     * Get the count of item from the slot
-     * @param slotId
-     * @param count
-     * @return
+     * Take 'count' item from slot, if count > stackSize, then get all stack
+     * else do a copy of slot with stackSize=count
+     * @param slotId id of slot where is item to take
+     * @param count number of item to take
+     * @return item taken
      */
     ItemStack* TakeSomeItemInSlot(int slotId, int count);
 
+    /**
+     * Decrease stackSize of slot, if stackSize <= 0 then the item is deleted
+     * @param slotId id of slot where is item
+     * @param count number of item to remove
+     */
     void RemoveSomeItemInSlot(int slotId, int count);
 
     /**
@@ -137,14 +143,41 @@ public:
      */
     void DropInventory(World::World* world, double x, double y, double z);
 
+    /**
+     * Walk through the inventory and take all stackable item to stack them into 'itemStack' while it's not full
+     * @param itemStack item stack to fill
+     */
     void TakeStackableItemAndFillStack(ItemStack* itemStack);
 
+    /**
+     * Walk through the inventory and try to place in free slot and in other stackable item the items contained in
+     * 'itemStack'
+     * @param itemStack items which must be place in slot
+     * @param reverseOrder start from end of inventory
+     * @param fillEmptySlot if false, it will ignore empty slot while walink throuh inventory
+     * @return The remaining items
+     */
     ItemStack* StackStackableItemFromStack(ItemStack* itemStack, bool reverseOrder, bool fillEmptySlot);
 
+    /**
+     * Return inventory type, used for shift click
+     * @return
+     */
     eInventoryType GetInventoryType();
 
+    /**
+     * Test if a slot can be fill by a player or not, like for result slot of crafting table or furnace
+     * the player can only take item from this slot, and cannot place it.
+     * @param slotId the id of slot
+     * @return true if player can fill the slot
+     */
     virtual bool CanPlayerPlaceItemAt(i_slot slotId);
 
+    /**
+     * Send window property update to all viewer, ex: furnace progress bar
+     * @param property propertyId
+     * @param value new value
+     */
     virtual void UpdateWindowProperty(short property, short value);
 protected:
     struct playerData

@@ -179,7 +179,7 @@ ItemStack* Inventory::Merge(int slotId, ItemStack* itemStack, int count)
     }
     else
     {
-        if (!oldItem->IsSoftEqual(itemStack))
+        if (!oldItem->IsStackable(itemStack))
         {
             return itemStack;
         }
@@ -235,7 +235,7 @@ void Inventory::TakeStackableItemAndFillStack(ItemStack* itemStack)
         if (avaibleSpace == 0)
             return;
         ItemStack* currentItemStack = slot[slotId];
-        if (currentItemStack != nullptr && currentItemStack->IsSoftEqual(itemStack))
+        if (currentItemStack != nullptr && currentItemStack->IsStackable(itemStack))
         {
             int currentStackSize = currentItemStack->getStackSize();
             if (currentStackSize < currentItemStack->GetMaxStackSize())
@@ -299,7 +299,6 @@ void Inventory::UpdateWindowProperty(short property, short value)
     Network::NetworkPacket updatePacket;
     for (auto playerItr : playerWithOffsetList)
     {
-        int offset = playerItr.second.offsetSlot;
         i_windowId windowId = playerItr.second.windowId;
         updatePacket << (unsigned char)Network::OP_UPDATE_WINDOW_PROPERTY << windowId << property << value;
         playerItr.first->Send(updatePacket);

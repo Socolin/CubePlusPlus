@@ -14,7 +14,7 @@ public:
 
     /**
      * Do a copy of item stack
-     * @return
+     * @return a new itemstack
      */
     ItemStack* Copy() const;
 
@@ -67,11 +67,22 @@ public:
      * @param otherStack
      * @return true if two item can be stackable
      */
-    bool IsSoftEqual(const ItemStack* otherStack) const;
+    bool IsStackable(const ItemStack* otherStack) const;
 
+    /**
+     * Check if item is stackable with a other item
+     * @param otherItemId id of other item
+     * @param otherItemData damage of other item
+     * @return
+     */
     bool IsStackable(i_item otherItemId, i_damage otherItemData) const;
 
+    /**
+     * Check if itemStackSize == maxStackSize
+     * @return true if stack has the maximum size
+     */
     bool Full() const;
+
 private:
     i_item itemId;
     i_damage itemData;

@@ -115,7 +115,7 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
         {
             if (button == 0)
             {
-                if (lookedClickedItem != nullptr && lookedItemInSlot != nullptr && lookedClickedItem->IsSoftEqual(lookedItemInSlot))
+                if (lookedClickedItem != nullptr && lookedItemInSlot != nullptr && lookedClickedItem->IsStackable(lookedItemInSlot))
                 {
                     if (inventory->CanPlayerPlaceItemAt(inventorySlotId))
                     {

@@ -46,7 +46,7 @@ void WindowScript::OnDoAction(World::EntityPlayer* /*player*/, short /*action*/)
 {
 }
 
-int WindowScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseOrder)
+int WindowScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot /*slotId*/, i_slot& targetSlot, const Inventory::ItemStack* /*slotItemStack*/, bool& reverseOrder)
 {
     if (clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_MAIN)
     {

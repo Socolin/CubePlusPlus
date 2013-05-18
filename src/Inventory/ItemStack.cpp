@@ -64,7 +64,7 @@ int ItemStack::GetMaxStackSize() const
     return item->getMaxStackSize();
 }
 
-bool ItemStack::IsSoftEqual(const ItemStack* otherStack) const
+bool ItemStack::IsStackable(const ItemStack* otherStack) const
 {
     return otherStack->itemId == itemId && otherStack->itemData == itemData;
 }
