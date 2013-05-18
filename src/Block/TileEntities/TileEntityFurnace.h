@@ -14,7 +14,7 @@ namespace Block
 class TileEntityFurnace: public TileEntity
 {
 public:
-    TileEntityFurnace(int blockX, i_height blockY, int blockZ);
+    TileEntityFurnace(World::World* world, int blockX, i_height blockY, int blockZ);
     virtual ~TileEntityFurnace();
 
     virtual void UpdateTick();

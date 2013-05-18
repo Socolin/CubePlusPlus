@@ -3,8 +3,8 @@
 namespace Block
 {
 
-TileEntityNote::TileEntityNote(int blockX, i_height blockY, int blockZ)
-        : TileEntity(TILEENTITY_TYPE_NOTE, blockX, blockY, blockZ), noteLevel(0)
+TileEntityNote::TileEntityNote(World::World* world, int blockX, i_height blockY, int blockZ)
+        : TileEntity(TILEENTITY_TYPE_NOTE, world, blockX, blockY, blockZ), noteLevel(0)
 {
 }
 

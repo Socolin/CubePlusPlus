@@ -57,9 +57,9 @@ bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, i
 }
 
 
-Block::TileEntity* BlockNoteScript::CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const
+Block::TileEntity* BlockNoteScript::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const
 {
-    return new Block::TileEntityNote(blockX, blockY, blockZ);
+    return new Block::TileEntityNote(world, blockX, blockY, blockZ);
 }
 
 void BlockNoteScript::Init(Block::Block* baseBlock)

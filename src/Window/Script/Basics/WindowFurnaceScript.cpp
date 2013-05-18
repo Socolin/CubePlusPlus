@@ -58,14 +58,14 @@ int WindowFurnaceScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInvento
         const Inventory::Item* item = slotItemStack->getItem();
         reverseOrder = false;
         targetSlot = -1;
-        if (item && item->getBurningTime())
-        {
-            targetSlot = furnaceInventory->GetFuelSlotId();
-            return Inventory::INVENTORY_TYPE_FURNACE;
-        }
         if (Database::FurnaceRecipes::Instance().IsValidInput(slotItemStack))
         {
             targetSlot = furnaceInventory->GetInputSlotId();
+            return Inventory::INVENTORY_TYPE_FURNACE;
+        }
+        if (item && item->getBurningTime())
+        {
+            targetSlot = furnaceInventory->GetFuelSlotId();
             return Inventory::INVENTORY_TYPE_FURNACE;
         }
         return Inventory::INVENTORY_TYPE_PLAYER_HANDS;
@@ -75,14 +75,14 @@ int WindowFurnaceScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInvento
         const Inventory::Item* item = slotItemStack->getItem();
         reverseOrder = false;
         targetSlot = -1;
-        if (item && item->getBurningTime())
-        {
-            targetSlot = furnaceInventory->GetFuelSlotId();
-            return Inventory::INVENTORY_TYPE_FURNACE;
-        }
         if (Database::FurnaceRecipes::Instance().IsValidInput(slotItemStack))
         {
             targetSlot = furnaceInventory->GetInputSlotId();
+            return Inventory::INVENTORY_TYPE_FURNACE;
+        }
+        if (item && item->getBurningTime())
+        {
+            targetSlot = furnaceInventory->GetFuelSlotId();
             return Inventory::INVENTORY_TYPE_FURNACE;
         }
         return Inventory::INVENTORY_TYPE_PLAYER_MAIN;

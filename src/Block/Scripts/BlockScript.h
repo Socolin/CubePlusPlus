@@ -96,12 +96,13 @@ public:
     /**
      * Return a new tile entity which will be store in chunk, to store more data, like for chest or
      * block with inventory
+     * @param world current world
      * @param blockX position of block
      * @param blockY position of block
      * @param blockZ position of block
      * @return nullptr or valid a pointer to valid TileEntity
      */
-    virtual Block::TileEntity* CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const;
+    virtual Block::TileEntity* CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const;
 
     /**
      * Indicate if block use a tile entity or not, if it return true, CreateNewTileEntity must not return nullptr
@@ -168,6 +169,8 @@ public:
 
     virtual i_powerlevel GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const;
     virtual i_powerlevel GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const;
+
+    virtual void OnNotifyTileEntityStateChange(World::World* world, int x, i_height y, int z, int action);
 
 protected:
     Block::Block* baseBlock;

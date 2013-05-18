@@ -9,7 +9,7 @@ namespace Block
 class TileEntitySign: public TileEntity
 {
 public:
-    TileEntitySign(int blockX, i_height blockY, int blockZ);
+    TileEntitySign(World::World* world, int blockX, i_height blockY, int blockZ);
     virtual ~TileEntitySign();
     virtual void UpdateTick() override;
     virtual bool NeedUpdate() override;

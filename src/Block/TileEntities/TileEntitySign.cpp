@@ -5,8 +5,8 @@
 namespace Block
 {
 
-TileEntitySign::TileEntitySign(int blockX, i_height blockY, int blockZ)
-    : TileEntity(TILEENTITY_TYPE_SIGN, blockX, blockY, blockZ)
+TileEntitySign::TileEntitySign(World::World* world, int blockX, i_height blockY, int blockZ)
+    : TileEntity(TILEENTITY_TYPE_SIGN, world, blockX, blockY, blockZ)
     , updated(false), inCache(false)
 {
 }

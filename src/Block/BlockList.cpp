@@ -60,6 +60,7 @@ void BlockList::Initialize()
               << "materia" << "\t"
               << "scriptI" << "\t"
               << "soundId" << "\t"
+              << "burning" << "\t"
               << "useNeighborBrightness" << "\t"
               << "name" << " "
               << UTIL_TEXT_SHELL_NONE
@@ -85,6 +86,7 @@ void BlockList::Initialize()
         float maxY = result->getDouble(TableBlock::maxY);
         float maxZ = result->getDouble(TableBlock::maxZ);
         int materialId = result->getInt(TableBlock::material);
+        int burningTime = result->getInt(TableBlock::burningTime);
         bool useNeighborBrightness = result->getInt(TableBlock::useNeighborBrightness);
         int scriptId = result->getInt(TableBlock::scriptId);
 
@@ -147,7 +149,7 @@ void BlockList::Initialize()
                                  slipperiness, isCollidable, isOpaqueCube,renderAsNormal,
                                  minX, minY, minZ, maxX, maxY, maxZ,
                                  materialList[materialId],
-                                 useNeighborBrightness,
+                                 useNeighborBrightness, burningTime,
                                  script);
         std::cout << blockId << "\t"
                   << (int)lightOpacity << "\t"
@@ -168,6 +170,7 @@ void BlockList::Initialize()
                   << materialId << "\t"
                   << scriptId << "\t"
                   << soundId << "\t"
+                  << burningTime << "\t"
                   << useNeighborBrightness << "\t"
                   << name << " "
                   << std::endl;

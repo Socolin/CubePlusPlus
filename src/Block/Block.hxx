@@ -59,6 +59,11 @@ bool Block::UseNeighborBrightness() const
     return useNeighborBrightness;
 }
 
+int Block::GetBurningTime() const
+{
+    return burningTime;
+}
+
 } /* namespace Block */
 
 #endif /* BLOCK_HXX_ */

@@ -73,6 +73,7 @@ public:
     Block::TileEntity* GetTileEntity(i_small_coord x, i_height y, i_small_coord z);
     i_height getMinHeight() const;
 
+    void ChangeBlockNoEventNoTileEntityChange_DoNotUseExceptIfYouKnowWhatYouDo(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData);
 private:
 
     inline i_lightvalue getBlockLightAt(i_small_coord x, i_height y, i_small_coord z);

@@ -145,7 +145,7 @@ void ItemList::GenerateItemBlock()
             continue;
         Scripting::ItemBlockScript* blockScript = new Scripting::ItemBlockScript();
         blockScript->InitParam(SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID, blockId);
-        items[blockId] = new Item(blockId, 64, 0, false, 0, 0, blockScript);
+        items[blockId] = new Item(blockId, 64, 0, false, 0, block->GetBurningTime(), blockScript);
     }
 }
 

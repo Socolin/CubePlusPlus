@@ -11,7 +11,7 @@ namespace Block
 class TileEntityRecordPlayer: public TileEntity
 {
 public:
-    TileEntityRecordPlayer(int blockX, i_height blockY, int blockZ);
+    TileEntityRecordPlayer(World::World* world, int blockX, i_height blockY, int blockZ);
     virtual ~TileEntityRecordPlayer();
 
     virtual void UpdateTick() override;

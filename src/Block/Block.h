@@ -43,7 +43,7 @@ public:
           float minX, float minY, float minZ,
           float maxX, float maxY, float maxZ,
           const BlockMaterial& material,
-          bool useNeighborBrightness,
+          bool useNeighborBrightness, int burningTime,
           Scripting::BlockScript* script);
     virtual ~Block();
 
@@ -138,12 +138,13 @@ public:
 
     /**
      * Create a new TileEntity which will be associate to the block
+     * @param world
      * @param blockX
      * @param blockY
      * @param blockZ
      * @return nullptr or an object that inherits from TileEntity
      */
-    TileEntity* CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const;
+    TileEntity* CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const;
 
     /**
      * Check if the block use a tile entity or not
@@ -195,6 +196,8 @@ public:
 
     bool IsNormalCube() const;
 
+    void NotifyTileEntityStateChange(World::World* world, int x, i_height y, int z, int action) const;
+
     // Getters
     inline i_block GetBlockId() const;
     inline const SoundBlock& GetSound() const;
@@ -207,6 +210,7 @@ public:
     inline i_lightvalue GetLightValue() const;
     inline float GetSlipperiness() const;
     inline bool UseNeighborBrightness() const;
+    inline int GetBurningTime() const;
 
 private:
     /// The id of block.
@@ -231,6 +235,7 @@ private:
     float maxZ;
     const BlockMaterial material;
     bool useNeighborBrightness;
+    int burningTime;
     Scripting::BlockScript* script;
 
     // Calculated data

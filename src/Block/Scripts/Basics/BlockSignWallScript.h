@@ -15,7 +15,7 @@ public:
     virtual ~BlockSignWallScript();
     virtual BlockScript* Copy() override;
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
-    virtual Block::TileEntity* CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const;
+    virtual Block::TileEntity* CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const override;
     virtual bool UseTileEntity() const;
 };
 

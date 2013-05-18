@@ -3,8 +3,8 @@
 namespace Block
 {
 
-TileEntityRecordPlayer::TileEntityRecordPlayer(int blockX, i_height blockY, int blockZ)
-    : TileEntity(TILEENTITY_TYPE_JUKEBOX, blockX, blockY, blockZ)
+TileEntityRecordPlayer::TileEntityRecordPlayer(World::World* world, int blockX, i_height blockY, int blockZ)
+    : TileEntity(TILEENTITY_TYPE_JUKEBOX, world, blockX, blockY, blockZ)
     , Record(0)
     , recordSlot(1)
 {

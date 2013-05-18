@@ -32,6 +32,7 @@ enum eDatabaseField
     material,
     scriptId,
     soundId,
+    burningTime,
     useNeighborBrightness,
 };
 }

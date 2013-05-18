@@ -21,7 +21,7 @@ Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpaci
              float minX, float minY, float minZ,
              float maxX, float maxY, float maxZ,
              const BlockMaterial& material,
-             bool useNeighborBrightness,
+             bool useNeighborBrightness, int burningTime,
              Scripting::BlockScript* script)
     : blockId(blockId)
     , sound(sound)
@@ -42,6 +42,7 @@ Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpaci
     , maxZ(maxZ)
     , material(material)
     , useNeighborBrightness(useNeighborBrightness)
+    , burningTime(burningTime)
     , script(script)
 {
     fullBlock = ((maxX - minX) + (maxZ - minZ) + (maxZ - minZ)) >= 3;
@@ -91,11 +92,11 @@ bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char f
     return false;
 }
 
-TileEntity* Block::CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const
+TileEntity* Block::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const
 {
     if (script)
     {
-        return script->CreateNewTileEntity(blockX, blockY, blockZ);
+        return script->CreateNewTileEntity(world, blockX, blockY, blockZ);
     }
     return nullptr;
 }
@@ -204,6 +205,14 @@ bool Block::HasSolidTopSurface(i_data metadata) const
 bool Block::IsNormalCube() const
 {
     return !material.isTranslucent() && renderAsNormal && !CanProvidePower();
+}
+
+void Block::NotifyTileEntityStateChange(World::World* world, int x, i_height y, int z, int action) const
+{
+    if (script)
+    {
+        return script->OnNotifyTileEntityStateChange(world, x, y, z, action);
+    }
 }
 
 } /* namespace Block */

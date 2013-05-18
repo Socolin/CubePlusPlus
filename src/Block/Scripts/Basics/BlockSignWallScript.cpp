@@ -48,9 +48,9 @@ void BlockSignWallScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /
      };
 }
 
-Block::TileEntity* BlockSignWallScript::CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const
+Block::TileEntity* BlockSignWallScript::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const
 {
-    return new Block::TileEntitySign(blockX, blockY, blockZ);
+    return new Block::TileEntitySign(world, blockX, blockY, blockZ);
 }
 
 bool BlockSignWallScript::UseTileEntity() const

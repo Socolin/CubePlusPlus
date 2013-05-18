@@ -62,9 +62,9 @@ bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
     return false;
 }
 
-Block::TileEntity* BlockJukeboxScript::CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const
+Block::TileEntity* BlockJukeboxScript::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const
 {
-    return new Block::TileEntityRecordPlayer(blockX, blockY, blockZ);
+    return new Block::TileEntityRecordPlayer(world, blockX, blockY, blockZ);
 }
 
 bool BlockJukeboxScript::UseTileEntity() const

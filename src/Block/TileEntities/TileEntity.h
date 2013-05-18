@@ -8,6 +8,10 @@ namespace Inventory
 {
 class Inventory;
 }
+namespace World
+{
+class World;
+}
 namespace Block
 {
 
@@ -25,7 +29,7 @@ enum eTileEntityType
 class TileEntity
 {
 public:
-    TileEntity(eTileEntityType type, int blockX, i_height blockY, int blockZ);
+    TileEntity(eTileEntityType type, World::World* world, int blockX, i_height blockY, int blockZ);
     virtual ~TileEntity();
 
     virtual void UpdateTick() = 0;
@@ -38,6 +42,7 @@ public:
     // Add tickFrequence ?
 protected:
     eTileEntityType type;
+    World::World* world;
     int blockX;
     i_height blockY;
     int blockZ;

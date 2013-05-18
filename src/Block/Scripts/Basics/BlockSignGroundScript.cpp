@@ -26,9 +26,9 @@ void BlockSignGroundScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x
     data = (int)(std::floor(((player->getYaw() + 180) * 16.0 / 360.0) + 0.5)) & 15;
 }
 
-Block::TileEntity* BlockSignGroundScript::CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const
+Block::TileEntity* BlockSignGroundScript::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const
 {
-    return new Block::TileEntitySign(blockX, blockY, blockZ);
+    return new Block::TileEntitySign(world, blockX, blockY, blockZ);
 }
 
 bool BlockSignGroundScript::UseTileEntity() const

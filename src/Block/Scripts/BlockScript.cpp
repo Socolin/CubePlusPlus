@@ -22,7 +22,7 @@ void BlockScript::Init(Block::Block* baseBlock)
     this->baseBlock = baseBlock;
 }
 
-Block::TileEntity* BlockScript::CreateNewTileEntity(int /*blockX*/, i_height /*blockY*/, int /*blockZ*/) const
+Block::TileEntity* BlockScript::CreateNewTileEntity(World::World* /*world*/, int /*blockX*/, i_height /*blockY*/, int /*blockZ*/) const
 {
     return nullptr;
 }
@@ -85,6 +85,10 @@ bool BlockScript::HasSolidTopSurface(i_data /*metadata*/) const
 i_powerlevel BlockScript::GetStrongPowerLevel(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int /*side*/, i_data /*metadata*/) const
 {
     return 0;
+}
+
+void BlockScript::OnNotifyTileEntityStateChange(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int /*action*/)
+{
 }
 
 } /* namespace Scripting */

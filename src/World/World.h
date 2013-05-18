@@ -99,6 +99,8 @@ public:
     void NotifyNeighborsForBlockChange(int x, i_height y, int z, i_block blockId);
     void NotifyNeighborBlockChange(int x, i_height y, int z, i_block neighborBlockId);
 
+    void NotifyTileEntityStateChange(int x, i_height y, int z, int action);
+
     bool IsNormalCube(int x, i_height y, int z);
 
     i_powerlevel getBlockPower(int x, i_height y, int z, int direction);

@@ -249,6 +249,24 @@ void Chunk::GetTileEntityPacket(Network::NetworkPacket& packet)
     }
 }
 
+
+void Chunk::ChangeBlockNoEventNoTileEntityChange_DoNotUseExceptIfYouKnowWhatYouDo(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData)
+{
+    inCache = false;
+
+    SetBlockAt(x, y, z, blockID);
+    SetDataAt(x, y, z, blockData);
+
+    unsigned int dataChange = 0;
+    dataChange |= blockData       & 0x0000000f;
+    dataChange |= (blockID << 4)  & 0x0000fff0;
+    dataChange |= ((int)y << 16)  & 0x00ff0000;
+    dataChange |= ((z & 0xf) << 24)       & 0x0f000000;
+    dataChange |= ((x & 0xf) << 28)       & 0xf0000000;
+    blockChangePacket << dataChange;
+    countChange++;
+}
+
 void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData)
 {
     inCache = false;
@@ -281,7 +299,7 @@ void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block bl
         block->OnBlockAddedInWorld(world, x + posXx16, y, z + posZx16, blockData);
         if (block->UseTileEntity())
         {
-            Block::TileEntity* tileEntity = block->CreateNewTileEntity(x + posXx16, y, z + posZx16);
+            Block::TileEntity* tileEntity = block->CreateNewTileEntity(world, x + posXx16, y, z + posZx16);
             SetTileEntity(tileEntity ,x, y, z);
         }
     }

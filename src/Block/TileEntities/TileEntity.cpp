@@ -3,8 +3,8 @@
 namespace Block
 {
 
-TileEntity::TileEntity(eTileEntityType type, int blockX, i_height blockY, int blockZ)
-    : type(type), blockX(blockX), blockY(blockY), blockZ(blockZ)
+TileEntity::TileEntity(eTileEntityType type, World::World* world, int blockX, i_height blockY, int blockZ)
+    : type(type), world(world), blockX(blockX), blockY(blockY), blockZ(blockZ)
 {
 }
 
@@ -21,7 +21,5 @@ eTileEntityType TileEntity::getType() const
 {
     return type;
 }
-
-
 
 } /* namespace Block */

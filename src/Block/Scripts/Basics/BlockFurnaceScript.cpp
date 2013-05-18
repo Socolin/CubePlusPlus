@@ -3,6 +3,8 @@
 #include "Block/TileEntities/TileEntityFurnace.h"
 #include "Entity/EntityPlayer.h"
 #include "Util/AssertUtil.h"
+#include "World/Chunk.h"
+#include "World/World.h"
 #include "Window/Window.h"
 #include "Window/WindowStaticData.h"
 #include "Window/WindowList.h"
@@ -13,6 +15,8 @@ namespace Scripting
 BlockFurnaceScript::BlockFurnaceScript()
     : BlockScript("block_furnace")
     , windowDataId(0)
+    , idleFurnaceBlock(0)
+    , burningFurnaceBlock(0)
 {
 }
 
@@ -29,8 +33,14 @@ void BlockFurnaceScript::InitParam(int paramId, int param)
 {
     switch(paramId)
     {
-    case SCRIPTINGPARAM_BLOCK_FURNACe_WINDOWID:
+    case SCRIPTINGPARAM_BLOCK_FURNACE_WINDOWID:
         windowDataId = param;
+        break;
+    case SCRIPTINGPARAM_BLOCK_FURNACE_IDLEFURNACEBLOCK:
+        idleFurnaceBlock = param;
+        break;
+    case SCRIPTINGPARAM_BLOCK_FURNACE_BURNINGFURNACEBLOCK:
+        burningFurnaceBlock = param;
         break;
     default:
         AssertSwitchBadDefault(paramId);
@@ -38,9 +48,9 @@ void BlockFurnaceScript::InitParam(int paramId, int param)
     }
 }
 
-Block::TileEntity* BlockFurnaceScript::CreateNewTileEntity(int blockX, i_height blockY, int blockZ) const
+Block::TileEntity* BlockFurnaceScript::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const
 {
-    return new Block::TileEntityFurnace(blockX, blockY, blockZ);
+    return new Block::TileEntityFurnace(world, blockX, blockY, blockZ);
 }
 
 
@@ -88,6 +98,35 @@ void BlockFurnaceScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/,
 void BlockFurnaceScript::OnDestroy(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, i_data /*data*/) const
 {
     // TODO: Drop item in tile entity
+}
+
+void BlockFurnaceScript::OnNotifyTileEntityStateChange(World::World* world, int x, i_height y, int z, int action)
+{
+    switch (action)
+    {
+    case ACTION_START_BURNING:
+        if (baseBlock->GetBlockId() == idleFurnaceBlock)
+        {
+            World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
+            if (chunk)
+            {
+                chunk->ChangeBlockNoEventNoTileEntityChange_DoNotUseExceptIfYouKnowWhatYouDo(x & 0xf, y, z & 0xf, burningFurnaceBlock, chunk->getDataAt(x & 0xf, y, z & 0xf));
+            }
+        }
+        break;
+    case ACTION_STOP_BURNING:
+        if (baseBlock->GetBlockId() == burningFurnaceBlock)
+        {
+            World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
+            if (chunk)
+            {
+                chunk->ChangeBlockNoEventNoTileEntityChange_DoNotUseExceptIfYouKnowWhatYouDo(x & 0xf, y, z & 0xf, idleFurnaceBlock, chunk->getDataAt(x & 0xf, y, z & 0xf));
+            }
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 } /* namespace Scripting */
