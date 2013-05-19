@@ -5,8 +5,8 @@
 #include "Inventory/Scripts/RegisterItemScripts.h"
 #include "Inventory/Scripts/ItemScript.h"
 #include "Database/DatabaseManager.h"
-#include "Window/Script/RegisterWindowScript.h"
-#include "Window/Script/WindowScript.h"
+#include "Window/Scripts/RegisterWindowScript.h"
+#include "Window/Scripts/WindowScript.h"
 
 
 #include <iostream>

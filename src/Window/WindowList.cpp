@@ -5,7 +5,7 @@
 #include "Database/DatabaseManager.h"
 #include "Util/StringUtil.h"
 #include "Scripting/ScriptManager.h"
-#include "Script/WindowScript.h"
+#include "Scripts/WindowScript.h"
 #include "WindowStaticData.h"
 
 namespace Window

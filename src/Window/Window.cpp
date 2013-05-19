@@ -4,7 +4,7 @@
 
 #include "Block/Block.h"
 #include "Block/BlockList.h"
-#include "Script/WindowScript.h"
+#include "Scripts/WindowScript.h"
 #include "Entity/EntityPlayer.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
