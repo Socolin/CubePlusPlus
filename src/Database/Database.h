@@ -64,6 +64,29 @@ enum eDatabaseField
     liquid,
 };
 }
+namespace TableCraft
+{
+enum eDatabaseField
+{
+    id = 1,
+    width,
+    height,
+    resultId,
+    resultData,
+    resultQuantity,
+    scriptId,
+};
+}
+namespace TableCraftSlot
+{
+enum eDatabaseField
+{
+    id = 1,
+    craftId,
+    itemId,
+    itemData,
+};
+}
 namespace TableFurnaceRecipe
 {
 enum eDatabaseField

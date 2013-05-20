@@ -9,6 +9,7 @@ namespace Scripting
 
 WindowCraftingTableScript::WindowCraftingTableScript()
     : WindowScript("window_craftingtable")
+    , craftInventory(nullptr)
 {
 }
 

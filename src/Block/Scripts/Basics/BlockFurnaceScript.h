@@ -7,7 +7,7 @@ namespace Scripting
 {
 
 /*
- * INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('block_furnace',1);
+ * INSERT INTO `script`(`scriptName`,`paramCount`) VALUES ('block_furnace',3);
    SET @scriptId = LAST_INSERT_ID();
    INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,1,'windowId',1);
    INSERT INTO `script_info`(`scriptId`,`paramId`,`name`,`type`) VALUES (@scriptId,2,'idleFurnaceBlock',1);

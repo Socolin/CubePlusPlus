@@ -23,6 +23,7 @@ public:
     const std::vector<Craft*>& GetCraftList(int width, int height);
 private:
     void load();
+    void loadCraftSlot(Craft* craft, int craftId);
     std::map<int, std::vector<Craft*>> craftList;
 };
 

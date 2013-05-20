@@ -1,7 +1,8 @@
 #include <Network/NetworkManager.h>
 #include <Network/Opcode.h>
-#include "World/WorldManager.h"
+
 #include "Config/Config.h"
+#include "Craft/CraftManager.h"
 #include "Block/BlockList.h"
 #include "Inventory/ItemList.h"
 #include "Database/DatabaseManager.h"
@@ -9,6 +10,7 @@
 #include "Database/MiscData/FurnaceRecipes.h"
 #include "Scripting/ScriptManager.h"
 #include "Window/WindowList.h"
+#include "World/WorldManager.h"
 
 #include <iostream>
 #include <ctime>
@@ -39,6 +41,7 @@ int main(void)
     Block::BlockList::Instance().InitInstance();
     Inventory::ItemList::Instance().InitInstance();
     Window::WindowList::Instance().InitInstance();
+    Craft::CraftManager::Instance().InitInstance();
     Database::PaintingData::Instance().InitInstance();
     Database::FurnaceRecipes::Instance().InitInstance();
 
