@@ -1,8 +1,10 @@
 #include "InventoryCraft.h"
 
 #include <vector>
+
 #include "Craft/Craft.h"
 #include "Craft/CraftManager.h"
+#include "Item.h"
 
 namespace Inventory
 {
@@ -71,6 +73,54 @@ void InventoryCraft::PerformCraftChecking()
     {
         ClearSlot(GetResultSlotId());
     }
+}
+
+ItemStack* InventoryCraft::GetResultItems(int count)
+{
+    PerformCraftChecking();
+    const ItemStack* lookedResultItem = slot[GetResultSlotId()];
+    ItemStack* resultItem = nullptr;
+    if (lookedResultItem != nullptr)
+    {
+        if (count < 0)
+        {
+            count = lookedResultItem->GetMaxStackSize() / lookedResultItem->getStackSize();
+        }
+        char countMaxResult = count;
+        for (int i = 1; i <= width * height; i++)
+        {
+            ItemStack* item = slot[i];
+            if (item != nullptr)
+            {
+                countMaxResult = std::min(item->getStackSize(), countMaxResult);
+            }
+        }
+
+        for (int i = 1; i <= width * height; i++)
+        {
+            ItemStack* item = slot[i];
+            if (item != nullptr)
+            {
+                item->setStackSize(item->getStackSize() - countMaxResult);
+                if (item->getStackSize() <= 0)
+                {
+                    i_item containerId = item->getItem()->getContainerId();
+                    if (containerId > 0)
+                    {
+                        ClearAndSetSlot(i, new ItemStack(containerId, 1, 0));
+                    }
+                    else
+                    {
+                        ClearSlot(i);
+                    }
+                }
+            }
+        }
+        resultItem = lookedResultItem->Copy();
+        resultItem->setStackSize(countMaxResult * lookedResultItem->getStackSize());
+    }
+    PerformCraftChecking();
+    return resultItem;
 }
 
 } /* namespace Inventory */

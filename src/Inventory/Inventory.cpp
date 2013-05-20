@@ -174,21 +174,19 @@ ItemStack* Inventory::Merge(int slotId, ItemStack* itemStack, int count)
     }
     else
     {
-        if (!oldItem->IsStackable(itemStack))
+        if (oldItem->IsStackable(itemStack))
         {
-            return itemStack;
-        }
-
-        if (oldItem->GetMaxStackSize() >= (count + oldItem->getStackSize()))
-        {
-            oldItem->setStackSize(oldItem->getStackSize() + count);
-            itemStack->setStackSize(itemStack->getStackSize() - count);
-        }
-        else
-        {
-            int freeSpace = oldItem->GetMaxStackSize() - oldItem->getStackSize();
-            oldItem->setStackSize(oldItem->getStackSize() + freeSpace);
-            itemStack->setStackSize(itemStack->getStackSize() - freeSpace);
+            if (oldItem->GetMaxStackSize() >= (count + oldItem->getStackSize()))
+            {
+                oldItem->setStackSize(oldItem->getStackSize() + count);
+                itemStack->setStackSize(itemStack->getStackSize() - count);
+            }
+            else
+            {
+                int freeSpace = oldItem->GetMaxStackSize() - oldItem->getStackSize();
+                oldItem->setStackSize(oldItem->getStackSize() + freeSpace);
+                itemStack->setStackSize(itemStack->getStackSize() - freeSpace);
+            }
         }
     }
     if (itemStack->getStackSize() == 0)

@@ -17,7 +17,7 @@ class CraftScript;
 namespace Craft
 {
 
-#define CRAFT_ANY_DATA i_damage(-1)
+#define CRAFT_ANY_DATA -1
 
 class Craft
 {
@@ -33,10 +33,19 @@ private:
     {
         ItemData() : itemId(0), itemData(0) {}
         i_item itemId;
-        i_damage itemData;
+        short itemData;
         bool Equals(const Inventory::ItemStack* item) const
         {
-            return itemId == item->getItemId() && (itemData == CRAFT_ANY_DATA || itemData == item->getItemData());
+            if (item == nullptr)
+                return itemId == 0;
+            if (itemId == item->getItemId())
+            {
+                if (itemData == CRAFT_ANY_DATA)
+                    return true;
+                if (itemData == item->getItemData())
+                    return true;
+            }
+            return false;
         }
     };
     char width;

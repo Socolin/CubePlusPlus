@@ -150,15 +150,11 @@ void CraftManager::loadCraftSlot(Craft* craft, int craftId)
                << "resultQu" << "\t"
                << "scriptId" << "\t"
                << UTIL_TEXT_SHELL_NONE << std::endl;
-    if (result->next())
+    while (result->next())
     {
        i_item itemId = result->getInt(TableCraftSlot::itemId);
        i_damage itemData = result->getInt(TableCraftSlot::itemData);
        craft->SetNextSlot(itemId, itemData);
-    }
-    else
-    {
-       std::cerr << "ERROR: no craft slot found in database, craftid:" << craftId << std::endl;
     }
 }
 

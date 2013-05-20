@@ -17,6 +17,8 @@ public:
     virtual bool CanPlayerPlaceItemAt(i_slot slotId) override;
 
     void PerformCraftChecking();
+
+    ItemStack* GetResultItems(int count = -1);
 private:
     int width;
     int height;

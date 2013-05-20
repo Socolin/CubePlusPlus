@@ -1,5 +1,7 @@
 #include "WindowCraftingTableScript.h"
 
+#include <cassert>
+
 #include "Inventory/InventoryCraft.h"
 #include "Entity/EntityPlayer.h"
 #include "Window/Window.h"
@@ -40,7 +42,7 @@ void WindowCraftingTableScript::OnCloseWindow(World::EntityPlayer* player)
     // TODO overide drop inventory for crafting part, don't drop stack in result
 }
 
-bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* /*player*/, short slotId, char /*button*/, short /*action*/, char mode, const Inventory::ItemStack* /*slot*/, bool& retValue)
+bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* player, short slotId, char /*button*/, short /*action*/, char mode, const Inventory::ItemStack* /*slot*/, bool& retValue)
 {
     i_slot inventorySlotId = 0;
     Inventory::Inventory* inventory = baseWindow->GetInventoryForSlot(slotId, inventorySlotId);
@@ -52,8 +54,21 @@ bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* /*player*/,
             if (mode == Window::WINDOW_CLICK_MODE_CLICK)
             {
                 retValue = true;
+                const Inventory::ItemStack* lookedClickedItem = player->GetClickedItem()->LookSlot(0);
+                const Inventory::ItemStack* lookedCraftResult = inventory->LookSlot(craftInventory->GetResultSlotId());
+                if (lookedCraftResult != nullptr)
+                {
+                    if (lookedClickedItem == nullptr || (lookedClickedItem->GetMaxStackSize() >= (int)lookedClickedItem->getStackSize() + (int)lookedCraftResult->getStackSize() && lookedClickedItem->IsStackable(lookedCraftResult)))
+                    {
+                        Inventory::ItemStack* craftResult = craftInventory->GetResultItems(1);
+                        if (craftResult != nullptr)
+                        {
+                            Inventory::ItemStack* mergeResult = player->GetClickedItem()->Merge(0, craftResult, -1);
+                            assert(mergeResult == nullptr);
+                        }
+                    }
+                }
                 return true;
-
             }
             if (mode == Window::WINDOW_CLICK_MODE_SHIFT)
             {

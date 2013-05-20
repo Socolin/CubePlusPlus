@@ -34,32 +34,36 @@ bool Craft::Match(Inventory::InventoryCraft* craftInventory) const
     {
         return false;//TODO
     }
+    bool findCraft = true;
     for (int x = 0; x < width; x++)
     {
         for (int y = 0; y < height; y++)
         {
-            if (slots[x][y].Equals(craftInventory->LookSlot(x, y)))
+            if (!slots[x][y].Equals(craftInventory->LookSlot(x, y)))
             {
-                return true;
+                findCraft = false;
             }
         }
     }
+    if (findCraft)
+        return true;
+    findCraft = true;
     for (int x = 0; x < width; x++)
     {
         for (int y = 0; y < height; y++)
         {
-            if (slots[width - x][y].Equals(craftInventory->LookSlot(x, y)))
+            if (!slots[width - 1 - x][y].Equals(craftInventory->LookSlot(x, y)))
             {
-                return true;
+                findCraft = false;
             }
         }
     }
-    return false;
+    return findCraft;
 }
 
 void Craft::SetNextSlot(i_item itemId, i_damage itemData)
 {
-    ItemData& slot = slots[currentSlot % width][currentSlot / height];
+    ItemData& slot = slots[currentSlot % width][currentSlot / width];
     slot.itemId = itemId;
     slot.itemData = itemData;
     currentSlot++;
