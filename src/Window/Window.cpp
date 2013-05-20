@@ -165,7 +165,7 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
                     }
                     else
                     {
-                        int count = lookedItemInSlot->getStackSize();
+                        i_stackSize count = lookedItemInSlot->getStackSize();
                         Inventory::ItemStack* halfStackFromSlot = inventory->TakeSomeItemInSlot(inventorySlotId, (count + 1) / 2);
                         player->GetClickedItem()->ClearAndSetSlot(0, halfStackFromSlot);
                         returnValue = true;
@@ -321,7 +321,11 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
                 {
                     for (Inventory::Inventory* inv : inventoryList)
                     {
-                        inv->TakeStackableItemAndFillStack(clickedItem);
+                        inv->TakeStackableItemAndFillStack(clickedItem, false);
+                    }
+                    for (Inventory::Inventory* inv : inventoryList)
+                    {
+                        inv->TakeStackableItemAndFillStack(clickedItem, true);
                     }
                 }
                 player->GetClickedItem()->ClearAndSetSlot(0, clickedItem);
@@ -488,6 +492,32 @@ bool Window::progressPainting(i_slot slotId, int action)
     return false;
 }
 
+Inventory::Inventory* Window::GetInventoryByType(Inventory::eInventoryType type)
+{
+    for (Inventory::Inventory* inv : inventoryList)
+    {
+        if (inv->GetInventoryType() == type)
+        {
+            return inv;
+        }
+    }
+    return nullptr;
+}
+
+int Window::CountAvaibleSpaceForItem(int inventoryFlag, const Inventory::ItemStack* item)
+{
+    int count = 0;
+
+    for (Inventory::Inventory* inv : inventoryList)
+    {
+        if ((inventoryFlag & inv->GetInventoryType()) != 0)
+        {
+            count += inv->CountAvaibleSpaceForItem(item);
+        }
+    }
+    return count;
+}
+
 bool Window::endPainting(int action)
 {
     if (isPainting)
@@ -501,7 +531,7 @@ bool Window::endPainting(int action)
                 const Inventory::ItemStack* lookClickedItem = clickedInventory->LookSlot(0);
                 if (lookClickedItem != nullptr)
                 {
-                    size_t stackedItem = lookClickedItem->getStackSize();
+                    i_stackSize stackedItem = lookClickedItem->getStackSize();
                     size_t countSlotPainted = paintedSlot.size();
                     size_t itemPerSlot = 1;
                     if (paintingButton == 0)
@@ -547,6 +577,11 @@ Inventory::Inventory* Window::GetInventoryForSlot(i_slot slotId, i_slot& invento
     }
     inventorySlotId = slotId - slotOffsetInInventory;
     return inventory;
+}
+
+const std::vector<Inventory::Inventory*>& Window::GetInventoryListByPriority() const
+{
+    return inventoryListByPriority;
 }
 
 } /* namespace Window */

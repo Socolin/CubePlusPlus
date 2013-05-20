@@ -37,12 +37,12 @@ i_item ItemStack::getItemId() const
     return itemId;
 }
 
-char ItemStack::getStackSize() const
+i_stackSize ItemStack::getStackSize() const
 {
     return stackSize;
 }
 
-void ItemStack::setStackSize(char stackSize)
+void ItemStack::setStackSize(i_stackSize stackSize)
 {
     this->stackSize = stackSize;
 }
@@ -54,7 +54,7 @@ const Item* ItemStack::getItem() const
     return ItemList::Instance().getItem(itemId);
 }
 
-int ItemStack::GetMaxStackSize() const
+i_stackSize ItemStack::GetMaxStackSize() const
 {
     const Item* item = getItem();
     if (item == nullptr)

@@ -121,7 +121,7 @@ NetworkPacket& NetworkPacket::operator <<(const Inventory::ItemStack* item)
         *this << item->getItemId();
         if (item->getItemId() > 0)
         {
-            *this << item->getStackSize() << item->getItemData() << short(-1) /*No nbt data*/;
+            *this << (char)item->getStackSize() << item->getItemData() << short(-1) /*No nbt data*/;
         }
     }
     return *this;

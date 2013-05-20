@@ -1,6 +1,7 @@
 #ifndef WINDOW_H_
 #define WINDOW_H_
 
+#include "Inventory/InventoryConstants.h"
 #include "Inventory/ItemStack.h"
 #include "Util/types.h"
 #include "Window/WindowStaticData.h"
@@ -66,6 +67,11 @@ public:
     void UpdateInventories();
 
     Inventory::Inventory* GetInventoryForSlot(i_slot slotId, i_slot& inventorySlotId);
+    Inventory::Inventory* GetInventoryByType(Inventory::eInventoryType type);
+
+    int CountAvaibleSpaceForItem(int inventoryFlag, const Inventory::ItemStack* item);
+    const std::vector<Inventory::Inventory*>& GetInventoryListByPriority() const;
+
 private:
     enum ePaintingAction
     {

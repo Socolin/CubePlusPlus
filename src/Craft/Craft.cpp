@@ -63,7 +63,7 @@ bool Craft::Match(Inventory::InventoryCraft* craftInventory) const
 
 void Craft::SetNextSlot(i_item itemId, i_damage itemData)
 {
-    ItemData& slot = slots[currentSlot % width][currentSlot / width];
+     ItemData& slot = slots[currentSlot % width][currentSlot / width];
     slot.itemId = itemId;
     slot.itemData = itemData;
     currentSlot++;

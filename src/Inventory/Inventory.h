@@ -146,8 +146,9 @@ public:
     /**
      * Walk through the inventory and take all stackable item to stack them into 'itemStack' while it's not full
      * @param itemStack item stack to fill
+     * @param takeFullStack
      */
-    void TakeStackableItemAndFillStack(ItemStack* itemStack);
+    void TakeStackableItemAndFillStack(ItemStack* itemStack, bool takeFullStack);
 
     /**
      * Walk through the inventory and try to place in free slot and in other stackable item the items contained in
@@ -179,6 +180,8 @@ public:
      * @param value new value
      */
     virtual void UpdateWindowProperty(short property, short value);
+
+    int CountAvaibleSpaceForItem(const ItemStack* item);
 protected:
     struct playerData
     {

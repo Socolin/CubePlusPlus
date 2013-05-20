@@ -86,7 +86,7 @@ ItemStack* InventoryCraft::GetResultItems(int count)
         {
             count = lookedResultItem->GetMaxStackSize() / lookedResultItem->getStackSize();
         }
-        char countMaxResult = count;
+        i_stackSize countMaxResult = count;
         for (int i = 1; i <= width * height; i++)
         {
             ItemStack* item = slot[i];

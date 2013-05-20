@@ -40,13 +40,13 @@ public:
      * Return number of item in stack
      * @return
      */
-    char getStackSize() const;
+    i_stackSize getStackSize() const;
 
     /**
      * Change number of item ins tack
      * @param stackSize
      */
-    void setStackSize(char stackSize);
+    void setStackSize(i_stackSize stackSize);
 
     /**
      * Get pointer to item, usefull to use script
@@ -58,12 +58,11 @@ public:
      * Get max stack size from item data
      * @return max stack size
      */
-    int GetMaxStackSize() const;
+    i_stackSize GetMaxStackSize() const;
 
     /**
      * Check if itemId && itemData are equals
      * TODO: check also nbt data when it will be possible
-     * TODO: rename
      * @param otherStack
      * @return true if two item can be stackable
      */
@@ -86,7 +85,7 @@ public:
 private:
     i_item itemId;
     i_damage itemData;
-    char stackSize;
+    i_stackSize stackSize;
 };
 
 } /* namespace Inventory */

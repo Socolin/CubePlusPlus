@@ -8,6 +8,7 @@
 #include "Entity/Object/EntityItem.h"
 #include "Inventory/Item.h"
 #include "Inventory/ItemStack.h"
+#include "Inventory/InventoryCraft.h"
 #include "Network/NetworkSession.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
@@ -35,7 +36,7 @@ EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& nam
     handsInventory = new Inventory::InventoryPlayer();
     clickedItem = new Inventory::Inventory(1);
     armorInventory = new Inventory::Inventory(4);//TODO: special inventory
-    craftingInventory = new Inventory::Inventory(5);//TODO: special inventory
+    craftingInventory = new Inventory::InventoryCraft(2, 2);
 
     inventoryWindow = new Window::Window(0, this, Window::WindowList::getWindowData(0));
     inventoryWindow->AddInventory(craftingInventory);

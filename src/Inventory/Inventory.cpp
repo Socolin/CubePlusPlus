@@ -164,6 +164,7 @@ ItemStack* Inventory::Merge(int slotId, ItemStack* itemStack, int count)
         if (count > itemStack->getStackSize())
             count = itemStack->getStackSize();
     }
+    count = std::min(itemStack->GetMaxStackSize(), count);
     ItemStack* returnItem = itemStack;
     if (oldItem == nullptr)
     {
@@ -220,7 +221,7 @@ void Inventory::DropInventory(World::World* world, double x, double y, double z)
     }
 }
 
-void Inventory::TakeStackableItemAndFillStack(ItemStack* itemStack)
+void Inventory::TakeStackableItemAndFillStack(ItemStack* itemStack, bool takeFullStack)
 {
     int avaibleSpace = itemStack->GetMaxStackSize() - itemStack->getStackSize();
     for (size_t slotId = 0; slotId < slot.size() && avaibleSpace > 0; slotId++)
@@ -230,22 +231,22 @@ void Inventory::TakeStackableItemAndFillStack(ItemStack* itemStack)
         ItemStack* currentItemStack = slot[slotId];
         if (currentItemStack != nullptr && currentItemStack->IsStackable(itemStack))
         {
-            int currentStackSize = currentItemStack->getStackSize();
-            if (currentStackSize < currentItemStack->GetMaxStackSize())
-            {
-                int toTakeCount = std::min(avaibleSpace, currentStackSize);
+            if (!takeFullStack && currentItemStack->Full())
+                continue;
 
-                itemStack->setStackSize(itemStack->getStackSize() + toTakeCount);
-                if (toTakeCount < currentStackSize)
-                    currentItemStack->setStackSize(currentItemStack->getStackSize() - toTakeCount);
-                else
-                {
-                    delete currentItemStack;
-                    slot[slotId] = nullptr;
-                }
-                avaibleSpace -= toTakeCount;
-                updatedSlot.push_back(slotId);
+            int currentStackSize = currentItemStack->getStackSize();
+            int toTakeCount = std::min(avaibleSpace, currentStackSize);
+
+            itemStack->setStackSize(itemStack->getStackSize() + toTakeCount);
+            if (toTakeCount < currentStackSize)
+                currentItemStack->setStackSize(currentItemStack->getStackSize() - toTakeCount);
+            else
+            {
+                delete currentItemStack;
+                slot[slotId] = nullptr;
             }
+            avaibleSpace -= toTakeCount;
+            updatedSlot.push_back(slotId);
         }
     }
 }
@@ -303,6 +304,27 @@ void Inventory::UpdateWindowProperty(short property, short value)
         updatePacket.Clear();
     }
     updatedSlot.clear();
+}
+
+int Inventory::CountAvaibleSpaceForItem(const ItemStack* item)
+{
+    int count = 0;
+    i_stackSize itemStackSize = item->GetMaxStackSize();
+    for (ItemStack* currentItem : slot)
+    {
+        if (currentItem != nullptr)
+        {
+            if (currentItem->IsStackable(item))
+            {
+                count += (itemStackSize - currentItem->getStackSize());
+            }
+        }
+        else
+        {
+            count += itemStackSize;
+        }
+    }
+    return count;
 }
 
 } /* namespace Inventory */

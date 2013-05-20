@@ -45,8 +45,7 @@ void WindowChestScript::OnOpenWindow(World::EntityPlayer* /*player*/, Block::Til
     baseWindow->AddInventory(chestInventory);
 }
 
-
-int WindowChestScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseOrder)
+int WindowChestScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot /*slotId*/, i_slot& targetSlot, const Inventory::ItemStack* /*slotItemStack*/, bool& reverseOrder)
 {
     if (clickedInventoryType == Inventory::INVENTORY_TYPE_DEFAULT)
     {
