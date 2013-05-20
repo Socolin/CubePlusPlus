@@ -186,7 +186,7 @@ protected:
         i_windowId windowId;
     };
     std::map<World::EntityPlayer*, playerData> playerWithOffsetList;
-    std::set<i_slot> updatedSlot;
+    std::vector<i_slot> updatedSlot;
     std::vector<ItemStack*> slot;
     int maxSlot;
     eInventoryType inventoryType;

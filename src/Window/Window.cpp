@@ -100,10 +100,16 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
     if (slotId >= 0 && slotId < windowData->getMaxSlot())
     {
         if (script)
-            script->OnClickOnWindow(player, slotId, button, action, mode, slot);
+        {
+            bool retValue = false;
+            if (script->OnClickOnWindow(player, slotId, button, action, mode, slot, retValue))
+            {
+                return retValue;
+            }
+        }
 
         i_slot inventorySlotId = 0;
-        Inventory::Inventory* inventory = getInventoryForSlot(slotId, inventorySlotId);
+        Inventory::Inventory* inventory = GetInventoryForSlot(slotId, inventorySlotId);
         if (inventory == nullptr)
         {
             return false;
@@ -372,6 +378,10 @@ bool Window::ClickOnWindow(short slotId, char button, short action, char mode, c
         }
 
     }
+    if (script)
+    {
+        script->OnPostClickOnWindow(player, slotId, button, action, mode, slot);
+    }
     player->UpdateInventories();
     UpdateInventories();
     return returnValue;
@@ -392,7 +402,7 @@ void Window::DoAction(short action)
 void Window::SetSlot(short slotId, const Inventory::ItemStack* slot)
 {
     i_slot inventorySlotId = 0;
-    Inventory::Inventory* inventory = getInventoryForSlot(slotId, inventorySlotId);
+    Inventory::Inventory* inventory = GetInventoryForSlot(slotId, inventorySlotId);
     if (inventory != nullptr)
     {
         if (slot == nullptr)
@@ -501,7 +511,7 @@ bool Window::endPainting(int action)
                         for (i_slot slotId : paintedSlot)
                         {
                             i_slot inventorySlotId = 0;
-                            Inventory::Inventory* inventory = getInventoryForSlot(slotId, inventorySlotId);
+                            Inventory::Inventory* inventory = GetInventoryForSlot(slotId, inventorySlotId);
                             if (inventory == nullptr)
                             {
                                 continue;
@@ -521,7 +531,7 @@ bool Window::endPainting(int action)
     return false;
 }
 
-Inventory::Inventory* Window::getInventoryForSlot(i_slot slotId, i_slot& inventorySlotId)
+Inventory::Inventory* Window::GetInventoryForSlot(i_slot slotId, i_slot& inventorySlotId)
 {
     int slotOffsetInInventory = 0;
     Inventory::Inventory* inventory = nullptr;

@@ -41,7 +41,8 @@ public:
     virtual void OnOpenWindow(World::EntityPlayer* player);
     virtual void OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity);
     virtual void OnCloseWindow(World::EntityPlayer* player);
-    virtual void OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
+    virtual bool OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot, bool& retValue);
+    virtual void OnPostClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot);
     virtual void OnConfirmTransaction(World::EntityPlayer* player, short action, bool accepted);
     virtual void OnDoAction(World::EntityPlayer* player, short action);
     virtual int GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseOrder);

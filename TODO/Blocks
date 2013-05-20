@@ -17,7 +17,7 @@
 16 tile.oreCoal                     yes     | no       |           
 17 tile.log                         yes     | no       |           
 18 tile.leaves                      no      | no       |           
-19 tile.sponge                      no      | no       |           
+19 tile.sponge                      yes     | no       |           
 20 tile.glass                       yes     | no       |           
 21 tile.oreLapis                    yes     | no       |           
 22 tile.blockLapis                  yes     | no       |           
@@ -25,9 +25,9 @@
 24 tile.sandStone                   yes     | no       |           
 25 tile.musicBlock                  yes     | no       |           
 26 tile.bed                         no      | no       |           
-27 tile.goldenRail                  no      | no       |   
-28 tile.detectorRail                no      | no       |   
-29 tile.pistonStickyBase            no      | no       |  
+27 tile.goldenRail                  no      | no       | Minecart
+28 tile.detectorRail                no      | no       | Minecart
+29 tile.pistonStickyBase            no      | no       | 
 30 tile.web                         no      | no       |           
 31 tile.tallgrass                   yes     | no       |           
 32 tile.deadbush                    yes     | no       |           
@@ -52,8 +52,8 @@
 51 tile.fire                        no      | no       |           
 52 tile.mobSpawner                  no      | no       | Mob
 53 tile.stairsWood                  yes     | no       |           
-54 tile.chest                       no      | no       |
-55 tile.redstoneDust                no      | no       |   
+54 tile.chest                       yes     | no       |
+55 tile.redstoneDust                yes     | no       |   
 56 tile.oreDiamond                  yes     | no       |           
 57 tile.blockDiamond                yes     | no       |           
 58 tile.workbench                   no      | no       |
@@ -68,9 +68,9 @@
 67 tile.stairsStone                 yes     | no       |           
 68 tile.sign                        yes     | no       | (But not fall if no block under)         
 69 tile.lever                       yes     | no       |  
-70 tile.pressurePlate               no      | no       |   
+70 tile.pressurePlate               no      | no       | EntityColliding with block 
 71 tile.doorIron                    yes     | no       | 
-72 tile.pressurePlate               no      | no       |   
+72 tile.pressurePlate               no      | no       | EntityColliding with block  
 73 tile.oreRedstone                 no      | no       |           
 74 tile.oreRedstone                 no      | no       |           
 75 tile.notGate                     yes     | no       |   
@@ -83,12 +83,12 @@
 82 tile.clay                        no      | no       |           
 83 tile.reeds                       no      | no       |           
 84 tile.jukebox                     yes     | no       |           
-85 tile.fence                       no      | no       |           
+85 tile.fence                       no      | no       | 
 86 tile.pumpkin                     yes     | no       |           
 87 tile.hellrock                    yes     | no       |           
 88 tile.hellsand                    no      | no       |           
 89 tile.lightgem                    yes     | no       |           
-90 tile.portal                      no      | no       |           
+90 tile.portal                      no      | no       | Nether          
 91 tile.litpumpkin                  yes     | no       |           
 92 tile.cake                        no      | no       |           
 93 tile.diode                       no      | no       |   
@@ -108,15 +108,15 @@
 107 tile.fenceGate                  no      | no       |           
 108 tile.stairsBrick                yes     | no       |           
 109 tile.stairsStoneBrickSmooth     yes     | no       |           
-110 tile.mycel                      no      | no       |           
-111 tile.waterlily                  no      | no       |           
-112 tile.netherBrick                no      | no       |           
+110 tile.mycel                      yes     | no       |           
+111 tile.waterlily                  no      | no       | Water
+112 tile.netherBrick                yes     | no       |           
 113 tile.netherFence                no      | no       |           
 114 tile.stairsNetherBrick          yes     | no       |           
 115 tile.netherStalk                no      | no       |           
-116 tile.enchantmentTable           no      | no       |           
+116 tile.enchantmentTable           no      | no       | ItemNbtMetadata
 117 tile.brewingStand               no      | no       |           
-118 tile.cauldron                   no      | no       |           
+118 tile.cauldron                   no      | no       | Weather
 119 tile.null                       no      | no       |           
 120 tile.endPortalFrame             no      | no       |           
 121 tile.whiteStone                 no      | no       |           

@@ -20,7 +20,7 @@ public:
     int GetFuelSlotId();
     int GetInputSlotId();
 
-    virtual bool CanPlayerPlaceItemAt(i_slot slotId);
+    virtual bool CanPlayerPlaceItemAt(i_slot slotId) override;
 };
 
 } /* namespace Inventory */

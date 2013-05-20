@@ -2,6 +2,8 @@
 
 #include "Block/Scripts/RegisterBlockScripts.h"
 #include "Block/Scripts/BlockScript.h"
+#include "Craft/Scripts/RegisterCraftScripts.h"
+#include "Craft/Scripts/CraftScript.h"
 #include "Inventory/Scripts/RegisterItemScripts.h"
 #include "Inventory/Scripts/ItemScript.h"
 #include "Database/DatabaseManager.h"
@@ -60,12 +62,27 @@ WindowScript* ScriptManager::GetWindowScript(std::string scriptName)
     return NULL;
 }
 
+void ScriptManager::RegisterScript(std::string scriptName, CraftScript* script)
+{
+    craftScript[scriptName] = script;
+}
+
+CraftScript* ScriptManager::GetCraftScript(std::string scriptName)
+{
+    auto it = craftScript.find(scriptName);
+    if (it != craftScript.end())
+        return it->second->Copy();
+    return NULL;
+}
+
+
 void ScriptManager::RegisterAllScripts()
 {
     std::cout << "Start registering scripts";
     RegisterBlockScript();
     RegisterItemScripts();
     RegisterWindowScript();
+    RegisterCraftScript();
 }
 
 void ScriptManager::LoadScriptsIds()

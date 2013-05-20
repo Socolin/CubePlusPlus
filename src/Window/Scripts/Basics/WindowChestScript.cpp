@@ -57,12 +57,12 @@ int WindowChestScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventory
     else if (clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_MAIN)
     {
         targetSlot = -1;
-        return (Inventory::INVENTORY_TYPE_DEFAULT  | clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_HANDS);
+        return (Inventory::INVENTORY_TYPE_DEFAULT  | Inventory::INVENTORY_TYPE_PLAYER_HANDS);
     }
     else if (clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_HANDS)
     {
         targetSlot = -1;
-        return (Inventory::INVENTORY_TYPE_DEFAULT  | clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_MAIN);
+        return (Inventory::INVENTORY_TYPE_DEFAULT  | Inventory::INVENTORY_TYPE_PLAYER_MAIN);
     }
     return 0;
 }

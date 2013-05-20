@@ -34,7 +34,12 @@ void WindowScript::OnCloseWindow(World::EntityPlayer* /*player*/)
 {
 }
 
-void WindowScript::OnClickOnWindow(World::EntityPlayer* /*player*/, short /*slotId*/, char /*button*/, short /*action*/, char /*mode*/, const Inventory::ItemStack* /*slot*/)
+bool WindowScript::OnClickOnWindow(World::EntityPlayer* /*player*/, short /*slotId*/, char /*button*/, short /*action*/, char /*mode*/, const Inventory::ItemStack* /*slot*/, bool& /*retValue*/)
+{
+    return false;
+}
+
+void WindowScript::OnPostClickOnWindow(World::EntityPlayer* /*player*/, short /*slotId*/, char /*button*/, short /*action*/, char /*mode*/, const Inventory::ItemStack* /*slot*/)
 {
 }
 

@@ -41,11 +41,6 @@ void Inventory::CloseInventoryForDelete()
     }
 }
 
-const ItemStack* Inventory::LookSlot(int slotId) const
-{
-    return slot[slotId];
-}
-
 void Inventory::SendUpdateToAllViewer()
 {
     if (!updatedSlot.empty())
@@ -78,7 +73,7 @@ ItemStack* Inventory::TakeSlot(int slotId)
 {
     ItemStack* oldItem = slot[slotId];
     slot[slotId] = nullptr;
-    updatedSlot.insert(slotId);
+    updatedSlot.push_back(slotId);
 
     return oldItem;
 }
@@ -86,7 +81,7 @@ ItemStack* Inventory::TakeAndSetSlot(int slotId, ItemStack* itemStack)
 {
     ItemStack* oldItem = slot[slotId];
     slot[slotId] = itemStack;
-    updatedSlot.insert(slotId);
+    updatedSlot.push_back(slotId);
 
     return oldItem;
 }
@@ -96,7 +91,7 @@ void Inventory::ClearAndSetSlot(int slotId, ItemStack* itemStack)
     ItemStack* oldItem = slot[slotId];
     delete oldItem;
     slot[slotId] = itemStack;
-    updatedSlot.insert(slotId);
+    updatedSlot.push_back(slotId);
 
 }
 
@@ -105,7 +100,7 @@ void Inventory::ClearSlot(int slotId)
     ItemStack* oldItem = slot[slotId];
     delete oldItem;
     slot[slotId] = nullptr;
-    updatedSlot.insert(slotId);
+    updatedSlot.push_back(slotId);
 
 }
 
@@ -130,7 +125,7 @@ ItemStack* Inventory::TakeSomeItemInSlot(int slotId, int count)
         newStack->setStackSize(count);
         oldItem->setStackSize(oldItem->getStackSize() - count);
     }
-    updatedSlot.insert(slotId);
+    updatedSlot.push_back(slotId);
 
     return newStack;
 }
@@ -149,7 +144,7 @@ void Inventory::RemoveSomeItemInSlot(int slotId, int count)
         delete oldItem;
         slot[slotId] = nullptr;
     }
-    updatedSlot.insert(slotId);
+    updatedSlot.push_back(slotId);
 }
 
 
@@ -201,7 +196,7 @@ ItemStack* Inventory::Merge(int slotId, ItemStack* itemStack, int count)
         delete itemStack;
         returnItem = nullptr;
     }
-    updatedSlot.insert(slotId);
+    updatedSlot.push_back(slotId);
 
     return returnItem;
 }
@@ -251,7 +246,7 @@ void Inventory::TakeStackableItemAndFillStack(ItemStack* itemStack)
                     slot[slotId] = nullptr;
                 }
                 avaibleSpace -= toTakeCount;
-                updatedSlot.insert(slotId);
+                updatedSlot.push_back(slotId);
             }
         }
     }
@@ -292,6 +287,11 @@ eInventoryType Inventory::GetInventoryType()
 bool Inventory::CanPlayerPlaceItemAt(i_slot /*slotId*/)
 {
     return true;
+}
+
+const ItemStack* Inventory::LookSlot(int slotId) const
+{
+    return slot[slotId];
 }
 
 void Inventory::UpdateWindowProperty(short property, short value)

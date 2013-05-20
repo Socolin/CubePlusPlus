@@ -155,7 +155,7 @@ public:
     virtual void OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const;
 
     /**
-     * Return true if block has the top surface solid, like for reversed stair/slab or glowstone
+     * Return true if block has the top surface solid, like for reversedb   stair/slab or glowstone
      * @param metadata metadata of block
      * @return true if top face is solid
      */

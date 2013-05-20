@@ -8,9 +8,9 @@ then
   exit 1
 fi
 
-echo -e "Choose: \\033[32mBlock \\033[0mor \\033[32mItem\\033[0m: "
+echo -e "Choose: \\033[32mBlock \\033[0mor \\033[32mItem\\033[0m \\033[0mor \\033[32mWindow\\033[0m: "
 read type
-if test "$type" != "Block" -a "$type" != "Item"
+if test "$type" != "Block" -a "$type" != "Item" -a "$type" != "Window"
 then
   echo "\\033[31mBad type:\\033[0m $type"
   exit 1

@@ -1,0 +1,10 @@
+#ifndef CRAFTCONTANTS_H_
+#define CRAFTCONTANTS_H_
+
+
+
+#define CRAFT_MAX_WIDTH 3
+#define CRAFT_MAX_HEIGHT 3
+
+
+#endif /* CRAFTCONTANTS_H_ */
