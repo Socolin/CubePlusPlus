@@ -67,7 +67,7 @@ void BlockRedstoneTorchActiveScript::OnDestroy(World::World* world, int x, i_hei
 {
     FOR_EACH_SIDE_YXZ(x, y, z, BlockSide)
         world->NotifyNeighborsForBlockChange(BlockSideX, BlockSideY, BlockSideZ, baseBlock->GetBlockId());
-    }
+    END_FOR_EACH_SIDE
 }
 
 i_powerlevel BlockRedstoneTorchActiveScript::GetWeakPowerLevel(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int side, i_data metadata) const

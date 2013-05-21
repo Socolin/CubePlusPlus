@@ -6,6 +6,7 @@ namespace Scripting
 {
 
 CraftScript::CraftScript(const char* scriptName)
+    : baseCraft(nullptr)
 {
     ScriptManager::GetInstance()->RegisterScript(scriptName, this);
 }

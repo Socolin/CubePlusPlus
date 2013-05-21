@@ -32,7 +32,7 @@ Region::Region(const std::string& worldPath, int x, int z)
 
     if (fileSize < REGION_HEADER_SIZE)
     {
-        for (int pos = 0; pos < REGION_HEADER_SIZE; pos++)
+        for (size_t pos = 0; pos < REGION_HEADER_SIZE; pos++)
         {
             file << int(0);
         }
@@ -83,7 +83,7 @@ Region::Region(const std::string& worldPath, int x, int z)
             {
                 // Initialize list of busy block
                 const offset& offset = locationsTable[z][x];
-                for (size_t blockId = offset.data.offsetBlock; blockId < offset.data.offsetBlock + offset.data.size; blockId++)
+                for (int blockId = offset.data.offsetBlock; blockId < offset.data.offsetBlock + offset.data.size; blockId++)
                 {
                     freeBlock[blockId] = false;
                 }
@@ -97,7 +97,7 @@ Region::~Region()
     file.close();
 }
 
-nbt::NbtBuffer* Region::GetNbtChunkData(size_t& size, i_small_coord chunkX, i_small_coord chunkZ)
+nbt::NbtBuffer* Region::GetNbtChunkData(size_t& /*size*/, i_small_coord chunkX, i_small_coord chunkZ)
 {
     assert(chunkX < 32);
     assert(chunkZ < 32);

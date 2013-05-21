@@ -146,7 +146,7 @@ void World::ChangeDataNotify(int x, i_height y, int z, i_data blockData)
     i_block blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
     FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
         NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, blockId);
-    }
+    END_FOR_EACH_SIDE
 }
 
 
@@ -171,7 +171,7 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
 
     FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
         NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, blockId);
-    }
+    END_FOR_EACH_SIDE
 
     updateAllLightTypes(x, y, z);
 }
@@ -186,7 +186,7 @@ void World::RemoveBlock(int x, i_height y, int z)
 
         FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
             NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, 0);
-        }
+        END_FOR_EACH_SIDE
     }
     updateAllLightTypes(x, y, z);
 }
@@ -673,7 +673,7 @@ i_lightvalue World::computeBlockLightValueUsingNeighbors(eLightType lightType, i
             {
                 return blockLightValue;
             }
-        }
+        END_FOR_EACH_SIDE
 
         return blockLightValue;
     }
@@ -783,7 +783,7 @@ void World::NotifyNeighborsForBlockChange(int x, i_height y, int z, i_block neig
 {
     FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
         NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, neighborBlockId);
-    }
+    END_FOR_EACH_SIDE
 }
 
 i_lightvalue World::recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall)

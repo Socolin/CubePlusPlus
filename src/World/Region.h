@@ -17,7 +17,7 @@ namespace World
 #define REGION_CHUNK_WIDTH 32
 #define REGION_CHUNK_HEIGHT 32
 #define REGION_CHUNK_COUNT REGION_CHUNK_WIDTH * REGION_CHUNK_HEIGHT
-#define REGION_HEADER_SIZE REGION_CHUNK_COUNT * 2 * sizeof(int)
+#define REGION_HEADER_SIZE size_t(REGION_CHUNK_COUNT * 2 * sizeof(int))
 
 class Region
 {

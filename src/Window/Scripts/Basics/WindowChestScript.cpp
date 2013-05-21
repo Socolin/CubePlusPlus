@@ -49,7 +49,7 @@ void WindowChestScript::OnOpenWindow(World::EntityPlayer* /*player*/, Block::Til
     baseWindow->AddInventory(chestInventory);
 }
 
-void WindowChestScript::OnCloseWindow(World::EntityPlayer* player)
+void WindowChestScript::OnCloseWindow(World::EntityPlayer* /*player*/)
 {
     if (chestTileEntity)
     {

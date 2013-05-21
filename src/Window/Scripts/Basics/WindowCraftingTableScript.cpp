@@ -36,7 +36,7 @@ void WindowCraftingTableScript::OnOpenWindow(World::EntityPlayer* player)
     baseWindow->AddInventory(player->GetHandsInventory());
 }
 
-void WindowCraftingTableScript::OnCloseWindow(World::EntityPlayer* player)
+void WindowCraftingTableScript::OnCloseWindow(World::EntityPlayer* /*player*/)
 {
     //TODO: craftInventory drop(player);
     // TODO overide drop inventory for crafting part, don't drop stack in result
@@ -165,12 +165,12 @@ bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* player, sho
     return false;
 }
 
-void WindowCraftingTableScript::OnPostClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
+void WindowCraftingTableScript::OnPostClickOnWindow(World::EntityPlayer* /*player*/, short /*slotId*/, char /*button*/, short /*action*/, char /*mode*/, const Inventory::ItemStack* /*slot*/)
 {
     craftInventory->PerformCraftChecking();
 }
 
-int WindowCraftingTableScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseOrder)
+int WindowCraftingTableScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* /*slotItemStack*/, bool& reverseOrder)
 {
     if (clickedInventoryType == Inventory::INVENTORY_TYPE_DEFAULT)
     {

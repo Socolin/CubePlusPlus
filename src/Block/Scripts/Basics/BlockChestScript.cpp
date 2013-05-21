@@ -76,7 +76,7 @@ bool BlockChestScript::CanPlace(World::World* world, int x, i_height y, int z, c
     return doubleChest == 0 && countChest < 2;
 }
 
-void BlockChestScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+void BlockChestScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int /*face*/, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = player->getWorld();
     int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
@@ -204,7 +204,7 @@ bool BlockChestScript::UseTileEntity() const
     return true;
 }
 
-bool BlockChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool BlockChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->getWorld();
     bool doubleChest = false;
@@ -232,7 +232,7 @@ Block::TileEntity* BlockChestScript::CreateNewTileEntity(World::World* world, in
     return new Block::TileEntityChest(world, blockX, blockY, blockZ);
 }
 
-void BlockChestScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
+void BlockChestScript::OnDestroy(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, i_data /*data*/) const
 {
     //TODO: drop items
 }

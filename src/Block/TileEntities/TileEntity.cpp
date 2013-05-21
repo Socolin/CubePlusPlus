@@ -17,7 +17,7 @@ Inventory::Inventory* TileEntity::GetInventory()
     return nullptr;
 }
 
-void TileEntity::NotifyPlayerUse(int action)
+void TileEntity::NotifyPlayerUse(int /*action*/)
 {
 }
 
