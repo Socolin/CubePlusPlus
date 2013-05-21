@@ -38,8 +38,12 @@ endif ()
 INCLUDE_DIRECTORIES(src/)
 
 
-link_directories ( ${Boost_LIBRARY_DIRS} )
-include_directories ( ${Boost_INCLUDE_DIRS} )
+link_directories ( ${Boost_LIBRARY_DIRS}
+    lib/cppNBT/
+)
+include_directories ( ${Boost_INCLUDE_DIRS}
+    lib/cppNBT/src
+)
 
 set(EXECUTABLE_OUTPUT_PATH bin)
 
@@ -58,6 +62,7 @@ target_link_libraries(
 	z
 	config++
 	mysqlcppconn
+    cppnbt
 )
 configure_file(
 	server.cfg
