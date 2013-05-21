@@ -10,3 +10,4 @@ src/.project
 Makefile
 doc/latex
 doc/html
+lib/cppNBT
