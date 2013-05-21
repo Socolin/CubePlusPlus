@@ -14,12 +14,14 @@ namespace Scripting
 
 WindowChestScript::WindowChestScript()
         : WindowScript("window_chest")
+        , chestTileEntity(nullptr)
 {
 }
 
 
 WindowChestScript::WindowChestScript(std::string scriptName)
     : WindowScript(scriptName.c_str())
+    , chestTileEntity(nullptr)
 {
 }
 
@@ -42,7 +44,17 @@ void WindowChestScript::OnOpenWindow(World::EntityPlayer* /*player*/, Block::Til
 {
     assert(tileEntity->getType() == Block::TILEENTITY_TYPE_CHEST);
     Inventory::Inventory* chestInventory = tileEntity->GetInventory();
+    chestTileEntity = tileEntity;
+    tileEntity->NotifyPlayerUse(Block::TileEntityChest::TILEENTITY_PLAYER_OPEN);
     baseWindow->AddInventory(chestInventory);
+}
+
+void WindowChestScript::OnCloseWindow(World::EntityPlayer* player)
+{
+    if (chestTileEntity)
+    {
+        chestTileEntity->NotifyPlayerUse(Block::TileEntityChest::TILEENTITY_PLAYER_CLOSE);
+    }
 }
 
 int WindowChestScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot /*slotId*/, i_slot& targetSlot, const Inventory::ItemStack* /*slotItemStack*/, bool& reverseOrder)

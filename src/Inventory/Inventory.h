@@ -182,6 +182,8 @@ public:
     virtual void UpdateWindowProperty(short property, short value);
 
     int CountAvaibleSpaceForItem(const ItemStack* item);
+
+    int GetPlayerCount() const;
 protected:
     struct playerData
     {

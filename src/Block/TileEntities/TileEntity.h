@@ -38,6 +38,7 @@ public:
     virtual void GetDataPacket(Network::NetworkPacket& packet) = 0;
     virtual bool HasNetworkData() = 0;
     virtual Inventory::Inventory* GetInventory();
+    virtual void NotifyPlayerUse(int action);
     eTileEntityType getType() const;
 
     // Add tickFrequence ?

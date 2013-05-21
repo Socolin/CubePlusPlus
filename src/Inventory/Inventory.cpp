@@ -327,4 +327,9 @@ int Inventory::CountAvaibleSpaceForItem(const ItemStack* item)
     return count;
 }
 
+int Inventory::GetPlayerCount() const
+{
+    return playerWithOffsetList.size();
+}
+
 } /* namespace Inventory */

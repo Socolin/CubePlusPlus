@@ -140,16 +140,6 @@ void CraftManager::loadCraftSlot(Craft* craft, int craftId)
         return;
     }
 
-    std::cout << "Loading craft's datas" << std::endl;
-    std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
-               << "id" << "\t"
-               << "width" << "\t"
-               << "height" << "\t"
-               << "resultId" << "\t"
-               << "resultDa" << "\t"
-               << "resultQu" << "\t"
-               << "scriptId" << "\t"
-               << UTIL_TEXT_SHELL_NONE << std::endl;
     while (result->next())
     {
        i_item itemId = result->getInt(TableCraftSlot::itemId);

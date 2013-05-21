@@ -3,6 +3,7 @@
 #include "Block/BlockConstants.h"
 #include "Inventory/Inventory.h"
 #include "World/World.h"
+#include "Util/FloatUtil.h"
 
 namespace Block
 {
@@ -40,6 +41,51 @@ bool TileEntityChest::HasNetworkData()
 Inventory::Inventory* TileEntityChest::GetInventory()
 {
     return inventory;
+}
+
+void TileEntityChest::NotifyPlayerUse(int action)
+{
+    switch(action)
+    {
+    case TILEENTITY_PLAYER_OPEN:
+        if (inventory->GetPlayerCount() == 0)
+        {
+            i_block baseBlockId = world->GetBlockId(blockX, blockY, blockZ);
+            int xOffset = 0;
+            int zOffset = 0;
+            if (world->GetBlockId(blockX, blockY, blockZ - 1) == baseBlockId)
+            {
+                zOffset = -1;
+            }
+            else if (world->GetBlockId(blockX - 1, blockY, blockZ) == baseBlockId)
+            {
+                xOffset = -1;
+            }
+            world->PlayBlockAction(blockX + xOffset, blockY, blockZ + zOffset, 1, 1, world->GetBlockId(blockX, blockY, blockZ), 4);
+            world->PlaySound(blockX, blockY, blockZ, L"random.chestopen", 0.5f, 0.9f + Util::randFloat(0.1F), 4);
+        }
+        break;
+    case TILEENTITY_PLAYER_CLOSE:
+        if (inventory->GetPlayerCount() == 0)
+        {
+            i_block baseBlockId = world->GetBlockId(blockX, blockY, blockZ);
+            int xOffset = 0;
+            int zOffset = 0;
+            if (world->GetBlockId(blockX, blockY, blockZ - 1) == baseBlockId)
+            {
+                zOffset = -1;
+            }
+            else if (world->GetBlockId(blockX - 1, blockY, blockZ) == baseBlockId)
+            {
+                xOffset = -1;
+            }
+            world->PlayBlockAction(blockX + xOffset, blockY, blockZ + zOffset, 1, 0, world->GetBlockId(blockX, blockY, blockZ), 4);
+            world->PlaySound(blockX, blockY, blockZ, L"random.chestclosed", 0.5f, 0.9f + Util::randFloat(0.1F), 4);
+        }
+        break;
+    default:
+        break;
+    }
 }
 
 Inventory::Inventory* TileEntityChest::GetSecondInventory()

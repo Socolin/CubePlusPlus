@@ -9,14 +9,22 @@ namespace Block
 class TileEntityChest : public TileEntity
 {
 public:
+    enum ePlayerUseAction
+    {
+        TILEENTITY_PLAYER_OPEN,
+        TILEENTITY_PLAYER_CLOSE,
+    };
+public:
     TileEntityChest(World::World* world, int blockX, i_height blockY, int blockZ);
     virtual ~TileEntityChest();
 
-    virtual void UpdateTick();
-    virtual bool NeedUpdate();
-    virtual void GetDataPacket(Network::NetworkPacket& packet);
-    virtual bool HasNetworkData();
-    virtual Inventory::Inventory* GetInventory();
+    virtual void UpdateTick() override;
+    virtual bool NeedUpdate() override;
+    virtual void GetDataPacket(Network::NetworkPacket& packet) override;
+    virtual bool HasNetworkData() override;
+    virtual Inventory::Inventory* GetInventory() override;
+
+    virtual void NotifyPlayerUse(int action) override;
 
     Inventory::Inventory* GetSecondInventory();
 private:

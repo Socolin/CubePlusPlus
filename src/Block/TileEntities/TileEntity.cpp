@@ -17,6 +17,10 @@ Inventory::Inventory* TileEntity::GetInventory()
     return nullptr;
 }
 
+void TileEntity::NotifyPlayerUse(int action)
+{
+}
+
 eTileEntityType TileEntity::getType() const
 {
     return type;
