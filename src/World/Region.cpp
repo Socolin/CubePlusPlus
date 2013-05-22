@@ -6,6 +6,8 @@
 
 #include <cppnbt.h>
 
+#include "Util/StringUtil.h"
+
 namespace World
 {
 
@@ -126,6 +128,9 @@ nbt::NbtBuffer* Region::GetNbtChunkData(i_small_coord chunkX, i_small_coord chun
     dataSize = be32toh(dataSize);
 
     if (dataSize <= 0)
+        return nullptr;
+
+    if (type != 2)
         return nullptr;
 
     uint8_t* buffer = new uint8_t[dataSize - 1];

@@ -20,6 +20,6 @@ namespace Util
 
 void StringToWString(std::wstring &ws, const std::string &s);
 
-
+void DumpBuffer(char* buffer, size_t size);
 } /* namespace Util */
 #endif /* STRINGUTIL_H_ */

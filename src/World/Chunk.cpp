@@ -51,53 +51,60 @@ void Chunk::Load()
 {
     flagSectionExists = 0;
     flagSectionUseAdd = 0;
-    // Clear all
-    {
-        unsigned char* data = biomeData;
-        unsigned char* heightdata = heightMap;
-        for (int i = 0; i < CHUNK_SURFACE; i++)
-        {
-            *data = 0;
-            *heightdata = 32;
-            heightdata++;
-            data++;
-        }
-    }
-    {
-        ChunkData* chunkData = new ChunkData();
-        unsigned char* data = chunkData->blocks;
-        for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
-        {
-            *data = 35;
-            data++;
-        }
-        data = chunkData->metadata;
-        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
-        {
-            *data = (i * 2 )% 16;
-            *data |= (((i * 2) + 1) % 16) << 4;
 
-            data++;
-        }
-        data = chunkData->blocklight;
-        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
-        {
-            *data = 0;
-            data++;
-        }
-        data = chunkData->skyLight;
-        for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
-        {
-            *data = 0x0;
-            data++;
-        }
-        chunkData->addData = nullptr;
-        datas[0] = chunkData;
-        flagSectionExists |= 1;
-    }
-
-    if (!loadFromFile())
+    nbt::NbtBuffer* nbtData = world->GetChunkNbtData(posX, posZ);
+    if (!loadFromFile(nbtData))
     {
+        if (nbtData)
+        {
+            std::cerr << "Data found but error occure while loading chunk" << posX << " " << posZ;
+        }
+        // Clear all
+        {
+            unsigned char* data = biomeData;
+            unsigned char* heightdata = heightMap;
+            for (int i = 0; i < CHUNK_SURFACE; i++)
+            {
+                *data = 0;
+                *heightdata = 32;
+                heightdata++;
+                data++;
+            }
+        }
+        {
+            ChunkData* chunkData = new ChunkData();
+            unsigned char* data = chunkData->blocks;
+            for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
+            {
+                *data = 35;
+                data++;
+            }
+            data = chunkData->metadata;
+            for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+            {
+                *data = (i * 2 )% 16;
+                *data |= (((i * 2) + 1) % 16) << 4;
+
+                data++;
+            }
+            data = chunkData->blocklight;
+            for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+            {
+                *data = 0;
+                data++;
+            }
+            data = chunkData->skyLight;
+            for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
+            {
+                *data = 0x0;
+                data++;
+            }
+            chunkData->addData = nullptr;
+            datas[0] = chunkData;
+            flagSectionExists |= 1;
+        }
+
+
         ChunkData* chunkData = new ChunkData();
         unsigned char* data = chunkData->blocks;
         for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
@@ -129,6 +136,7 @@ void Chunk::Load()
         flagSectionExists |= (1 << 1);
     }
     loaded = true;
+    delete nbtData;
 }
 
 void Chunk::UpdateTick()
@@ -725,36 +733,90 @@ i_height Chunk::getMinHeight() const
     return minHeight;
 }
 
-bool Chunk::loadFromFile()
+bool Chunk::loadFromFile(nbt::NbtBuffer* nbtData)
 {
-    nbt::NbtBuffer* nbtData = world->GetChunkNbtData(posX, posZ);
     if (nbtData)
     {
         nbt::Tag *root = nbtData->getRoot();
-        std::cout << root->toString() << std::endl;
+        if (!root)
+            return false;
+
         nbt::TagCompound* file_root = dynamic_cast<nbt::TagCompound*>(root);
         if (!file_root)
             return false;
 
-        /* tmp code
-         *         Tag *root = nbtBuffer.getRoot();
-                TagCompound* file_root = dynamic_cast<TagCompound*>(root);
-                TagCompound* level = dynamic_cast<TagCompound*>(file_root->getValueAt("Level"));
-                TagList* sections = dynamic_cast<TagList*>(level->getValueAt("Sections"));
-                for (int i = 0; i < sections->getValue().size(); i++)
-                //for (Tag* tag : sections->getValue())
-                {
-                    Tag* tag = sections->getValue()[i];
-                    if (tag->getType() == TAG_COMPOUND)
-                    {
-                        TagCompound* chunkSection = dynamic_cast<TagCompound*>(tag);
-                        TagByte* y = dynamic_cast<TagByte*>(chunkSection->getValueAt("Y"));
-                        std::cout << (int)y->getValue() << std::endl;
-                    }
-                }
-         *
-         */
-        //return true;
+        nbt::TagCompound* level = dynamic_cast<nbt::TagCompound*>(file_root->getValueAt("Level"));
+        if (!level)
+            return false;
+
+        nbt::TagByteArray* biomesArray = dynamic_cast<nbt::TagByteArray*>(level->getValueAt("Biomes"));
+        if (!biomesArray)
+            return false;
+
+        if (biomesArray->getSize() != CHUNK_SURFACE)
+            return false;
+
+        memcpy(biomeData, biomesArray->getValues(), CHUNK_SURFACE);
+
+
+        nbt::TagIntArray* heightMapArray = dynamic_cast<nbt::TagIntArray*>(level->getValueAt("HeightMap"));
+        if (!heightMapArray)
+            return false;
+        if (heightMapArray->getValue().size() != CHUNK_SURFACE)
+            return false;
+        memccpy(biomeData, biomesArray->getValues(), CHUNK_SURFACE, sizeof(int));
+
+
+        nbt::TagList* sections = dynamic_cast<nbt::TagList*>(level->getValueAt("Sections"));
+        if (!sections)
+            return false;
+
+        const std::vector<nbt::Tag *>& sectionsList = sections->getValue();
+        for (nbt::Tag* tag : sectionsList)
+        {
+            nbt::TagCompound* chunkSection = dynamic_cast<nbt::TagCompound*>(tag);
+            if (!chunkSection)
+                return false;
+
+            nbt::TagByte* yPos = dynamic_cast<nbt::TagByte*>(chunkSection->getValueAt("Y"));
+            if (!yPos)
+                return false;
+            int chunkSectionId = yPos->getValue();
+            if (chunkSectionId >= CHUNK_DATA_COUNT || chunkSectionId < 0)
+                return false;
+
+            ChunkData* chunkData = getOrCreateData(chunkSectionId);
+
+            nbt::TagByteArray* metadataArray = dynamic_cast<nbt::TagByteArray*>(chunkSection->getValueAt("Data"));
+            if (!metadataArray)
+                return false;
+            if (metadataArray->getSize() != CHUNK_BLOCK_NIBBLE_SIZE)
+                return false;
+            memcpy(chunkData->metadata, metadataArray->getValues(), CHUNK_BLOCK_NIBBLE_SIZE);
+
+            nbt::TagByteArray* skyLightArray = dynamic_cast<nbt::TagByteArray*>(chunkSection->getValueAt("SkyLight"));
+            if (!skyLightArray)
+                return false;
+            if (skyLightArray->getSize() != CHUNK_BLOCK_NIBBLE_SIZE)
+                return false;
+            memcpy(chunkData->skyLight, skyLightArray->getValues(), CHUNK_BLOCK_NIBBLE_SIZE);
+
+
+            nbt::TagByteArray* blockLightArray = dynamic_cast<nbt::TagByteArray*>(chunkSection->getValueAt("BlockLight"));
+            if (!blockLightArray)
+                return false;
+            if (blockLightArray->getSize() != CHUNK_BLOCK_NIBBLE_SIZE)
+                return false;
+            memcpy(chunkData->blocklight, blockLightArray->getValues(), CHUNK_BLOCK_NIBBLE_SIZE);
+
+            nbt::TagByteArray* blocksArray = dynamic_cast<nbt::TagByteArray*>(chunkSection->getValueAt("Blocks"));
+            if (!blocksArray)
+                return false;
+            if (blocksArray->getSize() != CHUNK_BLOCK_COUNT)
+                return false;
+            memcpy(chunkData->blocks, blocksArray->getValues(), CHUNK_BLOCK_COUNT);
+        }
+        return true;
     }
     return false;
 }

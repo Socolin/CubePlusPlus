@@ -52,7 +52,6 @@ int main(void)
     struct timespec unused;
     requestTime.tv_sec = 0;
 
-    worldManager->GetWorld()->GetChunk(0,0);
     while (worldManager->IsRunning())
     {
         time = std::clock();

@@ -16,6 +16,10 @@
 #include "Network/NetworkPacket.h"
 #include "WorldConstants.h"
 
+namespace nbt
+{
+class NbtBuffer;
+}
 namespace Block
 {
 class TileEntity;
@@ -106,7 +110,7 @@ private:
 
     i_lightopacity getBlockLightOpacity(i_small_coord x, i_height y, i_small_coord z);
 
-    bool loadFromFile();
+    bool loadFromFile(nbt::NbtBuffer* nbtData);
 private:
     // 16 x 16 x 16
     typedef struct
