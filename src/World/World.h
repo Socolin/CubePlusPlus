@@ -5,10 +5,11 @@
 #include <string>
 #include <set>
 
-#include "Util/AABB.h"
-#include "Util/BufferedRewindableQueue.h"
 #include "Chunk.h"
 #include "Entity/EntityConstants.h"
+#include "RegionManager.h"
+#include "Util/AABB.h"
+#include "Util/BufferedRewindableQueue.h"
 #include "World/WorldConstants.h"
 
 #include "Block/Scripts/Basics/BlockRedstoneTorchBurnoutMgr.h"
@@ -18,6 +19,10 @@
 namespace Network
 {
 class NetworkPacket;
+}
+namespace nbt
+{
+class NbtBuffer;
 }
 namespace World
 {
@@ -32,7 +37,7 @@ class World
 {
     friend Chunk;
 public:
-    World();
+    World(const std::string& worldName);
     virtual ~World();
 
     void UpdateTick();
@@ -117,6 +122,7 @@ private:
     VirtualChunk* CreateVirtualChunk(int x, int z);
     VirtualSmallChunk* CreateVirtualSmallChunk(int x, int z);
     Chunk* LoadChunk(int x, int z);
+    nbt::NbtBuffer* GetChunkNbtData(int x, int z);
     void MarkEntityForDelete(Entity* entity);
 
     bool isChunksExistInRange(int x, i_height y, int z, int range);
@@ -137,6 +143,8 @@ private:
     i_lightvalue recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall);
 
 private:
+    std::string worldName;
+    RegionManager regionManager;
     std::unordered_map<long, Chunk*> chunkMap;
     std::unordered_map<long, VirtualChunk*> virtualChunkMap;
     std::unordered_map<long, VirtualSmallChunk*> virtualSmallChunkMap;

@@ -81,7 +81,7 @@ void WorldManager::UpdateTick() const
 
 void WorldManager::Init()
 {
-    world = new World();
+    world = new World("world");
 }
 void WorldManager::Stop()
 {

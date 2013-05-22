@@ -13,6 +13,7 @@
 #include "Entity/Object/EntityItem.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
+#include "Region.h"
 #include "VirtualChunk.h"
 #include "VirtualSmallChunk.h"
 #include "Util/FloatUtil.h"
@@ -20,8 +21,14 @@
 namespace World
 {
 
-World::World() :
-    viewDistance(10), currentEntityId(10), ageOfWorld(0), currentTime(0),sunReduceValue(0)
+World::World(const std::string& worldName)
+    : worldName(worldName)
+    , regionManager(worldName + "/")
+    , viewDistance(10)
+    , currentEntityId(10)
+    , ageOfWorld(0)
+    , currentTime(0)
+    , sunReduceValue(0)
 {
     redstoneTorchBurnoutMgr = new Scripting::BlockRedstoneTorchBurnoutMgr();
 }
@@ -33,19 +40,19 @@ World::~World()
 // Called each tick
 void World::UpdateTick()
 {
-for (std::pair<long, Chunk*> chunk : chunkMap)
+    for (std::pair<long, Chunk*> chunk : chunkMap)
     {
         chunk.second->UpdateTick();
     }
-for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
     {
         chunk.second->UpdateTick();
     }
-for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
     {
         chunk.second->SendUpdate();
     }
-for (std::pair<long, Chunk*> chunk : chunkMap)
+    for (std::pair<long, Chunk*> chunk : chunkMap)
     {
         chunk.second->SendUpdate();
     }
@@ -346,6 +353,17 @@ Chunk* World::LoadChunk(int x, int z)
     chunkMap[CHUNK_KEY(x,z)] = chunk;
     return chunk;
 }
+nbt::NbtBuffer* World::GetChunkNbtData(int x, int z)
+{
+    Region* region = regionManager.GetRegion(x >> 5, z >> 5);
+    if (region)
+    {
+        nbt::NbtBuffer* nbtData = region->GetNbtChunkData(x & 0x1f, z & 0x1f);
+        return nbtData;
+    }
+    return nullptr;
+}
+
 
 VirtualChunk* World::CreateVirtualChunk(int x, int z)
 {

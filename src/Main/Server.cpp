@@ -11,6 +11,7 @@
 #include "Scripting/ScriptManager.h"
 #include "Window/WindowList.h"
 #include "World/WorldManager.h"
+#include "World/World.h"
 
 #include <iostream>
 #include <ctime>
@@ -51,6 +52,7 @@ int main(void)
     struct timespec unused;
     requestTime.tv_sec = 0;
 
+    worldManager->GetWorld()->GetChunk(0,0);
     while (worldManager->IsRunning())
     {
         time = std::clock();

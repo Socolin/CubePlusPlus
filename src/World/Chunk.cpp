@@ -8,6 +8,7 @@
 #include "Chunk.h"
 
 #include <iostream>
+#include <cppnbt.h>
 
 #include "Block/TileEntities/TileEntity.h"
 #include "Block/BlockList.h"
@@ -50,6 +51,7 @@ void Chunk::Load()
 {
     flagSectionExists = 0;
     flagSectionUseAdd = 0;
+    // Clear all
     {
         unsigned char* data = biomeData;
         unsigned char* heightdata = heightMap;
@@ -94,6 +96,7 @@ void Chunk::Load()
         flagSectionExists |= 1;
     }
 
+    if (!loadFromFile())
     {
         ChunkData* chunkData = new ChunkData();
         unsigned char* data = chunkData->blocks;
@@ -720,6 +723,40 @@ i_lightopacity Chunk::getBlockLightOpacity(i_small_coord x, i_height y, i_small_
 i_height Chunk::getMinHeight() const
 {
     return minHeight;
+}
+
+bool Chunk::loadFromFile()
+{
+    nbt::NbtBuffer* nbtData = world->GetChunkNbtData(posX, posZ);
+    if (nbtData)
+    {
+        nbt::Tag *root = nbtData->getRoot();
+        std::cout << root->toString() << std::endl;
+        nbt::TagCompound* file_root = dynamic_cast<nbt::TagCompound*>(root);
+        if (!file_root)
+            return false;
+
+        /* tmp code
+         *         Tag *root = nbtBuffer.getRoot();
+                TagCompound* file_root = dynamic_cast<TagCompound*>(root);
+                TagCompound* level = dynamic_cast<TagCompound*>(file_root->getValueAt("Level"));
+                TagList* sections = dynamic_cast<TagList*>(level->getValueAt("Sections"));
+                for (int i = 0; i < sections->getValue().size(); i++)
+                //for (Tag* tag : sections->getValue())
+                {
+                    Tag* tag = sections->getValue()[i];
+                    if (tag->getType() == TAG_COMPOUND)
+                    {
+                        TagCompound* chunkSection = dynamic_cast<TagCompound*>(tag);
+                        TagByte* y = dynamic_cast<TagByte*>(chunkSection->getValueAt("Y"));
+                        std::cout << (int)y->getValue() << std::endl;
+                    }
+                }
+         *
+         */
+        //return true;
+    }
+    return false;
 }
 
 } /* namespace World */

@@ -25,7 +25,7 @@ public:
     Region(const std::string& worldPath, int x, int z);
     virtual ~Region();
 
-    nbt::NbtBuffer* GetNbtChunkData(size_t& size, i_small_coord chunkX, i_small_coord chunkZ);
+    nbt::NbtBuffer* GetNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ);
 private:
     union offset
     {

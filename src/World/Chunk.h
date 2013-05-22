@@ -105,6 +105,8 @@ private:
     void GenerateSkyLight();
 
     i_lightopacity getBlockLightOpacity(i_small_coord x, i_height y, i_small_coord z);
+
+    bool loadFromFile();
 private:
     // 16 x 16 x 16
     typedef struct

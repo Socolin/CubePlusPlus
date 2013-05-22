@@ -20,9 +20,17 @@ Region::Region(const std::string& worldPath, int x, int z)
 
     if (!file.is_open())
     {
-        // maybe something can be do to handle it
-        std::cerr << "Failed to open file :" << fileName << " server will crash soon" << std::endl;
-        assert(false);
+        std::fstream createFile(fileName.str());
+        createFile << 0;
+        createFile.flush();
+        createFile.close();
+        file.open(fileName.str(), std::fstream::in | std::fstream::out | std::fstream::binary);
+        if (!file.is_open())
+        {
+            // maybe something can be do to handle it
+            std::cerr << "Failed to open file :" << fileName.str() << " server will crash soon" << std::endl;
+            assert(false);
+        }
     }
 
     // Checking filesize
@@ -54,10 +62,11 @@ Region::Region(const std::string& worldPath, int x, int z)
             countBlankChar++;
         }
         fileSize += countBlankChar;
+        file.seekg(0, file.beg);
     }
 
     // Reading header
-    file.read(reinterpret_cast<char*>(locationsTable), REGION_CHUNK_COUNT * sizeof(offset));
+    file.read(reinterpret_cast<char*>(locationsTable), REGION_CHUNK_COUNT * sizeof(int));
     file.read(reinterpret_cast<char*>(lastAccessTimeTable), REGION_CHUNK_COUNT * sizeof(int));
 
     // Compute total available block
@@ -97,17 +106,27 @@ Region::~Region()
     file.close();
 }
 
-nbt::NbtBuffer* Region::GetNbtChunkData(size_t& /*size*/, i_small_coord chunkX, i_small_coord chunkZ)
+nbt::NbtBuffer* Region::GetNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ)
 {
     assert(chunkX < 32);
     assert(chunkZ < 32);
 
     const offset& offset = locationsTable[chunkZ][chunkX];
-    file.seekg(offset.data.offsetBlock * REGION_BLOCK_SIZE, file.end);
+    if (offset.value == 0)
+    {
+        return nullptr;
+    }
+
+    file.seekg(offset.data.offsetBlock * REGION_BLOCK_SIZE, file.beg);
 
     int dataSize = 0;
     char type = 0;
-    file >> dataSize >> type;
+    file.read(reinterpret_cast<char*>(&dataSize), sizeof(int));
+    file.read(&type, sizeof(char));
+    dataSize = be32toh(dataSize);
+
+    if (dataSize <= 0)
+        return nullptr;
 
     uint8_t* buffer = new uint8_t[dataSize - 1];
     file.read(reinterpret_cast<char*>(buffer), dataSize - 1);
@@ -116,23 +135,5 @@ nbt::NbtBuffer* Region::GetNbtChunkData(size_t& /*size*/, i_small_coord chunkX, 
 
     return chunkData;
 }
-/* tmp code
- *         Tag *root = nbtBuffer.getRoot();
-        TagCompound* file_root = dynamic_cast<TagCompound*>(root);
-        TagCompound* level = dynamic_cast<TagCompound*>(file_root->getValueAt("Level"));
-        TagList* sections = dynamic_cast<TagList*>(level->getValueAt("Sections"));
-        for (int i = 0; i < sections->getValue().size(); i++)
-        //for (Tag* tag : sections->getValue())
-        {
-            Tag* tag = sections->getValue()[i];
-            if (tag->getType() == TAG_COMPOUND)
-            {
-                TagCompound* chunkSection = dynamic_cast<TagCompound*>(tag);
-                TagByte* y = dynamic_cast<TagByte*>(chunkSection->getValueAt("Y"));
-                std::cout << (int)y->getValue() << std::endl;
-            }
-        }
- *
- */
 
 } /* namespace World */
