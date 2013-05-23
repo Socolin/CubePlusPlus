@@ -17,6 +17,11 @@ public:
     virtual void GetDataPacket(Network::NetworkPacket& packet) override;
     virtual bool HasNetworkData() override;
 
+    virtual TileEntity* Create(World::World* world, int blockX, i_height blockY, int blockZ) override;
+    virtual void Load(nbt::TagCompound* nbtData) override;
+    virtual void Save(nbt::TagCompound* nbtData) override;
+    virtual const char* GetName() override;
+
     int getNoteLevel();
     int nextNoteLevel();
 

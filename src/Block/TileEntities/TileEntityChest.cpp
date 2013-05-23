@@ -105,4 +105,24 @@ Inventory::Inventory* TileEntityChest::GetSecondInventory()
     return nullptr;
 }
 
+TileEntity* TileEntityChest::Create(World::World* world, int blockX, i_height blockY, int blockZ)
+{
+    return new TileEntityChest(world, blockX, blockY, blockZ);
+}
+
+void TileEntityChest::Load(nbt::TagCompound* nbtData)
+{
+    /*FIXME*/
+}
+
+void TileEntityChest::Save(nbt::TagCompound* nbtData)
+{
+    /*FIXME*/
+}
+
+const char* TileEntityChest::GetName()
+{
+    return "Chest";
+}
+
 } /* namespace Block */

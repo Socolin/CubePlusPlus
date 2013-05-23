@@ -4,6 +4,7 @@
 #include "Config/Config.h"
 #include "Craft/CraftManager.h"
 #include "Block/BlockList.h"
+#include "Block/TileEntities/RegisterTileEntities.h"
 #include "Inventory/ItemList.h"
 #include "Database/DatabaseManager.h"
 #include "Database/MiscData/PaintingData.h"
@@ -45,6 +46,7 @@ int main(void)
     Craft::CraftManager::Instance().InitInstance();
     Database::PaintingData::Instance().InitInstance();
     Database::FurnaceRecipes::Instance().InitInstance();
+    Block::RegisterTileEntities();
 
     // Tick time management
     clock_t time = std::clock();

@@ -30,6 +30,26 @@ bool TileEntityNote::HasNetworkData()
     return false;
 }
 
+TileEntity* TileEntityNote::Create(World::World* world, int blockX, i_height blockY, int blockZ)
+{
+    return new TileEntityNote(world, blockX, blockY, blockZ);
+}
+
+void TileEntityNote::Load(nbt::TagCompound* nbtData)
+{
+    /*FIXME*/
+}
+
+void TileEntityNote::Save(nbt::TagCompound* nbtData)
+{
+    /*FIXME*/
+}
+
+const char* TileEntityNote::GetName()
+{
+    return "Music";
+}
+
 int TileEntityNote::getNoteLevel()
 {
     return noteLevel;

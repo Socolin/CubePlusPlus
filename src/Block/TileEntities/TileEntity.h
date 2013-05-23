@@ -8,6 +8,10 @@ namespace Inventory
 {
 class Inventory;
 }
+namespace nbt
+{
+class TagCompound;
+}
 namespace World
 {
 class World;
@@ -27,6 +31,7 @@ enum eTileEntityType
     TILEENTITY_TYPE_MAX // Keep it at end of enum
 };
 
+
 class TileEntity
 {
 public:
@@ -41,6 +46,11 @@ public:
     virtual void NotifyPlayerUse(int action);
     eTileEntityType getType() const;
 
+    virtual TileEntity* Create(World::World* world, int blockX, i_height blockY, int blockZ) = 0;
+    virtual void Load(nbt::TagCompound* nbtData) = 0;
+    virtual void Save(nbt::TagCompound* nbtData) = 0;
+
+    virtual const char* GetName() = 0;
     // Add tickFrequence ?
 protected:
     eTileEntityType type;

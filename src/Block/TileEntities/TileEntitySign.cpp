@@ -42,6 +42,24 @@ void TileEntitySign::GetDataPacket(Network::NetworkPacket& packet)
     packet << cachePacket;
 }
 
+TileEntity* TileEntitySign::Create(World::World* world, int blockX, i_height blockY, int blockZ)
+{
+    return new TileEntitySign(world, blockX, blockY, blockZ);
+}
+
+void TileEntitySign::Load(nbt::TagCompound* nbtData)
+{
+}
+
+void TileEntitySign::Save(nbt::TagCompound* nbtData)
+{
+}
+
+const char* TileEntitySign::GetName()
+{
+    return "Sign";
+}
+
 bool TileEntitySign::HasNetworkData()
 {
     return true;

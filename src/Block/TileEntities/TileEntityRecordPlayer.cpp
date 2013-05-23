@@ -32,6 +32,26 @@ bool TileEntityRecordPlayer::HasNetworkData()
     return false;
 }
 
+TileEntity* TileEntityRecordPlayer::Create(World::World* world, int blockX, i_height blockY, int blockZ)
+{
+    return new TileEntityRecordPlayer(world, blockX, blockY, blockZ);
+}
+
+void TileEntityRecordPlayer::Load(nbt::TagCompound* nbtData)
+{
+    /*FIXME*/
+}
+
+void TileEntityRecordPlayer::Save(nbt::TagCompound* nbtData)
+{
+    /*FIXME*/
+}
+
+const char* TileEntityRecordPlayer::GetName()
+{
+    return "RecordPlayer";
+}
+
 void TileEntityRecordPlayer::SetRecordItem(World::World* world, int x, i_height y, int z, Inventory::ItemStack* item)
 {
     if (item != nullptr)

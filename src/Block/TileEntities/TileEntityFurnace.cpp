@@ -124,4 +124,24 @@ Inventory::Inventory* TileEntityFurnace::GetInventory()
     return inventory;
 }
 
+TileEntity* TileEntityFurnace::Create(World::World* world, int blockX, i_height blockY, int blockZ)
+{
+    return new TileEntityFurnace(world, blockX, blockY, blockZ);
+}
+
+void TileEntityFurnace::Load(nbt::TagCompound* nbtData)
+{
+    /*FIXME*/
+}
+
+void TileEntityFurnace::Save(nbt::TagCompound* nbtData)
+{
+    /*FIXME*/
+}
+
+const char* TileEntityFurnace::GetName()
+{
+    return "Furnace";
+}
+
 } /* namespace Block */
