@@ -762,9 +762,9 @@ bool Chunk::loadFromFile(nbt::NbtBuffer* nbtData)
         nbt::TagIntArray* heightMapArray = dynamic_cast<nbt::TagIntArray*>(level->getValueAt("HeightMap"));
         if (!heightMapArray)
             return false;
-        if (heightMapArray->getValue().size() != CHUNK_SURFACE)
+        if (heightMapArray->getSize() != CHUNK_SURFACE)
             return false;
-        memccpy(biomeData, biomesArray->getValues(), CHUNK_SURFACE, sizeof(int));
+        memccpy(heightMap, heightMapArray->getValues(), CHUNK_SURFACE, sizeof(int));
 
 
         nbt::TagList* sections = dynamic_cast<nbt::TagList*>(level->getValueAt("Sections"));
