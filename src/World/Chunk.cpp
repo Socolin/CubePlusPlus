@@ -138,6 +138,26 @@ void Chunk::Load()
         datas[1] = chunkData;
         flagSectionExists |= (1 << 1);
     }
+    ChunkData** chunkDataItr = datas;
+    for (int i = 0; i < CHUNK_DATA_COUNT; i++)
+    {
+        if (*chunkDataItr)
+        {
+            ChunkData* chunkData = (*chunkDataItr);
+
+            unsigned char* data = chunkData->blocks;
+            for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
+            {
+                const Block::Block* block = Block::BlockList::getBlock(*data);
+                if (block && block->NeedsRandomTick())
+                {
+                    chunkData->countRandomUpdate++;
+                }
+            }
+        }
+        chunkDataItr++;
+    }
+
     loaded = true;
     delete nbtData;
 }
@@ -159,11 +179,13 @@ void Chunk::UpdateTick()
         if (*chunkDataItr)
         {
             ChunkData* chunkData = (*chunkDataItr);
+            if (chunkData->countRandomUpdate <= 0)
+                continue;
             for (int count = 0; count < 3; count++)
             {
                 int random = Util::FastGenRandomInt();
                 unsigned int cellId = (random >> 2) & 0xfff;
-                if (chunkData->addData != NULL)
+                if (chunkData->addData != nullptr)
                 {
                     blockId = chunkData->blocks[cellId] | (chunkData->addData[cellId << 1] & (0xf << ((cellId & 0x1) << 2)));
                 }
@@ -305,6 +327,11 @@ void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block bl
         previousBlock->Destroy(world, x + posXx16, y, z + posZx16, previousBlockkData);
         if (previousBlock->UseTileEntity())
             RemoveTileEntity(x, y, z);
+        if (previousBlock->NeedsRandomTick())
+        {
+            ChunkData* data = getOrCreateData(y >> 4);
+            data->countRandomUpdate--;
+        }
     }
 
     const Block::Block* block = Block::BlockList::getBlock(blockID);
@@ -315,6 +342,11 @@ void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block bl
         {
             Block::TileEntity* tileEntity = block->CreateNewTileEntity(world, x + posXx16, y, z + posZx16);
             SetTileEntity(tileEntity ,x, y, z);
+        }
+        if (block->NeedsRandomTick())
+        {
+            ChunkData* data = getOrCreateData(y >> 4);
+            data->countRandomUpdate--;
         }
     }
 }

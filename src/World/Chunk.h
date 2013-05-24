@@ -120,6 +120,7 @@ private:
         unsigned char blocklight[CHUNK_BLOCK_NIBBLE_SIZE];
         unsigned char skyLight[CHUNK_BLOCK_NIBBLE_SIZE];
         unsigned char* addData;
+        int countRandomUpdate;
 
         void clear()
         {
@@ -148,6 +149,7 @@ private:
                 data++;
             }
             addData = nullptr;
+            countRandomUpdate = 0;
         }
         void clearAddData()
         {

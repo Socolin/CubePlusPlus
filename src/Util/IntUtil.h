@@ -5,7 +5,7 @@ namespace Util
 {
 extern int randomGenerator;
 
-int FastGenRandomInt()
+inline int FastGenRandomInt()
 {
     randomGenerator = randomGenerator * 3 + 1013904223;
     return randomGenerator;
