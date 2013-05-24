@@ -3,6 +3,10 @@
 
 #include "ItemList.h"
 
+namespace nbt
+{
+class TagCompound;
+}
 namespace Inventory
 {
 
@@ -10,6 +14,7 @@ class ItemStack
 {
 public:
     ItemStack(int id, int stackSize, int itemData);
+    ItemStack(nbt::TagCompound* itemData);
     virtual ~ItemStack();
 
     /**

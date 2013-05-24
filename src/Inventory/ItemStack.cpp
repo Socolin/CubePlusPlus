@@ -1,5 +1,6 @@
 #include "ItemStack.h"
 
+#include <cppnbt.h>
 #include "Item.h"
 
 namespace Inventory
@@ -11,6 +12,31 @@ ItemStack::ItemStack(int id, int stackSize, int itemData)
         , stackSize(stackSize)
 {
 
+}
+
+ItemStack::ItemStack(nbt::TagCompound* nbtItemData)
+    : itemId(0)
+    , itemData(0)
+    , stackSize(0)
+{
+    if (nbtItemData)
+    {
+        nbt::TagShort* tagItemId = nbtItemData->getValueAt<nbt::TagShort>("id");
+        if (tagItemId)
+        {
+            itemId = tagItemId->getValue();
+        }
+        nbt::TagShort* tagItemDamage = nbtItemData->getValueAt<nbt::TagShort>("Damage");
+        if (tagItemDamage)
+        {
+            itemData = tagItemDamage->getValue();
+        }
+        nbt::TagByte * tagItemCount = nbtItemData->getValueAt<nbt::TagByte>("Count");
+        if (tagItemCount)
+        {
+            stackSize = tagItemCount->getValue();
+        }
+    }
 }
 
 ItemStack::~ItemStack()
@@ -73,6 +99,7 @@ bool ItemStack::IsStackable(i_item otherItemId, i_damage otherItemData) const
 {
     return otherItemId == itemId && otherItemData == itemData;
 }
+
 
 bool ItemStack::Full() const
 {

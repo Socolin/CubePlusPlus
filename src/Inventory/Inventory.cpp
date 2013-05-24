@@ -1,9 +1,12 @@
 #include "Inventory.h"
 
+#include <cppnbt.h>
+
 #include "Entity/EntityPlayer.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "World/World.h"
+
 
 namespace Inventory
 {
@@ -330,6 +333,27 @@ int Inventory::CountAvaibleSpaceForItem(const ItemStack* item)
 int Inventory::GetPlayerCount() const
 {
     return playerWithOffsetList.size();
+}
+
+void Inventory::Load(nbt::TagList* nbtData)
+{
+    const std::vector<nbt::Tag *>& itemList = nbtData->getValue();
+    for (nbt::Tag* tag : itemList)
+    {
+        nbt::TagCompound* itemData = dynamic_cast<nbt::TagCompound*>(tag);
+        if (!itemData)
+            continue;
+
+        nbt::TagByte* tagSlotId = itemData->getValueAt<nbt::TagByte>("Slot");
+        if (!tagSlotId)
+            continue;
+        int slotId = tagSlotId->getValue();
+
+        if (slotId < 0 || slotId >= maxSlot)
+            continue;
+
+        ClearAndSetSlot(slotId, new ItemStack(itemData));
+    }
 }
 
 } /* namespace Inventory */

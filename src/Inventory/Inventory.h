@@ -9,6 +9,10 @@
 #include "ItemStack.h"
 #include "Util/types.h"
 
+namespace nbt
+{
+class TagList;
+}
 namespace Network
 {
 class NetworkPacket;
@@ -184,6 +188,8 @@ public:
     int CountAvaibleSpaceForItem(const ItemStack* item);
 
     int GetPlayerCount() const;
+
+    virtual void Load(nbt::TagList* nbtData);
 protected:
     struct playerData
     {

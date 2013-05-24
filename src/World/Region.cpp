@@ -14,6 +14,7 @@ namespace World
 Region::Region(const std::string& worldPath, int x, int z)
     : regionX(x)
     , regionZ(z)
+    , opened(false)
 {
     std::stringstream fileName;
     fileName << worldPath << "region/" << "r." << x << "." << z << ".mca";
@@ -22,17 +23,8 @@ Region::Region(const std::string& worldPath, int x, int z)
 
     if (!file.is_open())
     {
-        std::fstream createFile(fileName.str());
-        createFile << 0;
-        createFile.flush();
-        createFile.close();
-        file.open(fileName.str(), std::fstream::in | std::fstream::out | std::fstream::binary);
-        if (!file.is_open())
-        {
-            // maybe something can be do to handle it
-            std::cerr << "Failed to open file :" << fileName.str() << " server will crash soon" << std::endl;
-            assert(false);
-        }
+        std::cerr << "Failed to open file :" << fileName.str() << std::endl;
+        return;
     }
 
     // Checking filesize
@@ -101,6 +93,7 @@ Region::Region(const std::string& worldPath, int x, int z)
             }
         }
     }
+    opened = true;
 }
 
 Region::~Region()
@@ -110,6 +103,8 @@ Region::~Region()
 
 nbt::NbtBuffer* Region::GetNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ)
 {
+    if (!opened)
+        return nullptr;
     assert(chunkX < 32);
     assert(chunkZ < 32);
 

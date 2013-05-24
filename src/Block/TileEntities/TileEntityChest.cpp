@@ -1,5 +1,7 @@
 #include "TileEntityChest.h"
 
+#include <cppnbt.h>
+
 #include "Block/BlockConstants.h"
 #include "Inventory/Inventory.h"
 #include "World/World.h"
@@ -62,7 +64,7 @@ void TileEntityChest::NotifyPlayerUse(int action)
                 xOffset = -1;
             }
             world->PlayBlockAction(blockX + xOffset, blockY, blockZ + zOffset, 1, 1, world->GetBlockId(blockX, blockY, blockZ), 4);
-            world->PlaySound(blockX, blockY, blockZ, L"random.chestopen", 0.5f, 0.9f + Util::randFloat(0.1F), 4);
+            world->PlaySound(blockX, blockY, blockZ, L"random.chestopen", 0.5f, 0.9f - Util::randFloat(0.1F), 4);
         }
         break;
     case TILEENTITY_PLAYER_CLOSE:
@@ -80,7 +82,7 @@ void TileEntityChest::NotifyPlayerUse(int action)
                 xOffset = -1;
             }
             world->PlayBlockAction(blockX + xOffset, blockY, blockZ + zOffset, 1, 0, world->GetBlockId(blockX, blockY, blockZ), 4);
-            world->PlaySound(blockX, blockY, blockZ, L"random.chestclosed", 0.5f, 0.9f + Util::randFloat(0.1F), 4);
+            world->PlaySound(blockX, blockY, blockZ, L"random.chestclosed", 0.5f, 0.9f - Util::randFloat(0.1F), 4);
         }
         break;
     default:
@@ -112,7 +114,11 @@ TileEntity* TileEntityChest::Create(World::World* world, int blockX, i_height bl
 
 void TileEntityChest::Load(nbt::TagCompound* nbtData)
 {
-    /*FIXME*/
+    nbt::TagList* itemList = nbtData->getValueAt<nbt::TagList>("Items");
+    if (itemList)
+    {
+        inventory->Load(itemList);
+    }
 }
 
 void TileEntityChest::Save(nbt::TagCompound* nbtData)

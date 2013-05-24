@@ -32,6 +32,8 @@ Chunk::Chunk(int x, int z, World* world) :
     posZx16 = z * 16;
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
         datas[i] = nullptr;
+    for (int i = 0; i < CHUNK_SURFACE; i++)
+        heightMap[i] = 0;
     ResetBlockChangePacket();
 }
 
@@ -150,6 +152,8 @@ void Chunk::UpdateTick()
     UpdateSkyLightIFN();
 
     // Random update tick
+    i_block blockId;
+    i_data blockData;
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
         if (*chunkDataItr)
@@ -159,8 +163,6 @@ void Chunk::UpdateTick()
             {
                 int random = Util::FastGenRandomInt();
                 unsigned int cellId = (random >> 2) & 0xfff;
-                i_block blockId;
-                i_data blockData;
                 if (chunkData->addData != NULL)
                 {
                     blockId = chunkData->blocks[cellId] | (chunkData->addData[cellId << 1] & (0xf << ((cellId & 0x1) << 2)));
@@ -765,7 +767,8 @@ bool Chunk::loadFromFile(nbt::NbtBuffer* nbtData)
             return false;
         if (heightMapArray->getSize() != CHUNK_SURFACE)
             return false;
-        memccpy(heightMap, heightMapArray->getValues(), CHUNK_SURFACE, sizeof(int));
+        for (int i = 0; i < CHUNK_SURFACE; i++)
+            heightMap[i] = heightMapArray->getValues()[i];
 
 
         nbt::TagList* sections = level->getValueAt<nbt::TagList>("Sections");
@@ -873,7 +876,39 @@ bool Chunk::loadFromFile(nbt::NbtBuffer* nbtData)
             const std::vector<nbt::Tag *>& toUpdateBlock = tileTicks->getValue();
             for (nbt::Tag* tag : toUpdateBlock)
             {
+                nbt::TagCompound* tileTickData = dynamic_cast<nbt::TagCompound*>(tag);
+                if (!tileTickData)
+                    continue;
+                nbt::TagInt* tileTickX = tileTickData->getValueAt<nbt::TagInt>("x");
+                if (!tileTickX)
+                    continue;
+                int x = tileTickX->getValue();
 
+                nbt::TagInt* tileTickY = tileTickData->getValueAt<nbt::TagInt>("y");
+                if (!tileTickY)
+                    continue;
+                int y = tileTickY->getValue();
+
+                nbt::TagInt* tileTickZ = tileTickData->getValueAt<nbt::TagInt>("z");
+                if (!tileTickZ)
+                    continue;
+                int z = tileTickZ->getValue();
+
+                nbt::TagInt* tileTickI = tileTickData->getValueAt<nbt::TagInt>("i");
+                if (!tileTickI)
+                    continue;
+                int i = tileTickI->getValue();
+
+                nbt::TagInt* tileTickT = tileTickData->getValueAt<nbt::TagInt>("t");
+                if (!tileTickT)
+                    continue;
+                int t = tileTickT->getValue();
+
+                /*Unused yet, optionnal for old map
+                 * nbt::TagInt* tileTickP = tileTickData->getValueAt<nbt::TagInt>("p");
+                if (!tileTickP)
+                    continue;*/
+                MarkForUpdate(x & 0xf, y, z & 0xf, i, t);
             }
             return true;
         }

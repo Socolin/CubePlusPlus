@@ -42,6 +42,7 @@ private:
     int lastAccessTimeTable[REGION_CHUNK_HEIGHT][REGION_CHUNK_WIDTH];
     std::vector<bool> freeBlock;
     std::fstream file;
+    bool opened;
 };
 
 } /* namespace World */
