@@ -37,7 +37,11 @@ TileEntity* TileEntityNote::Create(World::World* world, int blockX, i_height blo
 
 void TileEntityNote::Load(nbt::TagCompound* nbtData)
 {
-    /*FIXME*/
+    nbt::TagByte* tagNote = nbtData->getValueAt<nbt::TagByte>("note");
+    if (tagNote)
+    {
+        noteLevel = tagNote->getValue();
+    }
 }
 
 void TileEntityNote::Save(nbt::TagCompound* nbtData)
