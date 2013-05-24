@@ -1,6 +1,9 @@
 #include "TileEntitySign.h"
 
+#include <cppnbt.h>
+
 #include "Network/OpcodeList.h"
+#include "Util/StringUtil.h"
 
 namespace Block
 {
@@ -49,7 +52,29 @@ TileEntity* TileEntitySign::Create(World::World* world, int blockX, i_height blo
 
 void TileEntitySign::Load(nbt::TagCompound* nbtData)
 {
-}
+    nbt::TagString* tagText1= nbtData->getValueAt<nbt::TagString>("Text1");
+    if (tagText1)
+    {
+        Util::StringToWString(lines[0], tagText1->getValue());
+    }
+
+    nbt::TagString* tagText2= nbtData->getValueAt<nbt::TagString>("Text2");
+    if (tagText2)
+    {
+        Util::StringToWString(lines[1], tagText2->getValue());
+    }
+
+    nbt::TagString* tagText3= nbtData->getValueAt<nbt::TagString>("Text3");
+    if (tagText3)
+    {
+        Util::StringToWString(lines[2], tagText3->getValue());
+    }
+
+    nbt::TagString* tagText4= nbtData->getValueAt<nbt::TagString>("Text4");
+    if (tagText4)
+    {
+        Util::StringToWString(lines[3], tagText4->getValue());
+    }}
 
 void TileEntitySign::Save(nbt::TagCompound* nbtData)
 {
