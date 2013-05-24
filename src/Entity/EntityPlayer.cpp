@@ -75,19 +75,21 @@ void EntityPlayer::AddChunkToSend(int x, int z)
 
 void EntityPlayer::UpdateTick()
 {
-    if (world != NULL)
+    if (world != nullptr)
     {
-        if (session != NULL)
+        if (session != nullptr)
         {
             session->UpdateTick();
-        }
-        for (int i = 0; i < 15; i++)
-        {
-            if (!chunkToSend.empty())
+            for (int i = 0; i < 15; i++)
             {
-                // TODO: add check distance world->viewdistance
-                world->RequestChunk(this, chunkToSend.front());
-                chunkToSend.pop();
+                if (!chunkToSend.empty())
+                {
+                    //if (session->HasPendingData())
+                      //  break;
+                    // TODO: add check distance world->viewdistance
+                    world->RequestChunk(this, chunkToSend.front());
+                    chunkToSend.pop();
+                }
             }
         }
     }

@@ -25,6 +25,7 @@ namespace Network
 #define CURRENT_VERSION_PROTOCOL 60
 #define CURRENT_VERSION_PROTOCOL_WSTR L"60"
 #define MAX_STRING_SIZE 256
+#define SEND_BUFFER_SIZE 1024
 
 enum eSessionState
 {
@@ -109,6 +110,9 @@ public:
     {
         return state == STATE_DISCONECT;
     }
+
+    bool HasPendingData();
+    bool SendPendingData();
 private:
     void readData(int length, char* data) throw (NetworkException);
     char readByte() throw (NetworkException);
@@ -121,6 +125,10 @@ private:
     double readDouble() throw (NetworkException);
     Inventory::ItemStack* readSlot()  throw (NetworkException);
 
+    void SendDelayedData(char* buffer, int len);
+    void AppendPendingDataToSend(char* buffer, int len);
+
+private:
     int socket;
     std::vector<char> buffer;
     eSessionState state;
@@ -142,9 +150,14 @@ private:
     std::wstring username;
     World::EntityPlayer* player;
 
-    unsigned char sendBuffer[512];
+    unsigned char sendBuffer[SEND_BUFFER_SIZE];
     size_t lastSendKeepAliveTick;
     int lastKeepAliveId;
+
+    std::vector<char*> pendingData;
+    size_t pendingDataMaxSize;
+    size_t pendingDataSize;
+    size_t pendingDataPos;
 };
 }
 

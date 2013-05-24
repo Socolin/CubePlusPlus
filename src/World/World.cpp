@@ -28,6 +28,7 @@ World::World(const std::string& worldName)
     , currentEntityId(10)
     , ageOfWorld(0)
     , currentTime(0)
+    , updateInProgress(false)
     , sunReduceValue(0)
 {
     redstoneTorchBurnoutMgr = new Scripting::BlockRedstoneTorchBurnoutMgr();
@@ -40,6 +41,7 @@ World::~World()
 // Called each tick
 void World::UpdateTick()
 {
+    updateInProgress = true;
     for (std::pair<long, Chunk*> chunk : chunkMap)
     {
         chunk.second->UpdateTick();
@@ -58,6 +60,7 @@ void World::UpdateTick()
     }
 
     redstoneTorchBurnoutMgr->UpdateTick();
+    updateInProgress = false;
     UpdateTime();
 }
 
@@ -110,6 +113,11 @@ void World::RemoveEntity(Entity* entity)
 
 void World::RemovePlayer(EntityPlayer* player)
 {
+    if (updateInProgress)
+    {
+        MarkPlayerForRemove(player);
+        return;
+    }
     playerList.erase(player);
     int chunkX = ((int) player->x) >> 4;
     int chunkZ = ((int) player->z) >> 4;
@@ -452,6 +460,10 @@ void World::UpdateTime()
         delete entityToDelete[i];
     }
     entityToDelete.clear();
+
+    for (EntityPlayer* player: playerToRemove)
+        RemovePlayer(player);
+    playerToRemove.clear();
 
 }
 
@@ -802,6 +814,11 @@ void World::NotifyNeighborsForBlockChange(int x, i_height y, int z, i_block neig
     FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
         NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, neighborBlockId);
     END_FOR_EACH_SIDE
+}
+
+void World::MarkPlayerForRemove(EntityPlayer* entity)
+{
+    playerToRemove.insert(entity);
 }
 
 i_lightvalue World::recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall)

@@ -124,6 +124,7 @@ private:
     Chunk* LoadChunk(int x, int z);
     nbt::NbtBuffer* GetChunkNbtData(int x, int z);
     void MarkEntityForDelete(Entity* entity);
+    void MarkPlayerForRemove(EntityPlayer* entity);
 
     bool isChunksExistInRange(int x, i_height y, int z, int range);
     bool isChunksExist(int xmin, i_height ymin, int zmin, int xmax, i_height ymax, int zmax);
@@ -157,6 +158,8 @@ private:
     std::map<int, Entity*> entityById;
     std::set<int> deadEntity;
     std::vector<Entity*> entityToDelete;
+    bool updateInProgress;
+    std::set<EntityPlayer*> playerToRemove;
 
     struct LightUpdateData
     {

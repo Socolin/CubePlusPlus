@@ -4,18 +4,23 @@
 #include "NetworkPacket.h"
 
 #include <iostream>
+#include <fstream>
 #include <unistd.h>
 #include <sys/socket.h>
-#include "Opcode.h"
 
+#include "Opcode.h"
 #include "World/WorldManager.h"
 #include "Entity/EntityPlayer.h"
+#include "Util/StringUtil.h"
 
 namespace Network
 {
 NetworkSession::NetworkSession(int socket) :
     socket(socket), buffer(INITIAL_BUFFER_SIZE),state(STATE_NOTLOGGED),lastKeepAliveTick(0),startPosInBuffer(0)
     ,bufferSize(0),maxBufferSize(0),cryptedMode(false),aesDecryptor(nullptr),aesEncryptor(nullptr),player(nullptr),lastSendKeepAliveTick(0),lastKeepAliveId(0)
+    , pendingDataMaxSize(0)
+    , pendingDataSize(0)
+    , pendingDataPos(0)
 {
 
 }
@@ -126,6 +131,7 @@ float NetworkSession::readFloat() throw (NetworkException)
 
 void NetworkSession::disconnect(const char* reason)
 {
+    state = STATE_DISCONECT;
     std::cout << "Disconnect player: "<< reason << std::endl;
     if (player != nullptr)
     {
@@ -134,7 +140,6 @@ void NetworkSession::disconnect(const char* reason)
         player = nullptr;
     }
     close(socket);
-    state = STATE_DISCONECT;
 }
 
 double NetworkSession::readDouble() throw (NetworkException)
@@ -194,25 +199,21 @@ void NetworkSession::SendPacket(const NetworkPacket& packet)
 {
     if (state == STATE_DISCONECT)
         return;
-    //packet.dump();
+
     if (cryptedMode)
     {
         size_t sendSize = 0;
-        size_t x = 512;
-        size_t y = packet.getPacketSize();
+        size_t sendBufferSize = SEND_BUFFER_SIZE;
+        size_t toSendSize = packet.getPacketSize();
         size_t sended = 0;
-        sendSize = y ^ ((x ^ y) & -(x < y)); // min(x, y)
+        sendSize = std::min(sendBufferSize,toSendSize);
         while (sendSize > 0)
         {
             aesEncryptor->ProcessData((byte*)sendBuffer,(byte*)&packet.getPacketData()[sended],sendSize);
-            send(socket, sendBuffer, sendSize, MSG_NOSIGNAL);
-            if (errno == EPIPE)
-            {
-                disconnect("EPIPE");
-            }
-            y -= sendSize;
+            SendDelayedData(reinterpret_cast<char*>(sendBuffer), sendSize);
+            toSendSize -= sendSize;
             sended += sendSize;
-            sendSize = y ^ ((x ^ y) & -(x < y)); // min(x, y)
+            sendSize = std::min(sendBufferSize,toSendSize);
         }
     }
     else
@@ -243,6 +244,109 @@ std::wstring NetworkSession::readString(const int maxSize) throw (NetworkExcepti
 
     startPosInBuffer += length * 2;
     return utf16RealText;
+}
+
+void NetworkSession::SendDelayedData(char* buffer, int len)
+{
+    if (HasPendingData())
+    {
+        while (SendPendingData());
+    }
+
+    if (HasPendingData())
+    {
+        AppendPendingDataToSend(buffer, len);
+    }
+    else
+    {
+        struct timeval a;
+        a.tv_sec= 0;
+        a.tv_usec = 0;
+        fd_set rfd;
+        FD_ZERO( &rfd );
+        FD_SET(socket, &rfd );
+        if (select(socket + 1, nullptr, &rfd, nullptr, &a) > 0)
+        {
+            int res = send(socket, buffer, len, MSG_NOSIGNAL);
+            if (res == -1)
+            {
+                if (errno == EAGAIN)
+                {
+                    AppendPendingDataToSend(reinterpret_cast<char*>(buffer), len);
+                    return;
+                }
+                perror("send");
+                disconnect("socket error");
+                return;
+            }
+        }
+        else
+        {
+            AppendPendingDataToSend(reinterpret_cast<char*>(buffer), len);
+        }
+    }
+}
+
+void NetworkSession::AppendPendingDataToSend(char* buffer, int len)
+{
+    if (pendingDataSize + len > pendingDataMaxSize)
+    {
+        pendingData.resize(pendingDataSize + len);
+        pendingDataMaxSize = pendingDataSize + len;
+    }
+
+    std::memmove((char*)pendingData.data() + pendingDataSize, buffer, len);
+    pendingDataSize += len;
+}
+
+bool NetworkSession::HasPendingData()
+{
+    return pendingDataSize > 0;
+}
+
+bool NetworkSession::SendPendingData()
+{
+    if (state == STATE_DISCONECT)
+        return false;
+
+    int pendingSize = pendingDataSize - pendingDataPos;
+    if (pendingSize <= 0)
+        return false;
+
+    int sendSize = std::min(SEND_BUFFER_SIZE, pendingSize);
+
+    struct timeval a;
+    a.tv_sec= 0;
+    a.tv_usec = 0;
+    fd_set rfd;
+    FD_ZERO(&rfd);
+    FD_SET(socket, &rfd);
+    if (select(socket + 1, nullptr, &rfd, nullptr, &a) > 0)
+    {
+        int res = send(socket, (char*)pendingData.data() + pendingDataPos, sendSize, MSG_NOSIGNAL);
+        if (res == -1)
+        {
+            if (errno == EAGAIN)
+            {
+                return false;
+            }
+            perror("send");
+            disconnect("SendError");
+            return false;
+        }
+        pendingDataPos += res;
+    }
+    else
+    {
+        return false;
+    }
+    if (pendingDataPos >= pendingDataSize)
+    {
+        pendingDataPos = 0;
+        pendingDataSize = 0;
+        return false;
+    }
+    return true;
 }
 
 }

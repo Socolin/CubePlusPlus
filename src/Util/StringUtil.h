@@ -2,6 +2,7 @@
 #define STRINGUTIL_H_
 
 #include <string>
+#include <iostream>
 
 namespace Util
 {
@@ -20,6 +21,6 @@ namespace Util
 
 void StringToWString(std::wstring &ws, const std::string &s);
 
-void DumpBuffer(char* buffer, size_t size);
+void DumpBuffer(char* buffer, size_t size, std::ostream& stream = std::cout, const char* label = "BUFFER DUMP:");
 } /* namespace Util */
 #endif /* STRINGUTIL_H_ */

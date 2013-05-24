@@ -500,5 +500,7 @@ void NetworkSession::UpdateTick()
             SendPacket(keepAlivePacket);
         }
     }
+
+    while (SendPendingData());
 }
 }

@@ -10,28 +10,28 @@ void StringToWString(std::wstring &ws, const std::string &s)
     ws = wsTmp;
 }
 
-void DumpBuffer(char* buffer, size_t size)
+void DumpBuffer(char* buffer, size_t size, std::ostream& stream, const char* label)
 {
-    std::cout << "BUFFER DUMP: size:" << size << std::endl;
-    std::cout << std::hex;
+    stream << label << " size:" << size << std::endl;
+    stream << std::hex;
     int startline = 0;
     for (size_t i = 0; i < size; i++)
     {
         int toPrint = ((int) buffer[i]) & 0xff;
         if (toPrint < 16)
-            std::cout << 0;
-        std::cout << toPrint << " ";
+            stream << 0;
+        stream << toPrint << " ";
         if (i % 16 == 15)
         {
-            std::cout << " |";
+            stream << " |";
             for (int b = startline; b < startline + 16; b++)
             {
                 if (buffer[b] >= 32)
-                    std::cout << buffer[b];
+                    stream << buffer[b];
                 else
-                    std::cout << ".";
+                    stream << ".";
             }
-            std::cout << std::endl;
+            stream << std::endl;
             startline += 16;
         }
     }
@@ -39,17 +39,17 @@ void DumpBuffer(char* buffer, size_t size)
     {
         int spacecount = (16 - (size % 16)) * 3;
         for (int i = 0; i < spacecount; i++)
-            std::cout << " ";
-        std::cout << "|";
+            stream << " ";
+        stream << "|";
         for (unsigned b = startline; b < size; b++)
         {
             if (buffer[b] >= 32)
-                std::cout << buffer[b];
+                stream << buffer[b];
             else
-                std::cout << ".";
+                stream << ".";
         }
     }
-    std::cout << std::dec << std::endl;
+    stream << std::dec << std::endl;
 
 }
 
