@@ -1,5 +1,7 @@
 #include "TileEntityFurnace.h"
 
+#include <cppnbt.h>
+
 #include "Database/MiscData/FurnaceRecipes.h"
 #include "Inventory/Item.h"
 #include "Inventory/InventoryFurnace.h"
@@ -131,7 +133,34 @@ TileEntity* TileEntityFurnace::Create(World::World* world, int blockX, i_height 
 
 void TileEntityFurnace::Load(nbt::TagCompound* nbtData)
 {
-    /*FIXME*/
+    nbt::TagList* itemList = nbtData->getValueAt<nbt::TagList>("Items");
+    if (itemList)
+    {
+        inventory->Load(itemList);
+    }
+
+    nbt::TagShort* tagBurnTime = nbtData->getValueAt<nbt::TagShort>("BurnTime");
+    if (tagBurnTime)
+    {
+        fuel = tagBurnTime->getValue();
+    }
+
+    nbt::TagShort* tagCookTime = nbtData->getValueAt<nbt::TagShort>("CookTime");
+    if (tagBurnTime)
+    {
+        progress = tagCookTime->getValue();
+    }
+
+    maxfuel = fuel;
+    const Inventory::ItemStack* lookedFuelItem = inventory->LookSlot(inventory->GetFuelSlotId());
+    if (lookedFuelItem != nullptr)
+    {
+        const Inventory::Item* fuelType = lookedFuelItem->getItem();
+        if (fuelType && fuelType->getBurningTime() > 0)
+        {
+            maxfuel = fuelType->getBurningTime();
+        }
+    }
 }
 
 void TileEntityFurnace::Save(nbt::TagCompound* nbtData)
