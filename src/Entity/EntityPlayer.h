@@ -219,6 +219,11 @@ public:
      * @return a non null inventory
      */
     Inventory::InventoryPlayer* GetHandsInventory() const;
+    /**
+     * Get the ender chest inventory of player, made with 27 slots
+     * @return a non null inventory
+     */
+    Inventory::Inventory* GetEnderChestInventory() const;
 
     /**
      * Update slot of main inventory and clicked item
@@ -241,6 +246,7 @@ private:
     Network::NetworkSession* session;
     Inventory::Inventory* mainInventory;
     Inventory::InventoryPlayer* handsInventory;
+    Inventory::Inventory* enderChestInventory;
     Inventory::Inventory* clickedItem;
     Inventory::Inventory* armorInventory;
     Inventory::Inventory* craftingInventory;

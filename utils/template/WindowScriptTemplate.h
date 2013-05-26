@@ -14,7 +14,7 @@ class ___CLASS_NAME___ : public WindowScript
 public:
     ___CLASS_NAME___();
     virtual ~___CLASS_NAME___();
-    virtual WindowScript* Copy() override;
+    virtual WindowScript* Copy() const override;
 ___METHODS___
 };
 

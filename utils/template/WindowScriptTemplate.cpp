@@ -15,7 +15,7 @@ ___CLASS_NAME___::~___CLASS_NAME___()
 {
 }
 
-WindowScript* ___CLASS_NAME___::Copy()
+WindowScript* ___CLASS_NAME___::Copy() const
 {
     return new ___CLASS_NAME___(*this);
 }

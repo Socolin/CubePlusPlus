@@ -14,7 +14,14 @@ namespace Window
 {
 
 Window::Window(i_windowId id, World::EntityPlayer* player, const WindowStaticData* windowData)
-    : id(id), player(player), windowData(windowData), offset(0), isPainting(false), paintingButton(0), currentPaintingAction(0)
+    : id(id)
+    , player(player)
+    , script(nullptr)
+    , windowData(windowData)
+    , maxSlot(0)
+    , isPainting(false)
+    , paintingButton(0)
+    , currentPaintingAction(0)
 {
    assert(windowData);
    if (windowData->GetScript() != nullptr)
@@ -51,14 +58,15 @@ void Window::OpenWindow(int x, i_height y, int z)
     }
 
     player->OpenWindow(this);
-    if (script)
-        script->OnOpenWindow(player);
 
     OpenWindow(true);
 }
 
 void Window::OpenWindow(bool sendOpenPacket)
 {
+    if (script)
+        script->OnOpenWindow(player);
+
     if (sendOpenPacket)
     {
         Network::NetworkPacket openWindowPacket(Network::OP_OPEN_WINDOW);
@@ -67,7 +75,7 @@ void Window::OpenWindow(bool sendOpenPacket)
     }
 
     Network::NetworkPacket setWindowItemPacket(Network::OP_SET_WINDOW_ITEMS);
-    setWindowItemPacket << id << (short) windowData->getMaxSlot();
+    setWindowItemPacket << id << (short) maxSlot;
     for (Inventory::Inventory* inv : inventoryList)
     {
         inv->SendInventoryTo(setWindowItemPacket);
@@ -97,7 +105,7 @@ void Window::CloseWindow(bool sendPacket)
 bool Window::ClickOnWindow(short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
 {
     bool returnValue = false;
-    if (slotId >= 0 && slotId < windowData->getMaxSlot())
+    if (slotId >= 0 && slotId < maxSlot)
     {
         if (script)
         {
@@ -428,8 +436,8 @@ void Window::SetWindowItems(short /*slotId*/, const Inventory::ItemStack* /*slot
 void Window::AddInventory(Inventory::Inventory* inventory, Window::ePriority priority)
 {
     inventoryList.push_back(inventory);
-    inventory->OpenInventory(player, id, offset);
-    offset += inventory->GetMaxSlot();
+    inventory->OpenInventory(player, id, maxSlot);
+    maxSlot += inventory->GetMaxSlot();
     if (priority == PRIORITY_MEDIUM)
     {
         inventoryListByPriority.push_back(inventory);

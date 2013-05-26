@@ -91,7 +91,7 @@ private:
     std::vector<Inventory::Inventory*> inventoryList;
     std::vector<Inventory::Inventory*> inventoryListByPriority;
     const WindowStaticData* windowData;
-    int offset;
+    int maxSlot;
 
     bool isPainting;
     unsigned char paintingButton;

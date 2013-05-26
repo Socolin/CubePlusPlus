@@ -34,6 +34,7 @@ EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& nam
 {
     mainInventory = new Inventory::Inventory(27, Inventory::INVENTORY_TYPE_PLAYER_MAIN);
     handsInventory = new Inventory::InventoryPlayer();
+    enderChestInventory = new Inventory::Inventory(27);
     clickedItem = new Inventory::Inventory(1);
     armorInventory = new Inventory::Inventory(4);//TODO: special inventory
     craftingInventory = new Inventory::InventoryCraft(2, 2);
@@ -418,6 +419,11 @@ Inventory::Inventory* EntityPlayer::GetMainInventory() const
 Inventory::InventoryPlayer* EntityPlayer::GetHandsInventory() const
 {
     return handsInventory;
+}
+
+Inventory::Inventory* EntityPlayer::GetEnderChestInventory() const
+{
+    return enderChestInventory;
 }
 
 void EntityPlayer::UpdateInventories()

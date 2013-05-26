@@ -5,6 +5,7 @@
 #include "Basics/BlockChestScript.h"
 #include "Basics/BlockCraftingTableScript.h"
 #include "Basics/BlockDoorScript.h"
+#include "Basics/BlockEnderChestScript.h"
 #include "Basics/BlockFallingScript.h"
 #include "Basics/BlockFurnaceScript.h"
 #include "Basics/BlockGrassScript.h"
@@ -32,6 +33,7 @@ void RegisterBlockScript()
     new BlockChestScript();
     new BlockCraftingTableScript();
     new BlockDoorScript();
+    new BlockEnderChestScript();
     new BlockFallingScript();
     new BlockFurnaceScript();
     new BlockGrassScript();
