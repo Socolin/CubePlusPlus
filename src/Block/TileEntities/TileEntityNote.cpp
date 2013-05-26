@@ -1,5 +1,7 @@
 #include "TileEntityNote.h"
 
+#include <cppnbt.h>
+
 namespace Block
 {
 

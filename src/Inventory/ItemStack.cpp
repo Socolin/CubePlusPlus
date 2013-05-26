@@ -10,14 +10,28 @@ ItemStack::ItemStack(int id, int stackSize, int itemData)
         : itemId(id)
         , itemData(itemData)
         , stackSize(stackSize)
+        , specialData(nullptr)
 {
 
+}
+
+ItemStack::ItemStack(const ItemStack& itemStack)
+    : itemId(itemStack.itemId)
+    , itemData(itemStack.itemData)
+    , stackSize(itemStack.stackSize)
+    , specialData(nullptr)
+{
+    if (itemStack.specialData != nullptr)
+    {
+        specialData = dynamic_cast<nbt::TagCompound*>(itemStack.specialData->clone());
+    }
 }
 
 ItemStack::ItemStack(nbt::TagCompound* nbtItemData)
     : itemId(0)
     , itemData(0)
     , stackSize(0)
+    , specialData(nullptr)
 {
     if (nbtItemData)
     {
@@ -31,11 +45,17 @@ ItemStack::ItemStack(nbt::TagCompound* nbtItemData)
         {
             itemData = tagItemDamage->getValue();
         }
-        nbt::TagByte * tagItemCount = nbtItemData->getValueAt<nbt::TagByte>("Count");
+        nbt::TagByte* tagItemCount = nbtItemData->getValueAt<nbt::TagByte>("Count");
         if (tagItemCount)
         {
             stackSize = tagItemCount->getValue();
         }
+        nbt::TagCompound* specialData = nbtItemData->getValueAt<nbt::TagCompound>("tag");
+        if (specialData)
+        {
+            this->specialData = dynamic_cast<nbt::TagCompound*>(specialData->clone());
+        }
+
     }
 }
 
@@ -107,6 +127,11 @@ bool ItemStack::Full() const
     if (item == nullptr)
         return true;
     return item->getMaxStackSize() <= stackSize;
+}
+
+nbt::TagCompound* ItemStack::GetSpecialData() const
+{
+    return specialData;
 }
 
 } /* namespace Inventory */

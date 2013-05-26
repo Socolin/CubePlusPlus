@@ -14,6 +14,7 @@ class ItemStack
 {
 public:
     ItemStack(int id, int stackSize, int itemData);
+    ItemStack(const ItemStack& itemStack);
     ItemStack(nbt::TagCompound* itemData);
     virtual ~ItemStack();
 
@@ -68,6 +69,7 @@ public:
     /**
      * Check if itemId && itemData are equals
      * TODO: check also nbt data when it will be possible
+     *          need add equals method on nbt
      * @param otherStack
      * @return true if two item can be stackable
      */
@@ -87,10 +89,13 @@ public:
      */
     bool Full() const;
 
+    nbt::TagCompound* GetSpecialData() const;
+
 private:
     i_item itemId;
     i_damage itemData;
     i_stackSize stackSize;
+    nbt::TagCompound* specialData;
 };
 
 } /* namespace Inventory */
