@@ -121,7 +121,7 @@ void TileEntityChest::Load(nbt::TagCompound* nbtData)
     }
 }
 
-void TileEntityChest::Save(nbt::TagCompound* nbtData)
+void TileEntityChest::Save(nbt::TagCompound* /*nbtData*/)
 {
     /*FIXME*/
 }

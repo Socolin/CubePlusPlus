@@ -163,7 +163,7 @@ void TileEntityFurnace::Load(nbt::TagCompound* nbtData)
     }
 }
 
-void TileEntityFurnace::Save(nbt::TagCompound* nbtData)
+void TileEntityFurnace::Save(nbt::TagCompound* /*nbtData*/)
 {
     /*FIXME*/
 }

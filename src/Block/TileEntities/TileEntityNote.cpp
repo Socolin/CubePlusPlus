@@ -46,7 +46,7 @@ void TileEntityNote::Load(nbt::TagCompound* nbtData)
     }
 }
 
-void TileEntityNote::Save(nbt::TagCompound* nbtData)
+void TileEntityNote::Save(nbt::TagCompound* /*nbtData*/)
 {
     /*FIXME*/
 }

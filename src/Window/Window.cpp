@@ -536,11 +536,11 @@ bool Window::endPainting(int action)
                 if (lookClickedItem != nullptr)
                 {
                     i_stackSize stackedItem = lookClickedItem->getStackSize();
-                    size_t countSlotPainted = paintedSlot.size();
-                    size_t itemPerSlot = 1;
+                    i_stackSize countSlotPainted = paintedSlot.size();
+                    i_stackSize itemPerSlot = 1;
                     if (paintingButton == 0)
                         itemPerSlot = stackedItem / countSlotPainted;
-                    if (stackedItem >= itemPerSlot * countSlotPainted)
+                    if (stackedItem > 0 && stackedItem >= itemPerSlot * countSlotPainted)
                     {
                         for (i_slot slotId : paintedSlot)
                         {

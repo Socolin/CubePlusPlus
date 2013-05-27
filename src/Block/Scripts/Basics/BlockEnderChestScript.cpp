@@ -41,7 +41,7 @@ void BlockEnderChestScript::InitParam(int paramId, int param)
     }
 }
 
-void BlockEnderChestScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+void BlockEnderChestScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i_height /*y*/, int /*z*/, int /*face*/, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
 
@@ -65,7 +65,7 @@ void BlockEnderChestScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, 
     }
 }
 
-bool BlockEnderChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+bool BlockEnderChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     const Window::WindowStaticData* windowData = Window::WindowList::getWindowData(windowEnderChestChestDataId);
     if (windowData != nullptr)

@@ -76,7 +76,7 @@ void TileEntitySign::Load(nbt::TagCompound* nbtData)
         Util::StringToWString(lines[3], tagText4->getValue());
     }}
 
-void TileEntitySign::Save(nbt::TagCompound* nbtData)
+void TileEntitySign::Save(nbt::TagCompound* /*nbtData*/)
 {
 }
 
