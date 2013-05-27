@@ -8,7 +8,7 @@ namespace World
 {
 
 EntityHanging::EntityHanging(eEntityType type, int x, i_height y, int z, int direction)
-    : Entity(type, x, y, z)
+    : Entity(type, ENTITY_TYPEFLAG_HANGING, x, y, z)
     , direction(direction)
     , blockX(x)
     , blockY(y)
@@ -114,7 +114,7 @@ void EntityHanging::setDirection(int direction)
     z = entityPositionZ;
 
     boundingBox.SetWidthHeightDepth(std::fabs(widthX + boundingReduceSize) * 2, std::fabs(height + boundingReduceSize) * 2, std::fabs(widthZ + boundingReduceSize) * 2);
-    boundingBox.SetPositionCenteredXZ(entityPositionX, entityPositionY, entityPositionZ);
+    boundingBox.SetPositionCenteredXYZ(entityPositionX, entityPositionY, entityPositionZ);
 }
 
 double EntityHanging::getWidthOffset(int width)
@@ -191,11 +191,8 @@ bool EntityHanging::isOnValidSurface()
        }
     }
 
-    std::set<eEntityType> typeList;
-    typeList.insert(ENTITY_TYPE_HANGINGFRAME);
-    typeList.insert(ENTITY_TYPE_PAINTING);
     std::vector<std::pair<int, Util::AABB>> bbEntityList;
-    world->GetEntitiesBoundingBoxInAABB(typeList, entityId, boundingBox, bbEntityList);
+    world->GetEntitiesBoundingBoxInAABBByEntityFlag(ENTITY_TYPEFLAG_HANGING, entityId, boundingBox, bbEntityList);
 
     return bbEntityList.empty();
 }

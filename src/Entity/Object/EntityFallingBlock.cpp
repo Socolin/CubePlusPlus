@@ -7,7 +7,7 @@ namespace World
 {
 
 EntityFallingBlock::EntityFallingBlock(double x, double y, double z, i_block blockId, i_data blockData)
-    : Entity(ENTITY_TYPE_FALLINGBLOCK, x, y, z)
+    : Entity(ENTITY_TYPE_FALLINGBLOCK, ENTITY_TYPEFLAG_MOVING, x, y, z)
     , blockId(blockId)
     , blockData(blockData)
 {

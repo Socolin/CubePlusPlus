@@ -36,7 +36,7 @@ class Entity: public Position
         ENTITY_FLAG_INVISIBLE   = 0x20,
     };
 public:
-    Entity(eEntityType entityType, double x, double y, double z);
+    Entity(eEntityType entityType, int entityTypeFlag, double x, double y, double z);
     virtual ~Entity();
     virtual void UpdateTick() = 0;
     void setWorld(World* world, int entityId);
@@ -87,6 +87,7 @@ public:
     {
         return entityType;
     }
+    const int GetEntityTypeFlag() const;
 
     bool isDead() const;
     void kill();
@@ -98,10 +99,12 @@ public:
     void SetSneak(bool sneak);
     bool IsSprinting();
     void SetSprinting(bool sprinting);
+
 protected:
     bool PushOutOfBlock(double x, double y, double z);
 
     const eEntityType entityType;
+    const int entityTypeFlag;
 
     World* world;
     int entityId;

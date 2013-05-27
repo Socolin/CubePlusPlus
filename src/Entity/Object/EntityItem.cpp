@@ -9,7 +9,7 @@ namespace World
 {
 
 EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack* itemStack, double motionX, double motionY, double motionZ)
-    : Entity(ENTITY_TYPE_ITEM, x, y, z)
+    : Entity(ENTITY_TYPE_ITEM, ENTITY_TYPEFLAG_MOVING, x, y, z)
     , liveTime(0)
     , storedItem(1)
 {

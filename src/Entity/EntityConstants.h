@@ -3,7 +3,19 @@
 
 namespace World
 {
-enum eEntityType // Use mask ? or System with type/subtype ?
+enum eEntityFlagType
+{
+    ENTITY_TYPEFLAG_STATIC              = 0x001,
+    ENTITY_TYPEFLAG_HANGING             = 0x002,
+    ENTITY_TYPEFLAG_MOVING              = 0x004,
+    ENTITY_TYPEFLAG_FALLING             = 0x008,
+    ENTITY_TYPEFLAG_LIVING_ENTITY       = 0x010,
+    ENTITY_TYPEFLAG_NEUTRAL             = 0x020,
+    ENTITY_TYPEFLAG_ANIMAL              = 0x040,
+    ENTITY_TYPEFLAG_MOB                 = 0x080,
+};
+
+enum eEntityType
 {
     ENTITY_TYPE_NONE,
     ENTITY_TYPE_PLAYER,

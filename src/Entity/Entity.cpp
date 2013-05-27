@@ -17,8 +17,8 @@
 namespace World
 {
 
-Entity::Entity(eEntityType entityType, double x, double y, double z) :
-    Position(x, y, z), entityType(entityType), world(nullptr), entityId(0)
+Entity::Entity(eEntityType entityType, int entityTypeFlag, double x, double y, double z) :
+    Position(x, y, z), entityType(entityType), entityTypeFlag(entityTypeFlag), world(nullptr), entityId(0)
     , yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false)
     , stopMoving(false), noclip(false),onGround(false)
     , motionX(0), motionY(0), motionZ(0)
@@ -434,6 +434,11 @@ void Entity::kill()
 int Entity::getEntityId() const
 {
     return entityId;
+}
+
+const int Entity::GetEntityTypeFlag() const
+{
+    return entityTypeFlag;
 }
 
 } /* namespace World */

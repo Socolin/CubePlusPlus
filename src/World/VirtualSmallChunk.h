@@ -33,6 +33,7 @@ public:
     void SendPacketToPlayerInChunk(const Network::NetworkPacket& packet) const;
 
     void GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
+    void GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
 private:
 
     const int posX;
