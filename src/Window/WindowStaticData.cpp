@@ -22,11 +22,6 @@ i_windowDataId WindowStaticData::getId() const
     return id;
 }
 
-char WindowStaticData::getMaxSlot() const
-{
-    return maxSlot;
-}
-
 char WindowStaticData::getNetworkMaxSlot() const
 {
     return networkMaxSlot;

@@ -18,7 +18,6 @@ public:
     WindowStaticData(i_windowDataId id, char maxSlot, char networkMaxSlot, std::wstring name, int clientWindowId, Scripting::WindowScript* script);
     virtual ~WindowStaticData();
     i_windowDataId getId() const;
-    char getMaxSlot() const;
     char getNetworkMaxSlot() const;
     const std::wstring& getName() const;
     const Scripting::WindowScript* GetScript() const;
@@ -26,7 +25,7 @@ public:
 
 private:
     i_windowDataId id;
-    char maxSlot;
+    char maxSlot;// TODO: remove it
     char networkMaxSlot;
     std::wstring name;
     unsigned char clientWindowId;

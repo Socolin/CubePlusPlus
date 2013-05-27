@@ -102,7 +102,7 @@ void Window::CloseWindow(bool sendPacket)
     //TODO drop item clicked
 }
 
-bool Window::ClickOnWindow(short slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
+bool Window::ClickOnWindow(i_slot slotId, char button, short action, char mode, const Inventory::ItemStack* slot)
 {
     bool returnValue = false;
     if (slotId >= 0 && slotId < maxSlot)
@@ -411,7 +411,7 @@ void Window::DoAction(short action)
         script->OnDoAction(player, action);
 }
 
-void Window::SetSlot(short slotId, const Inventory::ItemStack* slot)
+void Window::SetSlot(i_slot slotId, const Inventory::ItemStack* slot)
 {
     i_slot inventorySlotId = 0;
     Inventory::Inventory* inventory = GetInventoryForSlot(slotId, inventorySlotId);
@@ -427,10 +427,6 @@ void Window::SetSlot(short slotId, const Inventory::ItemStack* slot)
         }
         return;
     }
-}
-
-void Window::SetWindowItems(short /*slotId*/, const Inventory::ItemStack* /*slot*/)
-{
 }
 
 void Window::AddInventory(Inventory::Inventory* inventory, Window::ePriority priority)
@@ -544,7 +540,7 @@ bool Window::endPainting(int action)
                     size_t itemPerSlot = 1;
                     if (paintingButton == 0)
                         itemPerSlot = stackedItem / countSlotPainted;
-                    if (itemPerSlot > 0 && stackedItem >= itemPerSlot * countSlotPainted)
+                    if (stackedItem >= itemPerSlot * countSlotPainted)
                     {
                         for (i_slot slotId : paintedSlot)
                         {

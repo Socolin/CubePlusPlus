@@ -185,10 +185,23 @@ public:
      */
     virtual void UpdateWindowProperty(short property, short value);
 
+    /**
+     * Count the number of item that can be place in inventory
+     * @param item item to place
+     * @return number of item
+     */
     int CountAvaibleSpaceForItem(const ItemStack* item);
 
+    /**
+     * Get number of player whose has opened the inventory
+     * @return number of player with this inventory openned
+     */
     int GetPlayerCount() const;
 
+    /**
+     * Load inventory from data
+     * @param nbtData
+     */
     virtual void Load(nbt::TagList* nbtData);
 protected:
     struct playerData
