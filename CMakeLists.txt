@@ -9,11 +9,9 @@ FIND_PACKAGE(Boost ${BOOST_MIN_VERSION} REQUIRED)
 
 FIND_PACKAGE(ZLIB REQUIRED)
 IF (ZLIB_FOUND)
-  MESSAGE(STATUS "Cmake FindZLIB: using ZLIB includes at: ${ZLIB_INCLUDE_DIR}")
-  MESSAGE(STATUS "Cmake FindZLIB: using ZLIB libraries: ${ZLIB_LIBRARIES}")
+    MESSAGE(STATUS "Cmake FindZLIB: using ZLIB includes at: ${ZLIB_INCLUDE_DIR}")
+    MESSAGE(STATUS "Cmake FindZLIB: using ZLIB libraries: ${ZLIB_LIBRARIES}")
 ENDIF (ZLIB_FOUND)
-
-
 
 # Initialize CXXFLAGS.
 set(CMAKE_CXX_FLAGS                "-Wall -std=c++0x")
@@ -35,27 +33,33 @@ else ()
     message(FATAL_ERROR "Your C++ compiler does not support C++11.")
 endif ()
 
-INCLUDE_DIRECTORIES(src/)
+# Define includes directories (for headers)  
+include_directories(
+    ${Boost_INCLUDE_DIRS}
+    lib/cppNBT/src
+    src/
+)
 
-
-link_directories ( ${Boost_LIBRARY_DIRS}
+link_directories(
+    ${Boost_LIBRARY_DIRS}
     lib/cppNBT/
 )
-include_directories ( ${Boost_INCLUDE_DIRS}
-    lib/cppNBT/src
-)
 
-set(EXECUTABLE_OUTPUT_PATH bin)
-
+# Source files
 file(
     GLOB_RECURSE
     source_files
     src/*
 )
+
+set(EXECUTABLE_OUTPUT_PATH bin)
+
 add_executable(
     Server
     ${source_files}
 )
+
+# Libs
 target_link_libraries(
 	Server
 	cryptopp
@@ -64,6 +68,7 @@ target_link_libraries(
 	mysqlcppconn
     cppnbt
 )
+
 configure_file(
 	server.cfg
     ${EXECUTABLE_OUTPUT_PATH}/server.cfg
