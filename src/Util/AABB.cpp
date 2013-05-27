@@ -30,7 +30,7 @@ AABB::~AABB()
 
 bool AABB::DetectCollision(const AABB& B) const
 {
-    if (x + width < B.x || y + height < B.y || z + depth < B.z || B.x + B.width < x || B.y + B.height < y || B.z + B.depth < z)
+    if (x + width <= B.x || y + height <= B.y || z + depth <= B.z || B.x + B.width <= x || B.y + B.height <= y || B.z + B.depth <= z)
         return false;
 
     return true;

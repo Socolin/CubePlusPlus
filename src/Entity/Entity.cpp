@@ -113,6 +113,7 @@ void Entity::Move(double dx, double dy, double dz)
     if (noclip)
     {
         MoveTo(x + dx, y + dy, z + dz);
+        boundingBox.Move(dx, dy, dz);
         return;
     }
 
@@ -136,6 +137,7 @@ void Entity::Move(double dx, double dy, double dz)
 
     for (Util::AABB& box : bbList)
         dz = box.GetZOffsetWith(boundingBox, dz);
+
     boundingBox.MoveZ(dz);
 
     if (0 != dx || 0 != dy || 0 != dz)

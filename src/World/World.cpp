@@ -318,7 +318,7 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, Inven
     const Inventory::Item* item = itemstack->getItem();
     if (item != nullptr)
     {
-        float randomDistance = Util::randFloat() * 0.5;
+        float randomDistance = Util::randFloat() * 0.1;
         float randomAngle = Util::randFloat() * M_PI * 2.0;
 
         double motionX = -sin(randomAngle) * randomDistance;

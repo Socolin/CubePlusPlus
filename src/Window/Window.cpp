@@ -99,7 +99,7 @@ void Window::CloseWindow(bool sendPacket)
         closeWindowPacket << id;
         player->Send(closeWindowPacket);
     }
-    //TODO drop item clicked
+    player->GetClickedItem()->DropInventory(player);
 }
 
 bool Window::ClickOnWindow(i_slot slotId, char button, short action, char mode, const Inventory::ItemStack* slot)

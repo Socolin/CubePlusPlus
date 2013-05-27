@@ -36,10 +36,9 @@ void WindowCraftingTableScript::OnOpenWindow(World::EntityPlayer* player)
     baseWindow->AddInventory(player->GetHandsInventory());
 }
 
-void WindowCraftingTableScript::OnCloseWindow(World::EntityPlayer* /*player*/)
+void WindowCraftingTableScript::OnCloseWindow(World::EntityPlayer* player)
 {
-    //TODO: craftInventory drop(player);
-    // TODO overide drop inventory for crafting part, don't drop stack in result
+    craftInventory->DropInventory(player);
 }
 
 bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short /*action*/, char mode, const Inventory::ItemStack* /*slot*/, bool& retValue)

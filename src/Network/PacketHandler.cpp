@@ -291,7 +291,7 @@ void NetworkSession::handleCreativeInventoryAction() throw (NetworkException)
         }
         else
         {
-            if (slotId == player->GetHandsInventory()->getHandSlotId())
+            if (slotId == player->GetHandsInventory()->getHandSlotId() + 36)
                 player->ItemInHandHasChange();
             player->GetInventoryWindow()->SetSlot(slotId, receivedSlot);
         }

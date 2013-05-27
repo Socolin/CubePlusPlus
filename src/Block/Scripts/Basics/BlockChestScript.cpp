@@ -232,9 +232,17 @@ Block::TileEntity* BlockChestScript::CreateNewTileEntity(World::World* world, in
     return new Block::TileEntityChest(world, blockX, blockY, blockZ);
 }
 
-void BlockChestScript::OnDestroy(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, i_data /*data*/) const
+void BlockChestScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
-    //TODO: drop items
+    Block::TileEntity* tileEntity = world->GetTileEntity(x, y, z);
+    if (tileEntity != nullptr)
+    {
+        Inventory::Inventory* inventory = tileEntity->GetInventory();
+        if (inventory != nullptr)
+        {
+            inventory->DropInventory(world, x, y, z);
+        }
+    }
 }
 
 } /* namespace Scripting */

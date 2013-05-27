@@ -19,6 +19,10 @@ public:
     void PerformCraftChecking();
 
     ItemStack* GetResultItems(int count = -1);
+
+    virtual void DropInventory(World::EntityPlayer* player) override;
+
+
 private:
     int width;
     int height;

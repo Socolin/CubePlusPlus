@@ -222,6 +222,21 @@ void Inventory::DropInventory(World::World* world, double x, double y, double z)
     {
         slot[i] = nullptr;
     }
+
+}
+void Inventory::DropInventory(World::EntityPlayer* player)
+{
+    for (ItemStack* item : slot)
+    {
+        if (item != nullptr)
+        {
+            player->DropItem(item);
+        }
+    }
+    for (size_t i = 0; i < slot.size(); i++)
+    {
+        slot[i] = nullptr;
+    }
 }
 
 void Inventory::TakeStackableItemAndFillStack(ItemStack* itemStack, bool takeFullStack)

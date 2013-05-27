@@ -4,6 +4,7 @@
 
 #include "Craft/Craft.h"
 #include "Craft/CraftManager.h"
+#include "Entity/EntityPlayer.h"
 #include "Item.h"
 
 namespace Inventory
@@ -123,4 +124,18 @@ ItemStack* InventoryCraft::GetResultItems(int count)
     return resultItem;
 }
 
+void InventoryCraft::DropInventory(World::EntityPlayer* player)
+{
+    for (size_t i = 0; i < slot.size(); i++)
+    {
+        if (i != (size_t)GetResultSlotId())
+        {
+            if (slot[i] != nullptr)
+            {
+                player->DropItem(slot[i]);
+            }
+            slot[i] = nullptr;
+        }
+    }
+}
 } /* namespace Inventory */

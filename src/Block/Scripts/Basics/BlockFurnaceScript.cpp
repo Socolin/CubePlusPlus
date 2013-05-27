@@ -94,10 +94,17 @@ void BlockFurnaceScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/,
     }
 }
 
-// On click open window using id in parameter of script from database
-void BlockFurnaceScript::OnDestroy(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, i_data /*data*/) const
+void BlockFurnaceScript::OnDestroy(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
-    // TODO: Drop item in tile entity
+    Block::TileEntity* tileEntity = world->GetTileEntity(x, y, z);
+    if (tileEntity != nullptr)
+    {
+        Inventory::Inventory* inventory = tileEntity->GetInventory();
+        if (inventory != nullptr)
+        {
+            inventory->DropInventory(world, x, y, z);
+        }
+    }
 }
 
 void BlockFurnaceScript::OnNotifyTileEntityStateChange(World::World* world, int x, i_height y, int z, int action)

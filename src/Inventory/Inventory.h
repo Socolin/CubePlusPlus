@@ -147,6 +147,8 @@ public:
      */
     void DropInventory(World::World* world, double x, double y, double z);
 
+    virtual void DropInventory(World::EntityPlayer* player);
+
     /**
      * Walk through the inventory and take all stackable item to stack them into 'itemStack' while it's not full
      * @param itemStack item stack to fill
