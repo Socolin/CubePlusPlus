@@ -348,6 +348,24 @@ void World::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int 
                 vSmallChunk->GetEntitiesBoundingBoxInAABB(type, ignoreEntityId, box, bbList);
             }
 }
+
+void World::GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
+{
+    int minX = floor(box.getX());
+    int minZ = floor(box.getZ());
+    int maxX = floor(box.getMaxX());
+    int maxZ = floor(box.getMaxZ());
+    minX >>= 4;
+    minZ >>= 4;
+    maxX >>= 4;
+    maxZ >>= 4;
+    for (int chunkX = minX; chunkX <= maxX; chunkX++)
+        for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++)
+            {
+                VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(chunkX, chunkZ);
+                vSmallChunk->GetEntitiesBoundingBoxInAABBByEntityType(type, ignoreEntityId, box, bbList);
+            }
+}
 void World::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
     int minX = floor(box.getX());
@@ -363,6 +381,24 @@ void World::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ign
             {
                 VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(chunkX, chunkZ);
                 vSmallChunk->GetEntitiesBoundingBoxInAABBByEntityFlag(entityTypeFlag, ignoreEntityId, box, bbList);
+            }
+}
+void World::GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int range, std::vector<Entity*>& entityList)
+{
+    int minX = floor(center.x - range);
+    int minZ = floor(center.z - range);
+    int maxX = floor(center.x + range);
+    int maxZ = floor(center.z + range);
+    minX >>= 4;
+    minZ >>= 4;
+    maxX >>= 4;
+    maxZ >>= 4;
+    int distanceSquared = range * range;
+    for (int chunkX = minX; chunkX <= maxX; chunkX++)
+        for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++)
+            {
+                VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(chunkX, chunkZ);
+                vSmallChunk->GetEntitiesInRangeByEntityType(type, ignoreEntityId, center, distanceSquared, entityList);
             }
 }
 

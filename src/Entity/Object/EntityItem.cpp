@@ -40,16 +40,38 @@ void EntityItem::UpdateTick()
 
     Move(motionX, motionY, motionZ);
 
+    if (liveTime % 25 == 0)
+    {
+        // If in lava, "jump" and play sound
+
+        // Check merge with item near
+        std::vector<Entity*> entityList;
+        world->GetEntitiesInRangeByEntityType(ENTITY_TYPE_ITEM, entityId, *this, 1, entityList);
+        for (Entity* entity : entityList)
+        {
+            if (entity->isDead())
+                continue;
+            EntityItem* entityItem = dynamic_cast<EntityItem*>(entity);
+            if (entityItem != nullptr)
+            {
+                const Inventory::ItemStack* lookedOtheItem = entityItem->storedItem.LookSlot(0);
+                const Inventory::ItemStack* lookedOwnItem = storedItem.LookSlot(0);
+                if (lookedOtheItem->IsStackable(lookedOwnItem))
+                {
+                    if (lookedOtheItem->getStackSize() + lookedOwnItem->getStackSize() <= lookedOwnItem->GetMaxStackSize())
+                    {
+                        Inventory::ItemStack* itemStack = entityItem->storedItem.TakeSlot(0);
+                        storedItem.Merge(0, itemStack);
+                        metadataManager.SetEntityMetadata(10, storedItem.LookSlot(0)->Copy());
+                        entityItem->kill();
+                    }
+                }
+            }
+        }
+    }
 
     if (hasMove)
     {
-        if (liveTime % 25 == 0)
-        {
-            // If in lava, "jump" and play sound
-
-            // Check merge with item near
-        }
-
         double slowDown = 0.98;
         if (onGround)
         {
@@ -83,13 +105,20 @@ void EntityItem::UpdateTick()
             motionZ = 0;
         }
     }
-    if (liveTime >= 100)
+    if (liveTime >= 6000)
         kill();
 
 }
 
-void EntityItem::GetSpecificUpdatePacket(Network::NetworkPacket& /*packet*/)
+void EntityItem::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
 {
+    if (metadataManager.HasChanged())// Move it to entity class
+    {
+        metadataManager.ClearChange();
+        packet << (unsigned char) Network::OP_ENTITY_METADATA
+                << entityId;
+        metadataManager.Write(packet);
+    }
 }
 
 void EntityItem::GetCreatePacket(Network::NetworkPacket& packet)

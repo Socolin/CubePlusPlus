@@ -436,7 +436,7 @@ int Entity::getEntityId() const
     return entityId;
 }
 
-const int Entity::GetEntityTypeFlag() const
+int Entity::GetEntityTypeFlag() const
 {
     return entityTypeFlag;
 }

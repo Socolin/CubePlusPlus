@@ -87,7 +87,7 @@ public:
     {
         return entityType;
     }
-    const int GetEntityTypeFlag() const;
+    int GetEntityTypeFlag() const;
 
     bool isDead() const;
     void kill();

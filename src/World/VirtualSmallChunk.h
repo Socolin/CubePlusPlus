@@ -13,6 +13,7 @@ class NetworkPacket;
 // This class represent a chunk of 16x16 for storing entity
 namespace World
 {
+class Position;
 class Entity;
 class EntityPlayer;
 class World;
@@ -33,7 +34,10 @@ public:
     void SendPacketToPlayerInChunk(const Network::NetworkPacket& packet) const;
 
     void GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
+    void GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
     void GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
+
+    void GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int squaredRange, std::vector<Entity*>& entityList);
 private:
 
     const int posX;

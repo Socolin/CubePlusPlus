@@ -85,6 +85,22 @@ void VirtualSmallChunk::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType>
     }
 }
 
+void VirtualSmallChunk::GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList)
+{
+    for (Entity* entity : entityList)
+    {
+        if (entity->getEntityType() == type)
+        {
+            if (entity->getEntityId() != ignoreEntityId)
+            {
+                if (entity->CollideWith(box))
+                {
+                    bbList.push_back(std::make_pair(entity->getEntityId(), entity->GetBoundingBox()));
+                }
+            }
+        }
+    }
+}
 void VirtualSmallChunk::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList)
 {
     for (Entity* entity : entityList)
@@ -101,6 +117,21 @@ void VirtualSmallChunk::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeF
         }
     }
 }
-
+void VirtualSmallChunk::GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int squaredRange, std::vector<Entity*>& returnEntityList)
+{
+    for (Entity* entity : entityList)
+    {
+        if (entity->getEntityType() == type)
+        {
+            if (entity->getEntityId() != ignoreEntityId)
+            {
+                if (entity->GetDistanceSQ(center) < squaredRange)
+                {
+                    returnEntityList.push_back(entity);
+                }
+            }
+        }
+    }
+}
 
 } /* namespace World */
