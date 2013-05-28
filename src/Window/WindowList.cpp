@@ -19,6 +19,11 @@ WindowList::WindowList()
 
 WindowList::~WindowList()
 {
+    for (int i = 0; i < MAX_WINDOW; i++)
+    {
+        delete windows[i];
+        windows[i] = nullptr;
+    }
 }
 
 void WindowList::InitInstance()
@@ -104,6 +109,7 @@ void WindowList::Initialize()
                         break;
                     }
                 }
+                delete script_result;
 
             }
             else
@@ -125,6 +131,7 @@ void WindowList::Initialize()
         windows[windowId] = data;
     }
 
+    delete result;
 }
 
 

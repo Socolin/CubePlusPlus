@@ -61,6 +61,7 @@ ItemStack::ItemStack(nbt::TagCompound* nbtItemData)
 
 ItemStack::~ItemStack()
 {
+    delete specialData;
 }
 
 ItemStack* ItemStack::Copy() const

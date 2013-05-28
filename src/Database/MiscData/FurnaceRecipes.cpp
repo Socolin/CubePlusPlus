@@ -99,6 +99,8 @@ void FurnaceRecipes::load()
         key = (key | i_damage(itemData));
         recipeList[key] = Recipe(itemId, itemData, resultId, resultData, resultQuantity, experience);
     }
+
+    delete result;
 }
 
 } /* namespace Database */

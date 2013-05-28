@@ -48,6 +48,15 @@ Chunk::~Chunk()
             delete datas[i];
         }
     }
+
+    for (auto tileEntityItr : tileEntities)
+    {
+        delete tileEntityItr.second;
+    }
+    activeTileEntities.clear();
+    updatedTileEntities.clear();
+    tileEntities.clear();
+
 }
 
 void Chunk::Load()

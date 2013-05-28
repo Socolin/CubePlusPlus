@@ -63,22 +63,20 @@ int main(void)
         time = std::clock();
 
         long diffInMsSeconds = diff * 1000;
-        diffInMsSeconds += lateness;
-        lateness = 0;
-        if (diffInMsSeconds < 50 * CLOCKS_PER_SEC)
+        if ((diffInMsSeconds + lateness) < 50 * CLOCKS_PER_SEC)
         {
-            requestTime.tv_nsec = ((50 * CLOCKS_PER_SEC) - diffInMsSeconds);
+            lateness = 0;
+            requestTime.tv_nsec = ((50 * CLOCKS_PER_SEC) - (diffInMsSeconds + lateness));
             nanosleep(&requestTime, &unused);
-            std::cout << "00" << std::endl;
         }
         else
         {
-            lateness += (diffInMsSeconds - (50 * CLOCKS_PER_SEC));
+            lateness = ((diffInMsSeconds + lateness) - (50 * CLOCKS_PER_SEC));
             std::cerr << "Tick take more than 50ms: "<< diffInMsSeconds / CLOCKS_PER_SEC << "ms, (lateness:" << lateness / CLOCKS_PER_SEC << "ms)" << std::endl;
             usleep(1);
         }
     }
-
+    Scripting::ScriptManager::DeleteInstance();
     delete worldManager;
     return 0;
 }

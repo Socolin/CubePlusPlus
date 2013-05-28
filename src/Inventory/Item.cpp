@@ -21,6 +21,7 @@ Item::Item(i_item itemId, unsigned char maxStackSize, i_data maxDamage, bool has
 
 Item::~Item()
 {
+    delete script;
 }
 
 bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const

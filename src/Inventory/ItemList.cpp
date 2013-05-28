@@ -20,6 +20,14 @@ ItemList::ItemList()
 
 ItemList::~ItemList()
 {
+    for (int i = 0; i < ITEM_COUNT; i++)
+    {
+        if (items[i] != nullptr)
+        {
+            delete items[i];
+            items[i] = nullptr;
+        }
+    }
 }
 
 void ItemList::InitInstance()
@@ -111,6 +119,8 @@ void ItemList::Initialize()
                     }
                 }
 
+                delete script_result;
+
             }
             else
             {
@@ -129,8 +139,12 @@ void ItemList::Initialize()
                   << scriptId << "\t"
                   << name << "\t"
                   << std::endl;
+        if (items[itemId] != nullptr)
+            delete items[itemId];
         items[itemId] = item;
     }
+
+    delete result;
 
 }
 

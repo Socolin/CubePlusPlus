@@ -1,5 +1,7 @@
 #include "WindowStaticData.h"
 
+#include "Window/Scripts/WindowScript.h"
+
 namespace Window
 {
 
@@ -15,6 +17,7 @@ WindowStaticData::WindowStaticData(i_windowDataId id, char maxSlot, char network
 
 WindowStaticData::~WindowStaticData()
 {
+    delete script;
 }
 
 i_windowDataId WindowStaticData::getId() const

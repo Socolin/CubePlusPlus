@@ -37,6 +37,15 @@ World::World(const std::string& worldName)
 World::~World()
 {
     delete redstoneTorchBurnoutMgr;
+
+    for (auto playerItr : playerList)
+    {
+        entityToDelete.push_back(playerItr);
+    }
+    for (size_t i = 0; i < entityToDelete.size(); i++)
+    {
+        delete entityToDelete[i];
+    }
 }
 // Called each tick
 void World::UpdateTick()
@@ -440,7 +449,7 @@ VirtualSmallChunk* World::CreateVirtualSmallChunk(int x, int z)
 
 void World::SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const
 {
-for (EntityPlayer* plr : playerList)
+    for (EntityPlayer* plr : playerList)
     {
         plr->Send(packet);
     }
@@ -448,16 +457,23 @@ for (EntityPlayer* plr : playerList)
 
 void World::Unload()
 {
-for (std::pair<long, Chunk*> chunk : chunkMap)
+    for (std::pair<long, Chunk*> chunk : chunkMap)
     {
         chunk.second->Unload();
         delete chunk.second;
     }
-for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+    chunkMap.clear();
+    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
     {
         chunk.second->Unload();
         delete chunk.second;
     }
+    virtualChunkMap.clear();
+    for (std::pair<long, VirtualSmallChunk*> chunk : virtualSmallChunkMap)
+    {
+        delete chunk.second;
+    }
+    virtualSmallChunkMap.clear();
 }
 
 void World::RequestChunk(EntityPlayer* player, std::pair<int, int> chunkCoord)

@@ -62,6 +62,8 @@ void PaintingData::load()
         Util::StringToWString(wname, name);
         paintingList[itemId].insert({wname, sizeX, sizeY, itemData});
     }
+
+    delete result;
 }
 
 } /* namespace Database */

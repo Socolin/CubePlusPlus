@@ -17,6 +17,15 @@ CraftManager::CraftManager()
 
 CraftManager::~CraftManager()
 {
+    for (auto itr : craftList)
+    {
+        auto craftVectorList = itr.second;
+        for (size_t i = 0; i < craftVectorList.size(); i++)
+        {
+            delete craftVectorList[i];
+        }
+    }
+    craftList.clear();
 }
 
 void CraftManager::InitInstance()
@@ -108,6 +117,7 @@ void CraftManager::load()
                         break;
                     }
                 }
+                delete script_result;
 
             }
             else
@@ -122,6 +132,7 @@ void CraftManager::load()
 
         loadCraftSlot(craft, craftId);
     }
+    delete result;
 }
 
 void CraftManager::loadCraftSlot(Craft* craft, int craftId)
@@ -146,6 +157,8 @@ void CraftManager::loadCraftSlot(Craft* craft, int craftId)
        i_damage itemData = result->getInt(TableCraftSlot::itemData);
        craft->SetNextSlot(itemId, itemData);
     }
+
+    delete result;
 }
 
 } /* namespace Craft */

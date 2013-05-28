@@ -95,7 +95,7 @@ void WorldManager::Stop()
 }
 void WorldManager::SendToAllPlayer(Network::NetworkPacket& packet)
 {
-for (EntityPlayer* plr : playerList)
+    for (EntityPlayer* plr : playerList)
     {
         plr->Send(packet);
     }

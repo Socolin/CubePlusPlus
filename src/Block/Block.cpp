@@ -11,10 +11,6 @@ namespace Block
 {
 
 
-Block::~Block()
-{
-}
-
 Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpacity,
              i_lightvalue lightValue, float blockResistance, float blockHardness, bool needsRandomTick,
              float slipperiness, bool isCollidable, bool isOpaqueCube, bool renderAsNormal,
@@ -46,6 +42,12 @@ Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpaci
     , script(script)
 {
     fullBlock = ((maxX - minX) + (maxZ - minZ) + (maxZ - minZ)) >= 3;
+}
+
+
+Block::~Block()
+{
+    delete script;
 }
 
 void Block::OnBlockPlace(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const

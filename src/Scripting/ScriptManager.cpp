@@ -16,13 +16,19 @@
 namespace Scripting
 {
 
-ScriptManager* ScriptManager::instance = NULL;
+ScriptManager* ScriptManager::instance = nullptr;
 
 ScriptManager* ScriptManager::GetInstance()
 {
-    if (instance == NULL)
+    if (instance == nullptr)
         instance = new ScriptManager;
     return instance;
+}
+void ScriptManager::DeleteInstance()
+{
+    if (instance != nullptr)
+        delete instance;
+    instance = nullptr;
 }
 
 void ScriptManager::RegisterScript(std::string scriptName, BlockScript* script)
@@ -142,6 +148,8 @@ void ScriptManager::LoadScriptsIds()
         scriptsIds[scriptId] = scriptName;
     }
     std::cout << scriptsIds.size() << " scripts loaded" << std::endl;
+
+    delete result;
 }
 
 std::string ScriptManager::GetScriptName(int scriptId)
@@ -156,6 +164,29 @@ ScriptManager::ScriptManager()
 
 ScriptManager::~ScriptManager()
 {
+    for (auto itr : blockScript)
+    {
+        delete itr.second;
+    }
+    blockScript.clear();
+
+    for (auto itr : itemScript)
+    {
+        delete itr.second;
+    }
+    itemScript.clear();
+
+    for (auto itr : windowScript)
+    {
+        delete itr.second;
+    }
+    windowScript.clear();
+
+    for (auto itr : craftScript)
+    {
+        delete itr.second;
+    }
+    craftScript.clear();
 }
 
 } /* namespace Scripting */

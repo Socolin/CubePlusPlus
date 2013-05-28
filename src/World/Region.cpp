@@ -132,7 +132,7 @@ nbt::NbtBuffer* Region::GetNbtChunkData(i_small_coord chunkX, i_small_coord chun
     file.read(reinterpret_cast<char*>(buffer), dataSize - 1);
 
     nbt::NbtBuffer* chunkData = new nbt::NbtBuffer(buffer, dataSize - 1);
-
+    delete[] buffer;
     return chunkData;
 }
 

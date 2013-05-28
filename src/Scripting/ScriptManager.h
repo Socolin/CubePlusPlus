@@ -16,6 +16,7 @@ class ScriptManager
 {
 public:
     static ScriptManager* GetInstance();
+    static void DeleteInstance();
     virtual ~ScriptManager();
 
     void RegisterAllScripts();

@@ -16,7 +16,14 @@ BlockList::BlockList()
 
 BlockList::~BlockList()
 {
-
+    for (int i = 0; i < BLOCK_COUNT; i++)
+    {
+        if (blocks[i] != nullptr)
+        {
+            delete blocks[i];
+            blocks[i] = nullptr;
+        }
+    }
 }
 
 void BlockList::InitInstance()
@@ -135,7 +142,7 @@ void BlockList::Initialize()
                         break;
                     }
                 }
-
+                delete script_result;
                 //Load script data
             }
             else
@@ -184,6 +191,7 @@ void BlockList::Initialize()
             blocks[id]->InitScript();
         }
     }
+    delete result;
 }
 
 
@@ -239,6 +247,8 @@ void BlockList::LoadSounds()
         Util::StringToWString(wPlaceSound, placeSound);
         soundList[soundId] = SoundBlock(wStepSound, wBreakSound, wPlaceSound, volume, modifier);
     }
+
+    delete result;
 }
 
 void BlockList::LoadMaterials()
@@ -293,6 +303,8 @@ void BlockList::LoadMaterials()
 
         materialList[materialId] = BlockMaterial(materialId, canBurn, replacable, translucent, requiresNoTool, mobilityFlag, true, false);//TODO; load in db true and flase
     }
+
+    delete result;
 }
 
 } /* namespace Block */

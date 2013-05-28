@@ -40,6 +40,7 @@ void EntityItem::UpdateTick()
 
     Move(motionX, motionY, motionZ);
 
+    // TODO:Maybe move it into 'if (hasmove) and reduce timer ?'
     if (liveTime % 25 == 0)
     {
         // If in lava, "jump" and play sound

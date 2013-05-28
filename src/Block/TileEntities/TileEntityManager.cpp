@@ -11,6 +11,11 @@ TileEntityManager::TileEntityManager()
 
 TileEntityManager::~TileEntityManager()
 {
+    for(auto tileEntityItr : nameTileEntityList)
+    {
+        delete tileEntityItr.second;
+    }
+    nameTileEntityList.clear();
 }
 
 TileEntity* TileEntityManager::GetNewTileEntityByName(const std::string& name, World::World* world, int blockX, i_height blockY, int blockZ)
