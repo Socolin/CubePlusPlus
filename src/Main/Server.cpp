@@ -54,23 +54,27 @@ int main(void)
     struct timespec unused;
     requestTime.tv_sec = 0;
 
+    long lateness = 0;
     while (worldManager->IsRunning())
     {
-        time = std::clock();
         manager.ReceiveData();
         worldManager->UpdateTick();
         clock_t diff = std::clock() - time;
+        time = std::clock();
 
-        double diffInSeconds = (((double)diff)/CLOCKS_PER_SEC);
-        if (diffInSeconds < 0.05)
+        long diffInMsSeconds = diff * 1000;
+        diffInMsSeconds += lateness;
+        lateness = 0;
+        if (diffInMsSeconds < 50 * CLOCKS_PER_SEC)
         {
-            requestTime.tv_nsec = (0.05 - diffInSeconds) * 1000000000;
+            requestTime.tv_nsec = ((50 * CLOCKS_PER_SEC) - diffInMsSeconds);
             nanosleep(&requestTime, &unused);
-            //std::cout << diffInSeconds << std::endl;;
+            std::cout << "00" << std::endl;
         }
         else
         {
-            std::cerr << "Tick take more than 5ms :"<< diffInSeconds << "seconds" << std::endl;
+            lateness += (diffInMsSeconds - (50 * CLOCKS_PER_SEC));
+            std::cerr << "Tick take more than 50ms: "<< diffInMsSeconds / CLOCKS_PER_SEC << "ms, (lateness:" << lateness / CLOCKS_PER_SEC << "ms)" << std::endl;
             usleep(1);
         }
     }
