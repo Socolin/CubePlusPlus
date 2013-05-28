@@ -143,7 +143,7 @@ void ItemList::GenerateItemBlock()
         const Block::Block* block = list.getBlock(blockId);
         if (!block)
             continue;
-        Scripting::ItemBlockScript* blockScript = new Scripting::ItemBlockScript();
+        Scripting::ItemScript* blockScript = Scripting::ScriptManager::GetInstance()->GetItemScript("item_block");
         blockScript->InitParam(SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID, blockId);
         items[blockId] = new Item(blockId, 64, 0, false, 0, block->GetBurningTime(), blockScript);
     }

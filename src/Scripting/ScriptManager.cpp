@@ -27,8 +27,15 @@ ScriptManager* ScriptManager::GetInstance()
 
 void ScriptManager::RegisterScript(std::string scriptName, BlockScript* script)
 {
-    std::cout << "\t- " << scriptName << std::endl;
-    blockScript[scriptName] = script;
+    if (blockScript.find(scriptName) == blockScript.end())
+    {
+        std::cout << "\t- " << scriptName << std::endl;
+        blockScript[scriptName] = script;
+    }
+    else
+    {
+        assert(false);
+    }
 }
 BlockScript* ScriptManager::GetBlockScript(std::string scriptName)
 {
@@ -40,7 +47,15 @@ BlockScript* ScriptManager::GetBlockScript(std::string scriptName)
 
 void ScriptManager::RegisterScript(std::string scriptName, ItemScript* script)
 {
-    itemScript[scriptName] = script;
+    if (itemScript.find(scriptName) == itemScript.end())
+    {
+        std::cout << "\t- " << scriptName << std::endl;
+        itemScript[scriptName] = script;
+    }
+    else
+    {
+        assert(false);
+    }
 }
 ItemScript* ScriptManager::GetItemScript(std::string scriptName)
 {
@@ -52,7 +67,15 @@ ItemScript* ScriptManager::GetItemScript(std::string scriptName)
 
 void ScriptManager::RegisterScript(std::string scriptName, WindowScript* script)
 {
-    windowScript[scriptName] = script;
+    if (windowScript.find(scriptName) == windowScript.end())
+    {
+        std::cout << "\t- " << scriptName << std::endl;
+        windowScript[scriptName] = script;
+    }
+    else
+    {
+        assert(false);
+    }
 }
 WindowScript* ScriptManager::GetWindowScript(std::string scriptName)
 {
@@ -64,7 +87,15 @@ WindowScript* ScriptManager::GetWindowScript(std::string scriptName)
 
 void ScriptManager::RegisterScript(std::string scriptName, CraftScript* script)
 {
-    craftScript[scriptName] = script;
+    if (craftScript.find(scriptName) == craftScript.end())
+    {
+        std::cout << "\t- " << scriptName << std::endl;
+        craftScript[scriptName] = script;
+    }
+    else
+    {
+        assert(false);
+    }
 }
 
 CraftScript* ScriptManager::GetCraftScript(std::string scriptName)
@@ -78,10 +109,13 @@ CraftScript* ScriptManager::GetCraftScript(std::string scriptName)
 
 void ScriptManager::RegisterAllScripts()
 {
-    std::cout << "Start registering scripts";
+    std::cout << "Registering block's scripts: " << std::endl;
     RegisterBlockScript();
+    std::cout << "Registering item's scripts: " << std::endl;
     RegisterItemScripts();
+    std::cout << "Registering window's scripts: " << std::endl;
     RegisterWindowScript();
+    std::cout << "Registering craft's scripts: " << std::endl;
     RegisterCraftScript();
 }
 
@@ -104,7 +138,6 @@ void ScriptManager::LoadScriptsIds()
     {
         std::string scriptName = result->getString(TableScript::scriptName);
         uint32_t scriptId = result->getUInt(TableScript::id);
-        //uint32_t paramCount = result->getUInt(TableScript::paramCount);
 
         scriptsIds[scriptId] = scriptName;
     }
