@@ -476,9 +476,9 @@ void World::Unload()
     virtualSmallChunkMap.clear();
 }
 
-void World::RequestChunk(EntityPlayer* player, std::pair<int, int> chunkCoord)
+void World::RequestChunk(EntityPlayer* player, int x, int z)
 {
-    Chunk* chunk = GetChunk(chunkCoord.first, chunkCoord.second);
+    Chunk* chunk = GetChunk(x, z);
     const Network::NetworkPacket& packet = chunk->GetPacket();
 
     //packet.dump();

@@ -54,12 +54,14 @@ EntityPlayer::~EntityPlayer()
     clickedItem->CloseInventoryForDelete();
     handsInventory->CloseInventoryForDelete();
     mainInventory->CloseInventoryForDelete();
+    enderChestInventory->CloseInventoryForDelete();
 
     delete craftingInventory;
     delete armorInventory;
     delete clickedItem;
     delete handsInventory;
     delete mainInventory;
+    delete enderChestInventory;
 }
 
 void EntityPlayer::Send(const Network::NetworkPacket& packet) const
@@ -71,7 +73,7 @@ void EntityPlayer::Send(const Network::NetworkPacket& packet) const
 }
 void EntityPlayer::AddChunkToSend(int x, int z)
 {
-    chunkToSend.push(std::pair<int, int>(x, z));
+    chunkToSend.push({x, z, abs(chunkX - x) + abs(chunkZ - z)});
 }
 
 void EntityPlayer::UpdateTick()
@@ -85,10 +87,11 @@ void EntityPlayer::UpdateTick()
             {
                 if (!chunkToSend.empty())
                 {
-                    //if (session->HasPendingData())
-                      //  break;
+                    if (session->HasPendingData())
+                        break;
                     // TODO: add check distance world->viewdistance
-                    world->RequestChunk(this, chunkToSend.front());
+                    const ChunkToSendData& chunkToSendData =  chunkToSend.top();
+                    world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
                     chunkToSend.pop();
                 }
             }

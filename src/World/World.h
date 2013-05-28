@@ -75,7 +75,7 @@ public:
     void MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick = 1);
 
     void Unload();
-    void RequestChunk(EntityPlayer* player, std::pair<int, int>);
+    void RequestChunk(EntityPlayer* player, int x, int z);
 
     int getViewDistance();
 

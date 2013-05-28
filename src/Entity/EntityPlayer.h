@@ -4,6 +4,7 @@
 #include "LivingEntity.h"
 #include "Inventory/InventoryPlayer.h"
 
+#include <boost/heap/binomial_heap.hpp>
 #include <string>
 #include <queue>
 
@@ -240,10 +241,25 @@ public:
      */
     Window::Window* GetInventoryWindow() const;
 private:
+    typedef struct
+    {
+        int x;
+        int z;
+        int distance;
+    } ChunkToSendData;
+
+    struct CompareChunkToSendData
+    {
+       bool operator() (const ChunkToSendData &a,const ChunkToSendData &b) const
+       {
+           return (a.distance > b.distance);
+       }
+     };
+private:
     eGameMode gameMode;
     std::wstring name;
-    std::queue<std::pair<int, int> > chunkToSend;//TODO: use heap to send the nearest chunk in first
     Network::NetworkSession* session;
+    boost::heap::binomial_heap<ChunkToSendData,boost::heap::compare<CompareChunkToSendData>> chunkToSend;
     Inventory::Inventory* mainInventory;
     Inventory::InventoryPlayer* handsInventory;
     Inventory::Inventory* enderChestInventory;
