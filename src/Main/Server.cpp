@@ -23,8 +23,8 @@ int main(void)
     Database::DatabaseManager::InitInstance();
     Network::initOpcode();
     Network::NetworkManager manager;
-    World::WorldManager* worldManager = World::WorldManager::GetInstance();
-    worldManager->Init();
+    World::WorldManager& worldManager = World::WorldManager::Instance();
+    worldManager.Init();
     int port = 25565;
 
     Scripting::ScriptManager::Instance().RegisterAllScripts();
@@ -55,10 +55,10 @@ int main(void)
     requestTime.tv_sec = 0;
 
     long lateness = 0;
-    while (worldManager->IsRunning())
+    while (worldManager.IsRunning())
     {
         manager.ReceiveData();
-        worldManager->UpdateTick();
+        worldManager.UpdateTick();
         clock_t diff = std::clock() - time;
         time = std::clock();
 
@@ -76,7 +76,6 @@ int main(void)
             usleep(1);
         }
     }
-    delete worldManager;
     return 0;
 }
 

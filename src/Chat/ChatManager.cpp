@@ -28,12 +28,12 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     //std::wcout << player->GetUsername() << ":" << message << std::endl;
     if (message == L"/stop")
     {
-        World::WorldManager::GetInstance()->Stop();
+        World::WorldManager::Instance().Stop();
         isCanceled = true;
     }
     if (message == L"/night")
     {
-        World::WorldManager::GetInstance()->GetWorld()->SetTime(20000);
+        World::WorldManager::Instance().GetWorld()->SetTime(20000);
         isCanceled = true;
     }
     if (isCanceled)

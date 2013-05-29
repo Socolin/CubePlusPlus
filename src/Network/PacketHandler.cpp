@@ -40,7 +40,7 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
 void NetworkSession::handleChatMessage() throw (NetworkException)
 {
     std::wstring message = readString(100);
-    World::WorldManager::GetInstance()->HandleChatMessage(player, message);
+    World::WorldManager::Instance().HandleChatMessage(player, message);
 }
 void NetworkSession::handleHandShake() throw (NetworkException)
 {
@@ -326,8 +326,8 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
         packet  << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
         SendPacket(packet);
 
-        World::WorldManager* worldManager = World::WorldManager::GetInstance();
-        player = worldManager->LoadAndJoinWorld(username, this);
+        World::WorldManager& worldManager = World::WorldManager::Instance();
+        player = worldManager.LoadAndJoinWorld(username, this);
         if (player != NULL)
             state = STATE_INGAME;
         else
@@ -430,7 +430,7 @@ void NetworkSession::handlePing() throw (NetworkException)
     oss << maxplayers;
     std::string str_maxplayers = oss.str();
 
-    int currentPlayers = World::WorldManager::GetInstance()->getPlayerCount();
+    int currentPlayers = World::WorldManager::Instance().getPlayerCount();
     std::ostringstream currentPlayerStream;
     currentPlayerStream << currentPlayers;
     std::string str_currentPlayers = currentPlayerStream.str();

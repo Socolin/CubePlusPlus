@@ -1,6 +1,8 @@
 #ifndef WORLDMANAGER_H_
 #define WORLDMANAGER_H_
 
+#include "Util/Singleton.h"
+
 #include <string>
 #include <set>
 
@@ -14,14 +16,14 @@ class NetworkPacket;
 
 namespace World
 {
-
 class EntityPlayer;
 class World;
 
-class WorldManager
+class WorldManager : public Util::Singleton<WorldManager>
 {
+    friend Util::Singleton<WorldManager>;
+    WorldManager();
 public:
-    static WorldManager* GetInstance();
     virtual ~WorldManager();
 
     void Init();
@@ -40,7 +42,6 @@ public:
     World* GetWorld();
 private:
     Chat::ChatManager chatManager;
-    WorldManager();
     std::set<EntityPlayer*> playerList;
     static WorldManager* instance;
     World* world;

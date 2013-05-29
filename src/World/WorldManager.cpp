@@ -9,15 +9,6 @@
 
 namespace World
 {
-WorldManager* WorldManager::instance = NULL;
-
-WorldManager* WorldManager::GetInstance()
-{
-    if (instance == NULL)
-        instance = new WorldManager();
-    return instance;
-}
-
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
 {
     EntityPlayer* player = new EntityPlayer(0, 80, 0, name, session);

@@ -135,8 +135,8 @@ void NetworkSession::disconnect(const char* reason)
     std::cout << "Disconnect player: "<< reason << std::endl;
     if (player != nullptr)
     {
-        World::WorldManager* worldManager = World::WorldManager::GetInstance();
-        worldManager->RemovePlayer(player);
+        World::WorldManager& worldManager = World::WorldManager::Instance();
+        worldManager.RemovePlayer(player);
         player = nullptr;
     }
     close(socket);
