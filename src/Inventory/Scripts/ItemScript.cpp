@@ -8,7 +8,7 @@ namespace Scripting
 ItemScript::ItemScript(const char* scriptName)
     : baseItem(nullptr)
 {
-    ScriptManager::GetInstance()->RegisterScript(scriptName, this);
+    ScriptManager::Instance().RegisterScript(scriptName, this);
 }
 
 ItemScript::~ItemScript()

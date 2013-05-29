@@ -9,7 +9,7 @@ namespace Scripting
 BlockScript::BlockScript(const char* scriptName)
     : baseBlock(nullptr)
 {
-    ScriptManager::GetInstance()->RegisterScript(scriptName, this);
+    ScriptManager::Instance().RegisterScript(scriptName, this);
 }
 
 BlockScript::~BlockScript()

@@ -8,7 +8,7 @@ namespace Scripting
 CraftScript::CraftScript(const char* scriptName)
     : baseCraft(nullptr)
 {
-    ScriptManager::GetInstance()->RegisterScript(scriptName, this);
+    ScriptManager::Instance().RegisterScript(scriptName, this);
 }
 
 CraftScript::~CraftScript()

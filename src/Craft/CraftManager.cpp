@@ -74,9 +74,9 @@ void CraftManager::load()
         Scripting::CraftScript* script = nullptr;
         if (scriptId > 0)
         {
-            Scripting::ScriptManager* scriptManager = Scripting::ScriptManager::GetInstance();
-            std::string scriptName = scriptManager->GetScriptName(scriptId);
-            script = scriptManager->GetCraftScript(scriptName);
+            Scripting::ScriptManager& scriptManager = Scripting::ScriptManager::Instance();
+            std::string scriptName = scriptManager.GetScriptName(scriptId);
+            script = scriptManager.GetCraftScript(scriptName);
             std::cout << "Use script:" << scriptName << " for craft:" << craftId << std::endl;
             if (script != NULL)
             {

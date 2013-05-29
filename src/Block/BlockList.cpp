@@ -100,9 +100,9 @@ void BlockList::Initialize()
         Scripting::BlockScript* script = nullptr;
         if (scriptId > 0)
         {
-            Scripting::ScriptManager* scriptManager = Scripting::ScriptManager::GetInstance();
-            std::string scriptName = scriptManager->GetScriptName(scriptId);
-            script = scriptManager->GetBlockScript(scriptName);
+            Scripting::ScriptManager& scriptManager = Scripting::ScriptManager::Instance();
+            std::string scriptName = scriptManager.GetScriptName(scriptId);
+            script = scriptManager.GetBlockScript(scriptName);
             std::cout << "Use script:" << scriptName << " for block:" << blockId << std::endl;
             if (script != NULL)
             {

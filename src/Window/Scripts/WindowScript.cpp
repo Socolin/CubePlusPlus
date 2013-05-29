@@ -10,7 +10,7 @@ namespace Scripting
 WindowScript::WindowScript(const char* scriptName)
     : baseWindow(nullptr)
 {
-    ScriptManager::GetInstance()->RegisterScript(scriptName, this);
+    ScriptManager::Instance().RegisterScript(scriptName, this);
 }
 
 WindowScript::~WindowScript()

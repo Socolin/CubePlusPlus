@@ -75,9 +75,9 @@ void ItemList::Initialize()
         Scripting::ItemScript* script = nullptr;
         if (scriptId > 0)
         {
-            Scripting::ScriptManager* scriptManager = Scripting::ScriptManager::GetInstance();
-            std::string scriptName = scriptManager->GetScriptName(scriptId);
-            script = scriptManager->GetItemScript(scriptName);
+            Scripting::ScriptManager& scriptManager = Scripting::ScriptManager::Instance();
+            std::string scriptName = scriptManager.GetScriptName(scriptId);
+            script = scriptManager.GetItemScript(scriptName);
             std::cout << "Use script:" << scriptName << " for item:" << itemId << std::endl;
             if (script != NULL)
             {
@@ -157,7 +157,7 @@ void ItemList::GenerateItemBlock()
         const Block::Block* block = list.getBlock(blockId);
         if (!block)
             continue;
-        Scripting::ItemScript* blockScript = Scripting::ScriptManager::GetInstance()->GetItemScript("item_block");
+        Scripting::ItemScript* blockScript = Scripting::ScriptManager::Instance().GetItemScript("item_block");
         blockScript->InitParam(SCRIPTINGPARAM_ITEM_BLOCK_BLOCKID, blockId);
         items[blockId] = new Item(blockId, 64, 0, false, 0, block->GetBurningTime(), blockScript);
     }

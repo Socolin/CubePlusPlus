@@ -15,22 +15,6 @@
 
 namespace Scripting
 {
-
-ScriptManager* ScriptManager::instance = nullptr;
-
-ScriptManager* ScriptManager::GetInstance()
-{
-    if (instance == nullptr)
-        instance = new ScriptManager;
-    return instance;
-}
-void ScriptManager::DeleteInstance()
-{
-    if (instance != nullptr)
-        delete instance;
-    instance = nullptr;
-}
-
 void ScriptManager::RegisterScript(std::string scriptName, BlockScript* script)
 {
     if (blockScript.find(scriptName) == blockScript.end())

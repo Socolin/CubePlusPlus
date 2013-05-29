@@ -4,6 +4,8 @@
 #include <unordered_map>
 #include <string>
 
+#include "Util/Singleton.h"
+
 namespace Scripting
 {
 
@@ -12,11 +14,11 @@ class ItemScript;
 class WindowScript;
 class CraftScript;
 
-class ScriptManager
+class ScriptManager : public Util::Singleton<ScriptManager>
 {
+    friend Util::Singleton<ScriptManager>;
+    ScriptManager();
 public:
-    static ScriptManager* GetInstance();
-    static void DeleteInstance();
     virtual ~ScriptManager();
 
     void RegisterAllScripts();
@@ -36,8 +38,6 @@ public:
     void LoadScriptsIds();
     std::string GetScriptName(int scriptId);
 private:
-    ScriptManager();
-    static ScriptManager* instance;
 
     std::unordered_map<std::string, BlockScript*> blockScript;
     std::unordered_map<std::string, ItemScript*> itemScript;

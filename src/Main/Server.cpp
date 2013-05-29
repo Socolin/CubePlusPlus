@@ -27,7 +27,7 @@ int main(void)
     worldManager->Init();
     int port = 25565;
 
-    Scripting::ScriptManager::GetInstance()->RegisterAllScripts();
+    Scripting::ScriptManager::Instance().RegisterAllScripts();
     if((Config::Config::getConfig()).lookupValue("server.network.port", port))
     {
         std::cout << "Custom port " << port << " detected" << std::endl;
@@ -76,7 +76,6 @@ int main(void)
             usleep(1);
         }
     }
-    Scripting::ScriptManager::DeleteInstance();
     delete worldManager;
     return 0;
 }

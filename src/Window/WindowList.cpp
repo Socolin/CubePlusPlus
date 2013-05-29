@@ -66,9 +66,9 @@ void WindowList::Initialize()
         Scripting::WindowScript* script = nullptr;
         if (scriptId > 0)
         {
-            Scripting::ScriptManager* scriptManager = Scripting::ScriptManager::GetInstance();
-            std::string scriptName = scriptManager->GetScriptName(scriptId);
-            script = scriptManager->GetWindowScript(scriptName);
+            Scripting::ScriptManager& scriptManager = Scripting::ScriptManager::Instance();
+            std::string scriptName = scriptManager.GetScriptName(scriptId);
+            script = scriptManager.GetWindowScript(scriptName);
             std::cout << "Use script:" << scriptName << " for window:" << windowId << std::endl;
             if (script != NULL)
             {
