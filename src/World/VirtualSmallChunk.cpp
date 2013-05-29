@@ -84,6 +84,19 @@ void VirtualSmallChunk::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType>
         }
     }
 }
+void VirtualSmallChunk::GetEntitiesBoundingBoxInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList)
+{
+    for (Entity* entity : entityList)
+    {
+        if (entity->getEntityId() != ignoreEntityId)
+        {
+            if (entity->CollideWith(box))
+            {
+                bbList.push_back(std::make_pair(entity->getEntityId(), entity->GetBoundingBox()));
+            }
+        }
+    }
+}
 
 void VirtualSmallChunk::GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList)
 {
@@ -117,7 +130,7 @@ void VirtualSmallChunk::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeF
         }
     }
 }
-void VirtualSmallChunk::GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int squaredRange, std::vector<Entity*>& returnEntityList)
+void VirtualSmallChunk::GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int squaredRange, std::vector<Entity*>& outEntityList)
 {
     for (Entity* entity : entityList)
     {
@@ -127,8 +140,21 @@ void VirtualSmallChunk::GetEntitiesInRangeByEntityType(eEntityType type, int ign
             {
                 if (entity->GetDistanceSQ(center) < squaredRange)
                 {
-                    returnEntityList.push_back(entity);
+                    outEntityList.push_back(entity);
                 }
+            }
+        }
+    }
+}
+void VirtualSmallChunk::GetEntitiesInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<Entity*>& outEntityList)
+{
+    for (Entity* entity : entityList)
+    {
+        if (entity->getEntityId() != ignoreEntityId)
+        {
+            if (entity->CollideWith(box))
+            {
+                outEntityList.push_back(entity);
             }
         }
     }

@@ -1,9 +1,11 @@
 #include "EntityItem.h"
+#include "Entity/EntityPlayer.h"
 #include "Util/types.h"
 #include "World/World.h"
 #include "Block/Block.h"
 #include "Block/BlockList.h"
 #include "Network/OpcodeList.h"
+#include "Window/Window.h"
 
 namespace World
 {
@@ -111,6 +113,30 @@ void EntityItem::UpdateTick()
 
 }
 
+void EntityItem::OnCollideWithPlayer(EntityPlayer* player)
+{
+    if (dead)
+        return;
+    Window::Window* inventoryWindow = player->GetInventoryWindow();
+    const Inventory::ItemStack* lookedStoredItem = LookStoreItem();
+    int count = inventoryWindow->CountAvaibleSpaceForItem(Inventory::INVENTORY_TYPE_PLAYER_HANDS | Inventory::INVENTORY_TYPE_PLAYER_MAIN, lookedStoredItem);
+    if (count > 0)
+    {
+        Inventory::ItemStack* takenItem = nullptr;
+        if (count >= lookedStoredItem->getStackSize())
+        {
+            takenItem = storedItem.TakeSlot(0);
+            kill();
+        }
+        else
+        {
+            takenItem = storedItem.TakeSomeItemInSlot(0, count);
+            metadataManager.SetEntityMetadata(10, storedItem.LookSlot(0)->Copy());
+        }
+        inventoryWindow->PlaceAllItemInStackToInventories(Inventory::INVENTORY_TYPE_PLAYER_HANDS | Inventory::INVENTORY_TYPE_PLAYER_MAIN,takenItem,false);
+    }
+}
+
 void EntityItem::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
 {
     if (metadataManager.HasChanged())// Move it to entity class
@@ -137,6 +163,11 @@ void EntityItem::GetCreatePacket(Network::NetworkPacket& packet)
     packet << (unsigned char) Network::OP_ENTITY_METADATA
             << entityId;
     metadataManager.Write(packet);
+}
+
+const Inventory::ItemStack* EntityItem::LookStoreItem() const
+{
+    return storedItem.LookSlot(0);
 }
 
 } /* namespace World */

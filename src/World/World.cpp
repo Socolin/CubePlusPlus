@@ -339,13 +339,31 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, Inven
     }
 }
 
+void World::GetEntitiesBoundingBoxInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
+{
+    int minX = floor(box.getX()) - 1;
+    int minZ = floor(box.getZ()) - 1;
+    int maxX = floor(box.getMaxX()) + 1;
+    int maxZ = floor(box.getMaxZ()) + 1;
+    minX >>= 4;
+    minZ >>= 4;
+    maxX >>= 4;
+    maxZ >>= 4;
+    for (int chunkX = minX; chunkX <= maxX; chunkX++)
+        for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++)
+            {
+                VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(chunkX, chunkZ);
+                vSmallChunk->GetEntitiesBoundingBoxInAABB(ignoreEntityId, box, bbList);
+            }
+}
+
 
 void World::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
-    int minX = floor(box.getX());
-    int minZ = floor(box.getZ());
-    int maxX = floor(box.getMaxX());
-    int maxZ = floor(box.getMaxZ());
+    int minX = floor(box.getX()) - 1;
+    int minZ = floor(box.getZ()) - 1;
+    int maxX = floor(box.getMaxX()) + 1;
+    int maxZ = floor(box.getMaxZ()) + 1;
     minX >>= 4;
     minZ >>= 4;
     maxX >>= 4;
@@ -360,10 +378,10 @@ void World::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int 
 
 void World::GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
-    int minX = floor(box.getX());
-    int minZ = floor(box.getZ());
-    int maxX = floor(box.getMaxX());
-    int maxZ = floor(box.getMaxZ());
+    int minX = floor(box.getX()) - 1;
+    int minZ = floor(box.getZ()) - 1;
+    int maxX = floor(box.getMaxX()) + 1;
+    int maxZ = floor(box.getMaxZ()) + 1;
     minX >>= 4;
     minZ >>= 4;
     maxX >>= 4;
@@ -377,10 +395,10 @@ void World::GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignor
 }
 void World::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
-    int minX = floor(box.getX());
-    int minZ = floor(box.getZ());
-    int maxX = floor(box.getMaxX());
-    int maxZ = floor(box.getMaxZ());
+    int minX = floor(box.getX()) - 1;
+    int minZ = floor(box.getZ()) - 1;
+    int maxX = floor(box.getMaxX()) + 1;
+    int maxZ = floor(box.getMaxZ()) + 1;
     minX >>= 4;
     minZ >>= 4;
     maxX >>= 4;
@@ -392,7 +410,7 @@ void World::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ign
                 vSmallChunk->GetEntitiesBoundingBoxInAABBByEntityFlag(entityTypeFlag, ignoreEntityId, box, bbList);
             }
 }
-void World::GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int range, std::vector<Entity*>& entityList)
+void World::GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int range, std::vector<Entity*>& outEntityList)
 {
     int minX = floor(center.x - range);
     int minZ = floor(center.z - range);
@@ -407,7 +425,25 @@ void World::GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId,
         for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++)
             {
                 VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(chunkX, chunkZ);
-                vSmallChunk->GetEntitiesInRangeByEntityType(type, ignoreEntityId, center, distanceSquared, entityList);
+                vSmallChunk->GetEntitiesInRangeByEntityType(type, ignoreEntityId, center, distanceSquared, outEntityList);
+            }
+}
+
+void World::GetEntitiesInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<Entity*>& outEntityList)
+{
+    int minX = floor(box.getX()) - 1;
+    int minZ = floor(box.getZ()) - 1;
+    int maxX = floor(box.getMaxX()) + 1;
+    int maxZ = floor(box.getMaxZ()) + 1;
+    minX >>= 4;
+    minZ >>= 4;
+    maxX >>= 4;
+    maxZ >>= 4;
+    for (int chunkX = minX; chunkX <= maxX; chunkX++)
+        for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++)
+            {
+                VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(chunkX, chunkZ);
+                vSmallChunk->GetEntitiesInAABB(ignoreEntityId, box, outEntityList);
             }
 }
 

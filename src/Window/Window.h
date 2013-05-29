@@ -157,6 +157,8 @@ public:
      */
     const std::vector<Inventory::Inventory*>& GetInventoryListByPriority() const;
 
+    void PlaceAllItemInStackToInventories(int inventoryFlag, Inventory::ItemStack* item, bool reverseOrder);
+
 private:
     enum ePaintingAction
     {

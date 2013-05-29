@@ -33,11 +33,13 @@ public:
     void SendPacketToAllNearPlayer(const Network::NetworkPacket& packet, int distanceChunk) const;
     void SendPacketToPlayerInChunk(const Network::NetworkPacket& packet) const;
 
+    void GetEntitiesBoundingBoxInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
     void GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
     void GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
     void GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB> >& bbList);
 
-    void GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int squaredRange, std::vector<Entity*>& entityList);
+    void GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int squaredRange, std::vector<Entity*>& outEntityList);
+    void GetEntitiesInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<Entity*>& outEntityList);
 private:
 
     const int posX;

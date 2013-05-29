@@ -277,7 +277,7 @@ bool Entity::CollideWith(const Util::AABB& box)
     return boundingBox.DetectCollision(box);
 }
 
-Util::AABB Entity::GetBoundingBox() const
+const Util::AABB& Entity::GetBoundingBox() const
 {
     return boundingBox;
 }
@@ -324,6 +324,10 @@ char Entity::GetFlag()
 void Entity::SetFlag(char flag)
 {
     metadataManager.SetEntityMetadata(0, flag);
+}
+
+void Entity::OnCollideWithPlayer(EntityPlayer* player)
+{
 }
 
 bool Entity::PushOutOfBlock(double x, double y, double z)

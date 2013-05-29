@@ -5,6 +5,10 @@
 
 #include "Inventory/Inventory.h"
 
+namespace Inventory
+{
+class ItemStack;
+}
 namespace World
 {
 
@@ -18,6 +22,10 @@ public:
 
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet);
     virtual void GetCreatePacket(Network::NetworkPacket& packet);
+
+    virtual void OnCollideWithPlayer(EntityPlayer* player);
+
+    const Inventory::ItemStack* LookStoreItem() const;
 private:
     unsigned int liveTime;
     Inventory::Inventory storedItem;

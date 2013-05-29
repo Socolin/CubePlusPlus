@@ -49,7 +49,7 @@ public:
     void GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet);
     void SetWidthHeight(double width, double height);
     bool CollideWith(const Util::AABB& box);
-    Util::AABB GetBoundingBox() const;
+    const Util::AABB& GetBoundingBox() const;
 
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) = 0;
     virtual void GetDestroyPacket(Network::NetworkPacket& packet);
@@ -57,6 +57,8 @@ public:
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
     virtual void moveToChunk(int newChunkX, int newChunkZ);
     virtual void Interact(EntityPlayer* player);
+
+    virtual void OnCollideWithPlayer(EntityPlayer* player);
 
     World* getWorld() const
     {

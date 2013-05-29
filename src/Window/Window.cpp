@@ -522,6 +522,36 @@ int Window::CountAvaibleSpaceForItem(int inventoryFlag, const Inventory::ItemSta
     return count;
 }
 
+void Window::PlaceAllItemInStackToInventories(int inventoryTypeFlag, Inventory::ItemStack* item, bool reverseOrder)
+{
+    bool fillEmptySlot = false;
+    int start = 0;
+    int step = 1;
+    if (reverseOrder)
+    {
+       start = inventoryListByPriority.size() - 1;
+       step = -1;
+    }
+    // Two pass, first filling all non empty slot, second fill empty slot
+    for (int i = 0; i < 2; i++)
+    {
+       for (size_t invId = start; invId < inventoryListByPriority.size(); invId += step)
+       {
+           Inventory::Inventory* inv = inventoryListByPriority[invId];
+
+           if ((inventoryTypeFlag & inv->GetInventoryType()) != 0)
+           {
+               if (item == nullptr)
+               {
+                   break;
+               }
+               item = inv->StackStackableItemFromStack(item, reverseOrder, fillEmptySlot);
+           }
+       }
+       fillEmptySlot = true;
+    }
+}
+
 bool Window::endPainting(int action)
 {
     if (isPainting)

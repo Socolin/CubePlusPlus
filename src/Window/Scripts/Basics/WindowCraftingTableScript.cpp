@@ -90,6 +90,7 @@ bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* player, sho
                         if (countCraft > 0)
                         {
                             Inventory::ItemStack* craftedItem = craftInventory->GetResultItems(countCraft);
+                            // TODO : use PlaceAllItemInStackToInventories in window class
                             const std::vector<Inventory::Inventory*>& inventoryListByPriority = baseWindow->GetInventoryListByPriority();
                             if (reverseOrder)
                             {

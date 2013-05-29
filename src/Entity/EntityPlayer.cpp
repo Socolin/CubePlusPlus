@@ -78,23 +78,30 @@ void EntityPlayer::AddChunkToSend(int x, int z)
 
 void EntityPlayer::UpdateTick()
 {
+    if (session == nullptr)
+        return;
     if (world != nullptr)
     {
-        if (session != nullptr)
+        session->UpdateTick();
+        for (int i = 0; i < 15; i++)
         {
-            session->UpdateTick();
-            for (int i = 0; i < 15; i++)
+            if (!chunkToSend.empty())
             {
-                if (!chunkToSend.empty())
-                {
-                    if (session->HasPendingData())
-                        break;
-                    // TODO: add check distance world->viewdistance
-                    const ChunkToSendData& chunkToSendData =  chunkToSend.top();
-                    world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
-                    chunkToSend.pop();
-                }
+                if (session->HasPendingData())
+                    break;
+                // TODO: add check distance world->viewdistance
+                const ChunkToSendData& chunkToSendData =  chunkToSend.top();
+                world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
+                chunkToSend.pop();
             }
+        }
+
+        // Check pickup item
+        std::vector<Entity*> entityList;
+        world->GetEntitiesInAABB(entityId, boundingBox, entityList);
+        for (Entity* entity : entityList)
+        {
+            entity->OnCollideWithPlayer(this);
         }
     }
     UpdateInventories();
