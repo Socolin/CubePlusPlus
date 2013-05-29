@@ -341,10 +341,10 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, Inven
 
 void World::GetEntitiesBoundingBoxInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
-    int minX = floor(box.getX()) - 1;
-    int minZ = floor(box.getZ()) - 1;
-    int maxX = floor(box.getMaxX()) + 1;
-    int maxZ = floor(box.getMaxZ()) + 1;
+    int minX = floor(box.getX()) - 2;
+    int minZ = floor(box.getZ()) - 2;
+    int maxX = floor(box.getMaxX()) + 2;
+    int maxZ = floor(box.getMaxZ()) + 2;
     minX >>= 4;
     minZ >>= 4;
     maxX >>= 4;
@@ -360,10 +360,10 @@ void World::GetEntitiesBoundingBoxInAABB(int ignoreEntityId, const Util::AABB& b
 
 void World::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
-    int minX = floor(box.getX()) - 1;
-    int minZ = floor(box.getZ()) - 1;
-    int maxX = floor(box.getMaxX()) + 1;
-    int maxZ = floor(box.getMaxZ()) + 1;
+    int minX = floor(box.getX()) - 2;
+    int minZ = floor(box.getZ()) - 2;
+    int maxX = floor(box.getMaxX()) + 2;
+    int maxZ = floor(box.getMaxZ()) + 2;
     minX >>= 4;
     minZ >>= 4;
     maxX >>= 4;
@@ -378,10 +378,10 @@ void World::GetEntitiesBoundingBoxInAABB(const std::set<eEntityType> &type, int 
 
 void World::GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
-    int minX = floor(box.getX()) - 1;
-    int minZ = floor(box.getZ()) - 1;
-    int maxX = floor(box.getMaxX()) + 1;
-    int maxZ = floor(box.getMaxZ()) + 1;
+    int minX = floor(box.getX()) - 2;
+    int minZ = floor(box.getZ()) - 2;
+    int maxX = floor(box.getMaxX()) + 2;
+    int maxZ = floor(box.getMaxZ()) + 2;
     minX >>= 4;
     minZ >>= 4;
     maxX >>= 4;
@@ -395,10 +395,10 @@ void World::GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignor
 }
 void World::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
-    int minX = floor(box.getX()) - 1;
-    int minZ = floor(box.getZ()) - 1;
-    int maxX = floor(box.getMaxX()) + 1;
-    int maxZ = floor(box.getMaxZ()) + 1;
+    int minX = floor(box.getX()) - 2;
+    int minZ = floor(box.getZ()) - 2;
+    int maxX = floor(box.getMaxX()) + 2;
+    int maxZ = floor(box.getMaxZ()) + 2;
     minX >>= 4;
     minZ >>= 4;
     maxX >>= 4;

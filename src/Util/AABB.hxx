@@ -90,5 +90,16 @@ double AABB::getMaxZ() const
 {
     return z + depth;
 }
+
+void AABB::SetAndExtend(const AABB& baseBoundingBox, double width, double height, double depth)
+{
+    x = baseBoundingBox.x - width;
+    y = baseBoundingBox.y - height;
+    z = baseBoundingBox.z - depth;
+    width = baseBoundingBox.width + width;
+    height = baseBoundingBox.height + height;
+    depth = baseBoundingBox.depth + depth;
+}
+
 }
 #endif

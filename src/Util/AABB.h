@@ -26,6 +26,9 @@ public:
 
     inline void SetWidthHeight(double width, double height);
     inline void SetWidthHeightDepth(double width, double height, double depth);
+
+    inline void SetAndExtend(const AABB& baseBoundingBox, double width, double height, double depth);
+
     inline double getDepth() const;
     inline void setDepth(double depth);
     inline double getHeight() const;

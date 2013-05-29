@@ -30,6 +30,7 @@ Entity::Entity(eEntityType entityType, int entityTypeFlag, double x, double y, d
     , chunkX(((int)x) >> 4)
     , chunkZ(((int)z) >> 4)
     , boundingBox(x, y, z, 0.6, 1.8, 0.6)
+    , tempBoundingBox(x, y, z, 0.6, 1.8, 0.6)
     , dead(false)
 {
     metadataManager.SetEntityMetadata(0, (char)0);
@@ -326,7 +327,7 @@ void Entity::SetFlag(char flag)
     metadataManager.SetEntityMetadata(0, flag);
 }
 
-void Entity::OnCollideWithPlayer(EntityPlayer* player)
+void Entity::OnCollideWithPlayer(EntityPlayer* /*player*/)
 {
 }
 

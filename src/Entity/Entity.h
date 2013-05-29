@@ -139,6 +139,10 @@ protected:
 
     Util::AABB boundingBox;
 
+    // Bounding box for calcul or find entity in greater range...
+    // storing it here, for reduce useless allocation
+    Util::AABB tempBoundingBox;
+
     bool dead;
 
     EntityMetadataManager metadataManager;

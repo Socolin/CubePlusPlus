@@ -98,7 +98,8 @@ void EntityPlayer::UpdateTick()
 
         // Check pickup item
         std::vector<Entity*> entityList;
-        world->GetEntitiesInAABB(entityId, boundingBox, entityList);
+        tempBoundingBox.SetAndExtend(boundingBox, 1, 0.5, 1);
+        world->GetEntitiesInAABB(entityId, tempBoundingBox, entityList);
         for (Entity* entity : entityList)
         {
             entity->OnCollideWithPlayer(this);
