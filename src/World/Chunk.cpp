@@ -147,6 +147,7 @@ void Chunk::Load()
         datas[1] = chunkData;
         flagSectionExists |= (1 << 1);
     }
+
     ChunkData** chunkDataItr = datas;
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
@@ -154,7 +155,7 @@ void Chunk::Load()
         {
             ChunkData* chunkData = (*chunkDataItr);
 
-            unsigned char* data = chunkData->blocks;
+            unsigned char* data = chunkData->blocks;//TODO: use add data for 4096 id
             for (int i = 0; i < CHUNK_BLOCK_COUNT; i++)
             {
                 const Block::Block* block = Block::BlockList::getBlock(*data);
@@ -162,6 +163,7 @@ void Chunk::Load()
                 {
                     chunkData->countRandomUpdate++;
                 }
+                data++;
             }
         }
         chunkDataItr++;
@@ -176,8 +178,6 @@ void Chunk::UpdateTick()
     if (!loaded)
         return;
 
-    ChunkData** chunkDataItr = datas;
-
     UpdateSkyLightIFN();
 
     // Random update tick
@@ -185,9 +185,9 @@ void Chunk::UpdateTick()
     i_data blockData;
     for (int i = 0; i < CHUNK_DATA_COUNT; i++)
     {
-        if (*chunkDataItr)
+        ChunkData* chunkData = datas[i];
+        if (chunkData != nullptr)
         {
-            ChunkData* chunkData = (*chunkDataItr);
             if (chunkData->countRandomUpdate <= 0)
                 continue;
             for (int count = 0; count < 3; count++)
@@ -222,9 +222,7 @@ void Chunk::UpdateTick()
                     }
                 }
             }
-
         }
-        chunkDataItr++;
     }
 
     while (!toUpdateBlockList.empty())
@@ -355,7 +353,7 @@ void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block bl
         if (block->NeedsRandomTick())
         {
             ChunkData* data = getOrCreateData(y >> 4);
-            data->countRandomUpdate--;
+            data->countRandomUpdate++;
         }
     }
 }
