@@ -237,7 +237,7 @@ void EntityPlayer::DropItem(Inventory::ItemStack* itemToDrop)
         motionX += cos(randomModifier) * modifier;
         motionY += (Util::randFloat() - Util::randFloat()) * 0.1f;
         motionZ += sin(randomModifier) * modifier;
-        EntityItem* item = new EntityItem(this->x, this->y + getEyeHeight() - 0.3, this->z, itemToDrop, motionX, motionY, motionZ);
+        EntityItem* item = new EntityItem(this->x, this->y + getEyeHeight() - 0.3, this->z, itemToDrop, motionX, motionY, motionZ, 40);
         world->AddEntity(item);
     }
 }

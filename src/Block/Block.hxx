@@ -24,9 +24,9 @@ bool Block::IsOpaqueCube() const
     return isOpaqueCube;
 }
 
-bool Block::IsFullBlock() const
+bool Block::IsEdgeAverageMoreThanOne() const
 {
-    return fullBlock;
+    return edgeAverageMoreThanOne;
 }
 
 bool Block::NeedsRandomTick() const

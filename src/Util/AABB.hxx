@@ -96,9 +96,9 @@ void AABB::SetAndExtend(const AABB& baseBoundingBox, double width, double height
     x = baseBoundingBox.x - width;
     y = baseBoundingBox.y - height;
     z = baseBoundingBox.z - depth;
-    width = baseBoundingBox.width + width;
-    height = baseBoundingBox.height + height;
-    depth = baseBoundingBox.depth + depth;
+    this->width = baseBoundingBox.width + width;
+    this->height = baseBoundingBox.height + height;
+    this->depth = baseBoundingBox.depth + depth;
 }
 
 }

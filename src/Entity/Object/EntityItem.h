@@ -15,7 +15,7 @@ namespace World
 class EntityItem : public Entity
 {
 public:
-    EntityItem(double x, double y, double z, Inventory::ItemStack* itemStack, double motionX, double motionY, double motionZ);
+    EntityItem(double x, double y, double z, Inventory::ItemStack* itemStack, double motionX, double motionY, double motionZ, int timeBeforePickup = 10);
     virtual ~EntityItem();
 
     virtual void UpdateTick() override;
@@ -28,6 +28,7 @@ public:
     const Inventory::ItemStack* LookStoreItem() const;
 private:
     unsigned int liveTime;
+    int timeBeforePickup;
     Inventory::Inventory storedItem;
 };
 

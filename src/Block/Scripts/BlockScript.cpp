@@ -87,6 +87,11 @@ i_powerlevel BlockScript::GetStrongPowerLevel(World::World* /*world*/, int /*x*/
     return 0;
 }
 
+bool BlockScript::IsFullBlock() const
+{
+    return baseBlock->IsEdgeAverageMoreThanOne();
+}
+
 void BlockScript::OnNotifyTileEntityStateChange(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, int /*action*/)
 {
 }

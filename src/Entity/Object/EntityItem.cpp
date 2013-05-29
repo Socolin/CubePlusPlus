@@ -1,18 +1,21 @@
-#include "EntityItem.h"
-#include "Entity/EntityPlayer.h"
-#include "Util/types.h"
-#include "World/World.h"
 #include "Block/Block.h"
 #include "Block/BlockList.h"
+#include "EntityItem.h"
+#include "Entity/EntityPlayer.h"
 #include "Network/OpcodeList.h"
+#include "Util/FloatUtil.h"
+#include "Util/types.h"
 #include "Window/Window.h"
+#include "World/World.h"
+#include "World/VirtualSmallChunk.h"
 
 namespace World
 {
 
-EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack* itemStack, double motionX, double motionY, double motionZ)
+EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack* itemStack, double motionX, double motionY, double motionZ, int timeBeforePickup)
     : Entity(ENTITY_TYPE_ITEM, ENTITY_TYPEFLAG_MOVING, x, y, z)
     , liveTime(0)
+    , timeBeforePickup(timeBeforePickup)
     , storedItem(1)
 {
     SetWidthHeight(0.25, 0.25);
@@ -117,6 +120,8 @@ void EntityItem::OnCollideWithPlayer(EntityPlayer* player)
 {
     if (dead)
         return;
+    if (liveTime < timeBeforePickup)
+        return;
     Window::Window* inventoryWindow = player->GetInventoryWindow();
     const Inventory::ItemStack* lookedStoredItem = LookStoreItem();
     int count = inventoryWindow->CountAvaibleSpaceForItem(Inventory::INVENTORY_TYPE_PLAYER_HANDS | Inventory::INVENTORY_TYPE_PLAYER_MAIN, lookedStoredItem);
@@ -133,6 +138,14 @@ void EntityItem::OnCollideWithPlayer(EntityPlayer* player)
             takenItem = storedItem.TakeSomeItemInSlot(0, count);
             metadataManager.SetEntityMetadata(10, storedItem.LookSlot(0)->Copy());
         }
+        VirtualSmallChunk* vSmallChunk = world->GetVirtualSmallChunkIfLoaded(chunkX, chunkZ);
+        if (vSmallChunk)
+        {
+            Network::NetworkPacket collectItemPacket(Network::OP_COLLECT_ITEM);
+            collectItemPacket << entityId << player->getEntityId();
+            vSmallChunk->SendPacketToAllNearPlayer(collectItemPacket);
+        }
+        world->PlaySound(x, y, z, L"random.pop", 0.2f, (char)(63.f * (((Util::randFloat() - Util::randFloat()) * 0.7f + 1.0f) * 2.0f)), 2);
         inventoryWindow->PlaceAllItemInStackToInventories(Inventory::INVENTORY_TYPE_PLAYER_HANDS | Inventory::INVENTORY_TYPE_PLAYER_MAIN,takenItem,false);
     }
 }

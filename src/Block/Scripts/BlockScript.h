@@ -167,6 +167,8 @@ public:
      */
     virtual bool CanProvidePower() const;
 
+    virtual bool IsFullBlock() const;
+
     virtual i_powerlevel GetWeakPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const;
     virtual i_powerlevel GetStrongPowerLevel(World::World* world, int x, i_height y, int z, int side, i_data metadata) const;
 

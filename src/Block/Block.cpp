@@ -41,7 +41,7 @@ Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpaci
     , burningTime(burningTime)
     , script(script)
 {
-    fullBlock = ((maxX - minX) + (maxZ - minZ) + (maxZ - minZ)) >= 3;
+    edgeAverageMoreThanOne = ((maxX - minX) + (maxY - minY) + (maxZ - minZ)) >= 3;
 }
 
 
@@ -215,6 +215,15 @@ void Block::NotifyTileEntityStateChange(World::World* world, int x, i_height y, 
     {
         return script->OnNotifyTileEntityStateChange(world, x, y, z, action);
     }
+}
+
+bool Block::IsFullBlock() const
+{
+    if (script)
+    {
+        return script->IsFullBlock();
+    }
+    return edgeAverageMoreThanOne;
 }
 
 } /* namespace Block */

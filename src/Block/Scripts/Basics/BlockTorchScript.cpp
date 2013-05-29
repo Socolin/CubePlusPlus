@@ -16,6 +16,7 @@ BlockTorchScript::~BlockTorchScript()
 {
 }
 
+
 BlockTorchScript::BlockTorchScript(const char* scriptName)
     : BlockScript(scriptName)
 {
@@ -85,6 +86,12 @@ void BlockTorchScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x*
 
 void BlockTorchScript::GetBoundingBoxes(int /*x*/, int /*y*/, int /*z*/, i_data /*data*/, std::vector<Util::AABB>& /*bbList*/) const
 {
+}
+
+
+bool BlockTorchScript::IsFullBlock() const
+{
+    return false;
 }
 
 } /* namespace Scripting */

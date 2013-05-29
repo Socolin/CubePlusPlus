@@ -198,12 +198,13 @@ public:
 
     void NotifyTileEntityStateChange(World::World* world, int x, i_height y, int z, int action) const;
 
+    bool IsFullBlock() const;
     // Getters
     inline i_block GetBlockId() const;
     inline const SoundBlock& GetSound() const;
     inline const BlockMaterial& GetMaterial() const;
     inline bool IsOpaqueCube() const;
-    inline bool IsFullBlock() const;
+    inline bool IsEdgeAverageMoreThanOne() const;
     inline bool NeedsRandomTick() const;
     inline bool IsRenderAsNormal() const;
     inline i_lightopacity GetLightOpacity() const;
@@ -239,7 +240,7 @@ private:
     Scripting::BlockScript* script;
 
     // Calculated data
-    bool fullBlock;
+    bool edgeAverageMoreThanOne;
 };
 
 } /* namespace Block */
