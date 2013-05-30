@@ -135,6 +135,7 @@ public:
 
     Scripting::BlockRedstoneTorchBurnoutMgr* GetRedstoneTorchBurnoutMgr() const;
     const Position& GetSpawnPosition() const;
+    Position GetValidSpawnPosition();
 
 private:
     void UpdateTime();

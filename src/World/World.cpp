@@ -1203,8 +1203,6 @@ void World::load()
     loadSpawn(dataCompound);
     loadTimeAndWeather(dataCompound);
     loadGameMode(dataCompound);
-
-    delete root;
 }
 
 void World::loadSpawn(nbt::TagCompound* tagData)
@@ -1259,6 +1257,24 @@ void World::loadTimeAndWeather(nbt::TagCompound* tagData)
         thundering = tagThundering->getValue() == 1;
     }
 
+}
+
+Position World::GetValidSpawnPosition()
+{
+    Chunk* chunk = GetChunk((int)spawnPosition.x >> 4, (int)spawnPosition.z >> 4);
+    i_block previousBlockId = chunk->getBlockAt((int)spawnPosition.x & 0xf, spawnPosition.y, (int)spawnPosition.z & 0xf);
+    Position validPosition(spawnPosition);
+    for (int y = spawnPosition.y + 1; y < 260; y++)
+    {
+        i_block blockId = chunk->getBlockAt((int)spawnPosition.x & 0xf, y, (int)spawnPosition.z & 0xf);
+        if (blockId == 0 && previousBlockId == 0)
+        {
+            break;
+        }
+        previousBlockId = blockId;
+        validPosition.y++;
+    }
+    return validPosition;
 }
 
 void World::loadGameMode(nbt::TagCompound* tagData)

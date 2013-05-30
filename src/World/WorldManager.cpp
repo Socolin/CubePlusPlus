@@ -11,7 +11,7 @@ namespace World
 {
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
 {
-    EntityPlayer* player = new EntityPlayer(world->GetSpawnPosition(), name, session);
+    EntityPlayer* player = new EntityPlayer(world->GetValidSpawnPosition(), name, session);
 
     world->AddPlayer(player);
 
