@@ -8,6 +8,7 @@
 #include "Chunk.h"
 #include "Entity/EntityConstants.h"
 #include "RegionManager.h"
+#include "Entity/Position.h"
 #include "Util/AABB.h"
 #include "Util/BufferedRewindableQueue.h"
 #include "World/WorldConstants.h"
@@ -23,6 +24,7 @@ class NetworkPacket;
 namespace nbt
 {
 class NbtBuffer;
+class TagCompound;
 }
 namespace World
 {
@@ -49,6 +51,7 @@ public:
     void RemoveEntity(Entity* entity);
     void RemovePlayer(EntityPlayer* entity);
 
+    /*Space partitioning utils*/
     inline Chunk* GetChunk(int x, int z);
     inline Chunk* GetChunkIfLoaded(int x, int z) const;
 
@@ -58,6 +61,7 @@ public:
     inline VirtualSmallChunk* GetVirtualSmallChunk(int x, int z);
     inline VirtualSmallChunk* GetVirtualSmallChunkIfLoaded(int x, int z) const;
 
+    /*Blocks utils*/
     inline i_block GetBlockId(int x, i_height y, int z);
     inline i_data GetBlockData(int x, i_height y, int z);
 
@@ -82,6 +86,7 @@ public:
     void PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, char modifier, unsigned char distanceChunk);
     void PlaySoundOrParticleEffect(double x, i_height y, double z, int effectId, int data, bool disableRelativeVolume, unsigned char distanceChunk);
     void PlayBlockAction(int x, short y, int z, char type, char modifier, i_block blockId, char distanceChunk);
+    void UpdateGameState(char reason, char gameMode);
 
     void DropItemstackWithRandomDirection(double x, double y, double z, Inventory::ItemStack* itemstack);
     void GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::AABB>& bbList);
@@ -123,6 +128,7 @@ public:
     i_powerlevel getMaxPowerFromBlockArround(int x, i_height y, int z);
 
     Scripting::BlockRedstoneTorchBurnoutMgr* GetRedstoneTorchBurnoutMgr() const;
+    const Position& GetSpawnPosition() const;
 
 private:
     void UpdateTime();
@@ -150,6 +156,11 @@ private:
     bool isBlockDirectlyLightedFromSky(int x, i_height y, int z);
     i_lightvalue recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall);
 
+    /*Load functions*/
+    void load();
+    void loadSpawn(nbt::TagCompound* tagData);
+    void loadTimeAndWeather(nbt::TagCompound* tagData);
+    void loadGameMode(nbt::TagCompound* tagData);
 private:
     std::string worldName;
     RegionManager regionManager;
@@ -178,6 +189,17 @@ private:
     Util::BufferedRewindableQueue<struct LightUpdateData, 32768> updateLightQueue;
     i_lightvalue sunReduceValue;
     Scripting::BlockRedstoneTorchBurnoutMgr* redstoneTorchBurnoutMgr;
+
+    // TODO: Export it in an other class ?
+    Position spawnPosition;
+    int rainTime;
+    bool raining;
+    int thunderTime;
+    bool thundering;
+
+    bool hardcore;
+    long seed;
+    int gameType;
 };
 
 } /* namespace World */

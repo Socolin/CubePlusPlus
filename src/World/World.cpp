@@ -3,6 +3,7 @@
 #include <cmath>
 #include <sstream>
 #include <algorithm>
+#include <cppnbt.h>
 
 #include "Chunk.h"
 #include "Block/Block.h"
@@ -32,6 +33,7 @@ World::World(const std::string& worldName)
     , sunReduceValue(0)
 {
     redstoneTorchBurnoutMgr = new Scripting::BlockRedstoneTorchBurnoutMgr();
+    load();
 }
 
 World::~World()
@@ -47,6 +49,8 @@ World::~World()
         delete entityToDelete[i];
     }
 }
+
+
 // Called each tick
 void World::UpdateTick()
 {
@@ -257,6 +261,13 @@ void World::PlayBlockAction(int x, short y, int z, char type, char modifier, i_b
     Network::NetworkPacket particlePacket(Network::OP_BLOCK_ACTION);
     particlePacket << x << y << z << type << modifier << blockId;
     vSmallChunk->SendPacketToAllNearPlayer(particlePacket, distanceChunk);
+}
+
+void World::UpdateGameState(char reason, char gameMode)
+{
+    Network::NetworkPacket packet(Network::OP_CHANGE_GAME_STATE);
+    packet << reason << gameMode;
+    SendPacketToPlayerInWorld(packet);
 }
 
 void World::GetBlockBoundingBoxInRange(int x, int y, int z, int range, int rangeHeight, std::vector<Util::AABB>& bbList)
@@ -570,6 +581,21 @@ void World::UpdateTime()
         RemovePlayer(player);
     playerToRemove.clear();
 
+    rainTime--;
+    if (rainTime <= 0)
+    {
+        raining = !raining;
+        UpdateGameState(raining ? 1 : 2, 0);
+
+        if (raining)
+        {
+            rainTime = (rand() % 12000) + 12000;
+        }
+        else
+        {
+            rainTime = (rand() % 168000) + 12000;
+        }
+    }
 }
 
 void World::MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick)
@@ -1136,5 +1162,111 @@ Scripting::BlockRedstoneTorchBurnoutMgr* World::GetRedstoneTorchBurnoutMgr() con
     return redstoneTorchBurnoutMgr;
 }
 
+
+void World::load()
+{
+    std::stringstream fileName;
+    fileName << worldName << "/level.dat";
+
+    nbt::NbtFile nbtFile(fileName.str());
+    nbtFile.read();
+
+    nbt::Tag* root = nbtFile.getRoot();
+
+    if (!root)
+        return;
+
+    nbt::TagCompound* rootCompound = dynamic_cast<nbt::TagCompound*>(root);
+    if (!rootCompound)
+        return;
+
+    nbt::TagCompound* dataCompound = rootCompound->getValueAt<nbt::TagCompound>("Data");
+    if (!dataCompound)
+        return;
+
+    loadSpawn(dataCompound);
+    loadTimeAndWeather(dataCompound);
+    loadGameMode(dataCompound);
+}
+
+void World::loadSpawn(nbt::TagCompound* tagData)
+{
+    nbt::TagInt* tagSpawnX = tagData->getValueAt<nbt::TagInt>("SpawnX");
+    nbt::TagInt* tagSpawnY = tagData->getValueAt<nbt::TagInt>("SpawnY");
+    nbt::TagInt* tagSpawnZ = tagData->getValueAt<nbt::TagInt>("SpawnZ");
+    if (tagSpawnX && tagSpawnY && tagSpawnZ)
+    {
+        int spawnX = tagSpawnX->getValue();
+        int spawnY = tagSpawnY->getValue();
+        int spawnZ = tagSpawnZ->getValue();
+        spawnPosition.Relocate(spawnX, spawnY, spawnZ);
+    }
+    else
+    {
+        spawnPosition.Relocate(0, 80, 0);
+        std::cerr << "Error while loading spawn data" << std::endl;
+    }
+}
+
+void World::loadTimeAndWeather(nbt::TagCompound* tagData)
+{
+    nbt::TagLong* tagTime = tagData->getValueAt<nbt::TagLong>("Time");
+    if (tagTime)
+    {
+        ageOfWorld = tagTime->getValue();
+        currentTime = tagTime->getValue();
+    }
+
+    nbt::TagInt* tagRainTime = tagData->getValueAt<nbt::TagInt>("rainTime");
+    if (tagRainTime)
+    {
+        rainTime = tagRainTime->getValue();
+    }
+
+    nbt::TagByte* tagRaining = tagData->getValueAt<nbt::TagByte>("raining");
+    if (tagRaining)
+    {
+        raining = tagRaining->getValue() == 1;
+    }
+
+    nbt::TagInt* tagThunderTime = tagData->getValueAt<nbt::TagInt>("thunderTime");
+    if (tagThunderTime)
+    {
+        thunderTime = tagThunderTime->getValue();
+    }
+
+    nbt::TagByte* tagThundering = tagData->getValueAt<nbt::TagByte>("thundering");
+    if (tagThundering)
+    {
+        thundering = tagThundering->getValue() == 1;
+    }
+
+}
+
+void World::loadGameMode(nbt::TagCompound* tagData)
+{
+    nbt::TagByte* tagHardcore = tagData->getValueAt<nbt::TagByte>("hardcore");
+    if (tagHardcore)
+    {
+        hardcore = tagHardcore->getValue() == 1;
+    }
+
+    nbt::TagLong* tagRandoSeed = tagData->getValueAt<nbt::TagLong>("RandomSeed");
+    if (tagRandoSeed)
+    {
+        seed = tagRandoSeed->getValue();
+    }
+
+    nbt::TagInt* tagGameType = tagData->getValueAt<nbt::TagInt>("GameType");
+    if (tagGameType)
+    {
+        gameType = tagGameType->getValue();
+    }
+}
+
+const Position& World::GetSpawnPosition() const
+{
+    return spawnPosition;
+}
 
 } /* namespace World */

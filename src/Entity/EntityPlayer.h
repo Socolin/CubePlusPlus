@@ -48,7 +48,7 @@ public:
         ACTION_STOP_SPRINTING,
     };
 public:
-    EntityPlayer(double x, double y, double z, const std::wstring& name, Network::NetworkSession* session);
+    EntityPlayer(const Position& spawnPosition, const std::wstring& name, Network::NetworkSession* session);
     virtual ~EntityPlayer();
 
     /**

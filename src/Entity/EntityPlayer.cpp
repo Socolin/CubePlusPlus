@@ -23,8 +23,8 @@
 namespace World
 {
 
-EntityPlayer::EntityPlayer(double x, double y, double z, const std::wstring& name, Network::NetworkSession* session)
-    : LivingEntity(ENTITY_TYPE_PLAYER, 0, x, y, z)
+EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& name, Network::NetworkSession* session)
+    : LivingEntity(ENTITY_TYPE_PLAYER, 0, spawnPosition.x, spawnPosition.y, spawnPosition.z)
     , gameMode(GAMEMODE_CREATVE)
     , name(name)
     , session(session)
