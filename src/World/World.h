@@ -162,29 +162,78 @@ private:
     bool isBlockDirectlyLightedFromSky(int x, i_height y, int z);
     i_lightvalue recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall);
 
-    /*Load functions*/
+    /**
+     * Load level.dat
+     */
     void load();
+
+    /**
+     * Load spawn data from nbt in level.dat
+     * @param tagData data to load
+     */
     void loadSpawn(nbt::TagCompound* tagData);
+
+    /**
+     * Load time and weather data from nbt in level.dat
+     * Time of day...
+     * Raining state/Rain time
+     * Thunfer state/time
+     * @param tagData data to load
+     */
     void loadTimeAndWeather(nbt::TagCompound* tagData);
+
+    /**
+     * Load gamemode and some data from world nbt data in level.dat
+     * Seed
+     * Hardcore mode
+     * GameType
+     * @param tagData data to load
+     */
     void loadGameMode(nbt::TagCompound* tagData);
 private:
+    /// Name of the world, it name also directory where files are store
     std::string worldName;
+    /// Manager for regions files
     RegionManager regionManager;
-    std::unordered_map<long, Chunk*> chunkMap;
-    std::unordered_map<long, VirtualChunk*> virtualChunkMap;
-    std::unordered_map<long, VirtualSmallChunk*> virtualSmallChunkMap;
-    std::set<EntityPlayer*> playerList;
-    int viewDistance; // In chunk
-    int currentEntityId;
-    long ageOfWorld;
-    long currentTime;
 
+    /// Map that store Chunk, use macro CHUNK_KEY(x, z) to get a chunk
+    std::unordered_map<long, Chunk*> chunkMap;
+    /// Map that store VirtualChunk, use macro CHUNK_KEY(x, z) to get a one
+    std::unordered_map<long, VirtualChunk*> virtualChunkMap;
+    /// Map that store VirtualSmallChunk, use macro CHUNK_KEY(x, z) to get a one
+    std::unordered_map<long, VirtualSmallChunk*> virtualSmallChunkMap;
+
+
+    /// Link EntityId and Entity
     std::map<int, Entity*> entityById;
+    /// List of player in world
+    std::set<EntityPlayer*> playerList;
+
+    /// Mark dead entityId, that will be remove at the end of tick
     std::set<int> deadEntity;
+
+    /// Entity which will be delete next tick
     std::vector<Entity*> entityToDelete;
-    bool updateInProgress;
+    /// Player that will be remove at end of tick
     std::set<EntityPlayer*> playerToRemove;
 
+    /// True if world is performing UpateTick()
+    bool updateInProgress;
+
+    /**
+     * Distance of the player view in chunk, if 10, he will see 10 chunk in front of him/back etc... so 441 chunk
+     * (10 + 1 + 10) * (10 + 1 + 10) = 441 chunk loaded around a player
+     * (9 + 1 + 9) * (9 + 1 + 9) = 361 chunk loaded around a player
+     * (8 + 1 + 8) * (8 + 1 + 8) = 289 chunk loaded around a player
+     */
+    int viewDistance;
+
+    /// Id of next entity
+    int currentEntityId;
+
+    /*
+     * Light utilities
+     */
     struct LightUpdateData
     {
         int x:6;
@@ -194,10 +243,16 @@ private:
     };
     Util::BufferedRewindableQueue<struct LightUpdateData, 32768> updateLightQueue;
     i_lightvalue sunReduceValue;
+
+    /// Redstone manager for burnout
     Scripting::BlockRedstoneTorchBurnoutMgr* redstoneTorchBurnoutMgr;
 
     // TODO: Export it in an other class ?
     Position spawnPosition;
+
+    long ageOfWorld;
+    long currentTime;
+
     int rainTime;
     bool raining;
     int thunderTime;

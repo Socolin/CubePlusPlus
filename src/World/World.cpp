@@ -15,9 +15,9 @@
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "Region.h"
+#include "Util/FloatUtil.h"
 #include "VirtualChunk.h"
 #include "VirtualSmallChunk.h"
-#include "Util/FloatUtil.h"
 
 namespace World
 {
@@ -25,12 +25,19 @@ namespace World
 World::World(const std::string& worldName)
     : worldName(worldName)
     , regionManager(worldName + "/")
+    , updateInProgress(false)
     , viewDistance(10)
     , currentEntityId(10)
+    , sunReduceValue(0)
     , ageOfWorld(0)
     , currentTime(0)
-    , updateInProgress(false)
-    , sunReduceValue(0)
+    , rainTime(0)
+    , raining(false)
+    , thunderTime(false)
+    , thundering(false)
+    , hardcore(false)
+    , seed(0)
+    , gameType(0)
 {
     redstoneTorchBurnoutMgr = new Scripting::BlockRedstoneTorchBurnoutMgr();
     load();
@@ -1174,19 +1181,30 @@ void World::load()
     nbt::Tag* root = nbtFile.getRoot();
 
     if (!root)
+    {
+        delete root;
         return;
+    }
 
     nbt::TagCompound* rootCompound = dynamic_cast<nbt::TagCompound*>(root);
     if (!rootCompound)
+    {
+        delete root;
         return;
+    }
 
     nbt::TagCompound* dataCompound = rootCompound->getValueAt<nbt::TagCompound>("Data");
     if (!dataCompound)
+    {
+        delete root;
         return;
+    }
 
     loadSpawn(dataCompound);
     loadTimeAndWeather(dataCompound);
     loadGameMode(dataCompound);
+
+    delete root;
 }
 
 void World::loadSpawn(nbt::TagCompound* tagData)
