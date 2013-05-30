@@ -61,6 +61,11 @@ public:
     inline VirtualSmallChunk* GetVirtualSmallChunk(int x, int z);
     inline VirtualSmallChunk* GetVirtualSmallChunkIfLoaded(int x, int z) const;
 
+    void RequestChunk(EntityPlayer* player, int x, int z);
+    void Unload();
+    int getViewDistance();
+    void SetTime(long time);
+
     /*Blocks utils*/
     inline i_block GetBlockId(int x, i_height y, int z);
     inline i_data GetBlockData(int x, i_height y, int z);
@@ -74,21 +79,21 @@ public:
     void ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData);
     void ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockData, bool playSound = true);
     void RemoveBlock(int x, i_height y, int z);
-    void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
-
     void MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick = 1);
 
-    void Unload();
-    void RequestChunk(EntityPlayer* player, int x, int z);
 
-    int getViewDistance();
+    /*Network/Notification to player functions*/
+    void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 
     void PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, char modifier, unsigned char distanceChunk);
     void PlaySoundOrParticleEffect(double x, i_height y, double z, int effectId, int data, bool disableRelativeVolume, unsigned char distanceChunk);
     void PlayBlockAction(int x, short y, int z, char type, char modifier, i_block blockId, char distanceChunk);
     void UpdateGameState(char reason, char gameMode);
 
+    /*Item util*/
     void DropItemstackWithRandomDirection(double x, double y, double z, Inventory::ItemStack* itemstack);
+
+    /*Entity collision/find functions*/
     void GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::AABB>& bbList);
     void GetBlockBoundingBoxInRange(int x, int y, int z, int range, int rangeHeight, std::vector<Util::AABB>& bbList);
     void GetBlockBoundingBoxInAABB(const Util::AABB& box, std::vector<Util::AABB>& bbList) const;
@@ -101,12 +106,13 @@ public:
     void GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int range, std::vector<Entity*>& outEntityList);
     void GetEntitiesInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<Entity*>& outEntityList);
 
+    /*Entity managment*/
     void MarkEntityAsDead(int entityId);
 
     Entity* GetEntityById(int target);
 
-    void SetTime(long time);
 
+    /*Light management*/
     i_lightopacity GetBlockLightOpacity(int x, i_height y, int z);
     i_lightvalue GetRealLightValueAt(int x, i_height y, int z);
 
