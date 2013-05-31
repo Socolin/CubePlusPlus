@@ -135,7 +135,7 @@ void VirtualChunk::SendPacketToPlayerInChunk(const Network::NetworkPacket& packe
 
 void VirtualChunk::GetCreatePacketFromAllEntityInChunk(Network::NetworkPacket& packet)
 {
-for (Entity* entity : entityList)
+    for (Entity* entity : entityList)
     {
         entity->GetCreatePacket(packet);
     }
@@ -143,7 +143,7 @@ for (Entity* entity : entityList)
 
 void VirtualChunk::GetDestroyPacketFromAllEntityInChunk(Network::NetworkPacket& packet)
 {
-for (Entity* entity : entityList)
+    for (Entity* entity : entityList)
     {
         entity->GetDestroyPacket(packet);
     }

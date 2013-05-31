@@ -175,6 +175,8 @@ void Chunk::Load()
 
 void Chunk::UpdateTick()
 {
+    if (playerList.empty())
+        return;
     if (!loaded)
         return;
 
