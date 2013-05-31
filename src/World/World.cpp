@@ -87,7 +87,7 @@ void World::UpdateTick()
 void World::AddEntity(Entity* entity)
 {
     entity->setWorld(this, currentEntityId++);
-    VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 8, ((int) entity->z) >> 8);
+    VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 7, ((int) entity->z) >> 7);
     virtualChunk->AddEntity(entity);
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
     vChunk->AddEntity(entity);
@@ -115,7 +115,7 @@ void World::AddPlayer(EntityPlayer* player)
             player->AddChunkToSend(x, z);
         }
 
-    VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 8, ((int) player->z) >> 8);
+    VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->AddPlayer(player);
     player->OnJoinWorld();
     entityById[player->getEntityId()] = player;
@@ -123,7 +123,7 @@ void World::AddPlayer(EntityPlayer* player)
 
 void World::RemoveEntity(Entity* entity)
 {
-    VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 8, ((int) entity->z) >> 8);
+    VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 7, ((int) entity->z) >> 7);
     virtualChunk->RemoveEntity(entity);
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
     vChunk->RemoveEntity(entity);
