@@ -20,6 +20,7 @@ namespace Util
 #define UTIL_TEXT_SHELL_BOLD_WHITE      "\033[1;37m"
 
 void StringToWString(std::wstring &ws, const std::string &s);
+void WStringToString(const std::wstring &ws, std::string &s);
 
 void DumpBuffer(char* buffer, size_t size, std::ostream& stream = std::cout, const char* label = "BUFFER DUMP:");
 } /* namespace Util */

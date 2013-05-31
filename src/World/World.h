@@ -25,6 +25,7 @@ namespace nbt
 {
 class NbtBuffer;
 class TagCompound;
+class NbtFile;
 }
 namespace World
 {
@@ -136,6 +137,7 @@ public:
     Scripting::BlockRedstoneTorchBurnoutMgr* GetRedstoneTorchBurnoutMgr() const;
     const Position& GetSpawnPosition() const;
     Position GetValidSpawnPosition();
+    nbt::NbtFile* LoadNbtDatasForPlayer(const std::string& playerName);
 
 private:
     void UpdateTime();

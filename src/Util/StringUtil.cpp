@@ -9,6 +9,11 @@ void StringToWString(std::wstring &ws, const std::string &s)
     std::wstring wsTmp(s.begin(), s.end());
     ws = wsTmp;
 }
+void WStringToString(const std::wstring &ws, std::string &s)
+{
+    std::string sTmp(ws.begin(), ws.end());
+    s = sTmp;
+}
 
 void DumpBuffer(char* buffer, size_t size, std::ostream& stream, const char* label)
 {

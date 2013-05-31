@@ -7,6 +7,8 @@
 
 #include "Entity.h"
 
+#include <cppnbt.h>
+
 #include "Network/Opcode.h"
 #include "Network/NetworkPacket.h"
 #include "Util/FloatUtil.h"
@@ -325,6 +327,36 @@ char Entity::GetFlag()
 void Entity::SetFlag(char flag)
 {
     metadataManager.SetEntityMetadata(0, flag);
+}
+
+bool Entity::Load(nbt::TagCompound* tagNbtData)
+{
+    nbt::TagList* tagPos = tagNbtData->getValueAt<nbt::TagList>("Pos");
+    if (!tagPos)
+        return false;
+
+    tagPos->fillVariablesWithList<nbt::TagDouble, double>({&x, &y, &z});
+
+    std::cout << x << " " << y << " " << z << std::endl;
+
+
+    networkX = (int)(x * 32.0);
+    networkY = (int)(y * 32.0);
+    networkZ = (int)(z * 32.0);
+    virtualChunkX = ((int)x) >> 7;
+    virtualChunkZ = ((int)z) >> 7;
+    chunkX = ((int)x) >> 4;
+    chunkZ = ((int)z) >> 4;
+    boundingBox.SetPosition(x, y, z);
+    boundingBox.SetWidthHeightDepth(0.6, 1.8, 0.6);
+    tempBoundingBox.SetPosition(x, y, z);
+    tempBoundingBox.SetWidthHeightDepth(0.6, 1.8, 0.6);
+    return true;
+}
+
+bool Entity::Save(nbt::TagCompound* /*tagNbtData*/)
+{
+    return true;
 }
 
 void Entity::OnCollideWithPlayer(EntityPlayer* /*player*/)

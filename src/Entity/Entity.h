@@ -57,6 +57,8 @@ public:
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
     virtual void moveToChunk(int newChunkX, int newChunkZ);
     virtual void Interact(EntityPlayer* player);
+    virtual bool Load(nbt::TagCompound* tagNbtData);
+    virtual bool Save(nbt::TagCompound* tagNbtData);
 
     virtual void OnCollideWithPlayer(EntityPlayer* player);
 

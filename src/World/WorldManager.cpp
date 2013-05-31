@@ -1,10 +1,12 @@
 #include "WorldManager.h"
 
 #include <iostream>
+#include <cppnbt.h>
 
 #include "Entity/EntityPlayer.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
+#include "Util/StringUtil.h"
 #include "World.h"
 
 namespace World
@@ -13,6 +15,21 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
 {
     EntityPlayer* player = new EntityPlayer(world->GetValidSpawnPosition(), name, session);
 
+    std::string stringName;
+    Util::WStringToString(name, stringName);
+    nbt::NbtFile* file = world->LoadNbtDatasForPlayer(stringName);
+    if (file != nullptr)
+    {
+        nbt::Tag* tag = file->getRoot();
+        if (tag)
+        {
+            nbt::TagCompound* tagCompound = dynamic_cast<nbt::TagCompound*>(tag);
+            if (tagCompound)
+            {
+                player->Load(tagCompound);
+            }
+        }
+    }
     world->AddPlayer(player);
 
     playerList.insert(player);

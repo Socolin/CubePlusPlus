@@ -1277,6 +1277,16 @@ Position World::GetValidSpawnPosition()
     return validPosition;
 }
 
+nbt::NbtFile* World::LoadNbtDatasForPlayer(const std::string& playerName)
+{
+    std::stringstream fileName;
+    fileName << worldName << "/players/" << playerName << ".dat";
+
+    nbt::NbtFile* file = new nbt::NbtFile(fileName.str());
+    file->read();
+    return file;
+}
+
 void World::loadGameMode(nbt::TagCompound* tagData)
 {
     nbt::TagByte* tagHardcore = tagData->getValueAt<nbt::TagByte>("hardcore");
