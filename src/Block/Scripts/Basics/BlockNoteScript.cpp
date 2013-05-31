@@ -33,7 +33,7 @@ bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, i
         if (noteTileEntity)
         {
             double note = noteTileEntity->nextNoteLevel();
-            i_block bottomBlockId = world->GetBlockId(x & 0xf, y - 1, z & 0xf);
+            i_block bottomBlockId = world->GetBlockId(x, y - 1, z);
             const Block::Block* bottomBlock = Block::BlockList::getBlock(bottomBlockId);
             int materialSoundId = 4;
             if (bottomBlock)
