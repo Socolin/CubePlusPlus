@@ -171,7 +171,7 @@ void BlockDoorScript::OnNeighborChange(World::World* world, int x, i_height y, i
         bool mustDrop = false;
         s_block_data bottomBlockData = world->GetBlockIdAndData(x, y - 1, z);
         const Block::Block* bottomBlock = Block::BlockList::getBlock(bottomBlockData.blockId);
-        if (!bottomBlock->HasSolidTopSurface(bottomBlockData.blockData))
+        if (bottomBlock && !bottomBlock->HasSolidTopSurface(bottomBlockData.blockData))
         {
             mustDrop = true;
         }
