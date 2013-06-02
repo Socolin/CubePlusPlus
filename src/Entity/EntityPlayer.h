@@ -260,6 +260,7 @@ private:
     std::wstring name;
     Network::NetworkSession* session;
     boost::heap::binomial_heap<ChunkToSendData,boost::heap::compare<CompareChunkToSendData>> chunkToSend;
+    std::vector<ChunkToSendData> sortChunkToSend;
     Inventory::Inventory* mainInventory;
     Inventory::InventoryPlayer* handsInventory;
     Inventory::Inventory* enderChestInventory;
