@@ -36,6 +36,11 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
         World::WorldManager::Instance().GetWorld()->SetTime(20000);
         isCanceled = true;
     }
+    if (message == L"/day")
+    {
+        World::WorldManager::Instance().GetWorld()->SetTime(1000);
+        isCanceled = true;
+    }
     if (isCanceled)
         return true;
 
