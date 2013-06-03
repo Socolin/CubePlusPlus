@@ -484,6 +484,16 @@ void EntityPlayer::DoAction(char action)
     }
 }
 
+bool EntityPlayer::Load(nbt::TagCompound* tagNbtData)
+{
+    return parent_type::Load(tagNbtData);
+}
+
+bool EntityPlayer::Save(nbt::TagCompound* tagNbtData)
+{
+    return parent_type::Save(tagNbtData);
+}
+
 Window::Window* EntityPlayer::GetInventoryWindow() const
 {
     return inventoryWindow;

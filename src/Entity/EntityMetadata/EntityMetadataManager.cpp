@@ -5,6 +5,7 @@
 #include "FloatEntityMetadata.h"
 #include "IntegerEntityMetadata.h"
 #include "ShortEntityMetadata.h"
+#include "StringEntityMetadata.h"
 
 #include "Network/NetworkPacket.h"
 
@@ -60,6 +61,15 @@ void EntityMetadataManager::SetEntityMetadata(int valueId, float value)
 {
     EntityMetadata* oldMetadata = metadataList[valueId];
     metadataList[valueId] = new FloatEntityMetadata(valueId, value);
+    if (oldMetadata)
+        delete oldMetadata;
+    hasChanged = true;
+}
+
+void EntityMetadataManager::SetEntityMetadata(int valueId, const std::wstring& value)
+{
+    EntityMetadata* oldMetadata = metadataList[valueId];
+    metadataList[valueId] = new StringEntityMetadata(valueId, value);
     if (oldMetadata)
         delete oldMetadata;
     hasChanged = true;
@@ -128,6 +138,20 @@ float EntityMetadataManager::GetFloatEntityMetadata(int valueId)
         }
     }
     return 0;
+}
+
+const std::wstring& EntityMetadataManager::GetStringMetadata(int valueId)
+{
+    EntityMetadata* metadata = metadataList[valueId];
+    if (metadata != nullptr)
+    {
+        if (metadata->getType() == EntityMetadata::DATATYPE_STRING)
+        {
+            StringEntityMetadata* itemMetadata = dynamic_cast<StringEntityMetadata*>(metadata);
+            return itemMetadata->getValue();
+        }
+    }
+    return nullptr;
 }
 
 const Inventory::ItemStack* EntityMetadataManager::GetItemEntityMetadata(int valueId)

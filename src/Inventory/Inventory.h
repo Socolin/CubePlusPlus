@@ -145,7 +145,7 @@ public:
      * @param y coordinate
      * @param z coordinate
      */
-    void DropInventory(World::World* world, double x, double y, double z);
+    virtual void DropInventory(World::World* world, double x, double y, double z);
 
     virtual void DropInventory(World::EntityPlayer* player);
 

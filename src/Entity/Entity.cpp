@@ -23,6 +23,12 @@ Entity::Entity(eEntityType entityType, int entityTypeFlag, double x, double y, d
     Position(x, y, z), entityType(entityType), entityTypeFlag(entityTypeFlag), world(nullptr), entityId(0)
     , yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false)
     , stopMoving(false), noclip(false),onGround(false)
+    , fallDistance(0)
+    , fire(0)
+    , air(0)
+    , dimension(0)
+    , invulnerable(false)
+    , portalCooldown(0)
     , motionX(0), motionY(0), motionZ(0)
     , networkX((int)(x * 32.0))
     , networkY((int)(y * 32.0))
@@ -337,8 +343,26 @@ bool Entity::Load(nbt::TagCompound* tagNbtData)
 
     tagPos->fillVariablesWithList<nbt::TagDouble, double>({&x, &y, &z});
 
-    std::cout << x << " " << y << " " << z << std::endl;
+    nbt::TagList* tagMotion = tagNbtData->getValueAt<nbt::TagList>("Motion");
+    if (!tagMotion)
+        return false;
 
+    tagMotion->fillVariablesWithList<nbt::TagDouble, double>({&motionX, &motionY, &motionZ});
+
+    nbt::TagList* tagRotation = tagNbtData->getValueAt<nbt::TagList>("Rotation");
+    if (!tagRotation)
+        return false;
+
+    tagRotation->fillVariablesWithList<nbt::TagFloat, float>({&yaw, &pitch});
+
+
+    fallDistance = tagNbtData->getFloat("FallDistance");
+    fire = tagNbtData->getShort("Fire");
+    air = tagNbtData->getShort("Air");
+    onGround = tagNbtData->getBool("OnGround");
+    dimension = tagNbtData->getInt("Dimension");
+    invulnerable = tagNbtData->getBool("Invulnerable");
+    portalCooldown = tagNbtData->getInt("PortalCooldown");
 
     networkX = (int)(x * 32.0);
     networkY = (int)(y * 32.0);

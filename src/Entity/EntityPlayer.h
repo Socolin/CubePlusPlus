@@ -23,6 +23,7 @@ namespace World
 
 class EntityPlayer: public LivingEntity
 {
+    typedef LivingEntity parent_type;
 public:
     enum PlayerAbilities
     {
@@ -85,6 +86,10 @@ public:
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) override;
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ) override;
     virtual void moveToChunk(int newChunkX, int newChunkZ) override;
+
+
+    virtual bool Load(nbt::TagCompound* tagNbtData) override;
+    virtual bool Save(nbt::TagCompound* tagNbtData) override;
 
     /**
      * Kick player

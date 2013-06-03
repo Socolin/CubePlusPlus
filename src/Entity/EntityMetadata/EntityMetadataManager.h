@@ -1,8 +1,10 @@
 #ifndef ENTITYMETADATAMANAGER_H_
 #define ENTITYMETADATAMANAGER_H_
 
-#include "EntityMetadata.h"
 #include <map>
+#include <string>
+
+#include "EntityMetadata.h"
 #include "Inventory/ItemStack.h"
 
 namespace Inventory
@@ -27,12 +29,14 @@ public:
     void SetEntityMetadata(int valueId, short value);
     void SetEntityMetadata(int valueId, int value);
     void SetEntityMetadata(int valueId, float value);
+    void SetEntityMetadata(int valueId, const std::wstring& value);
     void SetEntityMetadata(int valueId, const Inventory::ItemStack* value);
 
     char GetCharEntityMetadata(int valueId);
     short GetShortEntityMetadata(int valueId);
     int GetIntEntityMetadata(int valueId);
     float GetFloatEntityMetadata(int valueId);
+    const std::wstring& GetStringMetadata(int valueId);
     const Inventory::ItemStack* GetItemEntityMetadata(int valueId);
 
     bool HasChanged();

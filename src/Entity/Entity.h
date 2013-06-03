@@ -120,6 +120,12 @@ protected:
     bool stopMoving;
     bool noclip;
     bool onGround;
+    float fallDistance;
+    short fire;
+    short air;
+    int dimension;
+    bool invulnerable;
+    int portalCooldown;
 
     // Motion vector
     double motionX;
@@ -138,6 +144,7 @@ protected:
     // Chunk coordinate where entity is
     int chunkX;
     int chunkZ;
+
 
     Util::AABB boundingBox;
 
