@@ -33,7 +33,7 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
     if (value != lastKeepAliveId)
     {
         std::cout << lastKeepAliveId << " " << value << std::endl;
-        disconnect("bad keepalive message");
+        kick("bad keepalive message");
     }
     lastKeepAliveId = 0;
 }
@@ -331,7 +331,7 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
         if (player != NULL)
             state = STATE_INGAME;
         else
-            disconnect("Bad state handleClientStatuses");
+            kick("Bad state handleClientStatuses");
     }
 }
 void NetworkSession::handlePluginMessage() throw (NetworkException)
@@ -483,7 +483,7 @@ void NetworkSession::UpdateTick()
         lastKeepAliveTick--;
         if (lastKeepAliveTick <= 0)
         {
-            disconnect("time out");
+            kick("time out");
         }
     }
     else

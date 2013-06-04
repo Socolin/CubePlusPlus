@@ -61,7 +61,6 @@ void NetworkSession::ReceiveInBuffer() throw (NetworkException)
                 continue;
             throw NetworkException("Read == -1");
         }
-        //std::cout << "read:" << count << std::endl;
         bufferSize += count;
     }
     while (count == INITIAL_BUFFER_SIZE);
@@ -100,7 +99,6 @@ void NetworkSession::ReceiveData() throw (NetworkException)
             startPosInBuffer = backupStartPos;
             break;
         }
-        //std::cout << "packetSize: " << (startPosInBuffer - backupStartPos) << std::endl;
     }
 }
 
@@ -116,9 +114,10 @@ short NetworkSession::readShort() throw (NetworkException)
 {
     if (2 + startPosInBuffer > bufferSize)
         throw NetworkExceptionData("2 + startPosInBuffer > bufferSize");
-    short result = 0;
-    result += (((short)buffer[startPosInBuffer]) & 0xff)  << 8;
-    result += (((short)buffer[startPosInBuffer + 1] & 0xff));
+
+    short result;
+    result = *((short*)(&buffer[startPosInBuffer]));
+    result = be16toh(result);
     startPosInBuffer += 2;
     return result;
 }
@@ -135,6 +134,21 @@ void NetworkSession::disconnect(const char* reason)
     std::cout << "Disconnect player: "<< reason << std::endl;
     if (player != nullptr)
     {
+        player->Disconnect();
+        World::WorldManager& worldManager = World::WorldManager::Instance();
+        worldManager.RemovePlayer(player);
+        player = nullptr;
+    }
+    close(socket);
+}
+
+void NetworkSession::kick(const char* reason)
+{
+    state = STATE_DISCONECT;
+    std::cout << "Kick player: "<< reason << std::endl;
+    if (player != nullptr)
+    {
+        player->Kick();
         World::WorldManager& worldManager = World::WorldManager::Instance();
         worldManager.RemovePlayer(player);
         player = nullptr;
@@ -153,11 +167,9 @@ int NetworkSession::readInt() throw (NetworkException)
     if (4 + startPosInBuffer > bufferSize)
         throw NetworkExceptionData("4 + startPosInBuffer > bufferSize");
 
-    int result = 0;
-    result = (((int)buffer[startPosInBuffer]) & 0xff) << 24;
-    result += (((int)buffer[startPosInBuffer + 1]) & 0xff)  << 16;
-    result += (((int)buffer[startPosInBuffer + 2]) & 0xff)  << 8;
-    result += (((int)buffer[startPosInBuffer + 3] & 0xff));
+    int result;
+    result = *((int*)(&buffer[startPosInBuffer]));
+    result = be32toh(result);
     startPosInBuffer += 4;
     return result;
 }
@@ -166,18 +178,11 @@ long NetworkSession::readLong() throw (NetworkException)
     if (8 + startPosInBuffer > bufferSize)
         throw NetworkExceptionData("8 + startPosInBuffer > bufferSize");
 
-    long result = 0;
-
-    result = (((long)buffer[startPosInBuffer]) & 0xff) << 56;
-    result += (((long)buffer[startPosInBuffer + 1]) & 0xff) << 48;
-    result += (((long)buffer[startPosInBuffer + 2]) & 0xff) << 40;
-    result += (((long)buffer[startPosInBuffer + 3] & 0xff)) << 32;
-    result += (((long)buffer[startPosInBuffer + 4] & 0xff)) << 24;
-    result += (((long)buffer[startPosInBuffer + 5] & 0xff)) << 16;
-    result += (((long)buffer[startPosInBuffer + 6] & 0xff)) << 8;
-    result += (((long)buffer[startPosInBuffer + 7] & 0xff));
-
+    long result;
+    result = *((long*)(&buffer[startPosInBuffer]));
+    result = be64toh(result);
     startPosInBuffer += 8;
+
     return result;
 }
 buffer_t NetworkSession::readBuffer() throw (NetworkException)
@@ -276,7 +281,7 @@ void NetworkSession::SendDelayedData(char* buffer, int len)
                     return;
                 }
                 perror("send");
-                disconnect("socket error");
+                kick("socket error");
                 return;
             }
         }
@@ -331,7 +336,7 @@ bool NetworkSession::SendPendingData()
                 return false;
             }
             perror("send");
-            disconnect("SendError");
+            kick("SendError");
             return false;
         }
         pendingDataPos += res;

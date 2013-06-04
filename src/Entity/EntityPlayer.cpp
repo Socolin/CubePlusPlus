@@ -222,6 +222,12 @@ void EntityPlayer::Kick()
     // TODO packet kick
     if (session != NULL)
         session->disconnect("kick");
+    session = nullptr;
+}
+
+void EntityPlayer::Disconnect()
+{
+    session = nullptr;
 }
 
 EntityPlayer::eGameMode EntityPlayer::GetGameMode() const

@@ -97,6 +97,7 @@ public:
      */
     void Kick();
 
+    void Disconnect();
     /**
      * Resend block data to player, ex: when a PlaceBlock fail etc...
      * @param x block coordinate

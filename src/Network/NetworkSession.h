@@ -69,6 +69,7 @@ public:
     }
 
     void disconnect(const char* reason = "unk");
+    void kick(const char* reason = "unk");
 
     void handleKeepAlive() throw (NetworkException);
     void handleHandShake() throw (NetworkException);

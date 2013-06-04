@@ -18,18 +18,15 @@ namespace Network
 {
 
 NetworkManager::NetworkManager()
+    : sfd(0), s(0), efd(0), events(nullptr)
 {
-    sfd = 0;
-    s = 0;
-    efd = 0;
-    events = nullptr;
     event = epoll_event {0,epoll_data_t{nullptr}};
 }
 
 NetworkManager::~NetworkManager()
 {
     free(events);
-for (auto sessionItr : sessionList)
+    for (auto sessionItr : sessionList)
     {
         delete sessionItr.second;
     }
@@ -37,24 +34,19 @@ for (auto sessionItr : sessionList)
 
 static int create_and_bind(unsigned short port)
 {
-    int listenfd = 0;
+    int listenfd = socket(AF_INET, SOCK_STREAM, 0);
 
     struct sockaddr_in serv_addr;
-
-    char sendBuff[1025];
-
-    listenfd = socket(AF_INET, SOCK_STREAM, 0);
     memset(&serv_addr, '0', sizeof(serv_addr));
-    memset(sendBuff, '0', sizeof(sendBuff));
-
     serv_addr.sin_family = AF_INET;
     serv_addr.sin_addr.s_addr = htonl(INADDR_ANY );
     serv_addr.sin_port = htons(port);
 
-    int result = bind(listenfd, (struct sockaddr*) &serv_addr,
-                      sizeof(serv_addr));
+    int result = bind(listenfd, (struct sockaddr*) &serv_addr, sizeof(serv_addr));
+
     if (result != 0)
         return -1;
+
     return listenfd;
 }
 
@@ -85,7 +77,7 @@ bool NetworkManager::StartServer(unsigned short port)
     sfd = create_and_bind(port);
     if (sfd == -1)
     {
-        std::cerr << "Could not bind" << std::endl;
+        std::cerr << "Could not bind on port" << port << std::endl;
         return false;
     }
     s = make_socket_non_blocking(sfd);
@@ -123,11 +115,9 @@ bool NetworkManager::StartServer(unsigned short port)
 
 void NetworkManager::ReceiveData()
 {
-    /* The event loop */
-    int n, i;
-
-    n = epoll_wait(efd, events, MAXEVENTS, 1);
-    for (i = 0; i < n; i++)
+    // Receive data and do somthing with it
+    int countEvent = epoll_wait(efd, events, MAXEVENTS, 1);
+    for (int i = 0; i < countEvent; i++)
     {
         if ((events[i].events & EPOLLERR) || (events[i].events & EPOLLHUP)
                 || (!(events[i].events & EPOLLIN)))
@@ -227,7 +217,6 @@ void NetworkManager::ReceiveData()
             {
                 OnDisconnectClient(events[i].data.fd);
             }
-
         }
     }
 }
@@ -259,7 +248,7 @@ void NetworkManager::OnDisconnectClient(int socket)
         if (!sessionItr->second->isDisconnected())
             sessionItr->second->disconnect("OnDisconnectClient");
         sessionList.erase(socket);
-        //delete sessionItr->second;
+        delete sessionItr->second;
     }
 }
 
