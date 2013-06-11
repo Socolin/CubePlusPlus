@@ -49,10 +49,10 @@ bool LivingEntity::Load(nbt::TagCompound* tagNbtData)
 
     if (tagNbtData->hasKey("CustomName"))
     {
-        const std::string& customName = tagNbtData->getString("CustomName");
-        std::wstring customWName;
-        Util::StringToWString(customWName, customName);
-        SetCustomName(customWName);
+//        const std::string& customName = tagNbtData->getString("CustomName");
+//        std::wstring customWName;
+//        Util::StringToWString(customWName, customName);
+//        SetCustomName(customWName);
     }
 
     nbt::TagList* tagEquipement = tagNbtData->getValueAt<nbt::TagList>("Equipment");

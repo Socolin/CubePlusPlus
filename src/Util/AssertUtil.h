@@ -17,6 +17,6 @@
 #endif
 
 #define AssertNotReached() ASSERT(false,"AssertNotReached");
-#define AssertSwitchBadDefault(Value) ASSERT(false,"In default case in switch("#Value ")with value" << Value);
+#define AssertSwitchBadDefault(Value) ASSERT(false,"In default case in switch("#Value ")with value" << (int)Value);
 
 #endif /* ASSERTUTIL_H_ */

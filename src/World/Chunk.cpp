@@ -869,6 +869,7 @@ bool Chunk::loadFromFile(nbt::NbtBuffer* nbtData)
                 if (chunkData->addData == nullptr)
                 {
                     chunkData->addData = new unsigned char[CHUNK_BLOCK_NIBBLE_SIZE];
+                    flagSectionUseAdd |= (1 << chunkSectionId);
                 }
                 memcpy(chunkData->addData, addMetadataArray->getValues(), CHUNK_BLOCK_NIBBLE_SIZE);
             }

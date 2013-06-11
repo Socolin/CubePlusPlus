@@ -12,8 +12,15 @@ i_block Chunk::getBlockAt(i_small_coord x, i_height y, i_small_coord z)
     {
         if (data->addData != NULL)
         {
-            int cellId = ((y & 0xf) << 8 | z << 4 | x);
-            return data->blocks[cellId] | (data->addData[cellId << 1] & (0xf << ((x & 0x1) << 2)));
+            int cellId = (y & 0xf) << 8 | z << 4 | x;
+            if ((x & 0x1) == 0)
+            {
+                return data->blocks[cellId] | ((data->addData[cellId >> 1] & 0xf) << 8);
+            }
+            else
+            {
+                return data->blocks[cellId] | ((data->addData[cellId >> 1] & 0xf0)) << 4;
+            }
         }
         else
         {

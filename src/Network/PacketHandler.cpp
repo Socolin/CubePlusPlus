@@ -437,7 +437,7 @@ void NetworkSession::handlePing() throw (NetworkException)
 
     std::wstring answer(L"\u00a7\u0031\u0001");
     answer += CURRENT_VERSION_PROTOCOL_WSTR;
-    answer += L"\u00011.5\u0001";
+    answer += L"\u00011.5.2\u0001";
     std::copy(motd.begin(), motd.end(), std::back_inserter(answer));
     answer += L"\u0001";
     std::copy(str_currentPlayers.begin(), str_currentPlayers.end(), std::back_inserter(answer));
