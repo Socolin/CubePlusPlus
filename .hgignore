@@ -12,3 +12,4 @@ doc/latex
 doc/html
 lib/cppNBT
 bin
+.project
