@@ -15,7 +15,7 @@
 
 #include "Block/Scripts/Basics/BlockRedstoneTorchBurnoutMgr.h"
 
-#define CHUNK_KEY(X,Z) ((((long)X << 32) & 0xffffffff00000000)| ((long)Z & 0x00000000ffffffff))
+#define CHUNK_KEY(X,Z) (((((long)X) << 32) & 0xffffffff00000000)| (((long)Z) & 0x00000000ffffffff))
 
 namespace Network
 {
