@@ -97,7 +97,7 @@ NetworkPacket& NetworkPacket::operator <<(unsigned int value)
     return *this;
 }
 
-NetworkPacket& NetworkPacket::operator <<(long value)
+NetworkPacket& NetworkPacket::operator <<(long long value)
 {
     tmpBuffer[0] = (value >> 56) & 0xff;
     tmpBuffer[1] = (value >> 48) & 0xff;

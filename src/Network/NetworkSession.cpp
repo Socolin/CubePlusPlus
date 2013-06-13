@@ -173,13 +173,13 @@ int NetworkSession::readInt() throw (NetworkException)
     startPosInBuffer += 4;
     return result;
 }
-long NetworkSession::readLong() throw (NetworkException)
+long long NetworkSession::readLong() throw (NetworkException)
 {
     if (8 + startPosInBuffer > bufferSize)
         throw NetworkExceptionData("8 + startPosInBuffer > bufferSize");
 
-    long result;
-    result = *((long*)(&buffer[startPosInBuffer]));
+    long long result;
+    result = *((long long*)(&buffer[startPosInBuffer]));
     result = be64toh(result);
     startPosInBuffer += 8;
 

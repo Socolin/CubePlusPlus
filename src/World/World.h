@@ -15,7 +15,7 @@
 
 #include "Block/Scripts/Basics/BlockRedstoneTorchBurnoutMgr.h"
 
-#define CHUNK_KEY(X,Z) (((((long)X) << 32) & 0xffffffff00000000)| (((long)Z) & 0x00000000ffffffff))
+#define CHUNK_KEY(X,Z) (((((long long)X) << 32) & 0xffffffff00000000)| (((long long)Z) & 0x00000000ffffffff))
 
 namespace Network
 {
@@ -65,7 +65,7 @@ public:
     void RequestChunk(EntityPlayer* player, int x, int z);
     void Unload();
     int getViewDistance();
-    void SetTime(long time);
+    void SetTime(long long time);
 
     /*Blocks utils*/
     inline i_block GetBlockId(int x, i_height y, int z);
@@ -200,11 +200,11 @@ private:
     RegionManager regionManager;
 
     /// Map that store Chunk, use macro CHUNK_KEY(x, z) to get a chunk
-    std::unordered_map<long, Chunk*> chunkMap;
+    std::unordered_map<long long, Chunk*> chunkMap;
     /// Map that store VirtualChunk, use macro CHUNK_KEY(x, z) to get a one
-    std::unordered_map<long, VirtualChunk*> virtualChunkMap;
+    std::unordered_map<long long, VirtualChunk*> virtualChunkMap;
     /// Map that store VirtualSmallChunk, use macro CHUNK_KEY(x, z) to get a one
-    std::unordered_map<long, VirtualSmallChunk*> virtualSmallChunkMap;
+    std::unordered_map<long long, VirtualSmallChunk*> virtualSmallChunkMap;
 
 
     /// Link EntityId and Entity
@@ -253,8 +253,8 @@ private:
     // TODO: Export it in an other class ?
     Position spawnPosition;
 
-    long ageOfWorld;
-    long currentTime;
+    long long ageOfWorld;
+    long long currentTime;
 
     int rainTime;
     bool raining;
@@ -262,7 +262,7 @@ private:
     bool thundering;
 
     bool hardcore;
-    long seed;
+    long long seed;
     int gameType;
 };
 

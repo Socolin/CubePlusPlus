@@ -54,7 +54,7 @@ int main(void)
     struct timespec unused;
     requestTime.tv_sec = 0;
 
-    long lateness = 0;
+    long long lateness = 0;
     while (worldManager.IsRunning())
     {
         manager.ReceiveData();
@@ -62,7 +62,7 @@ int main(void)
         clock_t diff = std::clock() - time;
         time = std::clock();
 
-        long diffInMsSeconds = diff * 1000;
+        long long diffInMsSeconds = diff * 1000;
         if ((diffInMsSeconds + lateness) < 50 * CLOCKS_PER_SEC)
         {
             lateness = 0;

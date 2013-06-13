@@ -6,7 +6,7 @@
 
 namespace World
 {
-#define REGION_KEY(X,Z) ((((long)X << 32) & 0xffffffff00000000)| ((long)Z & 0x00000000ffffffff))
+#define REGION_KEY(X,Z) ((((long long)X << 32) & 0xffffffff00000000)| ((long long)Z & 0x00000000ffffffff))
 
 class Region;
 class RegionManager
@@ -18,7 +18,7 @@ public:
 private:
     void registerRegion(int x, int z, Region* region);
 private:
-    std::unordered_map<long, Region*> regionMap;
+    std::unordered_map<long long, Region*> regionMap;
     std::string worldPath;
 };
 

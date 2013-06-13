@@ -30,7 +30,7 @@ class NetworkPacket
 
     typedef union
     {
-        long l;
+        long long l;
         double d;
     } LongToDouble;
 
@@ -50,7 +50,7 @@ public:
     NetworkPacket& operator <<(unsigned short value);
     NetworkPacket& operator <<(int value);
     NetworkPacket& operator <<(unsigned int value);
-    NetworkPacket& operator <<(long value);
+    NetworkPacket& operator <<(long long value);
     NetworkPacket& operator <<(float value);
     NetworkPacket& operator <<(double value);
     NetworkPacket& operator <<(const std::wstring& value);

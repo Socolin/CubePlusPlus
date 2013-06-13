@@ -3,7 +3,7 @@
 
 namespace Network
 {
-inline void NetworkSession::SendUpdateTime(long currentTick, long ageOfWorld)
+inline void NetworkSession::SendUpdateTime(long long currentTick, long long ageOfWorld)
 {
     NetworkPacket packetUpdateTime(OP_TIME_UPDATE);
     packetUpdateTime << ageOfWorld << currentTick;

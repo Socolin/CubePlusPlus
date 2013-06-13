@@ -62,19 +62,19 @@ World::~World()
 void World::UpdateTick()
 {
     updateInProgress = true;
-    for (std::pair<long, Chunk*> chunk : chunkMap)
+    for (std::pair<long long, Chunk*> chunk : chunkMap)
     {
         chunk.second->UpdateTick();
     }
-    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+    for (std::pair<long long, VirtualChunk*> chunk : virtualChunkMap)
     {
         chunk.second->UpdateTick();
     }
-    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+    for (std::pair<long long, VirtualChunk*> chunk : virtualChunkMap)
     {
         chunk.second->SendUpdate();
     }
-    for (std::pair<long, Chunk*> chunk : chunkMap)
+    for (std::pair<long long, Chunk*> chunk : chunkMap)
     {
         chunk.second->SendUpdate();
     }
@@ -511,19 +511,19 @@ void World::SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) cons
 
 void World::Unload()
 {
-    for (std::pair<long, Chunk*> chunk : chunkMap)
+    for (std::pair<long long, Chunk*> chunk : chunkMap)
     {
         chunk.second->Unload();
         delete chunk.second;
     }
     chunkMap.clear();
-    for (std::pair<long, VirtualChunk*> chunk : virtualChunkMap)
+    for (std::pair<long long, VirtualChunk*> chunk : virtualChunkMap)
     {
         chunk.second->Unload();
         delete chunk.second;
     }
     virtualChunkMap.clear();
-    for (std::pair<long, VirtualSmallChunk*> chunk : virtualSmallChunkMap)
+    for (std::pair<long long, VirtualSmallChunk*> chunk : virtualSmallChunkMap)
     {
         delete chunk.second;
     }
@@ -1015,7 +1015,7 @@ bool World::isBlockDirectlyLightedFromSky(int x, i_height y, int z)
     return false;
 }
 
-void World::SetTime(long time)
+void World::SetTime(long long time)
 {
     currentTime = time;
 }

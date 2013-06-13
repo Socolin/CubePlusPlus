@@ -47,7 +47,7 @@ typedef union
 
 typedef union
 {
-    long i;
+    long long i;
     double f;
 } LongToDouble;
 
@@ -100,7 +100,7 @@ public:
     void handleDisconnect() throw (NetworkException);
     void handlePing () throw (NetworkException);
 
-    inline void SendUpdateTime(long currentTick, long ageOfWorld);
+    inline void SendUpdateTime(long long currentTick, long long ageOfWorld);
     inline void SendSetExperience(short level, short totalXP, float pct);
     inline void SendUpdateHealth(short health, short food, float foodSaturation);
     inline void SendSetPositionAndLook(double x, double y, double stance, double z, float yaw, float pitch, bool onGround);
@@ -119,7 +119,7 @@ private:
     char readByte() throw (NetworkException);
     short readShort() throw (NetworkException);
     int readInt() throw (NetworkException);
-    long readLong() throw (NetworkException);
+    long long readLong() throw (NetworkException);
     buffer_t readBuffer() throw (NetworkException);
     std::wstring readString(const int maxSize) throw (NetworkException);
     float readFloat() throw (NetworkException);
