@@ -92,11 +92,14 @@ public:
     virtual bool Save(nbt::TagCompound* tagNbtData) override;
 
     /**
-     * Kick player
-     * TODO: add reason and check it work well
+     * Kick player by sending kick packet and set session to null
+     * @param message
      */
-    void Kick();
+    void Kick(const std::wstring message);
 
+    /**
+     * Set session to null
+     */
     void Disconnect();
     /**
      * Resend block data to player, ex: when a PlaceBlock fail etc...

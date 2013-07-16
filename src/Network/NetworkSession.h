@@ -37,8 +37,10 @@ enum eSessionState
     STATE_INGAME    = 0x8,
     STATE_KICKED    = 0x10,
     STATE_WAIT_LOGGIN= 0x20,
+    STATE_ERROR     = 0x40,
 
-    STATE_EVERYTIME = STATE_NOTLOGGED | STATE_LOGGING | STATE_LOGGED | STATE_INGAME | STATE_WAIT_LOGGIN
+    STATE_EVERYTIME = STATE_NOTLOGGED | STATE_LOGGING | STATE_LOGGED | STATE_INGAME | STATE_WAIT_LOGGIN,
+    STATES_DISCONECT = STATE_DISCONECT | STATE_KICKED | STATE_ERROR
 };
 
 typedef union
@@ -70,8 +72,11 @@ public:
     {
     }
 
-    void disconnect(const char* reason = "unk");
-    void kick(const char* reason = "unk");
+    void CloseForDelete();
+    void SendKickMessage(const std::wstring& message);
+
+    void disconnect(std::wstring message);
+    void kick(std::wstring message);
 
     void handleKeepAlive() throw (NetworkException);
     void handleHandShake() throw (NetworkException);
@@ -108,10 +113,10 @@ public:
     inline void SendSetPositionAndLook(double x, double y, double stance, double z, float yaw, float pitch, bool onGround);
     inline void SendSetAbilities(char walkingSpeed, char flyingSpeed, char abilityFlag);
 
-    void UpdateTick();
+    bool UpdateTick();
     inline bool isDisconnected()
     {
-        return state == STATE_DISCONECT;
+        return (state & (STATES_DISCONECT));
     }
 
     bool HasPendingData();

@@ -218,11 +218,10 @@ void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
     }
 }
 
-void EntityPlayer::Kick()
+void EntityPlayer::Kick(const std::wstring message)
 {
-    // TODO packet kick
     if (session != NULL)
-        session->disconnect("kick");
+        session->kick(message);
     session = nullptr;
 }
 

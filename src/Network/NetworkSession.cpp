@@ -47,7 +47,6 @@ NetworkSession::~NetworkSession()
     }
     if (player)
     {
-        delete player;
         player = nullptr;
     }
 }
@@ -151,15 +150,10 @@ float NetworkSession::readFloat() throw (NetworkException)
     return dbl.f;
 }
 
-void NetworkSession::disconnect(const char* reason)
+void NetworkSession::CloseForDelete()
 {
-    if (state == STATE_KICKED || state == STATE_DISCONECT)
-        return;
-    state = STATE_DISCONECT;
-    std::cout << "Disconnect player: "<< reason << std::endl;
     if (player != nullptr)
     {
-        player->Disconnect();
         World::WorldManager& worldManager = World::WorldManager::Instance();
         worldManager.RemovePlayer(player);
         player = nullptr;
@@ -167,29 +161,52 @@ void NetworkSession::disconnect(const char* reason)
     close(socket);
 }
 
-void NetworkSession::kick(const char* reason)
+void NetworkSession::SendKickMessage(const std::wstring& message)
 {
-    if (state == STATE_KICKED || state == STATE_DISCONECT)
+    if (isDisconnected())
         return;
-    state = STATE_KICKED;
 
-    std::cout << "Kick player: " << reason << std::endl;
-    std::wstring wReason;
-    std::string sReason(reason);
-    Util::StringToWString(wReason, sReason);
     NetworkPacket packet(OP_KICK);
-    packet << wReason;
+    packet << message;
     SendPacket(packet);
+    state = STATE_KICKED;
+}
+
+void NetworkSession::disconnect(std::wstring message)
+{
+    if (isDisconnected())
+        return;
     state = STATE_DISCONECT;
 
     if (player != nullptr)
     {
-        World::WorldManager& worldManager = World::WorldManager::Instance();
-        worldManager.RemovePlayer(player);
+        std::wcout << L"Disconnect player: " << username << ": " << message << std::endl;
+        // Unlink session
         player->Disconnect();
         player = nullptr;
     }
-    shutdown(socket, SHUT_RDWR);
+    else
+    {
+        std::wcout << L"Disconnect session: " << message << std::endl;
+    }
+}
+
+void NetworkSession::kick(std::wstring message)
+{
+    if (isDisconnected())
+        return;
+    if (player != nullptr)
+    {
+        std::wcout << L"Kick " << username << L": " << message << std::endl;
+        player->Disconnect();
+    }
+    else
+    {
+        std::wcout << L"Kick sessions : " << message << std::endl;
+    }
+
+    SendKickMessage(message);
+    state = STATE_KICKED;
 }
 
 double NetworkSession::readDouble() throw (NetworkException)
@@ -238,7 +255,7 @@ buffer_t NetworkSession::readBuffer() throw (NetworkException)
 
 void NetworkSession::SendPacket(const NetworkPacket& packet)
 {
-    if (state == STATE_DISCONECT)
+    if (isDisconnected())
         return;
 
     if (cryptedMode)
@@ -259,7 +276,14 @@ void NetworkSession::SendPacket(const NetworkPacket& packet)
     }
     else
     {
-        send(socket, &packet.getPacketData()[0], packet.getPacketSize(), 0);
+        int res = send(socket, &packet.getPacketData()[0], packet.getPacketSize(), 0);
+        if (res == -1)
+        {
+            if (errno != EAGAIN)
+            {
+                disconnect(std::wstring(L"Socket error 22"));
+            }
+        }
     }
 }
 
@@ -316,8 +340,7 @@ void NetworkSession::SendDelayedData(char* buffer, int len)
                     AppendPendingDataToSend(reinterpret_cast<char*>(buffer), len);
                     return;
                 }
-                perror("send");
-                kick("socket error");
+                disconnect(std::wstring(L"Socket error"));
                 return;
             }
         }
@@ -327,6 +350,7 @@ void NetworkSession::SendDelayedData(char* buffer, int len)
         }
     }
 }
+
 
 void NetworkSession::AppendPendingDataToSend(char* buffer, int len)
 {
@@ -347,7 +371,7 @@ bool NetworkSession::HasPendingData()
 
 bool NetworkSession::SendPendingData()
 {
-    if (state == STATE_DISCONECT)
+    if (isDisconnected())
         return false;
 
     int pendingSize = pendingDataSize - pendingDataPos;
@@ -371,8 +395,7 @@ bool NetworkSession::SendPendingData()
             {
                 return false;
             }
-            perror("send");
-            kick("SendError");
+            disconnect(std::wstring(L"Socket error 10"));
             return false;
         }
         pendingDataPos += res;

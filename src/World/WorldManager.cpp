@@ -97,12 +97,13 @@ void WorldManager::Init()
 }
 void WorldManager::Stop()
 {
+    std::wstring kickReason(L"Server shutting down");
     isRunning = false;
     for (auto itrPlr = playerList.begin(); itrPlr != playerList.end();)
     {
         EntityPlayer* toKick = *itrPlr;
         itrPlr++;
-        toKick->Kick();
+        toKick->Kick(kickReason);
     }
 }
 void WorldManager::SendToAllPlayer(const Network::NetworkPacket& packet) const

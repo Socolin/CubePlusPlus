@@ -117,6 +117,17 @@ void NetworkManager::ReceiveData()
 {
     for (int socket : closedSocket)
     {
+        epoll_ctl(efd, EPOLL_CTL_DEL, socket, &event);
+        NetworkSession* session = sessionList[socket];
+        if (session)
+        {
+            session->CloseForDelete();
+            delete session;
+        }
+        else
+        {
+            close(socket);
+        }
         sessionList.erase(socket);
     }
     closedSocket.clear();
@@ -224,14 +235,17 @@ void NetworkManager::ReceiveData()
             }
         }
     }
-
     for (auto sessionItr : sessionList)
     {
         Network::NetworkSession* session = sessionItr.second;
         if (session != nullptr)
-            session->UpdateTick();
+        {
+            if (!session->UpdateTick())
+            {
+                OnDisconnectClient(sessionItr.first);
+            }
+        }
     }
-
 }
 
 void NetworkManager::StopServer()
@@ -253,15 +267,12 @@ void NetworkManager::OnNewClient(int socket)
 
 void NetworkManager::OnDisconnectClient(int socket)
 {
-    close(socket);
-    epoll_ctl(efd, EPOLL_CTL_DEL, socket, &event);
     auto sessionItr = sessionList.find(socket);
     if (sessionItr != sessionList.end())
     {
         if (!sessionItr->second->isDisconnected())
-            sessionItr->second->disconnect("OnDisconnectClient");
+            sessionItr->second->disconnect(std::wstring(L"OnDisconnectClient"));
         closedSocket.push_back(socket);
-        delete sessionItr->second;
     }
 }
 

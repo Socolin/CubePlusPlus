@@ -36,7 +36,7 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
     if (value != lastKeepAliveId)
     {
         std::cout << lastKeepAliveId << " " << value << std::endl;
-        kick("bad keepalive message");
+        kick(std::wstring(L"Bad keepalive message"));
     }
     lastKeepAliveId = 0;
 }
@@ -50,7 +50,7 @@ void NetworkSession::handleHandShake() throw (NetworkException)
     World:: WorldManager& worldManager = World:: WorldManager::Instance();
     if (worldManager.IsFull())
     {
-        kick("Server is full");
+        kick(std::wstring(L"Server is full"));
         return;
     }
 
@@ -355,7 +355,7 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
             if (player != NULL)
                 state = STATE_INGAME;
             else
-                kick("Bad state handleClientStatuses");
+                kick(std::wstring(L"Error 25"));
         }
         else
         {
@@ -543,16 +543,18 @@ void NetworkSession::handlePing() throw (NetworkException)
 void NetworkSession::handleDisconnect() throw (NetworkException)
 {
     readString(128);
-    disconnect("ask by client");
+    disconnect(std::wstring(L"Ask by client"));
 }
 
-void NetworkSession::UpdateTick()
+bool NetworkSession::UpdateTick()
 {
+    if (isDisconnected())
+        return false;
     if (state == STATE_WAIT_LOGGIN)
     {
         int ret = LoginManager::Instance().CheckLogin(waitLoginId);
         if (ret < 0)
-            return;
+            return true;
         if (ret == 1)
         {
             NetworkPacket packet(OP_LOGIN_REQUEST);
@@ -563,24 +565,30 @@ void NetworkSession::UpdateTick()
             World::WorldManager& worldManager = World::WorldManager::Instance();
             player = worldManager.LoadAndJoinWorld(username, this);
             if (player != NULL)
+            {
                 state = STATE_INGAME;
+            }
             else
-                kick("Error 42");
+            {
+                kick(L"Error 42");
+                return false;
+            }
         }
         else
         {
-            kick("Bad login");
+            kick(std::wstring(L"Bad login, or minecraft.net is down"));
+            return false;
         }
-        return;
+        return true;
     }
     if (state != STATE_INGAME)
-        return;
+        return true;
     if (lastKeepAliveId != 0)
     {
         lastKeepAliveTick--;
         if (lastKeepAliveTick <= 0)
         {
-            kick("Time out");
+            kick(std::wstring(L"Time out"));
         }
     }
     else
@@ -597,7 +605,8 @@ void NetworkSession::UpdateTick()
             SendPacket(keepAlivePacket);
         }
     }
-
     while (SendPendingData());
+
+    return true;
 }
 }
