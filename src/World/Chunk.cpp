@@ -45,7 +45,7 @@ Chunk::~Chunk()
         if (datas[i] != NULL)
         {
             if (datas[i]->addData != NULL)
-                delete datas[i]->addData;
+                delete[] datas[i]->addData;
             delete datas[i];
         }
     }
