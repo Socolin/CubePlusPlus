@@ -577,11 +577,12 @@ bool NetworkSession::UpdateTick()
         return true;
     if (lastKeepAliveId != 0)
     {
-        lastKeepAliveTick--;
         if (lastKeepAliveTick <= 0)
         {
             kick(std::wstring(L"Time out"));
         }
+        else
+            lastKeepAliveTick--;
     }
     else
     {

@@ -38,6 +38,14 @@ static int create_and_bind(unsigned short port)
 {
     int listenfd = socket(AF_INET, SOCK_STREAM, 0);
 
+    int optval = 1;
+    int res = setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
+    if (res == -1)
+    {
+        perror("setsockopt");
+        return -1;
+    }
+
     struct sockaddr_in serv_addr;
     memset(&serv_addr, '0', sizeof(serv_addr));
     serv_addr.sin_family = AF_INET;
@@ -47,7 +55,10 @@ static int create_and_bind(unsigned short port)
     int result = bind(listenfd, (struct sockaddr*) &serv_addr, sizeof(serv_addr));
 
     if (result != 0)
+    {
+        perror("bind");
         return -1;
+    }
 
     return listenfd;
 }

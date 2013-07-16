@@ -65,8 +65,18 @@ void NetworkSession::ReceiveInBuffer() throw (NetworkException)
     {
         if (maxBufferSize < bufferSize + INITIAL_BUFFER_SIZE)
         {
-            buffer.resize(maxBufferSize + INITIAL_BUFFER_SIZE);
-            maxBufferSize += INITIAL_BUFFER_SIZE;
+            if (startPosInBuffer > 1024)
+            {
+                memmove(&(buffer[0]),&(buffer[startPosInBuffer]), bufferSize - startPosInBuffer);
+                bufferSize -= startPosInBuffer;
+                currentPosInBuffer -= startPosInBuffer;
+                startPosInBuffer = 0;
+            }
+            if (maxBufferSize < bufferSize + INITIAL_BUFFER_SIZE)
+            {
+                buffer.resize(maxBufferSize + INITIAL_BUFFER_SIZE);
+                maxBufferSize += INITIAL_BUFFER_SIZE;
+            }
         }
         count = read(socket, &(buffer[bufferSize]), INITIAL_BUFFER_SIZE);
         if (count == -1)
@@ -357,8 +367,21 @@ void NetworkSession::AppendPendingDataToSend(char* buffer, int len)
 {
     if (pendingDataSize + len > pendingDataMaxSize)
     {
-        pendingData.resize(pendingDataSize + len);
-        pendingDataMaxSize = pendingDataSize + len;
+        if (pendingDataPos > 1024)
+        {
+            memmove(&(pendingData[0]),&(pendingData[pendingDataPos]), pendingDataSize - pendingDataPos);
+            pendingDataSize -= pendingDataPos;
+            pendingDataPos = 0;
+        }
+        if (pendingDataSize + len > pendingDataMaxSize)
+        {
+            pendingData.resize(pendingDataSize + len);
+            pendingDataMaxSize = pendingDataSize + len;
+        }
+        if (pendingDataSize + len > 1024 * 1024)
+        {
+            disconnect(L"Buffer overflow");
+        }
     }
 
     std::memmove((char*)pendingData.data() + pendingDataSize, buffer, len);
