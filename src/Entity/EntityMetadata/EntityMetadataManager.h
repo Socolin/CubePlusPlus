@@ -44,6 +44,7 @@ public:
 private:
     std::map<int, EntityMetadata*> metadataList;
     bool hasChanged; // TODO: maybe change it and use list of change
+    std::wstring nullStr;
 };
 
 } /* namespace World */

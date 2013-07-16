@@ -151,7 +151,7 @@ const std::wstring& EntityMetadataManager::GetStringMetadata(int valueId)
             return itemMetadata->getValue();
         }
     }
-    return nullptr;
+    return nullStr;
 }
 
 const Inventory::ItemStack* EntityMetadataManager::GetItemEntityMetadata(int valueId)
