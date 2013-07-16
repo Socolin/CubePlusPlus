@@ -17,10 +17,20 @@
 
 #include <iostream>
 #include <ctime>
+#include <signal.h>
+
+
+void stopHandler(int sig)
+{
+    World::WorldManager::Instance().Stop();
+}
+
 
 int main(void)
-
 {
+    signal(SIGINT, stopHandler);
+    signal(SIGTSTP, stopHandler);
+
     Database::DatabaseManager::InitInstance();
     Network::initOpcode();
     Network::NetworkManager manager;

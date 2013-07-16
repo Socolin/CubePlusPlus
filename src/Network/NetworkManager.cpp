@@ -257,6 +257,7 @@ void NetworkManager::StopServer()
     sessionList.clear();
     free(events);
     close(sfd);
+    close(efd);
 }
 
 void NetworkManager::OnNewClient(int socket)
