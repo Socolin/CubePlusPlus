@@ -5,6 +5,7 @@
 
 #include <string>
 #include <set>
+#include <map>
 
 #include "Chat/ChatManager.h"
 
@@ -50,6 +51,7 @@ public:
 private:
     Chat::ChatManager chatManager;
     std::set<EntityPlayer*> playerList;
+    std::map<std::wstring, EntityPlayer*> playerByNameList;
     static WorldManager* instance;
     World* world;
     bool isRunning;

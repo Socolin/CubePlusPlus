@@ -23,6 +23,16 @@ WorldManager::WorldManager()
 
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
 {
+    auto playerItr = playerByNameList.find(name);
+    if (playerItr != playerByNameList.end())
+    {
+        EntityPlayer* oldPlr = playerItr->second;
+        if (oldPlr)
+        {
+            oldPlr->Kick(L"Logged from an other location");
+            RemovePlayer(oldPlr);
+        }
+    }
     EntityPlayer* player = new EntityPlayer(world->GetValidSpawnPosition(), name, session);
 
     std::string stringName;
@@ -46,16 +56,21 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
         playerCount++;
     playerList.insert(player);
 
+    playerByNameList[name] = player;
+
     return player;
 }
 
 void WorldManager::RemovePlayer(EntityPlayer* player)
 {
     if (playerList.find(player) != playerList.end())
+    {
         playerCount--;
-    world->RemovePlayer(player);
-    playerList.erase(player);
-    // delete player; do it later
+        world->RemovePlayer(player);
+        playerList.erase(player);
+        playerByNameList.erase(player->GetUsername());
+        // TODO: fiind where delete player
+    }
 }
 
 bool WorldManager::IsRunning()
