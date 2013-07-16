@@ -156,7 +156,7 @@ private:
             unsigned char* data = addData;
             for (int i = 0; i < CHUNK_BLOCK_NIBBLE_SIZE; i++)
             {
-                *data = 0xff;
+                *data = 0;
                 data++;
             }
         }
