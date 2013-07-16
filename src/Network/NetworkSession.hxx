@@ -34,4 +34,10 @@ inline void NetworkSession::SendSetAbilities(char walkingSpeed, char flyingSpeed
     packetAbilities << abilityFlag << walkingSpeed << flyingSpeed;
     SendPacket(packetAbilities);
 }
+inline void NetworkSession::SendChangeGameState(char reason, char gameMode)
+{
+    Network::NetworkPacket packetAbilities(Network::OP_CHANGE_GAME_STATE);
+    packetAbilities << reason << gameMode;
+    SendPacket(packetAbilities);
+}
 }

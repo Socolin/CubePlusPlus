@@ -17,6 +17,15 @@ class NetworkPacket;
 
 namespace World
 {
+enum eDifficulty
+{
+    PEACEFUL,
+    EASY,
+    NORMAL,
+    HARD,
+    DIFFICULTY_MAX
+};
+
 class EntityPlayer;
 class World;
 
@@ -60,6 +69,7 @@ private:
     std::string serverName;
     std::string serverMotd;
     bool onlineMode;
+    unsigned int difficulty;
 };
 
 } /* namespace World */

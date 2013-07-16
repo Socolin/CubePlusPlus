@@ -6,6 +6,7 @@
 #include "Config/Config.h"
 #include "Entity/EntityPlayer.h"
 #include "Network/NetworkPacket.h"
+#include "Network/NetworkSession.h"
 #include "Network/OpcodeList.h"
 #include "Util/StringUtil.h"
 #include "World.h"
@@ -19,6 +20,12 @@ WorldManager::WorldManager()
     Config::Config::getConfig().lookupValue("server.general.name", serverName);
     Config::Config::getConfig().lookupValue("server.general.motd", serverMotd);
     Config::Config::getConfig().lookupValue("server.general.online", onlineMode);
+    Config::Config::getConfig().lookupValue("server.general.difficulty", difficulty);
+    if (difficulty >= DIFFICULTY_MAX)
+    {
+        std::cerr << "Invalid difficulty value: " << difficulty << ", max value is :" << DIFFICULTY_MAX - 1 << std::endl;
+        difficulty = DIFFICULTY_MAX - 1;
+    }
 }
 
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
@@ -34,6 +41,11 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
         }
     }
     EntityPlayer* player = new EntityPlayer(world->GetValidSpawnPosition(), name, session);
+
+    Network::NetworkPacket packet(Network::OP_LOGIN_REQUEST);
+    std::wstring levelType(L"flat");
+    packet  << int(-1) << levelType << (char)1 << (char)0 << (char)difficulty << (char)0 << (maxPlayerCount > 120 ? char(120) : char(maxPlayerCount));
+    session->SendPacket(packet);
 
     std::string stringName;
     Util::WStringToString(name, stringName);

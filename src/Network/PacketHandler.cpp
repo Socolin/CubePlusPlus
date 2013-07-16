@@ -345,11 +345,6 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
         World::WorldManager& worldManager = World::WorldManager::Instance();
         if (!worldManager.IsOnlineMode())
         {
-            NetworkPacket packet(OP_LOGIN_REQUEST);
-            std::wstring levelType(L"flat");
-            packet  << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
-            SendPacket(packet);
-
             player = worldManager.LoadAndJoinWorld(username, this);
             if (player != NULL)
                 state = STATE_INGAME;
@@ -556,11 +551,6 @@ bool NetworkSession::UpdateTick()
             return true;
         if (ret == 1)
         {
-            NetworkPacket packet(OP_LOGIN_REQUEST);
-            std::wstring levelType(L"flat");
-            packet  << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
-            SendPacket(packet);
-
             World::WorldManager& worldManager = World::WorldManager::Instance();
             player = worldManager.LoadAndJoinWorld(username, this);
             if (player != NULL)
