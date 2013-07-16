@@ -74,7 +74,20 @@ void Chunk::SetBlockAt(i_small_coord x, i_height y, i_small_coord z, i_block blo
     }
     else
     {
-        data->blocks[(y & 0xf) << 8 | z << 4 | x] = blockID & 0xff;
+        int cellId = ((y & 0xf) << 8 | z << 4 | x);
+        data->blocks[cellId] = blockID & 0xff;
+        if (data->addData != NULL)
+        {
+            i_data currentBlock = data->addData[cellId >> 1];
+            if ((x & 0x1) == 0)
+            {
+                data->addData[cellId >> 1] = currentBlock & 0xf0;
+            }
+            else
+            {
+                data->addData[cellId >> 1] = currentBlock & 0x0f;
+            }
+        }
     }
     i_height terrainHeight = getHeightMapAt(x, z);
     if (sectionNotExist && y >= terrainHeight)
