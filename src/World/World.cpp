@@ -16,6 +16,7 @@
 #include "Network/OpcodeList.h"
 #include "Region.h"
 #include "Util/FloatUtil.h"
+#include "Util/types.h"
 #include "VirtualChunk.h"
 #include "VirtualSmallChunk.h"
 
@@ -1272,8 +1273,8 @@ Position World::GetValidSpawnPosition()
     Position validPosition(spawnPosX, spawnPosY, spawnPosZ);
     for (int y = spawnPosY + 1; y < 260; y++)
     {
-        i_block blockId = chunk->getBlockAt((int)spawnPosition.x & 0xf, y, (int)spawnPosition.z & 0xf);
         i_block blockId = chunk->getBlockAt(spawnPosX & 0xf, y, spawnPosZ & 0xf);
+        if (blockId == 0 && previousBlockId == 0)
         {
             break;
         }
