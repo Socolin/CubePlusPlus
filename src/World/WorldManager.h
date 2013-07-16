@@ -27,25 +27,35 @@ public:
     virtual ~WorldManager();
 
     void Init();
+    void Stop();
+    bool IsRunning();
+
     void UpdateTick() const;
 
     EntityPlayer* LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session);
     void RemovePlayer(EntityPlayer* player);
 
+    void SendToAllPlayer(const Network::NetworkPacket& packet) const;
     void HandleChatMessage(EntityPlayer* player, std::wstring& message);
 
-    int getPlayerCount();
-    void Stop();
-    bool IsRunning();
-    void SendToAllPlayer(Network::NetworkPacket& packet);
+    World* GetWorld() const;
 
-    World* GetWorld();
+    bool IsFull() const;
+    int GetPlayerCount() const;
+    const std::string& GetName() const;
+    const std::string& GetMotd() const;
+    int GetMaxPlayerCount() const;
+    void SetMaxPlayerCount(int maxPlayerCount);
 private:
     Chat::ChatManager chatManager;
     std::set<EntityPlayer*> playerList;
     static WorldManager* instance;
     World* world;
     bool isRunning;
+    int playerCount;
+    int maxPlayerCount;
+    std::string serverName;
+    std::string serverMotd;
 };
 
 } /* namespace World */

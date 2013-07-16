@@ -102,6 +102,15 @@ void NetworkSession::ReceiveData() throw (NetworkException)
     }
 }
 
+void NetworkSession::readData(int length, char* data) throw (NetworkException)
+{
+    if (length + startPosInBuffer > bufferSize)
+        throw NetworkExceptionData("length + startPosInBuffer > bufferSize");
+
+    memcpy(data, &(buffer[startPosInBuffer]), length);
+    startPosInBuffer += length;
+}
+
 char NetworkSession::readByte() throw (NetworkException)
 {
     if (1 + startPosInBuffer > bufferSize)
@@ -130,6 +139,8 @@ float NetworkSession::readFloat() throw (NetworkException)
 
 void NetworkSession::disconnect(const char* reason)
 {
+    if (state == STATE_KICKED || state == STATE_DISCONECT)
+        return;
     state = STATE_DISCONECT;
     std::cout << "Disconnect player: "<< reason << std::endl;
     if (player != nullptr)
@@ -144,16 +155,27 @@ void NetworkSession::disconnect(const char* reason)
 
 void NetworkSession::kick(const char* reason)
 {
+    if (state == STATE_KICKED || state == STATE_DISCONECT)
+        return;
+    state = STATE_KICKED;
+
+    std::cout << "Kick player: " << reason << std::endl;
+    std::wstring wReason;
+    std::string sReason(reason);
+    Util::StringToWString(wReason, sReason);
+    NetworkPacket packet(OP_KICK);
+    packet << wReason;
+    SendPacket(packet);
     state = STATE_DISCONECT;
-    std::cout << "Kick player: "<< reason << std::endl;
+
     if (player != nullptr)
     {
-        player->Kick();
         World::WorldManager& worldManager = World::WorldManager::Instance();
         worldManager.RemovePlayer(player);
+        player->Disconnect();
         player = nullptr;
     }
-    close(socket);
+    shutdown(socket, SHUT_RDWR);
 }
 
 double NetworkSession::readDouble() throw (NetworkException)

@@ -1282,9 +1282,16 @@ nbt::NbtFile* World::LoadNbtDatasForPlayer(const std::string& playerName)
     std::stringstream fileName;
     fileName << worldName << "/players/" << playerName << ".dat";
 
-    nbt::NbtFile* file = new nbt::NbtFile(fileName.str());
-    file->read();
-    return file;
+    try
+    {
+        nbt::NbtFile* file = new nbt::NbtFile(fileName.str());
+        file->read();
+        return file;
+    } catch(nbt::GzipIOException& e)
+    {
+        // No file found or corrupted file
+        return nullptr;
+    }
 }
 
 void World::loadGameMode(nbt::TagCompound* tagData)

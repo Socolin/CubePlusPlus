@@ -44,6 +44,12 @@ void NetworkSession::handleChatMessage() throw (NetworkException)
 }
 void NetworkSession::handleHandShake() throw (NetworkException)
 {
+    if (World:: WorldManager::Instance().IsFull())
+    {
+        kick("Server is full");
+        return;
+    }
+
     unsigned char protocolVersion = readByte();
     if (protocolVersion != CURRENT_VERSION_PROTOCOL)
         throw NetworkException("Bad protocol version, use 1.5");
@@ -422,15 +428,14 @@ void NetworkSession::handlePing() throw (NetworkException)
     char magic = readByte();
     DEBUG_CHAR(magic)
 
-    std::string motd;
-    (Config::Config::getConfig()).lookupValue("server.general.motd", motd);
-    int maxplayers = 0;
-    (Config::Config::getConfig()).lookupValue("server.general.maxplayers", maxplayers);
+    World::WorldManager& worldMgr = World::WorldManager::Instance();
+    const std::string& motd = worldMgr.GetMotd();
+    int maxplayers = worldMgr.GetMaxPlayerCount();
     std::ostringstream oss;
     oss << maxplayers;
     std::string str_maxplayers = oss.str();
 
-    int currentPlayers = World::WorldManager::Instance().getPlayerCount();
+    int currentPlayers = World::WorldManager::Instance().GetPlayerCount();
     std::ostringstream currentPlayerStream;
     currentPlayerStream << currentPlayers;
     std::string str_currentPlayers = currentPlayerStream.str();
