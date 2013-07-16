@@ -1191,7 +1191,15 @@ void World::load()
     fileName << worldName << "/level.dat";
 
     nbt::NbtFile nbtFile(fileName.str());
-    nbtFile.read();
+    try
+    {
+        nbtFile.read();
+    }
+    catch (nbt::GzipIOException& e)
+    {
+        LOG_ERROR << "No map found in world/ !" << std::endl;
+        return;
+    }
 
     nbt::Tag* root = nbtFile.getRoot();
 
