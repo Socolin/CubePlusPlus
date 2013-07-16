@@ -140,6 +140,7 @@ public:
     nbt::NbtFile* LoadNbtDatasForPlayer(const std::string& playerName);
     long long GetAgeOfWorld() const;
     long long GetCurrentTime() const;
+    bool isReadOnly() const;
 
 private:
     void UpdateTime();
@@ -266,6 +267,11 @@ private:
     bool hardcore;
     long long seed;
     int gameType;
+    bool readOnly;
+    bool weatherActivated;
+    bool lockedTime;
+    int lockedTimeValue;
+    bool enableUpdateChunk;
 };
 
 } /* namespace World */

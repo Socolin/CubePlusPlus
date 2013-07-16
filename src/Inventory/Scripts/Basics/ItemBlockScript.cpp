@@ -49,6 +49,12 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
             return false;
     }
 
+    if (world->isReadOnly())
+    {
+        user->ResetBlock(x, y, z);
+        return false;
+    }
+
     i_block currentBlockId = world->GetBlockId(x, y, z);
     if (currentBlockId != 0)
     {

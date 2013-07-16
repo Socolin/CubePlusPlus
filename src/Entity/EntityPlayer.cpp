@@ -266,13 +266,20 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*fac
 {
     if (!world)
         return;
+    if (state == 4)
+    {
+       DropItem(handsInventory->TakeSomeItemInSlot(handsInventory->getHandSlotId(), 1));
+       return;
+    }
+
+    if (world->isReadOnly())
+    {
+        ResetBlock(x, y, z);
+        return;
+    }
     if (state == 0)
     {
         world->RemoveBlock(x, y, z);
-    }
-    else if (state == 4)
-    {
-        DropItem(handsInventory->TakeSomeItemInSlot(handsInventory->getHandSlotId(), 1));
     }
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)

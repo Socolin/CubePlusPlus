@@ -19,6 +19,7 @@
 #include "Util/types.h"
 #include "VirtualChunk.h"
 #include "VirtualSmallChunk.h"
+#include "Config/Config.h"
 
 namespace World
 {
@@ -41,6 +42,11 @@ World::World(const std::string& worldName)
     , gameType(0)
 {
     redstoneTorchBurnoutMgr = new Scripting::BlockRedstoneTorchBurnoutMgr();
+    Config::Config::getConfig().lookupValue("server.world.read-only", readOnly);
+    Config::Config::getConfig().lookupValue("server.world.time.locked", lockedTime);
+    Config::Config::getConfig().lookupValue("server.world.time.locked-value", lockedTimeValue);
+    Config::Config::getConfig().lookupValue("server.world.time.locked-value", lockedTimeValue);
+    Config::Config::getConfig().lookupValue("server.world.chunk.update-tick", enableUpdateChunk);
     load();
 }
 
@@ -555,6 +561,10 @@ void World::UpdateTime()
     currentTime++;
     if (currentTime % 20 == 0)
     {
+        if (lockedTime)
+        {
+            currentTime = lockedTimeValue;
+        }
         Network::NetworkPacket updateTimePacket(Network::OP_TIME_UPDATE);
         updateTimePacket << ageOfWorld << currentTime;
         SendPacketToPlayerInWorld(updateTimePacket);
@@ -589,19 +599,22 @@ void World::UpdateTime()
         RemovePlayer(player);
     playerToRemove.clear();
 
-    rainTime--;
-    if (rainTime <= 0)
+    if (weatherActivated)
     {
-        raining = !raining;
-        UpdateGameState(raining ? 1 : 2, 0);
+        rainTime--;
+        if (rainTime <= 0)
+        {
+            raining = !raining;
+            UpdateGameState(raining ? 1 : 2, 0);
 
-        if (raining)
-        {
-            rainTime = (rand() % 12000) + 12000;
-        }
-        else
-        {
-            rainTime = (rand() % 168000) + 12000;
+            if (raining)
+            {
+                rainTime = (rand() % 12000) + 12000;
+            }
+            else
+            {
+                rainTime = (rand() % 168000) + 12000;
+            }
         }
     }
 }
@@ -1336,6 +1349,11 @@ long long World::GetAgeOfWorld() const
 long long World::GetCurrentTime() const
 {
     return currentTime;
+}
+
+bool World::isReadOnly() const
+{
+    return readOnly;
 }
 
 } /* namespace World */
