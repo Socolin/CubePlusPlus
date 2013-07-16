@@ -249,6 +249,14 @@ public:
      * @return window with id = 0
      */
     Window::Window* GetInventoryWindow() const;
+
+    /**
+     * Send a chat message to player, do not use if to send a message to all
+     * player, for optimisation, generate packet and send it to all.
+     * @param message messsage to send
+     */
+    void SendChatMessage(const std::wstring& message);
+
 private:
     typedef struct
     {

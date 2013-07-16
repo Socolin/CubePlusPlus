@@ -505,4 +505,11 @@ Window::Window* EntityPlayer::GetInventoryWindow() const
     return inventoryWindow;
 }
 
+void EntityPlayer::SendChatMessage(const std::wstring& message)
+{
+    Network::NetworkPacket packetChatMessage(Network::OP_CHAT_MESSAGE);
+    packetChatMessage << message;
+    Send(packetChatMessage);
+}
+
 } /* namespace World */

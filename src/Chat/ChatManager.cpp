@@ -29,16 +29,19 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     LOG_DEBUG << player->GetUsername() << ":" << message << std::endl;
     if (message == L"/stop")
     {
+        player->SendChatMessage(L"§aStopping the server");
         World::WorldManager::Instance().Stop();
         isCanceled = true;
     }
     if (message == L"/night")
     {
+        player->SendChatMessage(L"§aYou switch time to night");
         World::WorldManager::Instance().GetWorld()->SetTime(20000);
         isCanceled = true;
     }
     if (message == L"/day")
     {
+        player->SendChatMessage(L"§aYou switch time to night day");
         World::WorldManager::Instance().GetWorld()->SetTime(1000);
         isCanceled = true;
     }
