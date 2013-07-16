@@ -345,7 +345,6 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
         World::WorldManager& worldManager = World::WorldManager::Instance();
         if (!worldManager.IsOnlineMode())
         {
-            username = username.substr(2, username.size() - 2);
             NetworkPacket packet(OP_LOGIN_REQUEST);
             std::wstring levelType(L"flat");
             packet  << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
