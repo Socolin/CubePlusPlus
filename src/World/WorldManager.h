@@ -46,6 +46,7 @@ public:
     const std::string& GetMotd() const;
     int GetMaxPlayerCount() const;
     void SetMaxPlayerCount(int maxPlayerCount);
+    bool IsOnlineMode() const;
 private:
     Chat::ChatManager chatManager;
     std::set<EntityPlayer*> playerList;
@@ -56,6 +57,7 @@ private:
     int maxPlayerCount;
     std::string serverName;
     std::string serverMotd;
+    bool onlineMode;
 };
 
 } /* namespace World */

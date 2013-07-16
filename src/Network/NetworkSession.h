@@ -36,8 +36,9 @@ enum eSessionState
     STATE_LOGGED    = 0x4,
     STATE_INGAME    = 0x8,
     STATE_KICKED    = 0x10,
+    STATE_WAIT_LOGGIN= 0x20,
 
-    STATE_EVERYTIME = STATE_NOTLOGGED | STATE_LOGGING | STATE_LOGGED | STATE_INGAME
+    STATE_EVERYTIME = STATE_NOTLOGGED | STATE_LOGGING | STATE_LOGGED | STATE_INGAME | STATE_WAIT_LOGGIN
 };
 
 typedef union
@@ -150,6 +151,7 @@ private:
     byte aesEncryptBuffer[CryptoPP::AES::BLOCKSIZE];
 
     std::wstring username;
+    std::wstring serverId;
     World::EntityPlayer* player;
 
     unsigned char sendBuffer[SEND_BUFFER_SIZE];
@@ -160,6 +162,10 @@ private:
     size_t pendingDataMaxSize;
     size_t pendingDataSize;
     size_t pendingDataPos;
+
+    int waitLoginId;
+    std::string decryptedSecretKey;
+    std::string serverIdStr;
 };
 }
 

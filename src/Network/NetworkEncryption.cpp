@@ -49,7 +49,12 @@ NetworkEncryption::NetworkEncryption()
 
 NetworkEncryption::~NetworkEncryption()
 {
-
+    delete privateKey;
+    delete publicKey;
+    privateKey = nullptr;
+    publicKey = nullptr;
+    delete[] certificate.first;
+    certificate.first = nullptr;
 }
 
 } /* namespace Network */

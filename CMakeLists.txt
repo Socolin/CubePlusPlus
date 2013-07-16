@@ -67,6 +67,8 @@ target_link_libraries(
 	config++
 	mysqlcppconn
     cppnbt
+    sfml-network
+    sfml-system
 )
 
 configure_file(

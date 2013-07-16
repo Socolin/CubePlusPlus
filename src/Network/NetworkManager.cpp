@@ -219,6 +219,14 @@ void NetworkManager::ReceiveData()
             }
         }
     }
+
+    for (auto sessionItr : sessionList)
+    {
+        Network::NetworkSession* session = sessionItr.second;
+        if (session != nullptr)
+            session->UpdateTick();
+    }
+
 }
 
 void NetworkManager::StopServer()

@@ -82,9 +82,6 @@ void EntityPlayer::UpdateTick()
         return;
     if (world != nullptr)
     {
-        session->UpdateTick();
-        if (session == nullptr)
-            return;
         for (int i = 0; i < 15; i++)
         {
             if (!chunkToSend.empty())

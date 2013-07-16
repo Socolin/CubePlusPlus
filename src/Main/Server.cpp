@@ -9,6 +9,7 @@
 #include "Database/DatabaseManager.h"
 #include "Database/MiscData/PaintingData.h"
 #include "Database/MiscData/FurnaceRecipes.h"
+#include "Network/LoginManager.h"
 #include "Scripting/ScriptManager.h"
 #include "Window/WindowList.h"
 #include "World/WorldManager.h"
@@ -48,6 +49,8 @@ int main(void)
     Database::FurnaceRecipes::Instance().InitInstance();
     Block::RegisterTileEntities();
 
+    Network::LoginManager::Instance().Start();
+
     // Tick time management
     clock_t time = std::clock();
     struct timespec requestTime;
@@ -76,6 +79,8 @@ int main(void)
             usleep(1);
         }
     }
+
+    Network::LoginManager::Instance().Stop();
     return 0;
 }
 

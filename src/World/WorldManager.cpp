@@ -15,9 +15,10 @@ namespace World
 WorldManager::WorldManager()
         : world(nullptr), isRunning(true), playerCount(0), maxPlayerCount(0)
 {
-    (Config::Config::getConfig()).lookupValue("server.general.maxplayers", maxPlayerCount);
-    (Config::Config::getConfig()).lookupValue("server.general.name", serverName);
-    (Config::Config::getConfig()).lookupValue("server.general.motd", serverName);
+    Config::Config::getConfig().lookupValue("server.general.maxplayers", maxPlayerCount);
+    Config::Config::getConfig().lookupValue("server.general.name", serverName);
+    Config::Config::getConfig().lookupValue("server.general.motd", serverMotd);
+    Config::Config::getConfig().lookupValue("server.general.online", onlineMode);
 }
 
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
@@ -139,6 +140,11 @@ void WorldManager::SetMaxPlayerCount(int maxPlayerCount)
 bool WorldManager::IsFull() const
 {
     return maxPlayerCount <= playerCount;
+}
+
+bool WorldManager::IsOnlineMode() const
+{
+    return onlineMode;
 }
 
 } /* namespace World */

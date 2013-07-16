@@ -21,6 +21,7 @@ NetworkSession::NetworkSession(int socket) :
     , pendingDataMaxSize(0)
     , pendingDataSize(0)
     , pendingDataPos(0)
+    , waitLoginId(0)
 {
 
 }

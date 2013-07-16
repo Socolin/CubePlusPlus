@@ -3,7 +3,8 @@
 #include <vector>
 #include <iostream>
 #include <stdexcept>
-
+#include <iconv.h>
+#include <boost/locale.hpp>
 
 namespace Util
 {
@@ -17,7 +18,6 @@ std::wstring utf8_to_utf16(const std::string& utf8)
     {
         unsigned long uni;
         size_t todo;
-        bool error = false;
         unsigned char ch = utf8[i++];
         if (ch <= 0x7F)
         {
@@ -94,8 +94,7 @@ void StringToWString(std::wstring &ws, const std::string &s)
 }
 void WStringToString(const std::wstring &ws, std::string &s)
 {
-    std::string sTmp(ws.begin(), ws.end());
-    s = sTmp;
+    s = boost::locale::conv::utf_to_utf<char, wchar_t>(ws);
 }
 
 void DumpBuffer(char* buffer, size_t size, std::ostream& stream, const char* label)

@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <sstream>
+#include <iomanip>
 #include <cryptopp/filters.h>
 #include <cryptopp/osrng.h>
 #include <cryptopp/files.h>
@@ -16,6 +17,8 @@
 #include "World/World.h"
 #include "Entity/EntityPlayer.h"
 #include "Window/Window.h"
+#include "LoginManager.h"
+#include "Util/StringUtil.h"
 
 #define DEBUG_STR(str) std::wcout << L"DEBUG: str: size:"<< str.length() << L" value:\"" << str << L"\"" << std::endl;
 #define DEBUG_SHORT(value) std::cout << #value << "(short):" << value << std::endl;
@@ -44,7 +47,8 @@ void NetworkSession::handleChatMessage() throw (NetworkException)
 }
 void NetworkSession::handleHandShake() throw (NetworkException)
 {
-    if (World:: WorldManager::Instance().IsFull())
+    World:: WorldManager& worldManager = World:: WorldManager::Instance();
+    if (worldManager.IsFull())
     {
         kick("Server is full");
         return;
@@ -61,10 +65,21 @@ void NetworkSession::handleHandShake() throw (NetworkException)
     DEBUG_STR(username)
     DEBUG_STR(serverHost)
 
-    std::wstring serverId(L"-");
-
     NetworkEncryption* encrypt = NetworkEncryption::GetInstance();
-    const std::pair<char*, short>& certificate = encrypt->GetCertificate();
+    buffer_t certificate = encrypt->GetCertificate();
+
+    if (!worldManager.IsOnlineMode())
+    {
+        serverId = L"-";
+    }
+    else
+    {
+        std::stringstream stream;
+        stream << rand() << rand();
+        serverIdStr = stream.str();
+        Util::StringToWString(serverId, serverIdStr);
+    }
+
 
     int rnd = rand();
     const std::pair<char*, short> token = std::make_pair((char*)&rnd, (short)4);
@@ -327,17 +342,70 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 
     if (payload == 0 && (state & STATE_INGAME) == 0)
     {
-        NetworkPacket packet(OP_LOGIN_REQUEST);
-        std::wstring levelType(L"flat");
-        packet  << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
-        SendPacket(packet);
-
         World::WorldManager& worldManager = World::WorldManager::Instance();
-        player = worldManager.LoadAndJoinWorld(username, this);
-        if (player != NULL)
-            state = STATE_INGAME;
+        if (!worldManager.IsOnlineMode())
+        {
+            username = username.substr(2, username.size() - 2);
+            NetworkPacket packet(OP_LOGIN_REQUEST);
+            std::wstring levelType(L"flat");
+            packet  << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
+            SendPacket(packet);
+
+            player = worldManager.LoadAndJoinWorld(username, this);
+            if (player != NULL)
+                state = STATE_INGAME;
+            else
+                kick("Bad state handleClientStatuses");
+        }
         else
-            kick("Bad state handleClientStatuses");
+        {
+            std::string name;
+            Util::WStringToString(username, name);
+
+            uint8_t digest[40] =
+            { 0 };
+
+            CryptoPP::SHA1 sha1Encoder;
+            sha1Encoder.Update((uint8_t*)serverIdStr.c_str(), serverIdStr.size());
+            sha1Encoder.Update((uint8_t*)decryptedSecretKey.c_str(), decryptedSecretKey.size());
+            const buffer_t& certificate = NetworkEncryption::GetInstance()->GetCertificate();
+            sha1Encoder.Update((uint8_t*)certificate.first, certificate.second);
+            sha1Encoder.Final(digest);
+
+            std::ostringstream hashOutput;
+            if (digest[0] & 0x80)
+            {
+                unsigned char carry = 1;
+                hashOutput << '-';
+                // Print as negative value... WTF
+                for (int i = 19; i >= 0; i--)
+                {
+                    unsigned short value = (unsigned char)~digest[i];
+                    value += carry;
+                    if (value & 0xff00)
+                    {
+                        value = value & 0xff;
+                    }
+                    else
+                    {
+                        carry = 0;
+                    }
+                    digest[i] = value;
+                }
+            }
+
+            hashOutput << std::hex;
+            hashOutput.fill('0');
+            for (const unsigned char * ptr = digest; ptr < digest + 20; ptr++)
+                hashOutput << std::setw(2) << (unsigned int)*ptr;
+            hashOutput << std::dec << std::endl;
+
+            std::string result = hashOutput.str();
+            while (result[0] == '0')
+                result = result.substr(1, result.size() - 1);
+            waitLoginId = LoginManager::Instance().AskCheckLogin(name, result);
+            state = STATE_WAIT_LOGGIN;
+        }
     }
 }
 void NetworkSession::handlePluginMessage() throw (NetworkException)
@@ -358,8 +426,7 @@ void NetworkSession::handleEncryptionKeyRequest() throw (NetworkException)
 
 void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 {
-    buffer_t sharedSecretKey;
-    sharedSecretKey = readBuffer();
+    buffer_t sharedSecretKey = readBuffer();
     DEBUG_SHORT(sharedSecretKey.second)
     if (sharedSecretKey.second != 128)
     {
@@ -382,23 +449,21 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
     CryptoPP::RSAES<CryptoPP::PKCS1v15>::Decryptor rsaDecryptor(*encrypt->getPrivateKey());
 
     std::string sEncryptedSharedSecret(sharedSecretKey.first,sharedSecretKey.second);
-    std::string sDecryptedSharedSecret ("");
 
     try
     {
         CryptoPP::StringSource StrSrc(
             sEncryptedSharedSecret,
             true,
-            new CryptoPP::PK_DecryptorFilter(encrypt->getAutoSeed(), rsaDecryptor, new CryptoPP::StringSink(sDecryptedSharedSecret))
+            new CryptoPP::PK_DecryptorFilter(encrypt->getAutoSeed(), rsaDecryptor, new CryptoPP::StringSink(decryptedSecretKey))
         );
-
     }
     catch (CryptoPP::Exception&)
     {
         throw NetworkException("PK_DecryptorFilter");
     }
 
-    if (sDecryptedSharedSecret.length() != 16)
+    if (decryptedSecretKey.length() != 16)
     {
         delete sharedSecretKey.first;
         delete verifyToken.first;
@@ -412,11 +477,11 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 
     cryptedMode = true;
 
-    memcpy(aesDecryptBuffer,sDecryptedSharedSecret.c_str(),16);
-    aesDecryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption((byte*)sDecryptedSharedSecret.c_str(),(unsigned int)16,aesDecryptBuffer,1);
+    memcpy(aesDecryptBuffer,decryptedSecretKey.c_str(),16);
+    aesDecryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption((byte*)decryptedSecretKey.c_str(),(unsigned int)16,aesDecryptBuffer,1);
 
-    memcpy(aesEncryptBuffer,sDecryptedSharedSecret.c_str(),16);
-    aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)sDecryptedSharedSecret.c_str(),(unsigned int)16,aesEncryptBuffer,1);
+    memcpy(aesEncryptBuffer,decryptedSecretKey.c_str(),16);
+    aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)decryptedSecretKey.c_str(),(unsigned int)16,aesEncryptBuffer,1);
 
     state = STATE_LOGGING;
 
@@ -428,7 +493,7 @@ void NetworkSession::handlePing() throw (NetworkException)
     char magic = readByte();
     DEBUG_CHAR(magic)
 
-    World::WorldManager& worldMgr = World::WorldManager::Instance();
+    const World::WorldManager& worldMgr = World::WorldManager::Instance();
     const std::string& motd = worldMgr.GetMotd();
     int maxplayers = worldMgr.GetMaxPlayerCount();
     std::ostringstream oss;
@@ -483,12 +548,39 @@ void NetworkSession::handleDisconnect() throw (NetworkException)
 
 void NetworkSession::UpdateTick()
 {
+    if (state == STATE_WAIT_LOGGIN)
+    {
+        int ret = LoginManager::Instance().CheckLogin(waitLoginId);
+        if (ret < 0)
+            return;
+        if (ret == 1)
+        {
+            NetworkPacket packet(OP_LOGIN_REQUEST);
+            std::wstring levelType(L"flat");
+            packet  << (int)1 << levelType << (char)1 << (char)0 << (char)0 << (char)0 << (char)20;
+            SendPacket(packet);
+
+            World::WorldManager& worldManager = World::WorldManager::Instance();
+            player = worldManager.LoadAndJoinWorld(username, this);
+            if (player != NULL)
+                state = STATE_INGAME;
+            else
+                kick("Error 42");
+        }
+        else
+        {
+            kick("Bad login");
+        }
+        return;
+    }
+    if (state != STATE_INGAME)
+        return;
     if (lastKeepAliveId != 0)
     {
         lastKeepAliveTick--;
         if (lastKeepAliveTick <= 0)
         {
-            kick("time out");
+            kick("Time out");
         }
     }
     else
