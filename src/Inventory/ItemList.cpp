@@ -6,6 +6,7 @@
 #include "Database/DatabaseManager.h"
 #include "Util/StringUtil.h"
 #include "Item.h"
+#include "Logging/Logger.h"
 #include "Scripts/Basics/ItemBlockScript.h"
 #include "Scripting/ScriptManager.h"
 
@@ -45,12 +46,12 @@ void ItemList::Initialize()
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no items found in database";
+        LOG_ERROR << "ERROR: no items found in database";
         return;
     }
 
-    std::cout << "Loading items's datas" << std::endl;
-    std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_INFO << "Loading items's datas" << std::endl;
+    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
               << "itemId" << "\t"
               << "StackSz" << "\t"
               << "MDamage" << "\t"
@@ -78,7 +79,7 @@ void ItemList::Initialize()
             Scripting::ScriptManager& scriptManager = Scripting::ScriptManager::Instance();
             std::string scriptName = scriptManager.GetScriptName(scriptId);
             script = scriptManager.GetItemScript(scriptName);
-            std::cout << "Use script:" << scriptName << " for item:" << itemId << std::endl;
+            LOG_DEBUG << "Use script:" << scriptName << " for item:" << itemId << std::endl;
             if (script != NULL)
             {
                 std::ostringstream request_construct;
@@ -103,7 +104,7 @@ void ItemList::Initialize()
                     case 1://int
                     {
                         int valueInt = script_result->getInt(TableScriptData_U_ScriptInfo::valueInt);
-                        std::cout << "\tparam:" << param << " value:" << valueInt << std::endl;
+                        LOG_DEBUG << "\tparam:" << param << " value:" << valueInt << std::endl;
                         script->InitParam(param, valueInt);
                         break;
                     }
@@ -124,13 +125,13 @@ void ItemList::Initialize()
             }
             else
             {
-                std::cerr << "ERROR: Script:" << scriptName << " not found" << std::endl;
+                LOG_ERROR << "ERROR: Script:" << scriptName << " not found" << std::endl;
             }
         }
         Item* item = new Item(itemId, maxStackSize, maxDamage, hasSubType, containerId, burningTime, script);
         if (script != nullptr)
             script->Init(item);
-        std::cout << itemId << "\t"
+        LOG_DEBUG << itemId << "\t"
                   << maxStackSize << "\t"
                   << maxDamage << "\t"
                   << hasSubType << "\t"

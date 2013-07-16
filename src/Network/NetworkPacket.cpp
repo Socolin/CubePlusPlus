@@ -12,6 +12,7 @@
 #include <cppnbt.h>
 
 #include "Inventory/ItemStack.h"
+#include "Logging/Logger.h"
 
 namespace Network
 {
@@ -197,26 +198,26 @@ NetworkPacket& NetworkPacket::operator <<(const NetworkPacket& packet)
 
 void NetworkPacket::dump() const
 {
-    std::cout << "PACKET DUMP: size:" << packetSize << std::endl;
-    std::cout << std::hex;
+    LOG_DEBUG << "PACKET DUMP: size:" << packetSize << std::endl;
+    LOG_DEBUG << std::hex;
     int startline = 0;
     for (size_t i = 0; i < packetSize; i++)
     {
         int toPrint = ((int) packetData[i]) & 0xff;
         if (toPrint <= 16)
-            std::cout << 0;
-        std::cout << toPrint << " ";
+            LOG_DEBUG << 0;
+        LOG_DEBUG << toPrint << " ";
         if (i % 16 == 15)
         {
-            std::cout << " |";
+            LOG_DEBUG << " |";
             for (int b = startline; b < startline + 16; b++)
             {
                 if (packetData[b] >= 32)
-                    std::cout << packetData[b];
+                    LOG_DEBUG << packetData[b];
                 else
-                    std::cout << ".";
+                    LOG_DEBUG << ".";
             }
-            std::cout << std::endl;
+            LOG_DEBUG << std::endl;
             startline += 16;
         }
     }
@@ -224,17 +225,17 @@ void NetworkPacket::dump() const
     {
         int spacecount = (16 - (packetSize % 16)) * 3;
         for (int i = 0; i < spacecount; i++)
-            std::cout << " ";
-        std::cout << "|";
+            LOG_DEBUG << " ";
+        LOG_DEBUG << "|";
         for (unsigned b = startline; b < packetSize; b++)
         {
             if (packetData[b] >= 32)
-                std::cout << packetData[b];
+                LOG_DEBUG << packetData[b];
             else
-                std::cout << ".";
+                LOG_DEBUG << ".";
         }
     }
-    std::cout << std::dec << std::endl;
+    LOG_DEBUG << std::dec << std::endl;
 }
 
 void NetworkPacket::startWriteCompressedData()

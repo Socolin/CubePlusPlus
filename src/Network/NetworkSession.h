@@ -60,7 +60,7 @@ class NetworkPacket;
 class NetworkSession
 {
 public:
-    NetworkSession(int socket);
+    NetworkSession(int socket, const std::string& ip);
     virtual ~NetworkSession();
 
     void ReceiveInBuffer() throw (NetworkException);
@@ -139,6 +139,7 @@ private:
 
 private:
     int socket;
+    std::string ip;
     std::vector<char> buffer;
     eSessionState state;
     int lastKeepAliveTick;

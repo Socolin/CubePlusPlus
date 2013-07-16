@@ -12,6 +12,7 @@
 #include "Inventory/ItemStack.h"
 #include "Entity/EntityPlayer.h"
 #include "Entity/Object/EntityItem.h"
+#include "Logging/Logger.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "Region.h"
@@ -1234,7 +1235,7 @@ void World::loadSpawn(nbt::TagCompound* tagData)
     else
     {
         spawnPosition.Relocate(0, 80, 0);
-        std::cerr << "Error while loading spawn data" << std::endl;
+        LOG_ERROR << "Error while loading spawn data" << std::endl;
     }
 }
 

@@ -6,6 +6,7 @@
  */
 
 #include "Config.h"
+#include "Logging/Logger.h"
 
 namespace Config
 {
@@ -17,17 +18,17 @@ Config::Config()
 {
     try
     {
-        std::cout << "Loading Config File..." << std::endl;
+        LOG_INFO << "Loading Config File..." << std::endl;
         ServerConfig.readFile("server.cfg");
     }
     catch(const libconfig::FileIOException &fioex)
     {
-        std::cerr << "Can't read server.cfg file. Abording." << std::endl;
+        LOG_ERROR << "Can't read server.cfg file. Abording." << std::endl;
         exit(EXIT_FAILURE);
     }
     catch(const libconfig::ParseException &pex)
     {
-        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
+        LOG_ERROR << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
         exit(EXIT_FAILURE);
     }
 

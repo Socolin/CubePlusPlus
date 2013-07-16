@@ -14,6 +14,7 @@
 #include "Block/TileEntities/TileEntityManager.h"
 #include "Block/BlockList.h"
 #include "Entity/EntityPlayer.h"
+#include "Logging/Logger.h"
 #include "Network/OpcodeList.h"
 #include "Util/types.h"
 #include "Util/IntUtil.h"
@@ -69,7 +70,7 @@ void Chunk::Load()
     {
         if (nbtData)
         {
-            std::cerr << "Data found but error occure while loading chunk" << posX << " " << posZ;
+            LOG_ERROR << "Data found but error occure while loading chunk" << posX << " " << posZ;
         }
         // Clear all
         {

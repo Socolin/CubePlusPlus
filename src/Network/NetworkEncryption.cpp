@@ -10,6 +10,8 @@
 #include <cryptopp/integer.h>
 #include <sstream>
 
+#include "Logging/Logger.h"
+
 namespace Network
 {
 
@@ -37,13 +39,13 @@ NetworkEncryption::NetworkEncryption()
     std::string rStr = ss.str();
     if (rStr.length() == 0)
     {
-        std::cerr << "Error while generating RSA";
+        LOG_ERROR << "Error while generating RSA";
     }
 
     char *pBuffer = new char[rStr.length()];
     memcpy(pBuffer,rStr.c_str(),rStr.length());
 
-    std::cout << "rStr.length():" << rStr.length() << std::endl;
+    LOG_DEBUG << "rStr.length():" << rStr.length() << std::endl;
     certificate = std::make_pair(pBuffer,(short)rStr.length());
 }
 

@@ -14,6 +14,8 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+#include "Logging/Logger.h"
+
 namespace Network
 {
 
@@ -77,7 +79,7 @@ bool NetworkManager::StartServer(unsigned short port)
     sfd = create_and_bind(port);
     if (sfd == -1)
     {
-        std::cerr << "Could not bind on port" << port << std::endl;
+        LOG_ERROR << "Could not bind on port" << port << std::endl;
         return false;
     }
     s = make_socket_non_blocking(sfd);
@@ -174,8 +176,7 @@ void NetworkManager::ReceiveData()
                                 sizeof sbuf, NI_NUMERICHOST | NI_NUMERICSERV);
                 if (s == 0)
                 {
-                    printf("Accepted connection on descriptor %d "
-                           "(host=%s, port=%s)\n", infd, hbuf, sbuf);
+                    LOG_DEBUG << "Accepted connection on descriptor " << infd << "(host=" << hbuf << ", port=" << sbuf << ")" << std::endl;
                 }
 
                 /* Make the incoming socket non-blocking and add it to the
@@ -192,7 +193,7 @@ void NetworkManager::ReceiveData()
                     perror("epoll_ctl");
                     continue;
                 }
-                OnNewClient(infd);
+                OnNewClient(infd, hbuf);
             }
             continue;
         }
@@ -220,7 +221,7 @@ void NetworkManager::ReceiveData()
                     }
                     catch (NetworkException &e)
                     {
-                        std::cerr << "Client network err:" << e.what() << std::endl;
+                        LOG_ERROR << "Client network err:" << e.what() << std::endl;
                         OnDisconnectClient(events[i].data.fd);
                     }
                 }
@@ -260,9 +261,9 @@ void NetworkManager::StopServer()
     close(efd);
 }
 
-void NetworkManager::OnNewClient(int socket)
+void NetworkManager::OnNewClient(int socket, const std::string& ip)
 {
-    NetworkSession* session = new NetworkSession(socket);
+    NetworkSession* session = new NetworkSession(socket, ip);
     sessionList[socket] = session;
 }
 

@@ -9,14 +9,15 @@
 #include <sys/socket.h>
 
 #include "Opcode.h"
+#include "Logging/Logger.h"
 #include "World/WorldManager.h"
 #include "Entity/EntityPlayer.h"
 #include "Util/StringUtil.h"
 
 namespace Network
 {
-NetworkSession::NetworkSession(int socket) :
-    socket(socket), buffer(INITIAL_BUFFER_SIZE),state(STATE_NOTLOGGED),lastKeepAliveTick(0),startPosInBuffer(0)
+NetworkSession::NetworkSession(int socket, const std::string& ip) :
+    socket(socket), ip(ip), buffer(INITIAL_BUFFER_SIZE),state(STATE_NOTLOGGED),lastKeepAliveTick(0),startPosInBuffer(0)
     ,bufferSize(0),maxBufferSize(0)
     , cryptedMode(false)
     , aesDecryptor(nullptr)
@@ -94,7 +95,7 @@ void NetworkSession::ReceiveData() throw (NetworkException)
             unsigned char packetId = readByte();
             const OpcodeHandler& handler = opcodeTable[packetId];
             if (handler.debug)
-                std::cout << "Receive packet:"<< opcodeTable[packetId].name << " 0x" << std::hex <<  ((int)(packetId)&0xff)  <<std::dec << std::endl;
+                LOG_DEBUG << "Receive packet:"<< opcodeTable[packetId].name << " 0x" << std::hex <<  ((int)(packetId)&0xff)  <<std::dec << std::endl;
             if ((handler.state & state) != 0)
             {
                 (this->*handler.handler) ();
@@ -180,14 +181,14 @@ void NetworkSession::disconnect(std::wstring message)
 
     if (player != nullptr)
     {
-        std::wcout << L"Disconnect player: " << username << ": " << message << std::endl;
+        LOG_INFO << L"Disconnect player: " << username << ": " << message << std::endl;
         // Unlink session
         player->Disconnect();
         player = nullptr;
     }
     else
     {
-        std::wcout << L"Disconnect session: " << message << std::endl;
+        LOG_INFO << L"Disconnect session: " << message << std::endl;
     }
 }
 
@@ -197,12 +198,12 @@ void NetworkSession::kick(std::wstring message)
         return;
     if (player != nullptr)
     {
-        std::wcout << L"Kick " << username << L": " << message << std::endl;
+        LOG_INFO << "Kick " << username << ": " << message << std::endl;
         player->Disconnect();
     }
     else
     {
-        std::wcout << L"Kick sessions : " << message << std::endl;
+        LOG_INFO << "Kick sessions : " << message << std::endl;
     }
 
     SendKickMessage(message);

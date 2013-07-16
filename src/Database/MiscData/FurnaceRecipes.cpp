@@ -2,6 +2,7 @@
 
 #include "Database/DatabaseManager.h"
 #include "Inventory/ItemStack.h"
+#include "Logging/Logger.h"
 #include "Util/StringUtil.h"
 
 namespace Database
@@ -61,12 +62,12 @@ void FurnaceRecipes::load()
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no furnace recipe found in database" << std::endl;
+        LOG_ERROR << "ERROR: no furnace recipe found in database" << std::endl;
         return;
     }
 
-    std::cout << "Loading furnace recipes's datas" << std::endl;
-    std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_INFO << "Loading furnace recipes's datas" << std::endl;
+    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
               << "itemId" << "\t"
               << "itemDat" << "\t"
               << "resultI" << "\t"
@@ -85,7 +86,7 @@ void FurnaceRecipes::load()
         int resultQuantity = result->getInt(TableFurnaceRecipe::resultQuantity);
         float experience = result->getDouble(TableFurnaceRecipe::experience);
 
-        std::cout
+        LOG_DEBUG
                 << itemId << "\t"
                 << itemData << "\t"
                 << resultId << "\t"

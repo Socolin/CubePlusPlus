@@ -1,4 +1,6 @@
 #include "BlockList.h"
+
+#include "Logging/Logger.h"
 #include "Database/DatabaseManager.h"
 #include "Util/StringUtil.h"
 #include "Scripts/BlockScript.h"
@@ -42,12 +44,12 @@ void BlockList::Initialize()
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no block found in database";
+        LOG_ERROR << "ERROR: no block found in database";
         return;
     }
 
-    std::cout << "Loading block's datas" << std::endl;
-    std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_INFO << "Loading block's datas" << std::endl;
+    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
               << "blockId" << "\t"
               << "lightOp" << "\t"
               << "lightVa" << "\t"
@@ -103,7 +105,7 @@ void BlockList::Initialize()
             Scripting::ScriptManager& scriptManager = Scripting::ScriptManager::Instance();
             std::string scriptName = scriptManager.GetScriptName(scriptId);
             script = scriptManager.GetBlockScript(scriptName);
-            std::cout << "Use script:" << scriptName << " for block:" << blockId << std::endl;
+            LOG_DEBUG << "Use script:" << scriptName << " for block:" << blockId << std::endl;
             if (script != NULL)
             {
                 std::ostringstream request_construct;
@@ -127,7 +129,7 @@ void BlockList::Initialize()
                     case 1://int
                     {
                         int valueInt = script_result->getInt(TableScriptData_U_ScriptInfo::valueInt);
-                        std::cout << "\tparam:" << param << " value:" << valueInt << std::endl;
+                        LOG_DEBUG << "\tparam:" << param << " value:" << valueInt << std::endl;
                         script->InitParam(param, valueInt);
                         break;
                     }
@@ -147,7 +149,7 @@ void BlockList::Initialize()
             }
             else
             {
-                std::cerr << "ERROR: Script:" << scriptName << " not found" << std::endl;
+                LOG_ERROR << "ERROR: Script:" << scriptName << " not found" << std::endl;
             }
         }
 
@@ -158,7 +160,7 @@ void BlockList::Initialize()
                                  materialList[materialId],
                                  useNeighborBrightness, burningTime,
                                  script);
-        std::cout << blockId << "\t"
+        LOG_DEBUG << blockId << "\t"
                   << (int)lightOpacity << "\t"
                   << (int)lightValue << "\t"
                   << blockResistance << "\t"
@@ -204,12 +206,12 @@ void BlockList::LoadSounds()
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no block found in database";
+        LOG_ERROR << "ERROR: no block found in database";
         return;
     }
 
-    std::cout << "Loading sound's datas" << std::endl;
-    std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << "Loading sound's datas" << std::endl;
+    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
               << "soundId" << "\t"
               << "volume" << "\t"
               << "modifie" << "\t"
@@ -229,7 +231,7 @@ void BlockList::LoadSounds()
         float volume = result->getDouble(TableBlockSound::volume);
         float modifier = result->getDouble(TableBlockSound::modifier);
 
-        std::cout << soundId << "\t"
+        LOG_DEBUG << soundId << "\t"
                   << volume << "\t"
                   << modifier << "\t"
                   << stepSound << "\t"
@@ -259,13 +261,13 @@ void BlockList::LoadMaterials()
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no material found in database";
+        LOG_ERROR << "ERROR: no material found in database";
         return;
     }
 
 
-    std::cout << "Loading material's datas" << std::endl;
-    std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << "Loading material's datas" << std::endl;
+    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
               << "matId" << "\t"
               << "canBurn" << "\t"
               << "replaca" << "\t"
@@ -289,7 +291,7 @@ void BlockList::LoadMaterials()
         bool solid = result->getBoolean(TableBlockMaterial::solid);
         bool liquid = result->getBoolean(TableBlockMaterial::liquid);
 
-        std::cout
+        LOG_DEBUG
                 << materialId << "\t"
                 << canBurn << "\t"
                 << replacable << "\t"

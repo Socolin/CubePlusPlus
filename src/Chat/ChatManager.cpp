@@ -4,6 +4,7 @@
 #include <sstream>
 
 #include "Entity/EntityPlayer.h"
+#include "Logging/Logger.h"
 #include "World/WorldManager.h"
 #include "World/World.h"
 
@@ -25,7 +26,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
 {
     bool isCanceled = false;
 
-    //std::wcout << player->GetUsername() << ":" << message << std::endl;
+    LOG_DEBUG << player->GetUsername() << ":" << message << std::endl;
     if (message == L"/stop")
     {
         World::WorldManager::Instance().Stop();
@@ -47,7 +48,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     std::wostringstream formatedMessage;
     formatedMessage << L"<" << player->GetUsername() << L"> " << message;
     message = formatedMessage.str();
-    std::wcout << message << std::endl;
+    LOG_INFO << message << std::endl;
     return isCanceled;
 }
 

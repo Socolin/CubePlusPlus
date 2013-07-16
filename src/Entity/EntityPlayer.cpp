@@ -12,6 +12,7 @@
 #include "Network/NetworkSession.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
+#include "Logging/Logger.h"
 #include "Util/FloatUtil.h"
 #include "Window/Window.h"
 #include "Window/WindowList.h"
@@ -484,7 +485,7 @@ void EntityPlayer::DoAction(char action)
         SetSprinting(false);
         break;
     default:
-        std::cerr << "Invalid action:" << action << std::endl;
+        LOG_ERROR << "Invalid action:" << action << std::endl;
         break;
     }
 }

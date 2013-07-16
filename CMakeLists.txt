@@ -76,3 +76,4 @@ configure_file(
     ${EXECUTABLE_OUTPUT_PATH}/server.cfg
 	COPYONLY
 )
+execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory bin/log)

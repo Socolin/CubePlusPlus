@@ -6,6 +6,7 @@
 
 #include <cppnbt.h>
 
+#include "Logging/Logger.h"
 #include "Util/StringUtil.h"
 
 namespace World
@@ -23,7 +24,7 @@ Region::Region(const std::string& worldPath, int x, int z)
 
     if (!file.is_open())
     {
-        std::cerr << "Failed to open file :" << fileName.str() << std::endl;
+        LOG_ERROR << "Failed to open file :" << fileName.str() << std::endl;
         return;
     }
 

@@ -3,6 +3,7 @@
 #include <sstream>
 
 #include "Database/DatabaseManager.h"
+#include "Logging/Logger.h"
 #include "Util/StringUtil.h"
 #include "Scripting/ScriptManager.h"
 #include "Scripts/WindowScript.h"
@@ -40,12 +41,12 @@ void WindowList::Initialize()
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no window found in database";
+        LOG_ERROR << "ERROR: no window found in database";
         return;
     }
 
-    std::cout << "Loading window's datas" << std::endl;
-    std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << "Loading window's datas" << std::endl;
+    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
               << "id" << "\t"
               << "maxSlot" << "\t"
               << "NetSlot" << "\t"
@@ -69,7 +70,7 @@ void WindowList::Initialize()
             Scripting::ScriptManager& scriptManager = Scripting::ScriptManager::Instance();
             std::string scriptName = scriptManager.GetScriptName(scriptId);
             script = scriptManager.GetWindowScript(scriptName);
-            std::cout << "Use script:" << scriptName << " for window:" << windowId << std::endl;
+            LOG_DEBUG << "Use script:" << scriptName << " for window:" << windowId << std::endl;
             if (script != NULL)
             {
                 std::ostringstream request_construct;
@@ -94,7 +95,7 @@ void WindowList::Initialize()
                     case 1://int
                     {
                         int valueInt = script_result->getInt(TableScriptData_U_ScriptInfo::valueInt);
-                        std::cout << "\tparam:" << param << " value:" << valueInt << std::endl;
+                        LOG_DEBUG << "\tparam:" << param << " value:" << valueInt << std::endl;
                         script->InitParam(param, valueInt);
                         break;
                     }
@@ -114,14 +115,14 @@ void WindowList::Initialize()
             }
             else
             {
-                std::cerr << "ERROR: Script:" << scriptName << " not found" << std::endl;
+                LOG_ERROR << "ERROR: Script:" << scriptName << " not found" << std::endl;
             }
         }
 
         std::wstring wname;
         Util::StringToWString(wname, name);
         WindowStaticData* data = new WindowStaticData(windowId, maxSlot, networkMaxSlot, wname, clientWindowId, script);
-        std::cout << windowId << "\t"
+        LOG_DEBUG << windowId << "\t"
                   << maxSlot << "\t"
                   << networkMaxSlot << "\t"
                   << scriptId << "\t"

@@ -9,6 +9,7 @@
 #include "Network/NetworkSession.h"
 #include "Network/OpcodeList.h"
 #include "Util/StringUtil.h"
+#include "Logging/Logger.h"
 #include "World.h"
 
 namespace World
@@ -23,7 +24,7 @@ WorldManager::WorldManager()
     Config::Config::getConfig().lookupValue("server.general.difficulty", difficulty);
     if (difficulty >= DIFFICULTY_MAX)
     {
-        std::cerr << "Invalid difficulty value: " << difficulty << ", max value is :" << DIFFICULTY_MAX - 1 << std::endl;
+        LOG_ERROR << "Invalid difficulty value: " << difficulty << ", max value is :" << DIFFICULTY_MAX - 1 << std::endl;
         difficulty = DIFFICULTY_MAX - 1;
     }
 }

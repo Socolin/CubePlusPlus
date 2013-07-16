@@ -6,6 +6,7 @@
 #include "Block/BlockList.h"
 #include "Scripts/WindowScript.h"
 #include "Entity/EntityPlayer.h"
+#include "Logging/Logger.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "World/World.h"
@@ -317,7 +318,7 @@ bool Window::ClickOnWindow(i_slot slotId, char button, short action, char mode, 
             }
             else
             {
-                std::cerr << "Bad value: paintAction: " << paintAction << std::endl;
+                LOG_ERROR << "Bad value: paintAction: " << paintAction << std::endl;
             }
         }
         else if (mode == WINDOW_CLICK_MODE_DOUBLECLICK) // double click
@@ -384,7 +385,7 @@ bool Window::ClickOnWindow(i_slot slotId, char button, short action, char mode, 
                 returnValue = endPainting(action);
                 break;
             default:
-                std::cerr << "Bad value: paintAction: " << paintAction << "with slot=-999" << std::endl;
+                LOG_ERROR << "Bad value: paintAction: " << paintAction << "with slot=-999" << std::endl;
                 break;
             }
         }

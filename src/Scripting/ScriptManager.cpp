@@ -9,7 +9,7 @@
 #include "Database/DatabaseManager.h"
 #include "Window/Scripts/RegisterWindowScript.h"
 #include "Window/Scripts/WindowScript.h"
-
+#include "Logging/Logger.h"
 
 #include <iostream>
 
@@ -19,7 +19,7 @@ void ScriptManager::RegisterScript(std::string scriptName, BlockScript* script)
 {
     if (blockScript.find(scriptName) == blockScript.end())
     {
-        std::cout << "\t- " << scriptName << std::endl;
+        LOG_DEBUG << "\t- " << scriptName << std::endl;
         blockScript[scriptName] = script;
     }
     else
@@ -39,7 +39,7 @@ void ScriptManager::RegisterScript(std::string scriptName, ItemScript* script)
 {
     if (itemScript.find(scriptName) == itemScript.end())
     {
-        std::cout << "\t- " << scriptName << std::endl;
+        LOG_DEBUG << "\t- " << scriptName << std::endl;
         itemScript[scriptName] = script;
     }
     else
@@ -59,7 +59,7 @@ void ScriptManager::RegisterScript(std::string scriptName, WindowScript* script)
 {
     if (windowScript.find(scriptName) == windowScript.end())
     {
-        std::cout << "\t- " << scriptName << std::endl;
+        LOG_DEBUG << "\t- " << scriptName << std::endl;
         windowScript[scriptName] = script;
     }
     else
@@ -79,7 +79,7 @@ void ScriptManager::RegisterScript(std::string scriptName, CraftScript* script)
 {
     if (craftScript.find(scriptName) == craftScript.end())
     {
-        std::cout << "\t- " << scriptName << std::endl;
+        LOG_DEBUG << "\t- " << scriptName << std::endl;
         craftScript[scriptName] = script;
     }
     else
@@ -99,13 +99,13 @@ CraftScript* ScriptManager::GetCraftScript(std::string scriptName)
 
 void ScriptManager::RegisterAllScripts()
 {
-    std::cout << "Registering block's scripts: " << std::endl;
+    LOG_DEBUG << "Registering block's scripts: " << std::endl;
     RegisterBlockScript();
-    std::cout << "Registering item's scripts: " << std::endl;
+    LOG_DEBUG << "Registering item's scripts: " << std::endl;
     RegisterItemScripts();
-    std::cout << "Registering window's scripts: " << std::endl;
+    LOG_DEBUG << "Registering window's scripts: " << std::endl;
     RegisterWindowScript();
-    std::cout << "Registering craft's scripts: " << std::endl;
+    LOG_DEBUG << "Registering craft's scripts: " << std::endl;
     RegisterCraftScript();
 }
 
@@ -118,11 +118,11 @@ void ScriptManager::LoadScriptsIds()
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no scripts found in database";
+        LOG_ERROR << "ERROR: no scripts found in database";
         return;
     }
 
-    std::cout << "Loading scripts's datas" << std::endl;
+    LOG_INFO << "Loading scripts's datas" << std::endl;
 
     while (result->next())
     {
@@ -131,7 +131,7 @@ void ScriptManager::LoadScriptsIds()
 
         scriptsIds[scriptId] = scriptName;
     }
-    std::cout << scriptsIds.size() << " scripts loaded" << std::endl;
+    LOG_INFO << scriptsIds.size() << " scripts loaded" << std::endl;
 
     delete result;
 }

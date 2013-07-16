@@ -6,6 +6,7 @@
 #include "Util/StringUtil.h"
 #include "Scripting/ScriptManager.h"
 #include "Craft.h"
+#include "Logging/Logger.h"
 #include "Scripts/CraftScript.h"
 
 namespace Craft
@@ -47,12 +48,12 @@ void CraftManager::load()
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no craft found in database";
+        LOG_ERROR << "ERROR: no craft found in database";
         return;
     }
 
-    std::cout << "Loading craft's datas" << std::endl;
-    std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_INFO << "Loading craft's datas" << std::endl;
+    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
                 << "id" << "\t"
                 << "width" << "\t"
                 << "height" << "\t"
@@ -77,7 +78,7 @@ void CraftManager::load()
             Scripting::ScriptManager& scriptManager = Scripting::ScriptManager::Instance();
             std::string scriptName = scriptManager.GetScriptName(scriptId);
             script = scriptManager.GetCraftScript(scriptName);
-            std::cout << "Use script:" << scriptName << " for craft:" << craftId << std::endl;
+            LOG_DEBUG << "Use script:" << scriptName << " for craft:" << craftId << std::endl;
             if (script != NULL)
             {
                 std::ostringstream request_construct;
@@ -102,7 +103,7 @@ void CraftManager::load()
                     case 1: //int
                     {
                         int valueInt = script_result->getInt(TableScriptData_U_ScriptInfo::valueInt);
-                        std::cout << "\tparam:" << param << " value:" << valueInt << std::endl;
+                        LOG_DEBUG << "\tparam:" << param << " value:" << valueInt << std::endl;
                         script->InitParam(param, valueInt);
                         break;
                     }
@@ -122,12 +123,12 @@ void CraftManager::load()
             }
             else
             {
-                std::cerr << "ERROR: Script:" << scriptName << " not found" << std::endl;
+                LOG_ERROR << "ERROR: Script:" << scriptName << " not found" << std::endl;
             }
         }
 
         Craft* craft = new Craft(width, height, resultId, resultData, resultQuantity);
-        std::cout << craftId << "\t" << width << "\t" << height << "\t" << resultId << "\t" << resultData << "\t" << resultQuantity << "\t" << scriptId << "\t" << std::endl;
+        LOG_DEBUG << craftId << "\t" << width << "\t" << height << "\t" << resultId << "\t" << resultData << "\t" << resultQuantity << "\t" << scriptId << "\t" << std::endl;
         craftList[CRAFT_KEY(width,height)].push_back(craft);
 
         loadCraftSlot(craft, craftId);
@@ -147,7 +148,7 @@ void CraftManager::loadCraftSlot(Craft* craft, int craftId)
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no craft slot found in database, craftid:" << craftId << std::endl ;
+        LOG_ERROR << "ERROR: no craft slot found in database, craftid:" << craftId << std::endl ;
         return;
     }
 

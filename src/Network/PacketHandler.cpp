@@ -18,12 +18,13 @@
 #include "Entity/EntityPlayer.h"
 #include "Window/Window.h"
 #include "LoginManager.h"
+#include "Logging/Logger.h"
 #include "Util/StringUtil.h"
 
-#define DEBUG_STR(str) std::wcout << L"DEBUG: str: size:"<< str.length() << L" value:\"" << str << L"\"" << std::endl;
-#define DEBUG_SHORT(value) std::cout << #value << "(short):" << value << std::endl;
-#define DEBUG_INT(value) std::cout << #value << "(int):" << value << std::endl;
-#define DEBUG_CHAR(value) std::cout << #value << "(char):" << (int)value << std::endl;
+#define DEBUG_STR(value)        LOG_DEBUG << "\t" << #value << "String: size: "<< value.length() << " value:\"" << value << "\"" << std::endl;
+#define DEBUG_SHORT(value)      LOG_DEBUG << "\t" << #value << "\tShort: " << value << std::endl;
+#define DEBUG_INT(value)        LOG_DEBUG << "\t" << #value << "\tInt: " << value << std::endl;
+#define DEBUG_CHAR(value)       LOG_DEBUG << "\t" << #value << "\tChar: " << (int)value << std::endl;
 
 
 namespace Network
@@ -35,7 +36,7 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
         return;
     if (value != lastKeepAliveId)
     {
-        std::cout << lastKeepAliveId << " " << value << std::endl;
+        LOG_DEBUG << lastKeepAliveId << " " << value << std::endl;
         kick(std::wstring(L"Bad keepalive message"));
     }
     lastKeepAliveId = 0;
@@ -137,7 +138,7 @@ void NetworkSession::handlePlayerDigging() throw (NetworkException)
     unsigned char y = readByte();
     int z = readInt();
     char face = readByte();
-    std::cout << "handlePlayerDigging state:" << (int)state << " x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << std::endl;
+    LOG_DEBUG << "handlePlayerDigging state:" << (int)state << " x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << std::endl;
     player->DigBlock(state, x, y, z, face);
 }
 
@@ -166,7 +167,7 @@ void NetworkSession::handlePlayerBlockPlacement() throw (NetworkException)
     char cursorPositionX = readByte();
     char cursorPositionY = readByte();
     char cursorPositionZ = readByte();
-    std::cout << "handlePlayerBlockPlacement x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << " blockId:" << blockId
+    LOG_DEBUG << "handlePlayerBlockPlacement x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << " blockId:" << blockId
               << " cx:" << (int)cursorPositionX
               << " cy:" << (int)cursorPositionY
               << " cz:" << (int)cursorPositionZ
@@ -186,7 +187,7 @@ void NetworkSession::handleAnimation() throw (NetworkException)
 {
     int entityId = readInt();
     char animationId = readByte();
-    std::cout << "handleAnimation: EID:" << entityId << " animationId:" << (int)animationId << std::endl;
+    LOG_DEBUG << "handleAnimation: EID:" << entityId << " animationId:" << (int)animationId << std::endl;
     player->PlayAnimation(animationId);
 }
 void NetworkSession::handleEntityAction() throw (NetworkException)
@@ -553,8 +554,10 @@ bool NetworkSession::UpdateTick()
         {
             World::WorldManager& worldManager = World::WorldManager::Instance();
             player = worldManager.LoadAndJoinWorld(username, this);
+            LOG_INFO << "Player join [" << username << "] ip:[" << ip << "]" << std::endl;
             if (player != NULL)
             {
+                LOG_INFO << "Player join [" << username << "] ip:[" << ip << "]" << std::endl;
                 state = STATE_INGAME;
             }
             else

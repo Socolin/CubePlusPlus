@@ -22,7 +22,7 @@ public:
     void ReceiveData();
     void StopServer();
 private:
-    void OnNewClient(int socket);
+    void OnNewClient(int socket, const std::string& ip);
     void OnDisconnectClient(int socket);
 private:
     std::unordered_map<int, NetworkSession*> sessionList;

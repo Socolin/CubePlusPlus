@@ -9,6 +9,7 @@
 #include "Database/DatabaseManager.h"
 #include "Database/MiscData/PaintingData.h"
 #include "Database/MiscData/FurnaceRecipes.h"
+#include "Logging/Logger.h"
 #include "Network/LoginManager.h"
 #include "Scripting/ScriptManager.h"
 #include "Window/WindowList.h"
@@ -41,12 +42,12 @@ int main(void)
     Scripting::ScriptManager::Instance().RegisterAllScripts();
     if((Config::Config::getConfig()).lookupValue("server.network.port", port))
     {
-        std::cout << "Custom port " << port << " detected" << std::endl;
+        LOG_INFO << "Custom port " << port << " detected" << std::endl;
     }
 
     if (!manager.StartServer(port))
     {
-        std::cerr << "Not started" << std::endl;
+        LOG_ERROR << "Not started" << std::endl;
         return 1;
     }
 
@@ -85,7 +86,8 @@ int main(void)
         else
         {
             lateness = ((diffInMsSeconds + lateness) - (50 * CLOCKS_PER_SEC));
-            std::cerr << "Tick take more than 50ms: "<< diffInMsSeconds / CLOCKS_PER_SEC << "ms, (lateness:" << lateness / CLOCKS_PER_SEC << "ms)" << std::endl;
+            if (diffInMsSeconds >= 50 * CLOCKS_PER_SEC)
+                LOG_ERROR << "Tick take more than 50ms: "<< diffInMsSeconds / CLOCKS_PER_SEC << "ms, (lateness:" << lateness / CLOCKS_PER_SEC << "ms)" << std::endl;
             usleep(1);
         }
     }

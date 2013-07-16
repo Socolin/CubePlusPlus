@@ -1,6 +1,7 @@
 #include "VirtualChunk.h"
 
 #include "Entity/EntityPlayer.h"
+#include "Logging/Logger.h"
 #include "Network/NetworkPacket.h"
 #include "World/World.h"
 
@@ -201,7 +202,7 @@ void VirtualChunk::AddPlayerByMoving(EntityPlayer* player, int prevChunkX, int p
     }
     else
     {
-        std::cerr << "ERROR AddPlayerByMoving: " << posX << " " << posZ << " from " << prevChunkX << " " << prevChunkZ << std::endl;
+        LOG_ERROR << "ERROR AddPlayerByMoving: " << posX << " " << posZ << " from " << prevChunkX << " " << prevChunkZ << std::endl;
     }
     AddEntityByMoving(player, prevChunkX, prevChunkZ);
     if (updatingEntities)
@@ -266,7 +267,7 @@ void VirtualChunk::RemovePlayerByMoving(EntityPlayer* player, int newChunkX, int
     }
     else
     {
-        std::cerr << "ERROR RemovePlayerByMoving: " << posX << " " << posZ << " to " << newChunkX << " " << newChunkZ << std::endl;
+        LOG_ERROR << "ERROR RemovePlayerByMoving: " << posX << " " << posZ << " to " << newChunkX << " " << newChunkZ << std::endl;
     }
 }
 
@@ -314,7 +315,7 @@ void VirtualChunk::AddEntityByMoving(Entity* entity, int prevChunkX, int prevChu
     }
     else
     {
-        std::cerr << "ERROR AddEntityByMoving: " << posX << " " << posZ << " from " << prevChunkX << " " << prevChunkZ << std::endl;
+        LOG_ERROR << "ERROR AddEntityByMoving: " << posX << " " << posZ << " from " << prevChunkX << " " << prevChunkZ << std::endl;
     }
     if (updatingEntities)
         waitingAddEntityList.push_back(entity);
@@ -366,7 +367,7 @@ void VirtualChunk::RemoveEntityByMoving(Entity* entity, int newChunkX, int newCh
     }
     else
     {
-        std::cerr << "ERROR RemovePlayerByMoving: " << posX << " " << posZ << " to " << newChunkX << " " << newChunkZ << std::endl;
+        LOG_ERROR << "ERROR RemovePlayerByMoving: " << posX << " " << posZ << " to " << newChunkX << " " << newChunkZ << std::endl;
     }
     if (updatingEntities)
         waitingRemoveEntityList.push_back(entity);

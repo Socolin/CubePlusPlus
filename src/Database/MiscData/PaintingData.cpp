@@ -1,6 +1,7 @@
 #include "PaintingData.h"
 
 #include "Database/DatabaseManager.h"
+#include "Logging/Logger.h"
 #include "Util/StringUtil.h"
 
 namespace Database
@@ -28,12 +29,12 @@ void PaintingData::load()
 
     if (result == nullptr)
     {
-        std::cerr << "ERROR: no paintings found in database" << std::endl;
+        LOG_ERROR << "ERROR: no paintings found in database" << std::endl;
         return;
     }
 
-    std::cout << "Loading paitings's datas" << std::endl;
-    std::cout << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_INFO << "Loading paitings's datas" << std::endl;
+    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
               << "title" << "\t\t"
               << "sizeX" << "\t"
               << "sizeY" << "\t"
@@ -50,7 +51,7 @@ void PaintingData::load()
         i_item itemId = result->getInt(TablePainting::itemId);
         i_damage itemData = result->getInt(TablePainting::itemData);
 
-        std::cout
+        LOG_DEBUG
                 << name << (name.length() < 8 ? "\t" : "") <<  "\t"
                 << sizeX << "\t"
                 << sizeY << "\t"

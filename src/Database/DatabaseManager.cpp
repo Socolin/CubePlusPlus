@@ -1,5 +1,7 @@
 #include "DatabaseManager.h"
 
+#include "Logging/Logger.h"
+
 namespace Database
 {
 
@@ -52,9 +54,9 @@ void DatabaseManager::execute(std::string request)
     }
     catch (sql::SQLException &e)
     {
-        std::cout << "# ERR: " << e.what();
-        std::cout << " (MySQL error code: " << e.getErrorCode();
-        std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "# ERR: " << e.what();
+        LOG_ERROR << " (MySQL error code: " << e.getErrorCode();
+        LOG_ERROR << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
 }
 
@@ -66,9 +68,9 @@ sql::ResultSet* DatabaseManager::querry(std::string request)
     }
     catch (sql::SQLException &e)
     {
-        std::cout << "# ERR: " << e.what();
-        std::cout << " (MySQL error code: " << e.getErrorCode();
-        std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "# ERR: " << e.what();
+        LOG_ERROR << " (MySQL error code: " << e.getErrorCode();
+        LOG_ERROR << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
     return nullptr;
 }
@@ -81,9 +83,9 @@ void DatabaseManager::execute(sql::PreparedStatement* pstmt)
     }
     catch (sql::SQLException &e)
     {
-        std::cout << "# ERR: " << e.what();
-        std::cout << " (MySQL error code: " << e.getErrorCode();
-        std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "# ERR: " << e.what();
+        LOG_ERROR << " (MySQL error code: " << e.getErrorCode();
+        LOG_ERROR << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
 }
 
@@ -95,9 +97,9 @@ sql::ResultSet* DatabaseManager::querry(sql::PreparedStatement* pstmt)
     }
     catch (sql::SQLException &e)
     {
-        std::cout << "# ERR: " << e.what();
-        std::cout << " (MySQL error code: " << e.getErrorCode();
-        std::cout << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "# ERR: " << e.what();
+        LOG_ERROR << " (MySQL error code: " << e.getErrorCode();
+        LOG_ERROR << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
     return nullptr;
 }
