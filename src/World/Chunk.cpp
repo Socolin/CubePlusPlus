@@ -196,29 +196,19 @@ void Chunk::UpdateTick()
             {
                 int random = Util::FastGenRandomInt();
                 unsigned int cellId = (random >> 2) & 0xfff;
-                if (chunkData->addData != nullptr)
-                {
-                    blockId = chunkData->blocks[cellId] | (chunkData->addData[cellId << 1] & (0xf << ((cellId & 0x1) << 2)));
-                }
-                else
-                {
-                    blockId = chunkData->blocks[cellId];
-                }
+                i_small_coord blockX = cellId & 0xf;
+                i_small_coord blockZ = ((cellId >> 4) & 0xf);
+                i_height blockY = (i << 4) + ((cellId >> 8) & 0xf);
+
+                blockId = getBlockAt(blockX, blockY, blockZ);
                 if (blockId > 0)
                 {
                     const Block::Block* block = Block::BlockList::getBlock(blockId);
-                    if (block)
+                    if (block != nullptr)
                     {
-                        if ((cellId & 0x1) == 0)
-                        {
-                            blockData = chunkData->metadata[cellId >> 1] & 0xf;
-                        }
-                        else
-                        {
-                            blockData = (chunkData->metadata[cellId >> 1] & 0xf0) >> 4;
-                        }
                         if (block->NeedsRandomTick())
                         {
+                            blockData = getDataAt(blockX, blockY, blockZ);
                             block->UpdateTick(world, posXx16 + (cellId & 0xf), (i << 4) + ((cellId >> 8) & 0xf), posZx16 + ((cellId >> 4) & 0xf), blockData);
                         }
                     }
@@ -869,6 +859,7 @@ bool Chunk::loadFromFile(nbt::NbtBuffer* nbtData)
                 if (chunkData->addData == nullptr)
                 {
                     chunkData->addData = new unsigned char[CHUNK_BLOCK_NIBBLE_SIZE];
+                    chunkData->clearAddData();
                     flagSectionUseAdd |= (1 << chunkSectionId);
                 }
                 memcpy(chunkData->addData, addMetadataArray->getValues(), CHUNK_BLOCK_NIBBLE_SIZE);

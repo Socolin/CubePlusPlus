@@ -477,11 +477,11 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
 
     cryptedMode = true;
 
-    memcpy(aesDecryptBuffer,decryptedSecretKey.c_str(),16);
-    aesDecryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption((byte*)decryptedSecretKey.c_str(),(unsigned int)16,aesDecryptBuffer,1);
+    memcpy(aesDecryptBuffer, decryptedSecretKey.c_str(), 16);
+    aesDecryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Decryption((byte*)decryptedSecretKey.c_str(), (unsigned int)16, aesDecryptBuffer, 1);
 
-    memcpy(aesEncryptBuffer,decryptedSecretKey.c_str(),16);
-    aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)decryptedSecretKey.c_str(),(unsigned int)16,aesEncryptBuffer,1);
+    memcpy(aesEncryptBuffer, decryptedSecretKey.c_str(), 16);
+    aesEncryptor = new CryptoPP::CFB_Mode<CryptoPP::AES>::Encryption((byte*)decryptedSecretKey.c_str(), (unsigned int)16, aesEncryptBuffer, 1);
 
     state = STATE_LOGGING;
 

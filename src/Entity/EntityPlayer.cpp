@@ -86,6 +86,8 @@ void EntityPlayer::UpdateTick()
         {
             if (!chunkToSend.empty())
             {
+                if (session == nullptr)
+                    return;
                 if (session->HasPendingData())
                     break;
                 const ChunkToSendData& chunkToSendData =  chunkToSend.top();

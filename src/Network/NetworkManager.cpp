@@ -115,6 +115,11 @@ bool NetworkManager::StartServer(unsigned short port)
 
 void NetworkManager::ReceiveData()
 {
+    for (int socket : closedSocket)
+    {
+        sessionList.erase(socket);
+    }
+    closedSocket.clear();
     // Receive data and do somthing with it
     int countEvent = epoll_wait(efd, events, MAXEVENTS, 1);
     for (int i = 0; i < countEvent; i++)
@@ -255,7 +260,7 @@ void NetworkManager::OnDisconnectClient(int socket)
     {
         if (!sessionItr->second->isDisconnected())
             sessionItr->second->disconnect("OnDisconnectClient");
-        sessionList.erase(socket);
+        closedSocket.push_back(socket);
         delete sessionItr->second;
     }
 }

@@ -17,7 +17,16 @@ namespace Network
 {
 NetworkSession::NetworkSession(int socket) :
     socket(socket), buffer(INITIAL_BUFFER_SIZE),state(STATE_NOTLOGGED),lastKeepAliveTick(0),startPosInBuffer(0)
-    ,bufferSize(0),maxBufferSize(0),cryptedMode(false),aesDecryptor(nullptr),aesEncryptor(nullptr),player(nullptr),lastSendKeepAliveTick(0),lastKeepAliveId(0)
+    ,bufferSize(0),maxBufferSize(0)
+    , cryptedMode(false)
+    , aesDecryptor(nullptr)
+    , aesDecryptBuffer{0}
+    , aesEncryptor(nullptr)
+    , aesEncryptBuffer{0}
+    , player(nullptr)
+    , sendBuffer{0}
+    , lastSendKeepAliveTick(0)
+    , lastKeepAliveId(0)
     , pendingDataMaxSize(0)
     , pendingDataSize(0)
     , pendingDataPos(0)
@@ -32,10 +41,14 @@ NetworkSession::~NetworkSession()
     {
         delete aesDecryptor;
         delete aesEncryptor;
+        aesDecryptor = nullptr;
+        aesEncryptor = nullptr;
+        cryptedMode = false;
     }
     if (player)
     {
         delete player;
+        player = nullptr;
     }
 }
 
