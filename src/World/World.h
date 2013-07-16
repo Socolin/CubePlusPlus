@@ -138,6 +138,8 @@ public:
     const Position& GetSpawnPosition() const;
     Position GetValidSpawnPosition();
     nbt::NbtFile* LoadNbtDatasForPlayer(const std::string& playerName);
+    long long GetAgeOfWorld() const;
+    long long GetCurrentTime() const;
 
 private:
     void UpdateTime();

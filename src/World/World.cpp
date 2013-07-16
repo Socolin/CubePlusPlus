@@ -117,7 +117,7 @@ void World::AddPlayer(EntityPlayer* player)
 
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->AddPlayer(player);
-    player->OnJoinWorld();
+    player->OnJoinWorld(this);
     entityById[player->getEntityId()] = player;
 }
 
@@ -1318,6 +1318,16 @@ void World::loadGameMode(nbt::TagCompound* tagData)
 const Position& World::GetSpawnPosition() const
 {
     return spawnPosition;
+}
+
+long long World::GetAgeOfWorld() const
+{
+    return ageOfWorld;
+}
+
+long long World::GetCurrentTime() const
+{
+    return currentTime;
 }
 
 } /* namespace World */

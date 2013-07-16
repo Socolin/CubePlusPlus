@@ -76,7 +76,7 @@ public:
     /**
      * Called when player join a world, it send all initialization packets
      */
-    void OnJoinWorld();
+    void OnJoinWorld(World* world);
 
     /**
      * Called each world's tick to update entity

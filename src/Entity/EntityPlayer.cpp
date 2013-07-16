@@ -119,7 +119,7 @@ void EntityPlayer::Respawn(double x, double y, double z)
     session->SendPacket(packetInitialPosition);
 }
 
-void EntityPlayer::OnJoinWorld()
+void EntityPlayer::OnJoinWorld(World* world)
 {
     // TODO: get it from world
     Network::NetworkPacket packetSpawnPosition(Network::OP_SPAWN_POSITION);
@@ -128,8 +128,7 @@ void EntityPlayer::OnJoinWorld()
 
     session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
 
-    // TODO: use world value
-    session->SendUpdateTime(0, 0);
+    session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
 
     session->SendSetPositionAndLook(x, y, y + 1.62, z, 0.f, 0.f, false);
 
