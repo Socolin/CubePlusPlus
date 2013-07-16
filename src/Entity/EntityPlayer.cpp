@@ -117,7 +117,7 @@ void EntityPlayer::Respawn(double x, double y, double z)
     // Move this to session
     Network::NetworkPacket packetInitialPosition(Network::OP_PLAYER_POSITION_AND_LOOK);
     packetInitialPosition << x << y << z << (float) 0 << (float) 0 << (char) 0;
-    session->SendPacket(packetInitialPosition);
+    Send(packetInitialPosition);
 }
 
 void EntityPlayer::OnJoinWorld(World* world)
