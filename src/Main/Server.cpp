@@ -24,6 +24,7 @@
 void stopHandler(int sig)
 {
     World::WorldManager::Instance().Stop();
+    signal(sig, stopHandler);
 }
 
 
