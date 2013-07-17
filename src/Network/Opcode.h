@@ -59,7 +59,7 @@ struct OpcodeHandler
     /// Active or not debug message for this opcode
     bool debug;
     /// Minimum size needed in buffer for trying decode this opcode
-    int packetSize;
+    size_t packetSize;
 };
 
 extern OpcodeHandler opcodeTable[TOTAL_OPCODE_COUNT];
