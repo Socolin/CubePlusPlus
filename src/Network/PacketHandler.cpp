@@ -21,11 +21,19 @@
 #include "Logging/Logger.h"
 #include "Util/StringUtil.h"
 
-#define DEBUG_STR(value)        LOG_DEBUG << "\t" << #value << "String: size: "<< value.length() << " value:\"" << value << "\"" << std::endl;
-#define DEBUG_SHORT(value)      LOG_DEBUG << "\t" << #value << "\tShort: " << value << std::endl;
-#define DEBUG_INT(value)        LOG_DEBUG << "\t" << #value << "\tInt: " << value << std::endl;
-#define DEBUG_CHAR(value)       LOG_DEBUG << "\t" << #value << "\tChar: " << (int)value << std::endl;
-
+#ifndef NDEBUG
+# define DEBUG_STR(value)        LOG_DEBUG << "\t" << #value << "String: size: "<< value.length() << " value:\"" << value << "\"" << std::endl;
+# define DEBUG_SHORT(value)      LOG_DEBUG << "\t" << #value << "\tShort: " << value << std::endl;
+# define DEBUG_BOOL(value)       LOG_DEBUG << "\t" << #value << "\tBool: " << value << std::endl;
+# define DEBUG_INT(value)        LOG_DEBUG << "\t" << #value << "\tInt: " << value << std::endl;
+# define DEBUG_CHAR(value)       LOG_DEBUG << "\t" << #value << "\tChar: " << (int)value << std::endl;
+#else
+# define DEBUG_STR(value)
+# define DEBUG_SHORT(value)
+# define DEBUG_BOOL(value)
+# define DEBUG_INT(value)
+# define DEBUG_CHAR(value)
+#endif
 
 namespace Network
 {
@@ -36,7 +44,6 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
         return;
     if (value != lastKeepAliveId)
     {
-        LOG_DEBUG << lastKeepAliveId << " " << value << std::endl;
         kick(std::wstring(L"Bad keepalive message"));
     }
     lastKeepAliveId = 0;
@@ -44,6 +51,9 @@ void NetworkSession::handleKeepAlive() throw (NetworkException)
 void NetworkSession::handleChatMessage() throw (NetworkException)
 {
     std::wstring message = readString(100);
+
+    DEBUG_STR(message);
+
     World::WorldManager::Instance().HandleChatMessage(player, message);
 }
 void NetworkSession::handleHandShake() throw (NetworkException)
@@ -57,14 +67,19 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 
     unsigned char protocolVersion = readByte();
     if (protocolVersion != CURRENT_VERSION_PROTOCOL)
-        throw NetworkException("Bad protocol version, use 1.5");
+    {
+        kick(std::wstring(L"Bad protocol version, use 1.5.2"));
+        return;
+    }
 
     username = readString(16);
     std::wstring serverHost = readString(255);
-    readInt();
+    int serverPort = readInt();
 
+    DEBUG_CHAR(protocolVersion)
     DEBUG_STR(username)
     DEBUG_STR(serverHost)
+    DEBUG_INT(serverPort)
 
     NetworkEncryption* encrypt = NetworkEncryption::GetInstance();
     buffer_t certificate = encrypt->GetCertificate();
@@ -91,9 +106,14 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 }
 void NetworkSession::handleUseEntity() throw (NetworkException)
 {
-    readInt();
+    int user = readInt();
     int target = readInt();
     bool leftClick = readByte();
+
+    DEBUG_INT(user);
+    DEBUG_INT(target);
+    DEBUG_BOOL(leftClick);
+
     player->UseEntity(target, leftClick);
 }
 void NetworkSession::handlePlayer() throw (NetworkException)
@@ -138,7 +158,13 @@ void NetworkSession::handlePlayerDigging() throw (NetworkException)
     unsigned char y = readByte();
     int z = readInt();
     char face = readByte();
-    LOG_DEBUG << "handlePlayerDigging state:" << (int)state << " x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << std::endl;
+
+    DEBUG_CHAR(state);
+    DEBUG_INT(x);
+    DEBUG_CHAR(y);
+    DEBUG_INT(z);
+    DEBUG_CHAR(face);
+
     player->DigBlock(state, x, y, z, face);
 }
 
@@ -167,11 +193,14 @@ void NetworkSession::handlePlayerBlockPlacement() throw (NetworkException)
     char cursorPositionX = readByte();
     char cursorPositionY = readByte();
     char cursorPositionZ = readByte();
-    LOG_DEBUG << "handlePlayerBlockPlacement x:" << x << " y:"<< (int)y << " z:" << z << " face:" << (int)face << " blockId:" << blockId
-              << " cx:" << (int)cursorPositionX
-              << " cy:" << (int)cursorPositionY
-              << " cz:" << (int)cursorPositionZ
-              << std::endl;
+
+    DEBUG_CHAR(face);
+    DEBUG_INT(x);
+    DEBUG_CHAR(y);
+    DEBUG_INT(z);
+    DEBUG_CHAR(cursorPositionX);
+    DEBUG_CHAR(cursorPositionY);
+    DEBUG_CHAR(cursorPositionZ);
 
     player->PlaceBlock(x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
 }
@@ -180,6 +209,8 @@ void NetworkSession::handleHeldItemChange() throw (NetworkException)
     int slotId = readShort();
     if (slotId > 8 || slotId < 0)
         throw NetworkException("handleHeldItemChange: SlotID > 8 || < 0");
+
+    DEBUG_INT(slotId)
     player->GetHandsInventory()->setHandSlot(slotId);
     player->ItemInHandHasChange();
 }
@@ -187,13 +218,17 @@ void NetworkSession::handleAnimation() throw (NetworkException)
 {
     int entityId = readInt();
     char animationId = readByte();
-    LOG_DEBUG << "handleAnimation: EID:" << entityId << " animationId:" << (int)animationId << std::endl;
+    DEBUG_INT(entityId);
+    DEBUG_CHAR(animationId);
     player->PlayAnimation(animationId);
 }
 void NetworkSession::handleEntityAction() throw (NetworkException)
 {
     readInt();
     char action = readByte();
+
+    DEBUG_CHAR(action);
+
     player->DoAction(action);
 }
 void NetworkSession::handleCloseWindow() throw (NetworkException)
@@ -209,11 +244,13 @@ void NetworkSession::handleClickWindow() throw (NetworkException)
     short action = readShort();
     char mode = readByte();
     const Inventory::ItemStack* itemStack = readSlot();
+
     DEBUG_CHAR(windowId);
     DEBUG_SHORT(slotId);
     DEBUG_CHAR(button);
     DEBUG_SHORT(action);
     DEBUG_CHAR(mode);
+
     player->ClickOnWindow(windowId, slotId, button, action, mode, itemStack);
     delete itemStack;
 }
@@ -225,8 +262,11 @@ void NetworkSession::handleConfirmTransaction() throw (NetworkException)
 }
 void NetworkSession::handleEnchantItem() throw (NetworkException)
 {
-    readByte();
-    readByte();
+    char windowId = readByte();
+    char enchantmentSlot = readByte();
+
+    DEBUG_CHAR(windowId);
+    DEBUG_CHAR(enchantmentSlot)
 }
 void NetworkSession::handleUpdateSign() throw (NetworkException)
 {
@@ -264,13 +304,17 @@ void NetworkSession::handleUpdateSign() throw (NetworkException)
 }
 void NetworkSession::handlePlayerAbilities() throw (NetworkException)
 {
+    char flag = readByte();
     readByte();
     readByte();
-    readByte();
+
+    DEBUG_CHAR(flag);
+    //bool flying = flag & 0x2;
 }
 void NetworkSession::handleTabComplete() throw (NetworkException)
 {
-    readString(255);
+    const std::wstring& message = readString(255);
+    DEBUG_STR(message);
 }
 Inventory::ItemStack* NetworkSession::readSlot() throw (NetworkException)
 {
@@ -405,7 +449,8 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
 }
 void NetworkSession::handlePluginMessage() throw (NetworkException)
 {
-    readString(128);
+    const std::wstring& channel = readString(128);
+    DEBUG_STR(channel);
     readBuffer();
 }
 void NetworkSession::handleEncryptionKeyRequest() throw (NetworkException)
