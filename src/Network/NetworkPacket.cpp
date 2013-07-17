@@ -151,16 +151,15 @@ NetworkPacket& NetworkPacket::operator <<(double value)
 
 NetworkPacket& NetworkPacket::operator <<(const std::wstring& value)
 {
-    short strLenght = value.size();
-    tmpBuffer[0] = (strLenght >> 8) & 0xff;
-    tmpBuffer[1] = strLenght & 0xff;
-    append(tmpBuffer, 2);
+    short len = value.size();
+    short strLenght = htobe16(len);
+    append(&strLenght, 2);
     const wchar_t* datastr = value.c_str();
-    for (short i = 0; i < strLenght; i++)
+    for (short i = 0; i < len; i++)
     {
-        tmpBuffer[0] = (datastr[i] >> 8) & 0xff;
-        tmpBuffer[1] = datastr[i] & 0xff;
-        append(tmpBuffer, 2);
+        short val = datastr[i];
+        val = htobe16(val);
+        append(&val, 2);
     }
     return *this;
 }

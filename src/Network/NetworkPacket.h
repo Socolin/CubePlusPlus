@@ -90,7 +90,6 @@ private:
     size_t bufferSize;
     std::vector<char> packetData;
     size_t packetSize;
-    char tmpBuffer[8]; // Buffer pour permettre d'écrire tout les type d'int sans avoir à réalouer de la place à chaque fois
     int startCompressOffset;
 };
 
