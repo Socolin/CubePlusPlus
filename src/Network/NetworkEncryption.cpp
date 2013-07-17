@@ -15,15 +15,6 @@
 namespace Network
 {
 
-NetworkEncryption* NetworkEncryption::instance = NULL;
-
-NetworkEncryption* NetworkEncryption::GetInstance()
-{
-    if (instance == NULL)
-        instance = new NetworkEncryption();
-    return instance;
-}
-
 NetworkEncryption::NetworkEncryption()
 {
     std::stringstream ss;

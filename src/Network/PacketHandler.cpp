@@ -81,8 +81,8 @@ void NetworkSession::handleHandShake() throw (NetworkException)
     DEBUG_STR(serverHost)
     DEBUG_INT(serverPort)
 
-    NetworkEncryption* encrypt = NetworkEncryption::GetInstance();
-    buffer_t certificate = encrypt->GetCertificate();
+    NetworkEncryption& encrypt = NetworkEncryption::Instance();
+    buffer_t certificate = encrypt.GetCertificate();
 
     if (!worldManager.IsOnlineMode())
     {
@@ -407,7 +407,7 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
             CryptoPP::SHA1 sha1Encoder;
             sha1Encoder.Update((uint8_t*)serverIdStr.c_str(), serverIdStr.size());
             sha1Encoder.Update((uint8_t*)decryptedSecretKey.c_str(), decryptedSecretKey.size());
-            const buffer_t& certificate = NetworkEncryption::GetInstance()->GetCertificate();
+            const buffer_t& certificate = NetworkEncryption::Instance().GetCertificate();
             sha1Encoder.Update((uint8_t*)certificate.first, certificate.second);
             sha1Encoder.Final(digest);
 
@@ -484,9 +484,9 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
         throw NetworkException("verifyToken.second != 128");
     }
 
-    NetworkEncryption* encrypt = NetworkEncryption::GetInstance();
+    NetworkEncryption& encrypt = NetworkEncryption::Instance();
 
-    CryptoPP::RSAES<CryptoPP::PKCS1v15>::Decryptor rsaDecryptor(*encrypt->getPrivateKey());
+    CryptoPP::RSAES<CryptoPP::PKCS1v15>::Decryptor rsaDecryptor(*encrypt.getPrivateKey());
 
     std::string sEncryptedSharedSecret(sharedSecretKey.first,sharedSecretKey.second);
 
@@ -495,7 +495,7 @@ void NetworkSession::handleEncryptionKeyResponse() throw (NetworkException)
         CryptoPP::StringSource StrSrc(
             sEncryptedSharedSecret,
             true,
-            new CryptoPP::PK_DecryptorFilter(encrypt->getAutoSeed(), rsaDecryptor, new CryptoPP::StringSink(decryptedSecretKey))
+            new CryptoPP::PK_DecryptorFilter(encrypt.getAutoSeed(), rsaDecryptor, new CryptoPP::StringSink(decryptedSecretKey))
         );
     }
     catch (CryptoPP::Exception&)

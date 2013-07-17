@@ -106,6 +106,11 @@ void NetworkSession::ReceiveData() throw (NetworkException)
             const OpcodeHandler& handler = opcodeTable[packetId];
             if (handler.debug)
                 LOG_DEBUG << "Receive packet:"<< opcodeTable[packetId].name << " 0x" << std::hex <<  ((int)(packetId)&0xff)  <<std::dec << std::endl;
+            if (bufferSize - startPosInBuffer < handler.packetSize)
+            {
+                startPosInBuffer = backupStartPos;
+                break;
+            }
             if ((handler.state & state) != 0)
             {
                 (this->*handler.handler) ();

@@ -1,17 +1,18 @@
 #ifndef NETWORKENCRYPTION_H_
 #define NETWORKENCRYPTION_H_
 
+#include "Util/Singleton.h"
+
 #include <cryptopp/rsa.h>
 #include <cryptopp/osrng.h>
 
 namespace Network
 {
 
-class NetworkEncryption
+class NetworkEncryption : public Util::Singleton<NetworkEncryption>
 {
-    static NetworkEncryption* instance;
+    friend Util::Singleton<NetworkEncryption>;
 public:
-    static NetworkEncryption* GetInstance();
     virtual ~NetworkEncryption();
 
     const std::pair<char*, short>& GetCertificate() const

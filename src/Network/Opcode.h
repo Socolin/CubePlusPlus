@@ -6,39 +6,60 @@
 
 namespace Network
 {
-
-/// Structure permettant de lié un Opcode a une fonction
+/// Opcode handler
 struct OpcodeHandler
 {
     OpcodeHandler()
+        : name("UNK_OPCODE")
+        , state(STATE_NEVER)
+        , handler(nullptr)
+        , debug(true)
+        , packetSize(0)
     {
-        name = "UNK_OPCODE";
-        state = STATE_NEVER;
-        handler = nullptr;
-        debug = true;
     }
-    OpcodeHandler(char const* name,int state,void (NetworkSession::*handler)())
+    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)())
+        : name(name)
+        , state(state)
+        , handler(handler)
+        , debug(true)
+        , packetSize(0)
     {
-        this->name = name;
-        this->state = state;
-        this->handler = handler;
-        debug = true;
     }
-    OpcodeHandler(char const* name,int state,void (NetworkSession::*handler)(), bool debug)
+    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)(), bool debug)
+        : name(name)
+        , state(state)
+        , handler(handler)
+        , debug(debug)
+        , packetSize(0)
     {
-        this->name = name;
-        this->state = state;
-        this->handler = handler;
-        this->debug = debug;
     }
-    /// Nom de l'opcode
-    char const* name;
-    /// Etat de la session requis pour que l'opcode soit réceptionné
-    int state;
-    /// Méthode associé a l'opcode
-    void (NetworkSession::*handler)() throw (NetworkException);
+    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)(), int size)
+        : name(name)
+        , state(state)
+        , handler(handler)
+        , debug(true)
+        , packetSize(size)
+    {
+    }
+    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)(), bool debug, int size)
+        : name(name)
+        , state(state)
+        , handler(handler)
+        , debug(debug)
+        , packetSize(size)
+    {
+    }
 
+    /// Opcode name
+    char const* name;
+    /// State of session when this opcode is receive, if state is not valid, client is kick
+    int state;
+    /// Handler called on packet reception
+    void (NetworkSession::*handler)() throw (NetworkException);
+    /// Active or not debug message for this opcode
     bool debug;
+    /// Minimum size needed in buffer for trying decode this opcode
+    int packetSize;
 };
 
 extern OpcodeHandler opcodeTable[TOTAL_OPCODE_COUNT];
