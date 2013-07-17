@@ -65,50 +65,35 @@ NetworkPacket& NetworkPacket::operator <<(unsigned char value)
 
 NetworkPacket& NetworkPacket::operator <<(short value)
 {
-    tmpBuffer[0] = (value >> 8) & 0xff;
-    tmpBuffer[1] = value & 0xff;
-    append(tmpBuffer, 2);
+    value = htobe16(value);
+    append(&value, 2);
     return *this;
 }
 NetworkPacket& NetworkPacket::operator <<(unsigned short value)
 {
-    tmpBuffer[0] = (value >> 8) & 0xff;
-    tmpBuffer[1] = value & 0xff;
-    append(tmpBuffer, 2);
+    value = htobe16(value);
+    append(&value, 2);
     return *this;
 }
 
 NetworkPacket& NetworkPacket::operator <<(int value)
 {
-    tmpBuffer[0] = (value >> 24) & 0xff;
-    tmpBuffer[1] = (value >> 16) & 0xff;
-    tmpBuffer[2] = (value >> 8) & 0xff;
-    tmpBuffer[3] = value & 0xff;
-    append(tmpBuffer, 4);
+    value = htobe32(value);
+    append(&value, 4);
     return *this;
 }
 
 NetworkPacket& NetworkPacket::operator <<(unsigned int value)
 {
-    tmpBuffer[0] = (value >> 24) & 0xff;
-    tmpBuffer[1] = (value >> 16) & 0xff;
-    tmpBuffer[2] = (value >> 8) & 0xff;
-    tmpBuffer[3] = value & 0xff;
-    append(tmpBuffer, 4);
+    value = htobe32(value);
+    append(&value, 4);
     return *this;
 }
 
 NetworkPacket& NetworkPacket::operator <<(long long value)
 {
-    tmpBuffer[0] = (value >> 56) & 0xff;
-    tmpBuffer[1] = (value >> 48) & 0xff;
-    tmpBuffer[2] = (value >> 40) & 0xff;
-    tmpBuffer[3] = (value >> 32) & 0xff;
-    tmpBuffer[4] = (value >> 24) & 0xff;
-    tmpBuffer[5] = (value >> 16) & 0xff;
-    tmpBuffer[6] = (value >> 8) & 0xff;
-    tmpBuffer[7] = value & 0xff;
-    append(tmpBuffer, 8);
+    value = htobe64(value);
+    append(&value, 8);
     return *this;
 }
 
@@ -183,9 +168,9 @@ NetworkPacket& NetworkPacket::operator <<(const std::wstring& value)
 NetworkPacket& NetworkPacket::operator <<(const std::pair<char*, short>& pair)
 {
     short value = pair.second;
-    tmpBuffer[0] = (value >> 8) & 0xff;
-    tmpBuffer[1] = value & 0xff;
-    append(tmpBuffer, 2);
+    value = htobe16(value);
+    append(&value, 2);
+
     append(pair.first, pair.second);
     return *this;
 }
@@ -296,18 +281,14 @@ void NetworkPacket::appendCompress(char* buffer, size_t size)
 
 void NetworkPacket::UpdateAt(int offset, int value)
 {
-    tmpBuffer[0] = (value >> 24) & 0xff;
-    tmpBuffer[1] = (value >> 16) & 0xff;
-    tmpBuffer[2] = (value >> 8) & 0xff;
-    tmpBuffer[3] = value & 0xff;
-    std::memcpy(&packetData[offset], tmpBuffer, 4);
+    value = htobe32(value);
+    std::memcpy(&packetData[offset], &value, 4);
 }
 
 void NetworkPacket::UpdateAt(int offset, short value)
 {
-    tmpBuffer[0] = (value >> 8) & 0xff;
-    tmpBuffer[1] = value & 0xff;
-    std::memcpy(&packetData[offset], tmpBuffer, 2);
+    value = htobe16(value);
+    std::memcpy(&packetData[offset], &value, 2);
 }
 
 } /* namespace Network */
