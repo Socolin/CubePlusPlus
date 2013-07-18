@@ -10,9 +10,10 @@ namespace Scripting
 {
 
 class BlockScript;
-class ItemScript;
-class WindowScript;
 class CraftScript;
+class ItemScript;
+class LivingEntityScript;
+class WindowScript;
 
 class ScriptManager : public Util::Singleton<ScriptManager>
 {
@@ -35,6 +36,9 @@ public:
     void RegisterScript(std::string scriptName, CraftScript* script);
     CraftScript* GetCraftScript(std::string scriptName);
 
+    void RegisterScript(std::string scriptName, LivingEntityScript* script);
+    LivingEntityScript* GetLivingEntityScript(std::string scriptName);
+
     void LoadScriptsIds();
     std::string GetScriptName(int scriptId);
 private:
@@ -43,6 +47,7 @@ private:
     std::unordered_map<std::string, ItemScript*> itemScript;
     std::unordered_map<std::string, WindowScript*> windowScript;
     std::unordered_map<std::string, CraftScript*> craftScript;
+    std::unordered_map<std::string, LivingEntityScript*> livingEntityScript;
     std::unordered_map<int, std::string> scriptsIds;
 };
 

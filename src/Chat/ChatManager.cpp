@@ -7,6 +7,8 @@
 #include "Logging/Logger.h"
 #include "World/WorldManager.h"
 #include "World/World.h"
+#include "Entity/Scripts/Database/ScriptedEntityList.h"
+#include "Entity/Scripts/ScriptedLivingEntity.h"
 
 namespace Chat
 {
@@ -43,6 +45,12 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     {
         player->SendChatMessage(L"§aYou switch time to night day");
         World::WorldManager::Instance().GetWorld()->SetTime(1000);
+        isCanceled = true;
+    }
+    if (message == L"/spawn")
+    {
+        World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(1, player->x, player->y, player->z);
+        player->GetWorld()->AddEntity(entity);
         isCanceled = true;
     }
     if (isCanceled)

@@ -87,6 +87,16 @@ enum eDatabaseField
     itemData,
 };
 }
+namespace TableEntityLiving
+{
+enum eDatabaseField
+{
+    id = 1,
+    name,
+    clientType,
+    script,
+};
+}
 namespace TableFurnaceRecipe
 {
 enum eDatabaseField

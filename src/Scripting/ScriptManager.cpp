@@ -4,6 +4,8 @@
 #include "Block/Scripts/BlockScript.h"
 #include "Craft/Scripts/RegisterCraftScripts.h"
 #include "Craft/Scripts/CraftScript.h"
+#include "Entity/Scripts/RegisterEntityLivingScripts.h"
+#include "Entity/Scripts/LivingEntityScript.h"
 #include "Inventory/Scripts/RegisterItemScripts.h"
 #include "Inventory/Scripts/ItemScript.h"
 #include "Database/DatabaseManager.h"
@@ -96,6 +98,27 @@ CraftScript* ScriptManager::GetCraftScript(std::string scriptName)
     return NULL;
 }
 
+void ScriptManager::RegisterScript(std::string scriptName, LivingEntityScript* script)
+{
+    if (livingEntityScript.find(scriptName) == livingEntityScript.end())
+    {
+        LOG_DEBUG << "\t- " << scriptName << std::endl;
+        livingEntityScript[scriptName] = script;
+    }
+    else
+    {
+        assert(false);
+    }
+}
+
+LivingEntityScript* ScriptManager::GetLivingEntityScript(std::string scriptName)
+{
+    auto it = livingEntityScript.find(scriptName);
+    if (it != livingEntityScript.end())
+        return it->second->Copy();
+    return NULL;
+}
+
 
 void ScriptManager::RegisterAllScripts()
 {
@@ -107,6 +130,8 @@ void ScriptManager::RegisterAllScripts()
     RegisterWindowScript();
     LOG_DEBUG << "Registering craft's scripts: " << std::endl;
     RegisterCraftScript();
+    LOG_DEBUG << "Registering entityLiving's scripts: " << std::endl;
+    RegisterEntityLivingScript();
 }
 
 void ScriptManager::LoadScriptsIds()
