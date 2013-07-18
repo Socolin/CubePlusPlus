@@ -86,7 +86,7 @@ void StringToWString(std::wstring &ws, const std::string &s)
     {
         ws = utf8_to_utf16(s);
     }
-    catch (std::logic_error e)
+    catch (std::logic_error& e)
     {
         std::wstring wsTmp(s.begin(), s.end());
         ws = wsTmp;

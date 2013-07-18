@@ -25,7 +25,7 @@ BlockScript* BlockNoteScript::Copy()
 }
 bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
     Block::TileEntity* tileEntity = world->GetTileEntity(x, y, z);
     if (tileEntity)
     {

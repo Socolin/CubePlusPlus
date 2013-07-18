@@ -49,7 +49,7 @@ bool ItemFrameScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned ch
         break;
     };
 
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
     if (world)
     {
         World::EntityHangingFrame* hangingEntity = new World::EntityHangingFrame(x, y, z, orientation);

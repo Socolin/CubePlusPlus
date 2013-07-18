@@ -40,7 +40,7 @@ Window::~Window()
 
 void Window::OpenWindow(int x, i_height y, int z)
 {
-    World::World* world = player->getWorld();
+    World::World* world = player->GetWorld();
     if (world)
     {
         i_block blockId = world->GetBlockId(x, y, z);

@@ -25,7 +25,7 @@ BlockScript* BlockJukeboxScript::Copy()
 }
 bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
     World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
     if (chunk == nullptr)
     {

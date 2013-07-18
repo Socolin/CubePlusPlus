@@ -55,7 +55,7 @@ void EntityItem::UpdateTick()
         world->GetEntitiesInRangeByEntityType(ENTITY_TYPE_ITEM, entityId, *this, 1, entityList);
         for (Entity* entity : entityList)
         {
-            if (entity->isDead())
+            if (entity->IsDead())
                 continue;
             EntityItem* entityItem = dynamic_cast<EntityItem*>(entity);
             if (entityItem != nullptr)
@@ -69,7 +69,7 @@ void EntityItem::UpdateTick()
                         Inventory::ItemStack* itemStack = entityItem->storedItem.TakeSlot(0);
                         storedItem.Merge(0, itemStack);
                         metadataManager.SetEntityMetadata(10, storedItem.LookSlot(0)->Copy());
-                        entityItem->kill();
+                        entityItem->Kill();
                     }
                 }
             }
@@ -112,7 +112,7 @@ void EntityItem::UpdateTick()
         }
     }
     if (liveTime >= 6000)
-        kill();
+        Kill();
 
 }
 
@@ -131,7 +131,7 @@ void EntityItem::OnCollideWithPlayer(EntityPlayer* player)
         if (count >= lookedStoredItem->getStackSize())
         {
             takenItem = storedItem.TakeSlot(0);
-            kill();
+            Kill();
         }
         else
         {
@@ -142,7 +142,7 @@ void EntityItem::OnCollideWithPlayer(EntityPlayer* player)
         if (vSmallChunk)
         {
             Network::NetworkPacket collectItemPacket(Network::OP_COLLECT_ITEM);
-            collectItemPacket << entityId << player->getEntityId();
+            collectItemPacket << entityId << player->GetEntityId();
             vSmallChunk->SendPacketToAllNearPlayer(collectItemPacket);
         }
         world->PlaySound(x, y, z, L"random.pop", 0.2f, (char)(63.f * (((Util::randFloat() - Util::randFloat()) * 0.7f + 1.0f) * 2.0f)), 2);

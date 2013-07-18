@@ -78,8 +78,8 @@ bool BlockChestScript::CanPlace(World::World* world, int x, i_height y, int z, c
 
 void BlockChestScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int /*face*/, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    World::World* world = player->getWorld();
-    int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
+    World::World* world = player->GetWorld();
+    int playerRotation = (int)(std::floor((player->GetYaw() * 4.0 / 360.0) + 0.5)) & 3;
 
     switch (playerRotation)
     {
@@ -206,7 +206,7 @@ bool BlockChestScript::UseTileEntity() const
 
 bool BlockChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
     bool doubleChest = false;
     i_block baseBlockId = baseBlock->GetBlockId();
     FOR_EACH_SIDE_XZ(x, z, blockSide)

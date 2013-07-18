@@ -94,17 +94,17 @@ void World::UpdateTick()
 
 void World::AddEntity(Entity* entity)
 {
-    entity->setWorld(this, currentEntityId++);
+    entity->SetWorld(this, currentEntityId++);
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 7, ((int) entity->z) >> 7);
     virtualChunk->AddEntity(entity);
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
     vChunk->AddEntity(entity);
-    entityById[entity->getEntityId()] = entity;
+    entityById[entity->GetEntityId()] = entity;
 }
 
 void World::AddPlayer(EntityPlayer* player)
 {
-    player->setWorld(this, currentEntityId++);
+    player->SetWorld(this, currentEntityId++);
     playerList.insert(player);
     int chunkX = ((int) player->x) >> 4;
     int chunkZ = ((int) player->z) >> 4;
@@ -126,7 +126,7 @@ void World::AddPlayer(EntityPlayer* player)
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->AddPlayer(player);
     player->OnJoinWorld(this);
-    entityById[player->getEntityId()] = player;
+    entityById[player->GetEntityId()] = player;
 }
 
 void World::RemoveEntity(Entity* entity)
@@ -135,8 +135,8 @@ void World::RemoveEntity(Entity* entity)
     virtualChunk->RemoveEntity(entity);
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
     vChunk->RemoveEntity(entity);
-    entityById[entity->getEntityId()] = nullptr;
-    entity->setWorld(nullptr, 0);
+    entityById[entity->GetEntityId()] = nullptr;
+    entity->SetWorld(nullptr, 0);
 }
 
 void World::RemovePlayer(EntityPlayer* player)
@@ -164,8 +164,8 @@ void World::RemovePlayer(EntityPlayer* player)
 
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->RemovePlayer(player);
-    player->setWorld(nullptr, 0);
-    entityById[player->getEntityId()] = nullptr;
+    player->SetWorld(nullptr, 0);
+    entityById[player->GetEntityId()] = nullptr;
 }
 
 void World::ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData)
@@ -576,7 +576,7 @@ void World::UpdateTime()
         Entity* entity = entityById[deadEntityId];
         if (entity)
         {
-            if (entity->getEntityType() == ENTITY_TYPE_PLAYER)
+            if (entity->GetEntityType() == ENTITY_TYPE_PLAYER)
             {
                 EntityPlayer* player = dynamic_cast<EntityPlayer*>(entity);
                 if (player)

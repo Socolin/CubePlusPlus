@@ -44,7 +44,7 @@ void EntityPainting::SelectRandomPainting(const Inventory::ItemStack* itemStack)
     std::set<Database::PaintingData::Painting> paintingList = Database::PaintingData::Instance().getPainting(itemStack->getItemId());
     if (paintingList.empty())
     {
-        kill();
+        Kill();
         return;
     }
     else
@@ -64,7 +64,7 @@ void EntityPainting::SelectRandomPainting(const Inventory::ItemStack* itemStack)
 
         if (compatibleArtList.empty())
         {
-            kill();
+            Kill();
             return;
         }
         int selectedArt = std::rand() % compatibleArtList.size();

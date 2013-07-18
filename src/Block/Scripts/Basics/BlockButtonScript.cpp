@@ -54,7 +54,7 @@ void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x
 
 bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);
     if (!SCRIPT_BLOCK_BUTTON_ACTIVATED(clickedBlockData))
     {

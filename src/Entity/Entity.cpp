@@ -49,7 +49,7 @@ Entity::~Entity()
 {
 }
 
-void Entity::setWorld(World* world, int entityId)
+void Entity::SetWorld(World* world, int entityId)
 {
     this->world = world;
     this->entityId = entityId;
@@ -481,20 +481,40 @@ bool Entity::PushOutOfBlock(double x, double y, double z)
     return true;
 }
 
-bool Entity::isDead() const
+bool Entity::IsDead() const
 {
     return dead;
 }
 
-void Entity::kill()
+void Entity::Kill()
 {
     dead = true;
     world->MarkEntityAsDead(entityId);
 }
 
-int Entity::getEntityId() const
+int Entity::GetEntityId() const
 {
     return entityId;
+}
+
+World* Entity::GetWorld() const
+{
+    return world;
+}
+
+float Entity::GetPitch() const
+{
+    return pitch;
+}
+
+float Entity::GetYaw() const
+{
+    return yaw;
+}
+
+eEntityType Entity::GetEntityType() const
+{
+    return entityType;
 }
 
 int Entity::GetEntityTypeFlag() const

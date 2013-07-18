@@ -23,7 +23,7 @@ BlockScript* BlockSignGroundScript::Copy()
 
 void BlockSignGroundScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i_height /*y*/, int /*z*/, int /*face*/, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    data = (int)(std::floor(((player->getYaw() + 180) * 16.0 / 360.0) + 0.5)) & 15;
+    data = (int)(std::floor(((player->GetYaw() + 180) * 16.0 / 360.0) + 0.5)) & 15;
 }
 
 Block::TileEntity* BlockSignGroundScript::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const

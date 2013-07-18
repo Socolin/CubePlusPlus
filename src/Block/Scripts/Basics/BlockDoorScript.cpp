@@ -32,7 +32,7 @@ BlockScript* BlockDoorScript::Copy()
 
 void BlockDoorScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int /*face*/, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
+    int playerRotation = (int)(std::floor((player->GetYaw() * 4.0 / 360.0) + 0.5)) & 3;
 
     int leftBlockX = x;
     int leftBlockZ = z;
@@ -65,7 +65,7 @@ void BlockDoorScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_heig
         break;
     }
 
-    World::World* world = player->getWorld();
+    World::World* world = player->GetWorld();
     i_block blockTop = world->GetBlockId(x, y + 1, z);
     if (blockTop == 0)
     {
@@ -86,7 +86,7 @@ bool BlockDoorScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, i
     if (need_redstone)
         return false;
 
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
     World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
     if (chunk == nullptr)
         return false;

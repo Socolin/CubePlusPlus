@@ -56,11 +56,11 @@ bool ItemPaintingScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned
         break;
     };
 
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
     if (world)
     {
         World::EntityPainting* hangingEntity = new World::EntityPainting(x, y, z, orientation, item, world);
-        if (!hangingEntity->isDead())
+        if (!hangingEntity->IsDead())
         {
             world->AddEntity(hangingEntity);
         }

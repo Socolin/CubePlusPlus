@@ -277,7 +277,7 @@ void NetworkSession::handleUpdateSign() throw (NetworkException)
     DEBUG_INT(x);
     DEBUG_SHORT(y);
     DEBUG_INT(z);
-    World::World* world = player->getWorld();
+    World::World* world = player->GetWorld();
     if (world)
     {
         Block::TileEntity* tileEntity = world->GetTileEntity(x, y, z);

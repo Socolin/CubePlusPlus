@@ -39,16 +39,81 @@ public:
     Entity(eEntityType entityType, int entityTypeFlag, double x, double y, double z);
     virtual ~Entity();
     virtual void UpdateTick() = 0;
-    void setWorld(World* world, int entityId);
 
+    /**
+     * Called when an entity join a world, it define the world and the entityId
+     * it initialize all special coordinate too, virtualChunk position, network position
+     * chunk position etc..
+     * @param world the world joined by the entity
+     * @param entityId the unique id for the entity
+     */
+    void SetWorld(World* world, int entityId);
+
+    /**
+     * Rotate entity, and mark here to send update rotation to player around it
+     * @param yaw the yaw rotation (around axes y)
+     * @param pitch the pitch rotation ("up/down" rotation for head)
+     */
     void Rotate(float yaw, float pitch);
+
+    /**
+     * Move entity to coordinate, it does not check collision etc..
+     * This method update chunk coordinate and notify chunk when the entity leave the
+     * chunk or enter in new chunk.
+     * @param x new x coordinate
+     * @param y new y coordinate
+     * @param z new z coordinate
+     */
     void MoveTo(double x, double y, double z);
+
+    /**
+     * Try to move the entity, check collision with block etc...
+     * @param dx
+     * @param dy
+     * @param dz
+     */
     void Move(double dx, double dy, double dz);
+
+    /**
+     * Notify that entity have not move
+     */
     void StopMoving();
+
+    /**
+     * No implemented yet
+     * Teleport the entity
+     * @param x
+     * @param y
+     * @param z
+     * @param yaw
+     * @param pitch
+     */
     void Teleport(double x, double y, double z, float yaw, float pitch);
+
+    /**
+     * Fill 'packet' with data to notify change to player around it
+     * @param packet packet to fill
+     */
     void GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet);
+
+    /**
+     * Define bounding box size of entity
+     * @param width
+     * @param height
+     */
     void SetWidthHeight(double width, double height);
+
+    /**
+     * Test if this entity is in collision with 'box'
+     * @param box
+     * @return
+     */
     bool CollideWith(const Util::AABB& box);
+
+    /**
+     * Get the entity bounding box.
+     * @return
+     */
     const Util::AABB& GetBoundingBox() const;
 
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) = 0;
@@ -62,40 +127,16 @@ public:
 
     virtual void OnCollideWithPlayer(EntityPlayer* player);
 
-    World* getWorld() const
-    {
-        return world;
-    }
+    World* GetWorld() const;
+    float GetPitch() const;
+    float GetYaw() const;
+    eEntityType GetEntityType() const;
 
-    float getPitch() const
-    {
-        return pitch;
-    }
-
-    void setPitch(float pitch)
-    {
-        this->pitch = pitch;
-    }
-
-    float getYaw() const
-    {
-        return yaw;
-    }
-
-    void setYaw(float yaw)
-    {
-        this->yaw = yaw;
-    }
-
-    eEntityType getEntityType() const
-    {
-        return entityType;
-    }
     int GetEntityTypeFlag() const;
 
-    bool isDead() const;
-    void kill();
-    int getEntityId() const;
+    bool IsDead() const;
+    void Kill();
+    int GetEntityId() const;
 
     char GetFlag();
     void SetFlag(char flag);

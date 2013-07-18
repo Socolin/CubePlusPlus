@@ -34,7 +34,7 @@ void EntityHanging::UpdateTick()
 
         if (!isOnValidSurface())
         {
-            kill();
+            Kill();
             // Drop
         }
     }

@@ -33,7 +33,7 @@ void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i
      case FACE_TOP: // +Y
      {
          data = 5;
-         int playerRotation = (int)(std::floor((player->getYaw() * 4.0 / 360.0) + 0.5)) & 3;
+         int playerRotation = (int)(std::floor((player->GetYaw() * 4.0 / 360.0) + 0.5)) & 3;
          if (playerRotation == 1 || playerRotation == 3)
              data++;
          break;
@@ -60,7 +60,7 @@ void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i
 
 bool BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);
     world->ChangeDataNotify(x, y, z, clickedBlockData ^ 0x8);
 

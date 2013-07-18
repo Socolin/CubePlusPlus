@@ -34,7 +34,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     if (item == nullptr)
         return false;
 
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
 
     int clickedBlockId = world->GetBlockId(x, y, z);
     const Block::Block* clicketBlock = Block::BlockList::getBlock(clickedBlockId);
@@ -73,7 +73,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
         metadata = item->getItemData() & 0xf;
 
     const Block::Block* block = Block::BlockList::getBlock(AssociatedBlockId);
-    if (block && block->CanPlace(user->getWorld(), x, y, z, face))
+    if (block && block->CanPlace(user->GetWorld(), x, y, z, face))
     {
         block->OnBlockPlace(user, x, y, z,face, blockId, metadata, cursorPositionX, cursorPositionY, cursorPositionZ);
         world->ChangeBlock(x, y, z, blockId, metadata, true);

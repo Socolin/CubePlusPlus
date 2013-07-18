@@ -32,7 +32,7 @@ bool ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, 
     if (face == FACE_BOTTOM)
         return false;
 
-    World::World* world = user->getWorld();
+    World::World* world = user->GetWorld();
 
     int clickedBlockId = world->GetBlockId(x, y, z);
     const Block::Block* clicketBlock = Block::BlockList::getBlock(clickedBlockId);
@@ -64,7 +64,7 @@ bool ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, 
     i_data metadata = 0;
 
     const Block::Block* block = Block::BlockList::getBlock(blockId);
-    if (block && block->CanPlace(user->getWorld(), x, y, z, face))
+    if (block && block->CanPlace(user->GetWorld(), x, y, z, face))
     {
         block->OnBlockPlace(user, x, y, z,face, blockId, metadata, cursorPositionX, cursorPositionY, cursorPositionZ);
         world->ChangeBlock(x, y, z, blockId, metadata, true);

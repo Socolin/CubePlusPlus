@@ -25,7 +25,7 @@ void EntityFallingBlock::UpdateTick()
         return;
 
     if (y < 0)
-        kill();
+        Kill();
 
     motionY -= 0.03999999910593033;
     Move(0, motionY, 0);
@@ -47,7 +47,7 @@ void EntityFallingBlock::UpdateTick()
             world->ChangeBlock(std::floor(x), std::floor(y), std::floor(z), blockId, blockData, false);
         else
             world->DropItemstackWithRandomDirection(x, y, z, new Inventory::ItemStack(blockId, 1, blockData));
-        kill();
+        Kill();
     }
 }
 
