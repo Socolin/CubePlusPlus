@@ -12,7 +12,7 @@
 namespace World
 {
 
-EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack* itemStack, double motionX, double motionY, double motionZ, int timeBeforePickup)
+EntityItem::EntityItem(double x, double y, double z, Inventory::ItemStack* itemStack, double motionX, double motionY, double motionZ, size_t timeBeforePickup)
     : Entity(ENTITY_TYPE_ITEM, ENTITY_TYPEFLAG_MOVING, x, y, z)
     , liveTime(0)
     , timeBeforePickup(timeBeforePickup)
@@ -150,15 +150,8 @@ void EntityItem::OnCollideWithPlayer(EntityPlayer* player)
     }
 }
 
-void EntityItem::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
+void EntityItem::GetSpecificUpdatePacket(Network::NetworkPacket& /*packet*/)
 {
-    if (metadataManager.HasChanged())// Move it to entity class
-    {
-        metadataManager.ClearChange();
-        packet << (unsigned char) Network::OP_ENTITY_METADATA
-                << entityId;
-        metadataManager.Write(packet);
-    }
 }
 
 void EntityItem::GetCreatePacket(Network::NetworkPacket& packet)

@@ -243,6 +243,15 @@ void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
         stopMoving = false;
         packet << (unsigned char) Network::OP_ENTITY_VELOCITY << entityId << (short) 0 << (short) 0 << (short) 0;
     }
+
+
+    if (metadataManager.HasChanged())
+    {
+        metadataManager.ClearChange();
+        packet << (unsigned char) Network::OP_ENTITY_METADATA
+                << entityId;
+        metadataManager.Write(packet);
+    }
 }
 
 void Entity::StopMoving()
@@ -384,6 +393,10 @@ bool Entity::Save(nbt::TagCompound* /*tagNbtData*/)
 }
 
 void Entity::OnCollideWithPlayer(EntityPlayer* /*player*/)
+{
+}
+
+void Entity::Attack(EntityLiving* /*attacker*/, int& /*damage*/)
 {
 }
 

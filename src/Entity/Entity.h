@@ -24,21 +24,28 @@ namespace World
 {
 class World;
 class EntityPlayer;
+class EntityLiving;
 class Entity: public Position
 {
     enum eEntityFlags
     {
-        ENTITY_FLAG_BURNING     = 0x1,
-        ENTITY_FLAG_SNEAKING    = 0x2,
-        ENTITY_FLAG_RIDING      = 0x4,
-        ENTITY_FLAG_SPRINTING   = 0x8,
-        ENTITY_FLAG_EATING      = 0x10,
-        ENTITY_FLAG_INVISIBLE   = 0x20,
+        ENTITY_FLAG_BURNING = 0x1,
+        ENTITY_FLAG_SNEAKING = 0x2,
+        ENTITY_FLAG_RIDING = 0x4,
+        ENTITY_FLAG_SPRINTING = 0x8,
+        ENTITY_FLAG_EATING = 0x10,
+        ENTITY_FLAG_INVISIBLE = 0x20,
     };
 public:
     Entity(eEntityType entityType, int entityTypeFlag, double x, double y, double z);
     virtual ~Entity();
     virtual void UpdateTick() = 0;
+
+    /**
+     * Get the unique entity Id
+     * @return
+     */
+    int GetEntityId() const;
 
     /**
      * Called when an entity join a world, it define the world and the entityId
@@ -116,27 +123,88 @@ public:
      */
     const Util::AABB& GetBoundingBox() const;
 
+    /**
+     * Fill packet with some specific data depending of entity
+     * @param packet
+     */
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) = 0;
+
+    /**
+     * Fill packet with information to "destroy" entity for other client
+     * @param packet
+     */
     virtual void GetDestroyPacket(Network::NetworkPacket& packet);
+
+    /**
+     * Fill packet with data to add entity on client side
+     * @param packet
+     */
     virtual void GetCreatePacket(Network::NetworkPacket& packet) = 0;
-    virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
-    virtual void moveToChunk(int newChunkX, int newChunkZ);
+
+    /**
+     * Called when player use right click on entity
+     * @param player player who clicked
+     */
     virtual void Interact(EntityPlayer* player);
+
+    /**
+     * Called when the entity is attacked
+     * @param attacker
+     */
+    virtual void Attack(EntityLiving* attacker, int& damage);
+
+    /**
+     * Load entity from nbt datas
+     * @param tagNbtData
+     * @return
+     */
     virtual bool Load(nbt::TagCompound* tagNbtData);
+
+    /**
+     * Save entity into nbt data
+     * @param tagNbtData
+     * @return
+     */
     virtual bool Save(nbt::TagCompound* tagNbtData);
 
+    /**
+     * When a player collide this entity
+     * @param player
+     */
     virtual void OnCollideWithPlayer(EntityPlayer* player);
 
+    /**
+     * Get the current world of the entity
+     * @return
+     */
     World* GetWorld() const;
+
+    /**
+     * Get pitch rotation (up/down)
+     * @return
+     */
     float GetPitch() const;
+
+    /**
+     * Get yaw rotation (around axe y)
+     * @return
+     */
     float GetYaw() const;
+
+
     eEntityType GetEntityType() const;
 
     int GetEntityTypeFlag() const;
 
+    /**
+     * Return true if entity is dead
+     * @return
+     */
     bool IsDead() const;
+    /**
+     * Kill an entity
+     */
     void Kill();
-    int GetEntityId() const;
 
     char GetFlag();
     void SetFlag(char flag);
@@ -146,6 +214,20 @@ public:
     void SetSprinting(bool sprinting);
 
 protected:
+    /**
+     * Called when entity move to new VirtualChunk (128x128)
+     * @param newVirtualChunkX
+     * @param newVirtualChunkZ
+     */
+    virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
+
+    /**
+     * Called when entity move to new chunk (16x16)
+     * @param newChunkX
+     * @param newChunkZ
+     */
+    virtual void moveToChunk(int newChunkX, int newChunkZ);
+
     bool PushOutOfBlock(double x, double y, double z);
 
     const eEntityType entityType;
@@ -185,7 +267,6 @@ protected:
     // Chunk coordinate where entity is
     int chunkX;
     int chunkZ;
-
 
     Util::AABB boundingBox;
 

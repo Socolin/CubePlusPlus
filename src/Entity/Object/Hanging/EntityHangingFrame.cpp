@@ -10,7 +10,6 @@ namespace World
 
 EntityHangingFrame::EntityHangingFrame(int x, i_height y, int z, int direction)
     : EntityHanging(ENTITY_TYPE_HANGINGFRAME,  x, y, z, direction)
-    , hasItemChange(false)
 {
     metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM, (Inventory::ItemStack*)nullptr);
     metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM_ROTATION, (char)0);
@@ -32,14 +31,12 @@ void EntityHangingFrame::Interact(EntityPlayer* player)
         {
             metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM, newItem);
             metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM_ROTATION, (char)0);
-            hasItemChange = true;
         }
     }
     else
     {
         char oldOrientation = metadataManager.GetCharEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM_ROTATION);
         metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM_ROTATION, (char)((oldOrientation + 1) % 4));
-        hasItemChange = true;
     }
 }
 
@@ -72,15 +69,8 @@ void EntityHangingFrame::GetCreatePacket(Network::NetworkPacket& packet)
     metadataManager.Write(packet);
 }
 
-void EntityHangingFrame::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
+void EntityHangingFrame::GetSpecificUpdatePacket(Network::NetworkPacket& /*packet*/)
 {
-    if (hasItemChange)
-    {
-        hasItemChange = false;
-        packet << (unsigned char) Network::OP_ENTITY_METADATA
-                << entityId;
-        metadataManager.Write(packet);
-    }
 }
 
 } /* namespace World */

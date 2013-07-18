@@ -20,8 +20,6 @@ public:
 protected:
     virtual int getPixelWidth() const override;
     virtual int getPixelHeight() const override;
-private:
-    bool hasItemChange;
 };
 
 } /* namespace World */

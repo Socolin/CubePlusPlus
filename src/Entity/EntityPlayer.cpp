@@ -347,14 +347,6 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
         packet << (unsigned char) Network::OP_ANIMATION << entityId << animationId;
         animationId = -1;
     }
-
-    if (metadataManager.HasChanged())// Move it to entity class
-    {
-        metadataManager.ClearChange();
-        packet << (unsigned char) Network::OP_ENTITY_METADATA
-                << entityId;
-        metadataManager.Write(packet);
-    }
 }
 
 void EntityPlayer::ResetBlock(int x, unsigned char y, int z)
