@@ -28,6 +28,8 @@ public:
 
     void Init(World::ScriptedLivingEntity* baseEntity);
 
+    virtual void Init();
+
     /**
      * Called each tick to update entity
      */
@@ -51,7 +53,7 @@ public:
 
     virtual void GetUpdatePacket(Network::NetworkPacket& packet);
 
-private:
+protected:
     World::ScriptedLivingEntity* baseEntity;
 };
 

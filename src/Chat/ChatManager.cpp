@@ -50,6 +50,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     if (message == L"/spawn")
     {
         World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(1, player->x, player->y, player->z);
+        entity->Rotate(player->GetYaw(), player->GetPitch());
         player->GetWorld()->AddEntity(entity);
         isCanceled = true;
     }

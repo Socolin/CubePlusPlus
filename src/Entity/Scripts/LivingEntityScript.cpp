@@ -14,6 +14,7 @@ LivingEntityScript::LivingEntityScript(const std::string scriptName)
 void LivingEntityScript::Init(World::ScriptedLivingEntity* baseEntity)
 {
     this->baseEntity = baseEntity;
+    Init();
 }
 
 LivingEntityScript::~LivingEntityScript()
@@ -33,6 +34,10 @@ void LivingEntityScript::OnInteract(World::EntityPlayer* /*player*/)
 }
 
 void LivingEntityScript::GetCreatePacket(Network::NetworkPacket& /*packet*/)
+{
+}
+
+void LivingEntityScript::Init()
 {
 }
 
