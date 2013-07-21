@@ -257,6 +257,8 @@ public:
      */
     void SendChatMessage(const std::wstring& message);
 
+
+    virtual void Attack(LivingEntity* attacker, int& damage) override;
 private:
     typedef struct
     {

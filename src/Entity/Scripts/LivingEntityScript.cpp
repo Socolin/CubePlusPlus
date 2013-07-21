@@ -25,7 +25,7 @@ void LivingEntityScript::OnUpdateTick()
 {
 }
 
-void LivingEntityScript::OnReceiveAttack(World::EntityLiving* /*attacker*/, int& /*damage*/)
+void LivingEntityScript::OnReceiveAttack(World::LivingEntity* /*attacker*/, int& /*damage*/)
 {
 }
 

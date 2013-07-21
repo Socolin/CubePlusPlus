@@ -24,6 +24,7 @@ ScriptedLivingEntity::~ScriptedLivingEntity()
 
 void ScriptedLivingEntity::UpdateTick()
 {
+    parent_type::UpdateTick();
     script->OnUpdateTick();
 }
 
@@ -32,9 +33,11 @@ void ScriptedLivingEntity::Interact(EntityPlayer* player)
     script->OnInteract(player);
 }
 
-void ScriptedLivingEntity::Attack(EntityLiving* attacker, int& damage)
+void ScriptedLivingEntity::Attack(LivingEntity* attacker, int& damage)
 {
-    script->OnReceiveAttack(attacker, damage);
+    parent_type::Attack(attacker, damage);
+    if (damage >= 0)
+        script->OnReceiveAttack(attacker, damage);
 }
 
 void ScriptedLivingEntity::GetCreatePacket(Network::NetworkPacket& packet)
@@ -49,6 +52,7 @@ void ScriptedLivingEntity::GetCreatePacket(Network::NetworkPacket& packet)
 
 void ScriptedLivingEntity::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
 {
+    parent_type::GetSpecificUpdatePacket(packet);
     script->GetUpdatePacket(packet);
 }
 

@@ -22,14 +22,14 @@ namespace World
 Entity::Entity(eEntityType entityType, int entityTypeFlag, double x, double y, double z) :
     Position(x, y, z), entityType(entityType), entityTypeFlag(entityTypeFlag), world(nullptr), entityId(0)
     , yaw(0), pitch(0), hasMove(false), hasRotate(false), isMoving(false)
-    , stopMoving(false), noclip(false),onGround(false)
+    , stopMoving(false), noclip(false),onGround(true)
     , fallDistance(0)
     , fire(0)
     , air(0)
     , dimension(0)
     , invulnerable(false)
     , portalCooldown(0)
-    , motionX(0), motionY(0), motionZ(0)
+    , motionX(0), motionY(0), motionZ(0), fallingSpeedFactor(1)
     , networkX((int)(x * 32.0))
     , networkY((int)(y * 32.0))
     , networkZ((int)(z * 32.0))
@@ -396,8 +396,17 @@ void Entity::OnCollideWithPlayer(EntityPlayer* /*player*/)
 {
 }
 
-void Entity::Attack(EntityLiving* /*attacker*/, int& /*damage*/)
+void Entity::Attack(LivingEntity* /*attacker*/, int& /*damage*/)
 {
+}
+
+void Entity::DealDamage(int /*damage*/)
+{
+}
+
+void Entity::Jump()
+{
+    motionY = 0.41999998688697815;
 }
 
 bool Entity::PushOutOfBlock(double x, double y, double z)
@@ -533,6 +542,36 @@ eEntityType Entity::GetEntityType() const
 int Entity::GetEntityTypeFlag() const
 {
     return entityTypeFlag;
+}
+
+double Entity::GetMotionX() const
+{
+    return motionX;
+}
+
+double Entity::GetMotionY() const
+{
+    return motionY;
+}
+
+double Entity::GetMotionZ() const
+{
+    return motionZ;
+}
+
+bool Entity::isOnGround() const
+{
+    return onGround;
+}
+
+double Entity::GetFallingSpeedFactor() const
+{
+    return fallingSpeedFactor;
+}
+
+void Entity::SetFallingSpeedFactor(double fallingSpeed)
+{
+    this->fallingSpeedFactor = fallingSpeed;
 }
 
 } /* namespace World */

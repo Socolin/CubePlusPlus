@@ -93,6 +93,8 @@ public:
 
     /*Item util*/
     void DropItemstackWithRandomDirection(double x, double y, double z, Inventory::ItemStack* itemstack);
+    void DropItemstack(double x, double y, double z, Inventory::ItemStack* itemstack);
+    void DropItemstack(const Position& pos, Inventory::ItemStack* itemstack);
 
     /*Entity collision/find functions*/
     void GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::AABB>& bbList);

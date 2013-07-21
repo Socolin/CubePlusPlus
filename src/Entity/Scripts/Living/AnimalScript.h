@@ -19,9 +19,27 @@ public:
     virtual LivingEntityScript* Copy() override;
 
     virtual void OnUpdateTick() override;
+    virtual void OnReceiveAttack(World::LivingEntity* attacker, int& damage);
+
 protected:
+    void updateRandomMove();
+    void updateEggPop();
+    void updateFrightenedMove();
+
+    // Random move module
     void updateRandomDestination(float range);
     World::Position destination;
+    int nextRandomTick;
+    bool notMoving;
+    float speed;
+
+    // Frightened effect after being attack
+    bool frightened;
+    int frightenedTimer;
+    float frightenedSpeed;
+
+    // Spawn egg module
+    int eggTimer;
 };
 
 } /* namespace Scripting */

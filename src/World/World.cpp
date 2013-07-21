@@ -365,6 +365,23 @@ void World::DropItemstackWithRandomDirection(double x, double y, double z, Inven
     }
 }
 
+void World::DropItemstack(double x, double y, double z, Inventory::ItemStack* itemstack)
+{
+    if (itemstack == nullptr)
+        return;
+    const Inventory::Item* item = itemstack->getItem();
+    if (item != nullptr)
+    {
+        EntityItem* item = new EntityItem(x, y, z, itemstack, 0, 0, 0);
+        AddEntity(item);
+    }
+}
+
+void World::DropItemstack(const Position& pos, Inventory::ItemStack* itemstack)
+{
+    DropItemstack(pos.x, pos.y, pos.z, itemstack);
+}
+
 void World::GetEntitiesBoundingBoxInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
     int minX = floor(box.getX()) - 2;

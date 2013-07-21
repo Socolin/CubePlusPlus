@@ -33,6 +33,15 @@ public:
         return (dx + dy + dz);
     }
 
+    double GetDistance2DSQ(const Position& otherPos)
+    {
+        double dx = x - otherPos.x;
+        dx *= dx;
+        double dz = z - otherPos.z;
+        dz *= dz;
+        return (dx + dz);
+    }
+
     double GetDistance(const Position& otherPos)
     {
         return sqrt(GetDistanceSQ(otherPos));

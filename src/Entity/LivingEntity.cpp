@@ -4,6 +4,8 @@
 
 #include "Util/StringUtil.h"
 #include "Inventory/InventoryEntityEquipement.h"
+#include "Network/NetworkPacket.h"
+#include "Network/OpcodeList.h"
 
 namespace World
 {
@@ -11,7 +13,8 @@ namespace World
 LivingEntity::LivingEntity(eEntityType entityType, int entityTypeFlag, double x, double y, double z) :
     Entity(entityType, entityTypeFlag | ENTITY_TYPEFLAG_LIVING_ENTITY, x, y, z)
     , hasChangeItemInHand(false)
-    , health(0)
+    , hasTakeDamage(false)
+    , health(DEFAULT_MAX_HEALTH)
     , hurtTime(0)
     , deathTime(0)
     , attackTime(0)
@@ -101,9 +104,53 @@ void LivingEntity::SetCustomName(const std::wstring& customName)
     metadataManager.SetEntityMetadata(5, customName);
 }
 
+void LivingEntity::MoveLiving(double dx, double dz)
+{
+    motionY -= 0.03999999910593033;
+    motionY *= 0.9800000190734863;
+    if (motionY < 0 && !onGround)
+        motionY *= fallingSpeedFactor;
+    Move(dx, motionY, dz);
+}
+
 void LivingEntity::SetCustomNameVisible(bool visible)
 {
     metadataManager.SetEntityMetadata(6, visible ? char(1) : char(1));
+}
+
+void LivingEntity::UpdateTick()
+{
+    if (hurtTime > 0)
+        hurtTime--;
+}
+
+void LivingEntity::Attack(LivingEntity* /*attacker*/, int& damage)
+{
+    if (hurtTime > 0)
+    {
+        damage = -1;
+        return;
+    }
+    hurtTime = MAX_HURTTIME;
+}
+
+void LivingEntity::DealDamage(int damage)
+{
+    health -= damage;
+    hasTakeDamage = true;
+    if (health <= 0)
+    {
+        Kill();
+    }
+}
+
+void LivingEntity::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
+{
+    if (hasTakeDamage)
+    {
+        hasTakeDamage = false;
+        packet << (unsigned char) Network::OP_ENTITY_STATUS << entityId << char(2);
+    }
 }
 
 } /* namespace World */

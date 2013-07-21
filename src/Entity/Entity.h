@@ -24,7 +24,7 @@ namespace World
 {
 class World;
 class EntityPlayer;
-class EntityLiving;
+class LivingEntity;
 class Entity: public Position
 {
     enum eEntityFlags
@@ -151,7 +151,7 @@ public:
      * Called when the entity is attacked
      * @param attacker
      */
-    virtual void Attack(EntityLiving* attacker, int& damage);
+    virtual void Attack(LivingEntity* attacker, int& damage);
 
     /**
      * Load entity from nbt datas
@@ -206,12 +206,22 @@ public:
      */
     void Kill();
 
+    virtual void DealDamage(int damage);
+
     char GetFlag();
     void SetFlag(char flag);
     bool IsSneak();
     void SetSneak(bool sneak);
     bool IsSprinting();
     void SetSprinting(bool sprinting);
+    double GetMotionX() const;
+    double GetMotionY() const;
+    double GetMotionZ() const;
+
+    void Jump();
+    bool isOnGround() const;
+    double GetFallingSpeedFactor() const;
+    void SetFallingSpeedFactor(double fallingSpeed);
 
 protected:
     /**
@@ -254,6 +264,8 @@ protected:
     double motionX;
     double motionY;
     double motionZ;
+
+    double fallingSpeedFactor;
 
     // Position * 32
     int networkX;

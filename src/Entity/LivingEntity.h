@@ -11,6 +11,7 @@ namespace World
 {
 
 #define DEFAULT_MAX_HEALTH 20
+#define MAX_HURTTIME 10
 
 class LivingEntity: public Entity
 {
@@ -20,16 +21,26 @@ public:
     virtual ~LivingEntity();
     virtual float getEyeHeight();
 
+    virtual void UpdateTick() override;
     virtual bool Load(nbt::TagCompound* tagNbtData) override;
     virtual bool Save(nbt::TagCompound* tagNbtData) override;
 
+    virtual void MoveLiving(double dx, double dz);
     virtual short GetMaxHealth();
 
     void SetCustomName(const std::wstring& customName);
     void SetCustomNameVisible(bool visible);
+
+    virtual void Attack(LivingEntity* attacker, int& damage) override;
+    virtual void DealDamage(int damage);
+
+    virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) override;
+
+
 protected:
     bool hasChangeItemInHand;
 
+    bool hasTakeDamage;
     short health;
     short hurtTime;
     short deathTime;

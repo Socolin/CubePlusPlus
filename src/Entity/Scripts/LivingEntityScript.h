@@ -7,7 +7,7 @@
 
 namespace World
 {
-class EntityLiving;
+class LivingEntity;
 class EntityPlayer;
 class ScriptedLivingEntity;
 }
@@ -41,7 +41,7 @@ public:
      * @param attacker entity that attack
      * @param damage the damage that will be done to entity
      */
-    virtual void OnReceiveAttack(World::EntityLiving* attacker, int& damage);
+    virtual void OnReceiveAttack(World::LivingEntity* attacker, int& damage);
 
     /**
      * Called when a player do a right click on entity

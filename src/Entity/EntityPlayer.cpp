@@ -337,6 +337,7 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
 
 void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
 {
+    parent_type::GetSpecificUpdatePacket(packet);
     if (hasChangeItemInHand)
     {
         hasChangeItemInHand = false;
@@ -363,7 +364,16 @@ void EntityPlayer::UseEntity(int target, bool leftClick)
     Entity* entity = world->GetEntityById(target);
     if (entity)
     {
-        if (!leftClick)
+        if (leftClick)
+        {
+            int damage = 1;
+            entity->Attack(this, damage);
+            if (damage > 0)
+            {
+                entity->DealDamage(damage);
+            }
+        }
+        else
             entity->Interact(this);
     }
 }
@@ -502,6 +512,11 @@ void EntityPlayer::SendChatMessage(const std::wstring& message)
     Network::NetworkPacket packetChatMessage(Network::OP_CHAT_MESSAGE);
     packetChatMessage << message;
     Send(packetChatMessage);
+}
+
+void EntityPlayer::Attack(LivingEntity* /*attacker*/, int& damage)
+{
+    damage = -1;
 }
 
 } /* namespace World */

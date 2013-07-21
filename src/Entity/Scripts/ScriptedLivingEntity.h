@@ -12,6 +12,7 @@ namespace World
 
 class ScriptedLivingEntity: public LivingEntity
 {
+    typedef LivingEntity parent_type;
 public:
     ScriptedLivingEntity(eEntityType entityType, int entityTypeFlag, double x, double y, double z,
             Scripting::LivingEntityScript* script,
@@ -30,7 +31,7 @@ public:
      * Called when the entity is attacked
      * @param attacker
      */
-    virtual void Attack(EntityLiving* attacker, int& damage) override;
+    virtual void Attack(LivingEntity* attacker, int& damage) override;
 
     virtual void GetCreatePacket(Network::NetworkPacket& packet) override;
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) override;
