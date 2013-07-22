@@ -38,6 +38,8 @@ public:
 
     char GetEntityClientType() const;
 
+    virtual void Kill() override;
+
 private:
     Scripting::LivingEntityScript* script;
     unsigned char entityClientType;

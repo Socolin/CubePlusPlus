@@ -254,6 +254,10 @@ void World::NotifyTileEntityStateChange(int x, i_height y, int z, int action)
     }
 }
 
+void World::PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, float modifier, unsigned char distanceChunk)
+{
+    PlaySound(x, y, z, soundName, volume, char(63 * modifier), distanceChunk);
+}
 void World::PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, char modifier, unsigned char distanceChunk)
 {
     VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(((int)x) >> 4, ((int)z) >> 4);

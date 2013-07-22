@@ -48,6 +48,11 @@ void AnimalScript::Init()
     updateRandomDestination(5);
 
     eggTimer = 6000 + (rand() % 6000);
+
+    baseEntity->SetLivingSound(L"mob.chicken.say");
+    baseEntity->SetHurtSound(L"mob.chicken.hurt");
+    baseEntity->SetDeathSound(L"mob.chicken.hurt");
+    baseEntity->SetLivingSoundInterval(120);
 }
 
 void AnimalScript::OnUpdateTick()
@@ -102,6 +107,8 @@ void AnimalScript::updateEggPop()
     {
         eggTimer = 6000 + (rand() % 6000);
         baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(344, 1, 0));
+        float soundModifier = ((Util::randFloat() - Util::randFloat()) * 0.2f) + 1.f;
+        baseEntity->GetWorld()->PlaySound(baseEntity->x, baseEntity->y, baseEntity->z, L"mob.chicken.plop", 1.0f, soundModifier, 2);
     }
     else
         eggTimer--;
@@ -140,6 +147,11 @@ void AnimalScript::updateFrightenedMove()
     {
         baseEntity->Jump();
     }
+}
+
+void AnimalScript::OnDeath()
+{
+    baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(365, 1, 0));
 }
 
 void AnimalScript::updateRandomDestination(float range)

@@ -6,6 +6,8 @@
 #include "Inventory/InventoryEntityEquipement.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
+#include "Util/FloatUtil.h"
+#include "World/World.h"
 
 namespace World
 {
@@ -21,6 +23,10 @@ LivingEntity::LivingEntity(eEntityType entityType, int entityTypeFlag, double x,
     , canPickUpLoot(false)
     , persistenceRequired(false)
     , equipementInventory(nullptr)
+    , livingSoundTimer(0)
+    , livingSoundInterval(DEFAULT_LIVINGSOUND_INTERVAL)
+    , hurtSound(L"damage.hit")
+    , deathSound(L"damage.hit")
 {
     equipementInventory = new Inventory::InventoryEntityEquipement();
 }
@@ -120,8 +126,19 @@ void LivingEntity::SetCustomNameVisible(bool visible)
 
 void LivingEntity::UpdateTick()
 {
+    if (dead)
+        return;
+
     if (hurtTime > 0)
         hurtTime--;
+
+    if (livingSoundTimer <= -(rand() % 1000))
+    {
+        livingSoundTimer = livingSoundInterval;
+        PlayLivingSound();
+    }
+    else
+        livingSoundTimer--;
 }
 
 void LivingEntity::Attack(LivingEntity* /*attacker*/, int& damage)
@@ -142,6 +159,14 @@ void LivingEntity::DealDamage(int damage)
     {
         Kill();
     }
+    PlayHurtSound();
+}
+
+void LivingEntity::Kill()
+{
+    parent_type::Kill();
+    PlayDeathSound();
+    //TODO: timer
 }
 
 void LivingEntity::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
@@ -151,6 +176,64 @@ void LivingEntity::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
         hasTakeDamage = false;
         packet << (unsigned char) Network::OP_ENTITY_STATUS << entityId << char(2);
     }
+}
+
+float LivingEntity::GetSoundVolume() const
+{
+    return 1.f;
+}
+
+float LivingEntity::GetSoundModifier() const
+{
+    return Util::randFloat(0.8f, 1.2f);
+}
+
+void LivingEntity::PlaySound(const std::wstring& sound)
+{
+    if (world != nullptr)
+    {
+        float soundModifier = GetSoundModifier();
+        float soundVolume = GetSoundVolume();
+        world->PlaySound(x, y, z, sound, soundVolume, soundModifier, 2);
+    }
+}
+
+void LivingEntity::PlayLivingSound()
+{
+    if (livingSound != L"")
+        PlaySound(livingSound);
+}
+
+void LivingEntity::PlayHurtSound()
+{
+    if (hurtSound != L"")
+        PlaySound(hurtSound);
+}
+
+void LivingEntity::SetDeathSound(const std::wstring& deathSound)
+{
+    this->deathSound = deathSound;
+}
+
+void LivingEntity::SetHurtSound(const std::wstring& hurtSound)
+{
+    this->hurtSound = hurtSound;
+}
+
+void LivingEntity::SetLivingSoundInterval(int livingSoundInterval)
+{
+    this->livingSoundInterval = livingSoundInterval;
+}
+
+void LivingEntity::SetLivingSound(const std::wstring& livingSound)
+{
+    this->livingSound = livingSound;
+}
+
+void LivingEntity::PlayDeathSound()
+{
+    if (deathSound != L"")
+        PlaySound(deathSound);
 }
 
 } /* namespace World */

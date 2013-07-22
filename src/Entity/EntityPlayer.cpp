@@ -79,6 +79,7 @@ void EntityPlayer::AddChunkToSend(int x, int z)
 
 void EntityPlayer::UpdateTick()
 {
+    parent_type::UpdateTick();
     if (session == nullptr)
         return;
     if (world != nullptr)

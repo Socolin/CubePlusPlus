@@ -12,6 +12,7 @@ namespace World
 
 #define DEFAULT_MAX_HEALTH 20
 #define MAX_HURTTIME 10
+#define DEFAULT_LIVINGSOUND_INTERVAL 80
 
 class LivingEntity: public Entity
 {
@@ -33,9 +34,23 @@ public:
 
     virtual void Attack(LivingEntity* attacker, int& damage) override;
     virtual void DealDamage(int damage);
+    virtual void Kill() override;
 
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) override;
 
+    // Sound
+    float GetSoundVolume() const;
+    float GetSoundModifier() const;
+
+    void PlaySound(const std::wstring& sound);
+    void PlayLivingSound();
+    void PlayHurtSound();
+    void PlayDeathSound();
+
+    void SetDeathSound(const std::wstring& deathSound);
+    void SetHurtSound(const std::wstring& hurtSound);
+    void SetLivingSound(const std::wstring& livingSound);
+    void SetLivingSoundInterval(int livingSoundInterval);
 
 protected:
     bool hasChangeItemInHand;
@@ -48,6 +63,12 @@ protected:
     bool canPickUpLoot;
     bool persistenceRequired;
     Inventory::InventoryEntityEquipement* equipementInventory;
+
+    int livingSoundTimer;
+    int livingSoundInterval;
+    std::wstring livingSound;
+    std::wstring hurtSound;
+    std::wstring deathSound;
 };
 
 } /* namespace World */

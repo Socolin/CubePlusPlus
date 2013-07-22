@@ -61,7 +61,7 @@ bool BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y,
         world->ChangeDataNotify(x, y, z, clickedBlockData | 0x8);
         notifyNeighborsUsingOrientation(world, x, y, z, clickedBlockData & 0x7);
         world->MarkBlockForUpdate(x, y, z, baseBlock->GetBlockId(), 20);
-        world->PlaySound((double)x + 0.5, (double)y + 0.5, (double)z + 0.5, soundClick, 0.3, 0.6 * 63, 2);
+        world->PlaySound((double)x + 0.5, (double)y + 0.5, (double)z + 0.5, soundClick, 0.3, 0.6f, 2);
     }
     return true;
 }
@@ -133,7 +133,7 @@ void BlockButtonScript::OnUpdateTick(World::World* world, int x, i_height y, int
     {
         world->ChangeDataNotify(x, y, z, data & 0x7);
         notifyNeighborsUsingOrientation(world, x, y, z, data & 0x7);
-        world->PlaySound((double)x + 0.5, (double)y + 0.5, (double)z + 0.5, soundClick, 0.3, 0.6 * 63, 2);
+        world->PlaySound((double)x + 0.5, (double)y + 0.5, (double)z + 0.5, soundClick, 0.3f, 0.6f, 2);
     }
 }
 

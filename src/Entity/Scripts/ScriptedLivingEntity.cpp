@@ -61,4 +61,10 @@ char ScriptedLivingEntity::GetEntityClientType() const
     return entityClientType;
 }
 
+void ScriptedLivingEntity::Kill()
+{
+    parent_type::Kill();
+    script->OnDeath();
+}
+
 } /* namespace World */

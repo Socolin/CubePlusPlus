@@ -53,6 +53,8 @@ public:
 
     virtual void GetUpdatePacket(Network::NetworkPacket& packet);
 
+    virtual void OnDeath();
+
 protected:
     World::ScriptedLivingEntity* baseEntity;
 };

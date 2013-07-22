@@ -21,6 +21,7 @@ public:
     virtual void OnUpdateTick() override;
     virtual void OnReceiveAttack(World::LivingEntity* attacker, int& damage);
 
+    virtual void OnDeath() override;
 protected:
     void updateRandomMove();
     void updateEggPop();

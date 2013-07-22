@@ -204,7 +204,7 @@ public:
     /**
      * Kill an entity
      */
-    void Kill();
+    virtual void Kill();
 
     virtual void DealDamage(int damage);
 

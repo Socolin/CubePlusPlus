@@ -86,6 +86,7 @@ public:
     /*Network/Notification to player functions*/
     void SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const;
 
+    void PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, float modifier, unsigned char distanceChunk);
     void PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, char modifier, unsigned char distanceChunk);
     void PlaySoundOrParticleEffect(double x, i_height y, double z, int effectId, int data, bool disableRelativeVolume, unsigned char distanceChunk);
     void PlayBlockAction(int x, short y, int z, char type, char modifier, i_block blockId, char distanceChunk);

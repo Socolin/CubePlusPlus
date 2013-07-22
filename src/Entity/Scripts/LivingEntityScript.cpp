@@ -45,4 +45,8 @@ void LivingEntityScript::GetUpdatePacket(Network::NetworkPacket& /*packet*/)
 {
 }
 
+void LivingEntityScript::OnDeath()
+{
+}
+
 } /* namespace Scripting */

@@ -145,7 +145,7 @@ void EntityItem::OnCollideWithPlayer(EntityPlayer* player)
             collectItemPacket << entityId << player->GetEntityId();
             vSmallChunk->SendPacketToAllNearPlayer(collectItemPacket);
         }
-        world->PlaySound(x, y, z, L"random.pop", 0.2f, (char)(63.f * (((Util::randFloat() - Util::randFloat()) * 0.7f + 1.0f) * 2.0f)), 2);
+        world->PlaySound(x, y, z, L"random.pop", 0.2f, Util::randFloat(0.3f, 1.7f) * 2.0f, 2);
         inventoryWindow->PlaceAllItemInStackToInventories(Inventory::INVENTORY_TYPE_PLAYER_HANDS | Inventory::INVENTORY_TYPE_PLAYER_MAIN,takenItem,false);
     }
 }
