@@ -1,4 +1,3 @@
-SET FOREIGN_KEY_CHECKS=0;
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
@@ -165,7 +164,7 @@ INSERT INTO `block` (`blockId`, `name`, `lightOpacity`, `lightValue`, `blockResi
 (127, 'tile.cocoa', 0, 0, 15, 0.2, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 5, 0, 4, 0, 1),
 (128, 'tile.stairsSandStone', 255, 0, 4, 0.8, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 1, 0, 1),
 (129, 'tile.oreEmerald', 255, 0, 15, 3, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0),
-(130, 'tile.enderChest', 0, 7, 3000, 22.5, 0, 0.6, 1, 0, 0, 0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375, 1, 0, 1, 0, 1),
+(130, 'tile.enderChest', 0, 7, 3000, 22.5, 0, 0.6, 1, 0, 0, 0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375, 1, 34, 1, 0, 1),
 (131, 'tile.tripWireSource', 0, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 13, 0, 5, 0, 1),
 (132, 'tile.tripWire', 0, 0, 0, 0, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 0.15625, 1, 13, 0, 5, 0, 1),
 (133, 'tile.blockEmerald', 255, 0, 30, 5, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 17, 0, 8, 0, 0),
@@ -181,7 +180,7 @@ INSERT INTO `block` (`blockId`, `name`, `lightOpacity`, `lightValue`, `blockResi
 (143, 'tile.button', 0, 0, 2.5, 0.5, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 13, 12, 4, 0, 1),
 (144, 'tile.skull', 0, 0, 5, 1, 0, 0.6, 1, 0, 0, 0.25, 0, 0.25, 0.75, 0.5, 0.75, 13, 0, 1, 0, 1),
 (145, 'tile.anvil', 0, 0, 6000, 5, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 30, 0, 12, 0, 1),
-(146, 'tile.chestTrap', 0, 0, 12.5, 2.5, 0, 0.6, 1, 0, 0, 0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375, 4, 0, 4, 300, 1),
+(146, 'tile.chestTrap', 0, 0, 12.5, 2.5, 0, 0.6, 1, 0, 0, 0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375, 4, 27, 4, 300, 1),
 (147, 'tile.weightedPlate_light', 0, 0, 2.5, 0.5, 1, 0.6, 1, 0, 0, 0.0625, 0, 0.0625, 0.9375, 0.03125, 0.9375, 17, 0, 4, 0, 1),
 (148, 'tile.weightedPlate_heavy', 0, 0, 2.5, 0.5, 1, 0.6, 1, 0, 0, 0.0625, 0, 0.0625, 0.9375, 0.03125, 0.9375, 17, 0, 4, 0, 1),
 (149, 'tile.comparator', 0, 0, 0, 0, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 0.125, 1, 13, 0, 4, 0, 1),
@@ -1474,6 +1473,17 @@ INSERT INTO `craft_slot` (`id`, `craftId`, `itemId`, `itemData`) VALUES
 (1045, 183, 1, -1),
 (1046, 184, 5, -1);
 
+CREATE TABLE IF NOT EXISTS `entity_living` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) COLLATE utf8_bin NOT NULL,
+  `clientType` int(11) NOT NULL,
+  `scriptId` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+
+INSERT INTO `entity_living` (`id`, `name`, `clientType`, `scriptId`) VALUES
+(1, 'Chicken', 93, 35);
+
 CREATE TABLE IF NOT EXISTS `furnace_recipe` (
   `itemId` int(11) NOT NULL,
   `itemData` int(11) NOT NULL,
@@ -1900,7 +1910,7 @@ CREATE TABLE IF NOT EXISTS `script` (
   `paramCount` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=33 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=36 ;
 
 INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (2, 'block_stair', 0),
@@ -1931,7 +1941,10 @@ INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (29, 'window_chest', 0),
 (30, 'window_largechest', 0),
 (31, 'window_craftingtable', 0),
-(32, 'block_craftingtable', 0);
+(32, 'block_craftingtable', 0),
+(33, 'window_enderchest', 0),
+(34, 'block_enderchest', 1),
+(35, 'entityliving_animal', 0);
 
 CREATE TABLE IF NOT EXISTS `script_data` (
   `scriptId` int(11) NOT NULL,
@@ -1993,7 +2006,10 @@ INSERT INTO `script_data` (`scriptId`, `stuffId`, `param`, `valueint`, `valueflo
 (25, 62, 3, 62, 0, ''),
 (27, 54, 1, 3, 0, ''),
 (27, 54, 2, 4, 0, ''),
-(32, 58, 1, 1, 0, '');
+(27, 146, 1, 3, 0, ''),
+(27, 146, 2, 4, 0, ''),
+(32, 58, 1, 1, 0, ''),
+(34, 130, 1, 5, 0, '');
 
 CREATE TABLE IF NOT EXISTS `script_info` (
   `scriptId` int(11) NOT NULL,
@@ -2024,7 +2040,8 @@ INSERT INTO `script_info` (`scriptId`, `name`, `paramId`, `type`) VALUES
 (25, 'burningFurnaceBlock', 3, 1),
 (27, 'windowChestDataId', 1, 1),
 (27, 'windowDoubleChestDataId', 2, 1),
-(32, 'windowId', 1, 1);
+(32, 'windowId', 1, 1),
+(34, 'windowEnderChestChestDataId', 1, 1);
 
 CREATE TABLE IF NOT EXISTS `windows` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2034,14 +2051,15 @@ CREATE TABLE IF NOT EXISTS `windows` (
   `script` int(11) NOT NULL,
   `clientWindowId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6 ;
 
 INSERT INTO `windows` (`id`, `name`, `maxSlot`, `networkMaxSlot`, `script`, `clientWindowId`) VALUES
 (0, 'Inventory', 45, 0, 0, 0),
 (1, 'Crafting', 46, 10, 31, 1),
 (2, 'Furnace', 39, 3, 26, 2),
 (3, 'Chest', 63, 27, 29, 0),
-(4, 'Large Chest', 90, 54, 30, 0);
+(4, 'Large Chest', 90, 54, 30, 0),
+(5, 'EnderChest', 63, 27, 33, 0);
 
 
 ALTER TABLE `block`
@@ -2049,7 +2067,6 @@ ALTER TABLE `block`
 
 ALTER TABLE `craft_slot`
   ADD CONSTRAINT `fk_craft` FOREIGN KEY (`craftId`) REFERENCES `craft` (`id`);
-SET FOREIGN_KEY_CHECKS=1;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
