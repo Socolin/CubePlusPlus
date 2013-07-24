@@ -41,6 +41,7 @@ World::World(const std::string& worldName)
     , hardcore(false)
     , seed(0)
     , gameType(0)
+    , weatherActivated(false)
 {
     redstoneTorchBurnoutMgr = new Scripting::BlockRedstoneTorchBurnoutMgr();
     Config::Config::getConfig().lookupValue("server.world.read-only", readOnly);

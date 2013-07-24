@@ -141,7 +141,7 @@ void LivingEntity::UpdateTick()
         livingSoundTimer--;
 }
 
-void LivingEntity::Attack(LivingEntity* /*attacker*/, int& damage)
+void LivingEntity::Attack(LivingEntity* attacker, int& damage)
 {
     if (hurtTime > 0)
     {
@@ -149,6 +149,16 @@ void LivingEntity::Attack(LivingEntity* /*attacker*/, int& damage)
         return;
     }
     hurtTime = MAX_HURTTIME;
+
+    double dx = attacker->x - x;
+    double dz = attacker->z - z;
+
+    while (dx * dx + dz * dz < 1.0E-4)
+    {
+        dz = Util::randFloat(-0.01f, 0.01f);
+        dx = Util::randFloat(-0.01f, 0.01f);
+    }
+    KnockBack(dx, dz);
 }
 
 void LivingEntity::DealDamage(int damage)
@@ -212,12 +222,33 @@ void LivingEntity::PlayHurtSound()
 
 void LivingEntity::SetDeathSound(const std::wstring& deathSound)
 {
+    // TODO: use design patern unique to reduce memory usage
     this->deathSound = deathSound;
 }
 
 void LivingEntity::SetHurtSound(const std::wstring& hurtSound)
 {
+    // TODO: use design patern unique to reduce memory usage
     this->hurtSound = hurtSound;
+}
+
+void LivingEntity::KnockBack(double dx, double dz)
+{
+    double distance = std::sqrt(dx * dx + dz * dz);
+    double speed = 0.4;
+    motionX /= 2.0;
+    motionY /= 2.0;
+    motionZ /= 2.0;
+
+    // Normalize vector
+    motionX -= dx / distance * speed;
+    motionY += speed;
+    motionZ -= dz / distance * speed;
+
+    if (motionY > 0.4000000059604645)
+    {
+        motionY = 0.4000000059604645;
+    }
 }
 
 void LivingEntity::SetLivingSoundInterval(int livingSoundInterval)
@@ -227,6 +258,7 @@ void LivingEntity::SetLivingSoundInterval(int livingSoundInterval)
 
 void LivingEntity::SetLivingSound(const std::wstring& livingSound)
 {
+    // TODO: use design patern unique to reduce memory usage
     this->livingSound = livingSound;
 }
 

@@ -36,6 +36,7 @@ public:
     virtual void DealDamage(int damage);
     virtual void Kill() override;
 
+    void KnockBack(double dx, double dz);
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) override;
 
     // Sound

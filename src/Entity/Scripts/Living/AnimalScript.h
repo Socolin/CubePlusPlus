@@ -2,12 +2,14 @@
 #define ANIMALSCRIPT_H_
 
 #include "Entity/Scripts/LivingEntityScript.h"
-#include "Entity/Position.h"
+#include "Util/types.h"
+#include "AI/AIRandomMove.h"
+#include "AI/AIPanicMove.h"
 
 namespace Scripting
 {
 
-class AnimalScript : public LivingEntityScript
+class AnimalScript : public LivingEntityScript, public AIRandomMove, public AIPanicMove
 {
 public:
     AnimalScript();
@@ -19,28 +21,22 @@ public:
     virtual LivingEntityScript* Copy() override;
 
     virtual void OnUpdateTick() override;
-    virtual void OnReceiveAttack(World::LivingEntity* attacker, int& damage);
-
+    virtual void OnReceiveAttack(World::LivingEntity* attacker, int& damage) override;
+    virtual void OnReachDestination() override;
     virtual void OnDeath() override;
 protected:
-    void updateRandomMove();
     void updateEggPop();
-    void updateFrightenedMove();
-
-    // Random move module
-    void updateRandomDestination(float range);
-    World::Position destination;
-    int nextRandomTick;
-    bool notMoving;
-    float speed;
-
-    // Frightened effect after being attack
-    bool frightened;
-    int frightenedTimer;
-    float frightenedSpeed;
 
     // Spawn egg module
     int eggTimer;
+    int eggMinTimer;
+    int eggMaxTimer;
+    i_item eggItemId;
+    i_damage eggItemData;
+    i_stackSize eggQuantity;
+
+    // Loot
+    // Vector<Inventory::Loot*> lootList;
 };
 
 } /* namespace Scripting */

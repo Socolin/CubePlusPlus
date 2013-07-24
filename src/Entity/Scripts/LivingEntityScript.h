@@ -4,6 +4,7 @@
 #include <string>
 
 #include "Network/NetworkPacket.h"
+#include "Entity/Position.h"
 
 namespace World
 {
@@ -55,8 +56,17 @@ public:
 
     virtual void OnDeath();
 
+    virtual void OnReachDestination();
+
+    void GenerateDestination(float range);
+    void SetDestination(double x, double y, double z);
+    void MoveToDestination(float speed);
+
 protected:
     World::ScriptedLivingEntity* baseEntity;
+
+    World::Position destination;
+    bool reachDestination;
 };
 
 } /* namespace Scripting */

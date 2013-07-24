@@ -10,25 +10,23 @@ namespace Scripting
 
 AnimalScript::AnimalScript()
     : LivingEntityScript("entityliving_animal")
-    , nextRandomTick(0)
-    , notMoving(false)
-    , speed(0.1)
-    , frightened(false)
-    , frightenedTimer(0)
-    , frightenedSpeed(0.2)
     , eggTimer(0)
+    , eggMinTimer(6000)
+    , eggMaxTimer(12000)
+    , eggItemId(344)
+    , eggItemData(0)
+    , eggQuantity(1)
 {
 }
 
 AnimalScript::AnimalScript(const std::string& scriptName)
     : LivingEntityScript(scriptName)
-    , nextRandomTick(0)
-    , notMoving(false)
-    , speed(0.1)
-    , frightened(false)
-    , frightenedTimer(0)
-    , frightenedSpeed(0.2)
     , eggTimer(0)
+    , eggMinTimer(6000)
+    , eggMaxTimer(12000)
+    , eggItemId(344)
+    , eggItemData(0)
+    , eggQuantity(1)
 {
 }
 
@@ -45,108 +43,33 @@ void AnimalScript::Init()
 {
     baseEntity->SetFallingSpeedFactor(0.6);
 
-    updateRandomDestination(5);
-
-    eggTimer = 6000 + (rand() % 6000);
+    if (eggMaxTimer == eggMinTimer)
+        eggTimer = eggMinTimer;
+    else
+        eggTimer = eggMinTimer + (rand() % (eggMaxTimer - eggMinTimer));
 
     baseEntity->SetLivingSound(L"mob.chicken.say");
     baseEntity->SetHurtSound(L"mob.chicken.hurt");
     baseEntity->SetDeathSound(L"mob.chicken.hurt");
     baseEntity->SetLivingSoundInterval(120);
+    baseEntity->SetWidthHeight(0.3, 0.7);
+
+    randomMoveInit(this);
+    panicMoveInit(this);
 }
 
 void AnimalScript::OnUpdateTick()
 {
     updateEggPop();
-    if (frightened)
-        updateFrightenedMove();
+    if (panicMoveIsPanic())
+        panicMoveUpdate();
     else
-        updateRandomMove();
-
+        randomMoveUpdate();
 }
 
 void AnimalScript::OnReceiveAttack(World::LivingEntity* /*attacker*/, int& /*damage*/)
 {
-    frightened = true;
-    frightenedTimer = 60;
-}
-
-void AnimalScript::updateRandomMove()
-{
-    if (nextRandomTick <= 0)
-    {
-        updateRandomDestination(5);
-    }
-    else
-        nextRandomTick--;
-
-    if (!notMoving)
-    {
-        double dx = destination.x - baseEntity->x;
-        double dz = destination.z - baseEntity->z;
-        float yaw = std::atan2(dz, dx) - M_PI_2;
-        baseEntity->Rotate((yaw * 360) / (2 * M_PI), 0);
-
-        double motX = -std::sin((baseEntity->GetYaw() * (2 * M_PI)) / 360) * speed;
-        double motZ = std::cos((baseEntity->GetYaw() * (2 * M_PI)) / 360) * speed;
-        baseEntity->MoveLiving(motX, motZ);
-        if (baseEntity->GetDistance2DSQ(destination) < 0.5)
-        {
-            updateRandomDestination(5);
-        }
-        if (((fabs(baseEntity->GetMotionX()) < 0.0001 && fabs(dx) > 0.0001)|| (fabs(baseEntity->GetMotionZ()) == 0.0001 && fabs(dz) > 0.0001)) && baseEntity->isOnGround())
-        {
-            baseEntity->Jump();
-        }
-    }
-}
-
-void AnimalScript::updateEggPop()
-{
-    if (eggTimer <= 0)
-    {
-        eggTimer = 6000 + (rand() % 6000);
-        baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(344, 1, 0));
-        float soundModifier = ((Util::randFloat() - Util::randFloat()) * 0.2f) + 1.f;
-        baseEntity->GetWorld()->PlaySound(baseEntity->x, baseEntity->y, baseEntity->z, L"mob.chicken.plop", 1.0f, soundModifier, 2);
-    }
-    else
-        eggTimer--;
-}
-
-void AnimalScript::updateFrightenedMove()
-{
-    if (frightenedTimer <= 0)
-    {
-        frightened = false;
-    }
-    else
-        frightenedTimer--;
-
-
-    if (nextRandomTick <= 0)
-    {
-        updateRandomDestination(10);
-    }
-    else
-        nextRandomTick--;
-
-    double dx = destination.x - baseEntity->x;
-    double dz = destination.z - baseEntity->z;
-    float yaw = std::atan2(dz, dx) - M_PI_2;
-    baseEntity->Rotate((yaw * 360) / (2 * M_PI), 0);
-
-    double motX = -std::sin((baseEntity->GetYaw() * (2 * M_PI)) / 360) * frightenedSpeed;
-    double motZ = std::cos((baseEntity->GetYaw() * (2 * M_PI)) / 360) * frightenedSpeed;
-    baseEntity->MoveLiving(motX, motZ);
-    if (baseEntity->GetDistance2DSQ(destination) < 0.5)
-    {
-        updateRandomDestination(5);
-    }
-    if (((fabs(baseEntity->GetMotionX()) < 0.0001 && fabs(dx) > 0.0001) || (fabs(baseEntity->GetMotionZ()) == 0.0001 && fabs(dz) > 0.0001)) && baseEntity->isOnGround())
-    {
-        baseEntity->Jump();
-    }
+    panicMoveStart();
 }
 
 void AnimalScript::OnDeath()
@@ -154,18 +77,30 @@ void AnimalScript::OnDeath()
     baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(365, 1, 0));
 }
 
-void AnimalScript::updateRandomDestination(float range)
+void AnimalScript::OnReachDestination()
 {
-    if (rand() % 3 == 0)
+    if (panicMoveIsPanic())
+        panicMoveUpdateDestination();
+    else
+        randomMoveUpdateDestination();
+}
+
+void AnimalScript::updateEggPop()
+{
+    if (eggTimer <= 0)
     {
-        notMoving = true;
+        if (eggMaxTimer == eggMinTimer)
+            eggTimer = eggMinTimer;
+        else
+            eggTimer = eggMinTimer + (rand() % (eggMaxTimer - eggMinTimer));
+
+        baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(eggItemId, eggQuantity, eggItemData));
+        float soundModifier = ((Util::randFloat() - Util::randFloat()) * 0.2f) + 1.f;
+        baseEntity->GetWorld()->PlaySound(baseEntity->x, baseEntity->y, baseEntity->z, L"mob.chicken.plop", 1.0f, soundModifier, 2);
     }
     else
-    {
-        notMoving = false;
-        nextRandomTick = 100 + (rand() % 200);
-        destination.Relocate(baseEntity->x + Util::randFloat(-range, range), baseEntity->y, baseEntity->z + Util::randFloat(-range, range));
-    }
+        eggTimer--;
 }
+
 
 } /* namespace Scripting */
