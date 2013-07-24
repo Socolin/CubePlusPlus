@@ -12,7 +12,7 @@ public:
     virtual ~AIRandomMove();
 
 protected:
-    void randomMoveInit(LivingEntityScript* script);
+    void randomMoveInit(LivingEntityScript* script, float speed);
     void randomMoveUpdate();
     void randomMoveUpdateDestination();
 private:

@@ -10,7 +10,7 @@ public:
     AIPanicMove();
     virtual ~AIPanicMove();
 protected:
-    void panicMoveInit(LivingEntityScript* script);
+    void panicMoveInit(LivingEntityScript* script, float speed);
     void panicMoveStart();
     void panicMoveUpdate();
     void panicMoveUpdateDestination();
@@ -20,7 +20,7 @@ private:
     int panicTimer;
     float panicSpeed;
     int panicNextRandomTick;
-private:
+
     LivingEntityScript* baseScript;
 };
 

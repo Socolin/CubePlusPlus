@@ -18,8 +18,9 @@ AIPanicMove::~AIPanicMove()
 {
 }
 
-void AIPanicMove::panicMoveInit(LivingEntityScript* script)
+void AIPanicMove::panicMoveInit(LivingEntityScript* script, float speed)
 {
+    panicSpeed = speed;
     baseScript = script;
 }
 

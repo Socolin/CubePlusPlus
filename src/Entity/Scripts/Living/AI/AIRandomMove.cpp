@@ -17,9 +17,10 @@ AIRandomMove::~AIRandomMove()
 {
 }
 
-void AIRandomMove::randomMoveInit(LivingEntityScript* script)
+void AIRandomMove::randomMoveInit(LivingEntityScript* script, float speed)
 {
     baseScript = script;
+    randomMoveSpeed = speed;
     randomMoveUpdateDestination();
 }
 
