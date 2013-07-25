@@ -574,4 +574,9 @@ void Entity::SetFallingSpeedFactor(double fallingSpeed)
     this->fallingSpeedFactor = fallingSpeed;
 }
 
+EntityMetadataManager* Entity::GetMetadataManager()
+{
+    return &metadataManager;
+}
+
 } /* namespace World */

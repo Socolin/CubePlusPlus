@@ -134,7 +134,7 @@ ScriptedLivingEntity* ScriptedEntityList::CreateNewEntity(int id, double x, doub
         return nullptr;
     }
     Scripting::LivingEntityScript* script = data->baseScript->Copy();
-    ScriptedLivingEntity* newEntity = new ScriptedLivingEntity(ENTITY_TYPE_SCRIPTEDLIVING, 0, x, y, z, script, data->type);
+    ScriptedLivingEntity* newEntity = new ScriptedLivingEntity(ENTITY_TYPE_SCRIPTEDLIVING, 0, x, y, z, script, data->type, id);
     script->Init(newEntity);
     return newEntity;
 }

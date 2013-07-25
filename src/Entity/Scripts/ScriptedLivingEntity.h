@@ -16,7 +16,7 @@ class ScriptedLivingEntity: public LivingEntity
 public:
     ScriptedLivingEntity(eEntityType entityType, int entityTypeFlag, double x, double y, double z,
             Scripting::LivingEntityScript* script,
-            char entityClientType);
+            char entityClientType, int serverEntityTypeId);
     virtual ~ScriptedLivingEntity();
 
     void UpdateTick() override;
@@ -41,10 +41,12 @@ public:
     virtual void Kill() override;
 
     Scripting::LivingEntityScript* GetScript() const;
+    int GetServerEntityTypeId() const;
 
 private:
     Scripting::LivingEntityScript* script;
     unsigned char entityClientType;
+    const int serverEntityTypeId;
 };
 
 } /* namespace World */

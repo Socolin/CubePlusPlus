@@ -222,6 +222,7 @@ public:
     bool isOnGround() const;
     double GetFallingSpeedFactor() const;
     void SetFallingSpeedFactor(double fallingSpeed);
+    EntityMetadataManager* GetMetadataManager();
 
 protected:
     /**

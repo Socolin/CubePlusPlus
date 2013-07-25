@@ -58,11 +58,14 @@ void AnimalChickenScript::OnDeath()
 
 void AnimalChickenScript::OnInteract(World::EntityPlayer* player)
 {
-    i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
-    if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
+    if (makeBabyCanBeInLove())
     {
-        if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)
-            player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
+        i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
+        if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
+        {
+            if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)
+                player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
+        }
     }
 }
 

@@ -9,10 +9,11 @@ namespace World
 
 ScriptedLivingEntity::ScriptedLivingEntity(eEntityType entityType, int entityTypeFlag, double x, double y, double z,
         Scripting::LivingEntityScript* script,
-        char entityClientType)
+        char entityClientType, int serverEntityTypeId)
     : LivingEntity(entityType, entityTypeFlag | ENTITY_TYPEFLAG_SCRIPTEDLIVING, x, y, z)
     , script(script)
     , entityClientType(entityClientType)
+    , serverEntityTypeId(serverEntityTypeId)
 {
     ASSERT(script != nullptr, "script must not be null !");
 }
@@ -59,6 +60,11 @@ void ScriptedLivingEntity::GetSpecificUpdatePacket(Network::NetworkPacket& packe
 char ScriptedLivingEntity::GetEntityClientType() const
 {
     return entityClientType;
+}
+
+int ScriptedLivingEntity::GetServerEntityTypeId() const
+{
+    return serverEntityTypeId;
 }
 
 Scripting::LivingEntityScript* ScriptedLivingEntity::GetScript() const

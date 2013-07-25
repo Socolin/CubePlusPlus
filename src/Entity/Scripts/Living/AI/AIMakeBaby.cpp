@@ -5,6 +5,7 @@
 #include "Inventory/ItemStack.h"
 #include "Util/AABB.h"
 #include "World/World.h"
+#include "Entity/Scripts/Database/ScriptedEntityList.h"
 
 namespace Scripting
 {
@@ -14,6 +15,7 @@ AIMakeBaby::AIMakeBaby()
     , makeBabyInLoveTimer(0)
     , makeBabyMate(-1)
     , makeBabyFoodId(295)
+    , makeBabySpawnBabyTimer(0)
     , baseScript(nullptr)
 {
 }
@@ -29,6 +31,26 @@ void AIMakeBaby::makeBabyInit(LivingEntityScript* script)
 
 void AIMakeBaby::makeBabyUpdate(World::ScriptedLivingEntity* baseEntity)
 {
+    if (makeBabySpawnBabyTimer > 0)
+    {
+        makeBabySpawnBabyTimer--;
+        if (makeBabySpawnBabyTimer == 0)
+        {
+            baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(0));
+        }
+        return;
+    }
+
+    if (makeBabySpawnBabyTimer < 0)
+    {
+        makeBabySpawnBabyTimer++;
+        if (makeBabySpawnBabyTimer == 0)
+        {
+            baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(0));
+        }
+        return;
+    }
+
     if (makeBabyInLoveTimer > 0)
     {
         if (makeBabyMate == -1)
@@ -120,6 +142,37 @@ void AIMakeBaby::makeBabyFindMate(World::ScriptedLivingEntity* baseEntity)
     }
 }
 
+void AIMakeBaby::makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity)
+{
+    makeBabySpawnBabyTimer = 6000;
+    makeBabyInLoveTimer = 0;
+    makeBabyTimer = 0;
+    makeBabyMate = -1;
+    scriptedEntity->GetMetadataManager()->SetEntityMetadata(12, int(6000));
+
+    int entityTypeId = scriptedEntity->GetServerEntityTypeId();
+    World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(entityTypeId, scriptedEntity->x, scriptedEntity->y, scriptedEntity->z);
+    entity->Rotate(scriptedEntity->GetYaw(), scriptedEntity->GetPitch());
+    scriptedEntity->GetWorld()->AddEntity(entity);
+    LivingEntityScript* script = scriptedEntity->GetScript();
+    AIMakeBaby* aiScript = dynamic_cast<AIMakeBaby*>(script);
+    if (aiScript != nullptr)
+    {
+        aiScript->makeBabySetBaby(scriptedEntity);
+    }
+}
+
+bool AIMakeBaby::makeBabyCanBeInLove()
+{
+    return makeBabySpawnBabyTimer <= 0;
+}
+
+void AIMakeBaby::makeBabySetBaby(World::ScriptedLivingEntity* baseEntity)
+{
+    makeBabySpawnBabyTimer = -24000;
+    baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(-24000));
+}
+
 void AIMakeBaby::makeBabyUpdateMate(World::ScriptedLivingEntity* baseEntity)
 {
     World::World* world = baseEntity->GetWorld();
@@ -131,18 +184,35 @@ void AIMakeBaby::makeBabyUpdateMate(World::ScriptedLivingEntity* baseEntity)
     }
     else
     {
+        double distanceSq = baseEntity->GetDistanceSQ(*entity);
         World::ScriptedLivingEntity* scriptedEntity = dynamic_cast<World::ScriptedLivingEntity*>(entity);
-        if (scriptedEntity && scriptedEntity->GetEntityClientType() == baseEntity->GetEntityClientType())
+        if (distanceSq < 1)
         {
             LivingEntityScript* script = scriptedEntity->GetScript();
-            double x = (baseEntity->x + entity->x) / 2.;
-            double y = (baseEntity->y + entity->y) / 2.;
-            double z = (baseEntity->z + entity->z) / 2.;
-            script->SetDestination(x, y, z);
-            baseScript->SetDestination(x, y, z);
+            AIMakeBaby* aiScript = dynamic_cast<AIMakeBaby*>(script);
+            if (aiScript != nullptr)
+            {
+                makeBabySpawnBabyTimer = 6000;
+                makeBabyInLoveTimer = 0;
+                makeBabyTimer = 0;
+                makeBabyMate = -1;
+                baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(6000));
+                aiScript->makeBabySpawnBaby(scriptedEntity);
+            }
+        }
+        else
+        {
+            if (scriptedEntity && scriptedEntity->GetEntityClientType() == baseEntity->GetEntityClientType())
+            {
+                LivingEntityScript* script = scriptedEntity->GetScript();
+                double x = (baseEntity->x + entity->x) / 2.;
+                double y = (baseEntity->y + entity->y) / 2.;
+                double z = (baseEntity->z + entity->z) / 2.;
+                script->SetDestination(x, y, z);
+                baseScript->SetDestination(x, y, z);
+            }
         }
     }
-
 }
 
 } /* namespace Scripting */
