@@ -59,6 +59,12 @@ public:
         static_cast<std::ofstream&>(*this) << var2;
         return (*this);
     }
+
+    Logger& operator<<(const wchar_t* var)
+    {
+        std::wstring str(var);
+        return *this << str;
+    }
 private:
     std::ostream& streamOutput;
 };

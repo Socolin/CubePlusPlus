@@ -30,7 +30,6 @@ namespace Network
 enum eSessionState
 {
     STATE_NEVER     = 0x0,
-    STATE_DISCONECT = 0x0,
     STATE_NOTLOGGED = 0x1,
     STATE_LOGGING   = 0x2,
     STATE_LOGGED    = 0x4,
@@ -38,9 +37,10 @@ enum eSessionState
     STATE_KICKED    = 0x10,
     STATE_WAIT_LOGGIN= 0x20,
     STATE_ERROR     = 0x40,
+    STATE_DISCONNECT = 0x80,
 
     STATE_EVERYTIME = STATE_NOTLOGGED | STATE_LOGGING | STATE_LOGGED | STATE_INGAME | STATE_WAIT_LOGGIN,
-    STATES_DISCONECT = STATE_DISCONECT | STATE_KICKED | STATE_ERROR
+    STATES_DISCONNECT = STATE_DISCONNECT | STATE_KICKED | STATE_ERROR
 };
 
 typedef union
@@ -117,7 +117,7 @@ public:
     bool UpdateTick();
     inline bool isDisconnected()
     {
-        return (state & (STATES_DISCONECT));
+        return (state & (STATES_DISCONNECT));
     }
 
     bool HasPendingData();

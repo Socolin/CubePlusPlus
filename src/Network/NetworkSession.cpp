@@ -192,19 +192,19 @@ void NetworkSession::disconnect(std::wstring message)
 {
     if (isDisconnected())
         return;
-    state = STATE_DISCONECT;
+    state = STATE_DISCONNECT;
 
     if (player != nullptr)
     {
         LOG_INFO << L"Disconnect player: " << username << ": " << message << std::endl;
         // Unlink session
         player->Disconnect();
-        player = nullptr;
     }
     else
     {
         LOG_INFO << L"Disconnect session: " << message << std::endl;
     }
+    shutdown(socket, 2);
 }
 
 void NetworkSession::kick(std::wstring message)
@@ -223,6 +223,7 @@ void NetworkSession::kick(std::wstring message)
 
     SendKickMessage(message);
     state = STATE_KICKED;
+    shutdown(socket, SHUT_RDWR);
 }
 
 double NetworkSession::readDouble() throw (NetworkException)

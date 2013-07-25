@@ -582,7 +582,6 @@ void NetworkSession::handlePing() throw (NetworkException)
 }
 void NetworkSession::handleDisconnect() throw (NetworkException)
 {
-    readString(128);
     disconnect(std::wstring(L"Ask by client"));
 }
 
