@@ -12,21 +12,8 @@
 namespace World
 {
 
-LivingEntity::LivingEntity(eEntityType entityType, int entityTypeFlag, double x, double y, double z) :
-    Entity(entityType, entityTypeFlag | ENTITY_TYPEFLAG_LIVING_ENTITY, x, y, z)
-    , hasChangeItemInHand(false)
-    , hasTakeDamage(false)
-    , health(DEFAULT_MAX_HEALTH)
-    , hurtTime(0)
-    , deathTime(0)
-    , attackTime(0)
-    , canPickUpLoot(false)
-    , persistenceRequired(false)
-    , equipementInventory(nullptr)
-    , livingSoundTimer(0)
-    , livingSoundInterval(DEFAULT_LIVINGSOUND_INTERVAL)
-    , hurtSound(L"damage.hit")
-    , deathSound(L"damage.hit")
+LivingEntity::LivingEntity(eEntityType entityType, int entityTypeFlag, double x, double y, double z)
+        : Entity(entityType, entityTypeFlag | ENTITY_TYPEFLAG_LIVING_ENTITY, x, y, z), hasChangeItemInHand(false), hasTakeDamage(false), health(DEFAULT_MAX_HEALTH), hurtTime(0), deathTime(0), attackTime(0), canPickUpLoot(false), persistenceRequired(false), equipementInventory(nullptr), livingSoundTimer(0), livingSoundInterval(DEFAULT_LIVINGSOUND_INTERVAL), hurtSound(L"damage.hit"), deathSound(L"damage.hit")
 {
     equipementInventory = new Inventory::InventoryEntityEquipement();
 }
@@ -112,11 +99,43 @@ void LivingEntity::SetCustomName(const std::wstring& customName)
 
 void LivingEntity::MoveLiving(double dx, double dz)
 {
-    motionY -= 0.03999999910593033;
+    double slowFactor = 0.91;
+
+    if (onGround)
+    {
+        slowFactor = 0.546;
+
+        i_block blockBottomId = 0;
+        if (1 < y && y < 256)
+        {
+            blockBottomId = world->GetBlockId(floor(x), floor(y) - 1, floor(z));
+            if (blockBottomId > 0)
+            {
+                const Block::Block* blockBottom = Block::BlockList::getBlock(blockBottomId);
+                if (blockBottom)
+                {
+                    slowFactor = blockBottom->GetSlipperiness() * 0.91;
+                }
+            }
+        }
+    }
+    else
+    {
+        dx *= 0.02;
+        dz *= 0.02;
+    }
     motionY *= 0.9800000190734863;
     if (motionY < 0 && !onGround)
         motionY *= fallingSpeedFactor;
-    Move(dx, motionY, dz);
+
+    motionX += (1. - slowFactor) * dx;
+    motionZ += (1. - slowFactor) * dz;
+    motionX *= slowFactor;
+    motionZ *= slowFactor;
+
+    Move(motionX, motionY, motionZ);
+    motionY -= 0.08;
+
 }
 
 void LivingEntity::SetCustomNameVisible(bool visible)
@@ -184,7 +203,7 @@ void LivingEntity::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
     if (hasTakeDamage)
     {
         hasTakeDamage = false;
-        packet << (unsigned char) Network::OP_ENTITY_STATUS << entityId << char(2);
+        packet << (unsigned char)Network::OP_ENTITY_STATUS << entityId << char(2);
     }
 }
 

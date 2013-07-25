@@ -406,7 +406,7 @@ void Entity::DealDamage(int /*damage*/)
 
 void Entity::Jump()
 {
-    motionY = 0.41999998688697815;
+    motionY = 0.42;
 }
 
 bool Entity::PushOutOfBlock(double x, double y, double z)

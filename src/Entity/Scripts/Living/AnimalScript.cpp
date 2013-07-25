@@ -29,21 +29,12 @@ LivingEntityScript* AnimalScript::Copy()
 
 void AnimalScript::Init()
 {
-    baseEntity->SetFallingSpeedFactor(0.6);
-    baseEntity->SetLivingSound(L"mob.chicken.say");
-    baseEntity->SetHurtSound(L"mob.chicken.hurt");
-    baseEntity->SetDeathSound(L"mob.chicken.hurt");
-    baseEntity->SetLivingSoundInterval(120);
-    baseEntity->SetWidthHeight(0.3, 0.7);
-
-    randomMoveInit(this, 0.1f);
-    panicMoveInit(this, 0.2f);
-    DropItemInit(this, 344, 0, 1, 6000, 12000);
+    randomMoveInit(this, 0.2f);
+    panicMoveInit(this, 0.4f);
 }
 
 void AnimalScript::OnUpdateTick()
 {
-    DropItemUpdate(baseEntity);
     if (panicMoveIsPanic())
         panicMoveUpdate();
     else
@@ -53,11 +44,6 @@ void AnimalScript::OnUpdateTick()
 void AnimalScript::OnReceiveAttack(World::LivingEntity* /*attacker*/, int& /*damage*/)
 {
     panicMoveStart();
-}
-
-void AnimalScript::OnDeath()
-{
-    baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(365, 1, 0));
 }
 
 void AnimalScript::OnReachDestination()

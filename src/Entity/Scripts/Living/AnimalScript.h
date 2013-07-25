@@ -12,6 +12,7 @@ namespace Scripting
 
 class AnimalScript : public LivingEntityScript, public AIRandomMove, public AIPanicMove, public AIDropItem
 {
+    typedef LivingEntityScript parent_type;
 public:
     AnimalScript();
     AnimalScript(const std::string& scriptName);
@@ -24,10 +25,7 @@ public:
     virtual void OnUpdateTick() override;
     virtual void OnReceiveAttack(World::LivingEntity* attacker, int& damage) override;
     virtual void OnReachDestination() override;
-    virtual void OnDeath() override;
 protected:
-    void updateEggPop();
-
 
     // Loot
     // Vector<Inventory::Loot*> lootList;

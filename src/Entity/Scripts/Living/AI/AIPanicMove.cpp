@@ -28,7 +28,6 @@ void AIPanicMove::panicMoveStart()
 {
     panic= true;
     panicTimer = 60;
-    baseScript->GenerateDestination(10);
 }
 
 void AIPanicMove::panicMoveUpdate()
