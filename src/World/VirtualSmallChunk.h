@@ -40,6 +40,7 @@ public:
 
     void GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int squaredRange, std::vector<Entity*>& outEntityList);
     void GetEntitiesInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<Entity*>& outEntityList);
+    void GetEntitiesInAABBByEntityType(eEntityType type, int ignoreEntityId, const Util::AABB& box, std::vector<Entity*>& outEntityList);
 private:
 
     const int posX;

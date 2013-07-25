@@ -160,4 +160,21 @@ void VirtualSmallChunk::GetEntitiesInAABB(int ignoreEntityId, const Util::AABB& 
     }
 }
 
+void VirtualSmallChunk::GetEntitiesInAABBByEntityType(eEntityType type, int ignoreEntityId, const Util::AABB& box, std::vector<Entity*>& outEntityList)
+{
+    for (Entity* entity : entityList)
+    {
+        if (entity->GetEntityType() == type)
+        {
+            if (entity->GetEntityId() != ignoreEntityId)
+            {
+                if (entity->CollideWith(box))
+                {
+                    outEntityList.push_back(entity);
+                }
+            }
+        }
+    }
+}
+
 } /* namespace World */

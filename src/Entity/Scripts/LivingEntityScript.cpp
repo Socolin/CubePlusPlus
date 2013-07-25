@@ -65,16 +65,17 @@ void LivingEntityScript::MoveToDestination(float speed)
         double dz = destination.z - baseEntity->z;
         float yaw = std::atan2(dz, dx) - M_PI_2;
         baseEntity->Rotate((yaw * 360) / (2 * M_PI), 0);
+        if (baseEntity->GetDistance2DSQ(destination) < 0.25)
+        {
+            reachDestination = true;
+            OnReachDestination();
+            return;
+        }
 
         double motX = -std::sin((baseEntity->GetYaw() * (2 * M_PI)) / 360) * speed;
         double motZ = std::cos((baseEntity->GetYaw() * (2 * M_PI)) / 360) * speed;
         baseEntity->MoveLiving(motX, motZ);
 
-        if (baseEntity->GetDistance2DSQ(destination) < 0.5)
-        {
-            reachDestination = true;
-            OnReachDestination();
-        }
         if (((fabs(baseEntity->GetMotionX()) < 0.0001 && fabs(dx) > 0.0001)|| (fabs(baseEntity->GetMotionZ()) == 0.0001 && fabs(dz) > 0.0001)) && baseEntity->isOnGround())
         {
             baseEntity->Jump();

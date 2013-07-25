@@ -3,14 +3,13 @@
 
 #include "Entity/Scripts/LivingEntityScript.h"
 #include "Util/types.h"
-#include "AI/AIDropItem.h"
 #include "AI/AIPanicMove.h"
 #include "AI/AIRandomMove.h"
 
 namespace Scripting
 {
 
-class AnimalScript : public LivingEntityScript, public AIRandomMove, public AIPanicMove, public AIDropItem
+class AnimalScript : public LivingEntityScript, public AIRandomMove, public AIPanicMove
 {
     typedef LivingEntityScript parent_type;
 public:

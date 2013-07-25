@@ -13,6 +13,7 @@ enum eEntityFlagType
     ENTITY_TYPEFLAG_NEUTRAL             = 0x020,
     ENTITY_TYPEFLAG_ANIMAL              = 0x040,
     ENTITY_TYPEFLAG_MOB                 = 0x080,
+    ENTITY_TYPEFLAG_SCRIPTEDLIVING      = 0x100,
 };
 
 enum eEntityType

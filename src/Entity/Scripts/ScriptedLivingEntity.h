@@ -40,6 +40,8 @@ public:
 
     virtual void Kill() override;
 
+    Scripting::LivingEntityScript* GetScript() const;
+
 private:
     Scripting::LivingEntityScript* script;
     unsigned char entityClientType;

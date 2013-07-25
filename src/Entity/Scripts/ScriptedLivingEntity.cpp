@@ -10,7 +10,7 @@ namespace World
 ScriptedLivingEntity::ScriptedLivingEntity(eEntityType entityType, int entityTypeFlag, double x, double y, double z,
         Scripting::LivingEntityScript* script,
         char entityClientType)
-    : LivingEntity(entityType, entityTypeFlag, x, y, z)
+    : LivingEntity(entityType, entityTypeFlag | ENTITY_TYPEFLAG_SCRIPTEDLIVING, x, y, z)
     , script(script)
     , entityClientType(entityClientType)
 {
@@ -59,6 +59,11 @@ void ScriptedLivingEntity::GetSpecificUpdatePacket(Network::NetworkPacket& packe
 char ScriptedLivingEntity::GetEntityClientType() const
 {
     return entityClientType;
+}
+
+Scripting::LivingEntityScript* ScriptedLivingEntity::GetScript() const
+{
+    return script;
 }
 
 void ScriptedLivingEntity::Kill()

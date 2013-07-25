@@ -1,6 +1,7 @@
 #include "AnimalChickenScript.h"
 
 #include "Entity/Scripts/ScriptedLivingEntity.h"
+#include "Entity/EntityPlayer.h"
 #include "Util/FloatUtil.h"
 #include "World/World.h"
 
@@ -31,17 +32,49 @@ void AnimalChickenScript::Init()
     baseEntity->SetLivingSoundInterval(120);
     baseEntity->SetWidthHeight(0.3, 0.7);
     DropItemInit(this, 344, 0, 1, 6000, 12000);
+    makeBabyInit(this);
+
 }
 
 void AnimalChickenScript::OnUpdateTick()
 {
-    parent_type::OnUpdateTick();
-    DropItemUpdate(baseEntity);
+    if (panicMoveIsPanic())
+    {
+        panicMoveUpdate();
+    }
+    else
+    {
+        if (!makeBabyHasMate())
+            randomMoveUpdate();
+        DropItemUpdate(baseEntity);
+        makeBabyUpdate(baseEntity);
+    }
 }
 
 void AnimalChickenScript::OnDeath()
 {
     baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(365, 1, 0));
+}
+
+void AnimalChickenScript::OnInteract(World::EntityPlayer* player)
+{
+    i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
+    if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
+    {
+        if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)
+            player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
+    }
+}
+
+void AnimalChickenScript::OnReachDestination()
+{
+    if (!makeBabyHasMate())
+    {
+        if (panicMoveIsPanic())
+            panicMoveUpdateDestination();
+        else
+            randomMoveUpdateDestination();
+    }
 }
 
 } /* namespace Scripting */
