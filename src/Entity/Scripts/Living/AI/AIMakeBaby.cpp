@@ -151,10 +151,10 @@ void AIMakeBaby::makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity)
     scriptedEntity->GetMetadataManager()->SetEntityMetadata(12, int(6000));
 
     int entityTypeId = scriptedEntity->GetServerEntityTypeId();
-    World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(entityTypeId, scriptedEntity->x, scriptedEntity->y, scriptedEntity->z);
-    entity->Rotate(scriptedEntity->GetYaw(), scriptedEntity->GetPitch());
-    scriptedEntity->GetWorld()->AddEntity(entity);
-    LivingEntityScript* script = scriptedEntity->GetScript();
+    World::ScriptedLivingEntity* baby = World::ScriptedEntityList::Instance().CreateNewEntity(entityTypeId, scriptedEntity->x, scriptedEntity->y, scriptedEntity->z);
+    baby->Rotate(scriptedEntity->GetYaw(), scriptedEntity->GetPitch());
+    scriptedEntity->GetWorld()->AddEntity(baby);
+    LivingEntityScript* script = baby->GetScript();
     AIMakeBaby* aiScript = dynamic_cast<AIMakeBaby*>(script);
     if (aiScript != nullptr)
     {
