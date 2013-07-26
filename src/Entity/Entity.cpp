@@ -409,6 +409,13 @@ void Entity::Jump()
     motionY = 0.42;
 }
 
+void Entity::Push(double dx, double dy, double dz)
+{
+    motionX = dx;
+    motionY = dy;
+    motionZ = dz;
+}
+
 bool Entity::PushOutOfBlock(double x, double y, double z)
 {
     int blockX = floor(x);

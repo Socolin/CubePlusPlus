@@ -520,4 +520,10 @@ void EntityPlayer::Attack(LivingEntity* /*attacker*/, int& damage)
     damage = -1;
 }
 
+const Inventory::ItemStack* EntityPlayer::LookItemInHand() const
+{
+    i_slot handSlotId = handsInventory->getHandSlotId();
+    return handsInventory->LookSlot(handSlotId);
+}
+
 } /* namespace World */

@@ -33,7 +33,7 @@ void AnimalChickenScript::Init()
     baseEntity->SetWidthHeight(0.3, 0.7);
     DropItemInit(this, 344, 0, 1, 6000, 12000);
     makeBabyInit(this);
-
+    findFeederInit(this, 295);
 }
 
 void AnimalChickenScript::OnUpdateTick()
@@ -45,8 +45,13 @@ void AnimalChickenScript::OnUpdateTick()
     else
     {
         if (!makeBabyHasMate())
-            randomMoveUpdate();
-        DropItemUpdate(baseEntity);
+        {
+            if (!findFeederHasTarget())
+                randomMoveUpdate();
+            findFeederUpdate(baseEntity);
+        }
+        if (!makeBabyIsBaby())
+            DropItemUpdate(baseEntity);
         makeBabyUpdate(baseEntity);
     }
 }
@@ -67,6 +72,12 @@ void AnimalChickenScript::OnInteract(World::EntityPlayer* player)
                 player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
         }
     }
+}
+
+void AnimalChickenScript::OnReceiveAttack(World::LivingEntity* attacker, int& damage)
+{
+    parent_type::OnReceiveAttack(attacker, damage);
+    makeBabyResetInLove();
 }
 
 void AnimalChickenScript::OnReachDestination()

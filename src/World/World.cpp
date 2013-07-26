@@ -513,6 +513,24 @@ void World::GetEntitiesInAABBByEntityType(eEntityType type, int ignoreEntityId, 
             }
 }
 
+void World::GetEntitiesInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<Entity*>& outEntityList)
+{
+    int minX = floor(box.getX()) - 1;
+    int minZ = floor(box.getZ()) - 1;
+    int maxX = floor(box.getMaxX()) + 1;
+    int maxZ = floor(box.getMaxZ()) + 1;
+    minX >>= 4;
+    minZ >>= 4;
+    maxX >>= 4;
+    maxZ >>= 4;
+    for (int chunkX = minX; chunkX <= maxX; chunkX++)
+        for (int chunkZ = minZ; chunkZ <= maxZ; chunkZ++)
+            {
+                VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(chunkX, chunkZ);
+                vSmallChunk->GetEntitiesInAABBByEntityFlag(entityTypeFlag, ignoreEntityId, box, outEntityList);
+            }
+}
+
 void World::MarkEntityAsDead(int entityId)
 {
     deadEntity.insert(entityId);

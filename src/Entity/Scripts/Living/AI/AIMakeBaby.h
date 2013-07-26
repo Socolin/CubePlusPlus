@@ -1,6 +1,7 @@
 #ifndef AIMAKEBABY_H_
 #define AIMAKEBABY_H_
 
+#include "Util/AABB.h"
 #include "Util/types.h"
 
 namespace Inventory
@@ -25,11 +26,13 @@ protected:
     bool makeBabyCanBeInLove();
     bool makeBabyIsInLove();
     bool makeBabyHasMate();
+    bool makeBabyIsBaby();
     void makeBabySetBaby(World::ScriptedLivingEntity* baseEntity);
     bool makeBabyTryFallInLove(const Inventory::ItemStack* item);
     void makeBabySetMate(int entityId);
     void makeBabyUpdate(World::ScriptedLivingEntity* baseEntity);
     void makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity);
+    void makeBabyResetInLove();
 private:
     void makeBabyFindMate(World::ScriptedLivingEntity* baseEntity);
     void makeBabyUpdateMate(World::ScriptedLivingEntity* baseEntity);
@@ -39,6 +42,7 @@ private:
     int makeBabyMate;
     i_item makeBabyFoodId;
     int makeBabySpawnBabyTimer;
+    Util::AABB makeBabySearchMateBoundingBox;
     LivingEntityScript* baseScript;
 };
 

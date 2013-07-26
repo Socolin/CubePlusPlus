@@ -43,6 +43,8 @@ public:
     Scripting::LivingEntityScript* GetScript() const;
     int GetServerEntityTypeId() const;
 
+protected:
+    void updateCollisionWithLivingEntity();
 private:
     Scripting::LivingEntityScript* script;
     unsigned char entityClientType;

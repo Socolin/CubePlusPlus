@@ -224,6 +224,8 @@ public:
     void SetFallingSpeedFactor(double fallingSpeed);
     EntityMetadataManager* GetMetadataManager();
 
+    void Push(double dx, double dy, double dz);
+
 protected:
     /**
      * Called when entity move to new VirtualChunk (128x128)

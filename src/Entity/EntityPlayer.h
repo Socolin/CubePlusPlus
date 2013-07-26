@@ -259,6 +259,8 @@ public:
 
 
     virtual void Attack(LivingEntity* attacker, int& damage) override;
+
+    const Inventory::ItemStack* LookItemInHand() const;
 private:
     typedef struct
     {

@@ -3,7 +3,6 @@
 #include "Entity/Scripts/LivingEntityScript.h"
 #include "Entity/Scripts/ScriptedLivingEntity.h"
 #include "Inventory/ItemStack.h"
-#include "Util/AABB.h"
 #include "World/World.h"
 #include "Entity/Scripts/Database/ScriptedEntityList.h"
 
@@ -16,6 +15,7 @@ AIMakeBaby::AIMakeBaby()
     , makeBabyMate(-1)
     , makeBabyFoodId(295)
     , makeBabySpawnBabyTimer(0)
+    , makeBabySearchMateBoundingBox(0, 0,  0)
     , baseScript(nullptr)
 {
 }
@@ -110,10 +110,9 @@ void AIMakeBaby::makeBabySetMate(int entityId)
 void AIMakeBaby::makeBabyFindMate(World::ScriptedLivingEntity* baseEntity)
 {
     World::World* world = baseEntity->GetWorld();
-    Util::AABB boundingBox(0, 0, 0);
     std::vector<World::Entity*> entityList;
-    boundingBox.SetAndExtend(baseEntity->GetBoundingBox(), 8, 8, 8);
-    world->GetEntitiesInAABBByEntityType(World::ENTITY_TYPE_SCRIPTEDLIVING, baseEntity->GetEntityId(), boundingBox, entityList);
+    makeBabySearchMateBoundingBox.SetAndExtend(baseEntity->GetBoundingBox(), 8, 8, 8);
+    world->GetEntitiesInAABBByEntityType(World::ENTITY_TYPE_SCRIPTEDLIVING, baseEntity->GetEntityId(), makeBabySearchMateBoundingBox, entityList);
 
     for (World::Entity* entity : entityList)
     {
@@ -173,6 +172,16 @@ void AIMakeBaby::makeBabySetBaby(World::ScriptedLivingEntity* baseEntity)
     baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(-24000));
 }
 
+bool AIMakeBaby::makeBabyIsBaby()
+{
+    return makeBabySpawnBabyTimer < 0;
+}
+
+void AIMakeBaby::makeBabyResetInLove()
+{
+    makeBabyInLoveTimer = 0;
+}
+
 void AIMakeBaby::makeBabyUpdateMate(World::ScriptedLivingEntity* baseEntity)
 {
     World::World* world = baseEntity->GetWorld();
@@ -186,10 +195,16 @@ void AIMakeBaby::makeBabyUpdateMate(World::ScriptedLivingEntity* baseEntity)
     {
         double distanceSq = baseEntity->GetDistanceSQ(*entity);
         World::ScriptedLivingEntity* scriptedEntity = dynamic_cast<World::ScriptedLivingEntity*>(entity);
+        LivingEntityScript* script = scriptedEntity->GetScript();
+        AIMakeBaby* aiScript = dynamic_cast<AIMakeBaby*>(script);
+        if (!aiScript->makeBabyIsInLove())
+        {
+            makeBabyMate = -1;
+            makeBabyFindMate(baseEntity);
+            return;
+        }
         if (distanceSq < 1)
         {
-            LivingEntityScript* script = scriptedEntity->GetScript();
-            AIMakeBaby* aiScript = dynamic_cast<AIMakeBaby*>(script);
             if (aiScript != nullptr)
             {
                 makeBabySpawnBabyTimer = 6000;

@@ -4,11 +4,12 @@
 #include "AnimalScript.h"
 #include "AI/AIDropItem.h"
 #include "AI/AIMakeBaby.h"
+#include "AI/AIFindFeeder.h"
 
 namespace Scripting
 {
 
-class AnimalChickenScript : public AnimalScript, public AIDropItem, public AIMakeBaby
+class AnimalChickenScript : public AnimalScript, public AIDropItem, public AIMakeBaby, public AIFindFeeder
 {
     typedef AnimalScript parent_type;
 public:
@@ -19,10 +20,9 @@ public:
 
     virtual void Init() override;
     virtual void OnUpdateTick() override;
+    virtual void OnReceiveAttack(World::LivingEntity* attacker, int& damage) override;
     virtual void OnDeath() override;
-
     virtual void OnInteract(World::EntityPlayer* player) override;
-
     virtual void OnReachDestination() override;
 };
 

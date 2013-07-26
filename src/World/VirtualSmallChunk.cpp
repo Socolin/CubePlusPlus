@@ -62,7 +62,7 @@ void VirtualSmallChunk::SendPacketToAllNearPlayer(const Network::NetworkPacket& 
 
 void VirtualSmallChunk::SendPacketToPlayerInChunk(const Network::NetworkPacket& packet) const
 {
-for (EntityPlayer* plr : playerList)
+    for (EntityPlayer* plr : playerList)
     {
         plr->Send(packet);
     }
@@ -165,6 +165,23 @@ void VirtualSmallChunk::GetEntitiesInAABBByEntityType(eEntityType type, int igno
     for (Entity* entity : entityList)
     {
         if (entity->GetEntityType() == type)
+        {
+            if (entity->GetEntityId() != ignoreEntityId)
+            {
+                if (entity->CollideWith(box))
+                {
+                    outEntityList.push_back(entity);
+                }
+            }
+        }
+    }
+}
+
+void VirtualSmallChunk::GetEntitiesInAABBByEntityFlag(int typeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<Entity*>& outEntityList)
+{
+    for (Entity* entity : entityList)
+    {
+        if ((entity->GetEntityTypeFlag() & typeFlag) != 0)
         {
             if (entity->GetEntityId() != ignoreEntityId)
             {
