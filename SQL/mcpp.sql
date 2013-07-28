@@ -1,11 +1,30 @@
+-- phpMyAdmin SQL Dump
+-- version 3.5.8.1deb1
+-- http://www.phpmyadmin.net
+--
+-- Host: localhost
+-- Generation Time: Jul 27, 2013 at 08:40 PM
+-- Server version: 5.5.32-0ubuntu0.13.04.1
+-- PHP Version: 5.4.9-4ubuntu2.2
+
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
+
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
 /*!40101 SET NAMES utf8 */;
 
+--
+-- Database: `mcpp`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `block`
+--
 
 CREATE TABLE IF NOT EXISTS `block` (
   `blockId` int(10) NOT NULL AUTO_INCREMENT,
@@ -33,6 +52,10 @@ CREATE TABLE IF NOT EXISTS `block` (
   PRIMARY KEY (`blockId`),
   KEY `fk_soundId` (`soundId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=159 ;
+
+--
+-- Dumping data for table `block`
+--
 
 INSERT INTO `block` (`blockId`, `name`, `lightOpacity`, `lightValue`, `blockResistance`, `blockHardness`, `needsRandomTick`, `slipperiness`, `isCollidable`, `isOpaqueCube`, `renderAsNormal`, `minX`, `minY`, `minZ`, `maxX`, `maxY`, `maxZ`, `material`, `scriptId`, `soundId`, `burningTime`, `useNeighborBrightness`) VALUES
 (1, 'tile.stone', 255, 0, 30, 1.5, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0),
@@ -194,6 +217,12 @@ INSERT INTO `block` (`blockId`, `name`, `lightOpacity`, `lightValue`, `blockResi
 (157, 'tile.activatorRail', 0, 0, 3.5, 0.7, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 0.125, 1, 13, 0, 8, 0, 1),
 (158, 'tile.dropper', 255, 0, 17.5, 3.5, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `blocksound`
+--
+
 CREATE TABLE IF NOT EXISTS `blocksound` (
   `soundId` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) COLLATE utf8_bin NOT NULL,
@@ -204,6 +233,10 @@ CREATE TABLE IF NOT EXISTS `blocksound` (
   `breakSound` varchar(64) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`soundId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=13 ;
+
+--
+-- Dumping data for table `blocksound`
+--
 
 INSERT INTO `blocksound` (`soundId`, `name`, `volume`, `modifier`, `stepSound`, `placeSound`, `breakSound`) VALUES
 (1, 'UNKNOW', 1, 1, 'step.stone', 'dig.stone', 'dig.stone'),
@@ -219,6 +252,12 @@ INSERT INTO `blocksound` (`soundId`, `name`, `volume`, `modifier`, `stepSound`, 
 (11, 'UNKNOW', 1, 1, 'step.snow', 'dig.snow', 'dig.snow'),
 (12, 'UNKNOW', 0.3, 1, 'step.anvil', 'random.anvil_land', 'dig.stone');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `craft`
+--
+
 CREATE TABLE IF NOT EXISTS `craft` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `width` int(11) NOT NULL,
@@ -229,6 +268,10 @@ CREATE TABLE IF NOT EXISTS `craft` (
   `scriptId` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=185 ;
+
+--
+-- Dumping data for table `craft`
+--
 
 INSERT INTO `craft` (`id`, `width`, `height`, `resultId`, `resultData`, `resultQuantity`, `scriptId`) VALUES
 (1, 3, 3, 270, 0, 1, 0),
@@ -416,6 +459,12 @@ INSERT INTO `craft` (`id`, `width`, `height`, `resultId`, `resultData`, `resultQ
 (183, 1, 1, 77, 0, 1, 0),
 (184, 1, 1, 143, 0, 1, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `craft_slot`
+--
+
 CREATE TABLE IF NOT EXISTS `craft_slot` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `craftId` int(11) NOT NULL,
@@ -424,6 +473,10 @@ CREATE TABLE IF NOT EXISTS `craft_slot` (
   PRIMARY KEY (`id`,`craftId`),
   KEY `fk_craft` (`craftId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1047 ;
+
+--
+-- Dumping data for table `craft_slot`
+--
 
 INSERT INTO `craft_slot` (`id`, `craftId`, `itemId`, `itemData`) VALUES
 (1, 1, 5, -1),
@@ -1473,16 +1526,35 @@ INSERT INTO `craft_slot` (`id`, `craftId`, `itemId`, `itemData`) VALUES
 (1045, 183, 1, -1),
 (1046, 184, 5, -1);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `entity_living`
+--
+
 CREATE TABLE IF NOT EXISTS `entity_living` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_bin NOT NULL,
   `clientType` int(11) NOT NULL,
   `scriptId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `entity_living`
+--
 
 INSERT INTO `entity_living` (`id`, `name`, `clientType`, `scriptId`) VALUES
-(1, 'Chicken', 93, 35);
+(1, 'Chicken', 93, 36),
+(2, 'Cow', 92, 37),
+(3, 'Pig', 90, 38),
+(4, 'Sheep', 91, 39);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `furnace_recipe`
+--
 
 CREATE TABLE IF NOT EXISTS `furnace_recipe` (
   `itemId` int(11) NOT NULL,
@@ -1493,6 +1565,10 @@ CREATE TABLE IF NOT EXISTS `furnace_recipe` (
   `experience` float NOT NULL,
   PRIMARY KEY (`itemId`,`itemData`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `furnace_recipe`
+--
 
 INSERT INTO `furnace_recipe` (`itemId`, `itemData`, `resultId`, `resultData`, `resultQuantity`, `experience`) VALUES
 (4, -1, 1, 0, 1, 0.1),
@@ -1515,6 +1591,12 @@ INSERT INTO `furnace_recipe` (`itemId`, `itemData`, `resultId`, `resultData`, `r
 (365, -1, 366, 0, 1, 0.35),
 (392, -1, 393, 0, 1, 0.35);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `items`
+--
+
 CREATE TABLE IF NOT EXISTS `items` (
   `itemId` int(10) NOT NULL AUTO_INCREMENT,
   `name` text COLLATE utf8_bin NOT NULL,
@@ -1526,6 +1608,10 @@ CREATE TABLE IF NOT EXISTS `items` (
   `scriptId` int(11) NOT NULL,
   PRIMARY KEY (`itemId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2268 ;
+
+--
+-- Dumping data for table `items`
+--
 
 INSERT INTO `items` (`itemId`, `name`, `maxStackSize`, `maxDamage`, `hasSubType`, `containerId`, `burningTime`, `scriptId`) VALUES
 (5, 'item.planks', 64, 0, 1, 0, 300, 3),
@@ -1702,6 +1788,12 @@ INSERT INTO `items` (`itemId`, `name`, `maxStackSize`, `maxDamage`, `hasSubType`
 (2266, 'item.record', 1, 0, 0, 0, 0, 0),
 (2267, 'item.record', 1, 0, 0, 0, 0, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `material`
+--
+
 CREATE TABLE IF NOT EXISTS `material` (
   `materialId` int(11) NOT NULL,
   `name` varchar(64) COLLATE utf8_bin NOT NULL,
@@ -1713,6 +1805,10 @@ CREATE TABLE IF NOT EXISTS `material` (
   `solid` tinyint(1) NOT NULL DEFAULT '1',
   `liquid` tinyint(1) NOT NULL DEFAULT '0'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `material`
+--
 
 INSERT INTO `material` (`materialId`, `name`, `canBurn`, `replacable`, `translucent`, `requiresNoTool`, `mobilityFlag`, `solid`, `liquid`) VALUES
 (1, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
@@ -1867,6 +1963,12 @@ INSERT INTO `material` (`materialId`, `name`, `canBurn`, `replacable`, `transluc
 (29, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
 (30, 'UNKNOW', 0, 0, 0, 1, 2, 1, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `painting`
+--
+
 CREATE TABLE IF NOT EXISTS `painting` (
   `name` varchar(13) COLLATE utf8_bin NOT NULL,
   `sizeX` int(11) NOT NULL,
@@ -1875,6 +1977,10 @@ CREATE TABLE IF NOT EXISTS `painting` (
   `itemData` int(11) NOT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `painting`
+--
 
 INSERT INTO `painting` (`name`, `sizeX`, `sizeY`, `itemId`, `itemData`) VALUES
 ('Alban', 16, 16, 321, 0),
@@ -1904,13 +2010,23 @@ INSERT INTO `painting` (`name`, `sizeX`, `sizeY`, `itemId`, `itemData`) VALUES
 ('Wasteland', 16, 16, 321, 0),
 ('Wither', 32, 32, 321, 0);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `script`
+--
+
 CREATE TABLE IF NOT EXISTS `script` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `scriptName` varchar(128) COLLATE utf8_bin NOT NULL,
   `paramCount` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=36 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=40 ;
+
+--
+-- Dumping data for table `script`
+--
 
 INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (2, 'block_stair', 0),
@@ -1944,7 +2060,17 @@ INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (32, 'block_craftingtable', 0),
 (33, 'window_enderchest', 0),
 (34, 'block_enderchest', 1),
-(35, 'entityliving_animal', 0);
+(35, 'entityliving_animal', 0),
+(36, 'entityliving_chicken', 0),
+(37, 'entityliving_cow', 0),
+(38, 'entityliving_pig', 0),
+(39, 'entityliving_sheep', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `script_data`
+--
 
 CREATE TABLE IF NOT EXISTS `script_data` (
   `scriptId` int(11) NOT NULL,
@@ -1955,6 +2081,10 @@ CREATE TABLE IF NOT EXISTS `script_data` (
   `valuestr` varchar(128) COLLATE utf8_bin NOT NULL,
   UNIQUE KEY `scriptId` (`scriptId`,`stuffId`,`param`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `script_data`
+--
 
 INSERT INTO `script_data` (`scriptId`, `stuffId`, `param`, `valueint`, `valuefloat`, `valuestr`) VALUES
 (3, 5, 1, 5, 0, ''),
@@ -2011,6 +2141,12 @@ INSERT INTO `script_data` (`scriptId`, `stuffId`, `param`, `valueint`, `valueflo
 (32, 58, 1, 1, 0, ''),
 (34, 130, 1, 5, 0, '');
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `script_info`
+--
+
 CREATE TABLE IF NOT EXISTS `script_info` (
   `scriptId` int(11) NOT NULL,
   `name` varchar(128) COLLATE utf8_bin NOT NULL DEFAULT 'unk',
@@ -2018,6 +2154,10 @@ CREATE TABLE IF NOT EXISTS `script_info` (
   `type` int(4) NOT NULL DEFAULT '0',
   UNIQUE KEY `scriptId` (`scriptId`,`paramId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `script_info`
+--
 
 INSERT INTO `script_info` (`scriptId`, `name`, `paramId`, `type`) VALUES
 (3, 'blockid', 1, 1),
@@ -2043,6 +2183,12 @@ INSERT INTO `script_info` (`scriptId`, `name`, `paramId`, `type`) VALUES
 (32, 'windowId', 1, 1),
 (34, 'windowEnderChestChestDataId', 1, 1);
 
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `windows`
+--
+
 CREATE TABLE IF NOT EXISTS `windows` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -2053,6 +2199,10 @@ CREATE TABLE IF NOT EXISTS `windows` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6 ;
 
+--
+-- Dumping data for table `windows`
+--
+
 INSERT INTO `windows` (`id`, `name`, `maxSlot`, `networkMaxSlot`, `script`, `clientWindowId`) VALUES
 (0, 'Inventory', 45, 0, 0, 0),
 (1, 'Crafting', 46, 10, 31, 1),
@@ -2061,10 +2211,19 @@ INSERT INTO `windows` (`id`, `name`, `maxSlot`, `networkMaxSlot`, `script`, `cli
 (4, 'Large Chest', 90, 54, 30, 0),
 (5, 'EnderChest', 63, 27, 33, 0);
 
+--
+-- Constraints for dumped tables
+--
 
+--
+-- Constraints for table `block`
+--
 ALTER TABLE `block`
   ADD CONSTRAINT `block_ibfk_1` FOREIGN KEY (`soundId`) REFERENCES `blocksound` (`soundId`);
 
+--
+-- Constraints for table `craft_slot`
+--
 ALTER TABLE `craft_slot`
   ADD CONSTRAINT `fk_craft` FOREIGN KEY (`craftId`) REFERENCES `craft` (`id`);
 
