@@ -57,7 +57,7 @@ void AnimalSheepScript::OnUpdateTick()
             findFeederUpdate(baseEntity);
         }
         makeBabyUpdate(baseEntity);
-        if(isSheared)
+        if(isSheared || entityAgeIsBaby())
         {
         	EatGrassUpdate(baseEntity);
         }
@@ -84,7 +84,7 @@ void AnimalSheepScript::OnInteract(World::EntityPlayer* player)
     }
 	if(player->LookItemInHand() != nullptr)
 	{
-		if(player->LookItemInHand()->getItemId() == 359 && !isSheared)
+		if(player->LookItemInHand()->getItemId() == 359 && !isSheared && !entityAgeIsBaby())
 		{
 			SetSheared(true);
 			baseEntity->GetWorld()->PlaySound(baseEntity->x, baseEntity->y, baseEntity->z, L"mob.sheep.shear", 1.0f, 1.0f,2);
@@ -129,7 +129,15 @@ void AnimalSheepScript::SetFleeceColor(char fleeceColor){
 
 void AnimalSheepScript::EatGrassBonus()
 {
-	SetSheared(false);
+	if(entityAgeIsBaby())
+	{
+		entityAgeGrow(baseEntity, 60);
+		if(entityAgeIsBaby())
+			EatGrassStart();
+	}
+	else{
+		SetSheared(false);
+	}
 }
 
 bool AnimalSheepScript::GetSheared()
@@ -144,7 +152,7 @@ void AnimalSheepScript::SetSheared(bool shear)
 	{
 		baseEntity->GetMetadataManager()->SetEntityMetadata(16, char((status | 0x10) & 0x1F));
 		isSheared = true;
-		EatGrassStart(baseEntity);
+		EatGrassStart();
 	}
 	else
 	{
