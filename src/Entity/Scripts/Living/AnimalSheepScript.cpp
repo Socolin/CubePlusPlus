@@ -5,13 +5,15 @@
 #include "Util/FloatUtil.h"
 #include "World/World.h"
 
+#include "Logging/Logger.h"
+
 namespace Scripting
 {
 
 AnimalSheepScript::AnimalSheepScript()
     : AnimalScript("entityliving_sheep")
 	, isSheared(false)
-	, woolColor(0)
+	, fleeceColor(0)
 {
 }
 
@@ -34,6 +36,8 @@ void AnimalSheepScript::Init()
     baseEntity->SetWidthHeight(0.6, 1.3);
     makeBabyInit(this);
     findFeederInit(this, 296);
+    EatGrassInit(this);
+    SetFleeceColor(GetRandomFleeceColor());
 }
 
 void AnimalSheepScript::OnUpdateTick()
@@ -47,34 +51,45 @@ void AnimalSheepScript::OnUpdateTick()
         if (!makeBabyHasMate())
         {
             if (!findFeederHasTarget())
+            {
                 randomMoveUpdate();
+            }
             findFeederUpdate(baseEntity);
         }
         makeBabyUpdate(baseEntity);
+        if(isSheared)
+        {
+        	EatGrassUpdate(baseEntity);
+        }
     }
 }
 
 void AnimalSheepScript::OnDeath()
 {
-    baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(35, 1, 0));
+    baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(35, 1, GetFleeceColor()));
 }
 
 void AnimalSheepScript::OnInteract(World::EntityPlayer* player)
 {
-	i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
 	if (makeBabyCanBeInLove())
     {
+		i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
         if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
         {
             if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)
+            {
                 player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
+            }
         }
     }
-	if(player->LookItemInHand()->getItemId() == 359 && !isSheared){
-		SetSheared(false);
-	}
-	else{
-		SetSheared(true);
+	if(player->LookItemInHand() != nullptr)
+	{
+		if(player->LookItemInHand()->getItemId() == 359 && !isSheared)
+		{
+			SetSheared(true);
+			baseEntity->GetWorld()->PlaySound(baseEntity->x, baseEntity->y, baseEntity->z, L"mob.sheep.shear", 1.0f, 1.0f,2);
+			baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(35, 1 + rand()%3, GetFleeceColor()));
+		}
 	}
 }
 
@@ -95,19 +110,46 @@ void AnimalSheepScript::OnReachDestination()
     }
 }
 
-int AnimalSheepScript::getFleeceColor() {
-      return (baseEntity->GetMetadataManager()->GetIntEntityMetadata(16) & 15);
+char AnimalSheepScript::GetFleeceColor()
+{
+	return (baseEntity->GetMetadataManager()->GetCharEntityMetadata(16) & 0x0F);
 }
 
-void AnimalSheepScript::SetSheared(bool sheared){
-	woolColor = baseEntity->GetMetadataManager()->GetFloatEntityMetadata(16);
-	if(sheared){
-		baseEntity->GetMetadataManager()->SetEntityMetadata(16, char(woolColor | 16));
-		isSheared = false;
-	}
-	else{
-		baseEntity->GetMetadataManager()->SetEntityMetadata(16, char(woolColor & -17));
+char AnimalSheepScript::GetRandomFleeceColor()
+{
+	int rand100 = rand()%100;
+	int rand500 = rand()%500;
+	return (char)rand100 < 5?15:(rand100 < 10?7:(rand100 < 15?8:(rand100 < 18?12:(rand500 == 0?6:0))));
+}
+
+void AnimalSheepScript::SetFleeceColor(char fleeceColor){
+	char status = baseEntity->GetMetadataManager()->GetCharEntityMetadata(16);
+	baseEntity->GetMetadataManager()->SetEntityMetadata(16, char((status & 0xF0) | (fleeceColor & 0x0F)));
+}
+
+void AnimalSheepScript::EatGrassBonus()
+{
+	SetSheared(false);
+}
+
+bool AnimalSheepScript::GetSheared()
+{
+	return (baseEntity->GetMetadataManager()->GetCharEntityMetadata(16) & 0x10) != 0;
+}
+
+void AnimalSheepScript::SetSheared(bool shear)
+{
+	char status = baseEntity->GetMetadataManager()->GetCharEntityMetadata(16);
+	if(shear)
+	{
+		baseEntity->GetMetadataManager()->SetEntityMetadata(16, char((status | 0x10) & 0x1F));
 		isSheared = true;
+		EatGrassStart(baseEntity);
+	}
+	else
+	{
+		baseEntity->GetMetadataManager()->SetEntityMetadata(16, char((status & 0xEF) & 0x1F));
+		isSheared = false;
 	}
 }
 

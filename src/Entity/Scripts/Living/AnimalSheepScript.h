@@ -4,11 +4,12 @@
 #include "AnimalScript.h"
 #include "AI/AIMakeBaby.h"
 #include "AI/AIFindFeeder.h"
+#include "AI/AIEatGrass.h"
 
 namespace Scripting
 {
 
-class AnimalSheepScript : public AnimalScript, public AIMakeBaby, public AIFindFeeder
+class AnimalSheepScript : public AnimalScript, public AIMakeBaby, public AIFindFeeder, public AIEatGrass
 {
     typedef AnimalScript parent_type;
 public:
@@ -23,11 +24,15 @@ public:
     virtual void OnDeath() override;
     virtual void OnInteract(World::EntityPlayer* player) override;
     virtual void OnReachDestination() override;
+    bool GetSheared();
     void SetSheared(bool isSheared);
-    int getFleeceColor();
+    void EatGrassBonus();
+    char GetFleeceColor();
+    char GetRandomFleeceColor();
+    void SetFleeceColor(char fleeceColor);
 private:
     bool isSheared;
-    char woolColor;
+    char fleeceColor;
 };
 
 } /* namespace Scripting */
