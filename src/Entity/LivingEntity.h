@@ -34,6 +34,7 @@ public:
 
     virtual void Attack(LivingEntity* attacker, int& damage) override;
     virtual void DealDamage(int damage);
+    virtual void SetEntityEat();
     virtual void Kill() override;
 
     void KnockBack(double dx, double dz);
@@ -57,6 +58,7 @@ protected:
     bool hasChangeItemInHand;
 
     bool hasTakeDamage;
+    bool entityEat;
     short health;
     short hurtTime;
     short deathTime;

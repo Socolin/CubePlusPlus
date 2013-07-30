@@ -26,8 +26,6 @@ protected:
     bool makeBabyCanBeInLove();
     bool makeBabyIsInLove();
     bool makeBabyHasMate();
-    bool makeBabyIsBaby();
-    void makeBabySetBaby(World::ScriptedLivingEntity* baseEntity);
     bool makeBabyTryFallInLove(const Inventory::ItemStack* item);
     void makeBabySetMate(int entityId);
     void makeBabyUpdate(World::ScriptedLivingEntity* baseEntity);

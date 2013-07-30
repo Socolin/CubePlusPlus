@@ -1,14 +1,8 @@
-/*
- * AIEatGrass.cpp
- *
- *  Created on: Jul 28, 2013
- *      Author: yann291
- */
-
 #include "AIEatGrass.h"
 #include "Entity/Scripts/Living/AnimalSheepScript.h"
 #include "Entity/Scripts/ScriptedLivingEntity.h"
 #include "World/World.h"
+#include "Network/NetworkPacket.h"
 
 namespace Scripting
 {
@@ -27,16 +21,19 @@ void AIEatGrass::EatGrassInit(AnimalSheepScript* script)
 	baseScript = script;
 }
 
-void AIEatGrass::EatGrassStart(World::ScriptedLivingEntity* baseEntity)
+void AIEatGrass::EatGrassStart()
 {
-	eatGrassTimer = 40;
-	baseEntity->SetFlag(char(10));
+	if(baseScript->entityAgeIsBaby())
+		eatGrassTimer = 50 + rand()%950;
+	else
+		eatGrassTimer = 50 + rand()%400;
 }
 
 void AIEatGrass::EatGrassUpdate(World::ScriptedLivingEntity* baseEntity)
 {
-	if(eatGrassTimer == 0)
+	if(eatGrassTimer == 40)
 	{
+		baseEntity->SetEntityEat();
 		World::World* world = baseEntity->GetWorld();
 		double x = baseEntity->x;
 		double y = baseEntity->y;

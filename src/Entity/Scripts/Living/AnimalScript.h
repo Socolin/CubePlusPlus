@@ -2,6 +2,7 @@
 #define ANIMALSCRIPT_H_
 
 #include "Entity/Scripts/LivingEntityScript.h"
+#include "Entity/Scripts/Living/LivingEntityAge.h"
 #include "Util/types.h"
 #include "AI/AIPanicMove.h"
 #include "AI/AIRandomMove.h"
@@ -9,7 +10,7 @@
 namespace Scripting
 {
 
-class AnimalScript : public LivingEntityScript, public AIRandomMove, public AIPanicMove
+class AnimalScript : public LivingEntityScript, public AIRandomMove, public AIPanicMove, public LivingEntityAge
 {
     typedef LivingEntityScript parent_type;
 public:

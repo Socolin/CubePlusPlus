@@ -50,7 +50,7 @@ void AnimalChickenScript::OnUpdateTick()
                 randomMoveUpdate();
             findFeederUpdate(baseEntity);
         }
-        if (!makeBabyIsBaby())
+        if (!entityAgeIsBaby())
             DropItemUpdate(baseEntity);
         makeBabyUpdate(baseEntity);
     }

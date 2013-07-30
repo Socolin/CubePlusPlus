@@ -62,19 +62,26 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
         isCanceled = true;
     }
     if (message == L"/spawn pig")
-        {
-    		World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(3, player->x, player->y, player->z);
-    		entity->Rotate(player->GetYaw(), player->GetPitch());
-    		player->GetWorld()->AddEntity(entity);
-            isCanceled = true;
+    {
+		World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(3, player->x, player->y, player->z);
+		entity->Rotate(player->GetYaw(), player->GetPitch());
+		player->GetWorld()->AddEntity(entity);
+		isCanceled = true;
     }
     if (message == L"/spawn sheep")
-            {
-        		World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(4, player->x, player->y, player->z);
-        		entity->Rotate(player->GetYaw(), player->GetPitch());
-        		player->GetWorld()->AddEntity(entity);
-                isCanceled = true;
-        }
+	{
+		World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(4, player->x, player->y, player->z);
+		entity->Rotate(player->GetYaw(), player->GetPitch());
+		player->GetWorld()->AddEntity(entity);
+		isCanceled = true;
+	}
+    if (message == L"/spawn wolf")
+	{
+		World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(5, player->x, player->y, player->z);
+		entity->Rotate(player->GetYaw(), player->GetPitch());
+		player->GetWorld()->AddEntity(entity);
+		isCanceled = true;
+	}
     if (isCanceled)
         return true;
 

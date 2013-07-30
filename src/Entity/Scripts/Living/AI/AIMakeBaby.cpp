@@ -2,6 +2,7 @@
 
 #include "Entity/Scripts/LivingEntityScript.h"
 #include "Entity/Scripts/ScriptedLivingEntity.h"
+#include "Entity/Scripts/Living/LivingEntityAge.h"
 #include "Inventory/ItemStack.h"
 #include "World/World.h"
 #include "Entity/Scripts/Database/ScriptedEntityList.h"
@@ -36,7 +37,8 @@ void AIMakeBaby::makeBabyUpdate(World::ScriptedLivingEntity* baseEntity)
         makeBabySpawnBabyTimer--;
         if (makeBabySpawnBabyTimer == 0)
         {
-            baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(0));
+        	LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(baseScript);
+        	ageScript->entityAgeSetAge(baseEntity, 0);
         }
         return;
     }
@@ -46,7 +48,8 @@ void AIMakeBaby::makeBabyUpdate(World::ScriptedLivingEntity* baseEntity)
         makeBabySpawnBabyTimer++;
         if (makeBabySpawnBabyTimer == 0)
         {
-            baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(0));
+        	LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(baseScript);
+        	ageScript->entityAgeSetAge(baseEntity, 0);
         }
         return;
     }
@@ -147,34 +150,22 @@ void AIMakeBaby::makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity)
     makeBabyInLoveTimer = 0;
     makeBabyTimer = 0;
     makeBabyMate = -1;
-    scriptedEntity->GetMetadataManager()->SetEntityMetadata(12, int(6000));
 
     int entityTypeId = scriptedEntity->GetServerEntityTypeId();
     World::ScriptedLivingEntity* baby = World::ScriptedEntityList::Instance().CreateNewEntity(entityTypeId, scriptedEntity->x, scriptedEntity->y, scriptedEntity->z);
     baby->Rotate(scriptedEntity->GetYaw(), scriptedEntity->GetPitch());
     scriptedEntity->GetWorld()->AddEntity(baby);
     LivingEntityScript* script = baby->GetScript();
-    AIMakeBaby* aiScript = dynamic_cast<AIMakeBaby*>(script);
-    if (aiScript != nullptr)
+    LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(script);
+    if (ageScript != nullptr)
     {
-        aiScript->makeBabySetBaby(scriptedEntity);
+        ageScript->entityAgeSetBaby(scriptedEntity);
     }
 }
 
 bool AIMakeBaby::makeBabyCanBeInLove()
 {
     return makeBabySpawnBabyTimer <= 0;
-}
-
-void AIMakeBaby::makeBabySetBaby(World::ScriptedLivingEntity* baseEntity)
-{
-    makeBabySpawnBabyTimer = -24000;
-    baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(-24000));
-}
-
-bool AIMakeBaby::makeBabyIsBaby()
-{
-    return makeBabySpawnBabyTimer < 0;
 }
 
 void AIMakeBaby::makeBabyResetInLove()
@@ -211,7 +202,6 @@ void AIMakeBaby::makeBabyUpdateMate(World::ScriptedLivingEntity* baseEntity)
                 makeBabyInLoveTimer = 0;
                 makeBabyTimer = 0;
                 makeBabyMate = -1;
-                baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(6000));
                 aiScript->makeBabySpawnBaby(scriptedEntity);
             }
         }

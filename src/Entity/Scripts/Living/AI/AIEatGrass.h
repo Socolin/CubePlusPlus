@@ -16,7 +16,7 @@ public:
 
 protected:
 	void EatGrassInit(AnimalSheepScript* script);
-	void EatGrassStart(World::ScriptedLivingEntity* baseEntity);
+	void EatGrassStart();
 	void EatGrassUpdate(World::ScriptedLivingEntity* baseEntity);
 	bool EatGrassShouldExecute();
 

@@ -5,6 +5,7 @@
 #include "Living/AnimalCowScript.h"
 #include "Living/AnimalPigScript.h"
 #include "Living/AnimalSheepScript.h"
+#include "Living/AnimalWolfScript.h"
 
 namespace Scripting
 {
@@ -16,6 +17,7 @@ void RegisterEntityLivingScript()
     new AnimalCowScript();
     new AnimalPigScript();
     new AnimalSheepScript();
+    new AnimalWolfScript();
 }
 
 } /* namespace Scripting */

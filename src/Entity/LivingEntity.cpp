@@ -13,7 +13,21 @@ namespace World
 {
 
 LivingEntity::LivingEntity(eEntityType entityType, int entityTypeFlag, double x, double y, double z)
-        : Entity(entityType, entityTypeFlag | ENTITY_TYPEFLAG_LIVING_ENTITY, x, y, z), hasChangeItemInHand(false), hasTakeDamage(false), health(DEFAULT_MAX_HEALTH), hurtTime(0), deathTime(0), attackTime(0), canPickUpLoot(false), persistenceRequired(false), equipementInventory(nullptr), livingSoundTimer(0), livingSoundInterval(DEFAULT_LIVINGSOUND_INTERVAL), hurtSound(L"damage.hit"), deathSound(L"damage.hit")
+    : Entity(entityType, entityTypeFlag | ENTITY_TYPEFLAG_LIVING_ENTITY, x, y, z)
+	, hasChangeItemInHand(false)
+	, hasTakeDamage(false)
+	, entityEat(false)
+	, health(DEFAULT_MAX_HEALTH)
+	, hurtTime(0)
+	, deathTime(0)
+	, attackTime(0)
+	, canPickUpLoot(false)
+	, persistenceRequired(false)
+	, equipementInventory(nullptr)
+	, livingSoundTimer(0)
+	, livingSoundInterval(DEFAULT_LIVINGSOUND_INTERVAL)
+	, hurtSound(L"damage.hit")
+	, deathSound(L"damage.hit")
 {
     equipementInventory = new Inventory::InventoryEntityEquipement();
 }
@@ -191,6 +205,11 @@ void LivingEntity::DealDamage(int damage)
     PlayHurtSound();
 }
 
+void LivingEntity::SetEntityEat()
+{
+	entityEat = true;
+}
+
 void LivingEntity::Kill()
 {
     parent_type::Kill();
@@ -204,6 +223,11 @@ void LivingEntity::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
     {
         hasTakeDamage = false;
         packet << (unsigned char)Network::OP_ENTITY_STATUS << entityId << char(2);
+    }
+    if (entityEat)
+    {
+    	entityEat = false;
+    	packet << (unsigned char)Network::OP_ENTITY_STATUS << entityId << char(10);
     }
 }
 
