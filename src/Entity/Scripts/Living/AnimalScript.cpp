@@ -31,7 +31,7 @@ void AnimalScript::Init()
 {
     randomMoveInit(this, 0.2f);
     panicMoveInit(this, 0.4f);
-    entityAgeInit(this);
+    EntityAgeInit(this);
 }
 
 void AnimalScript::OnUpdateTick()
@@ -39,8 +39,8 @@ void AnimalScript::OnUpdateTick()
     if (panicMoveIsPanic())
         panicMoveUpdate();
     else
-    	if(entityAgeIsBaby())
-    		entityAgeUpdate(baseEntity);
+    	if(EntityAgeIsBaby())
+    		EntityAgeUpdate(baseEntity);
         randomMoveUpdate();
 }
 

@@ -40,6 +40,8 @@ public:
     void KnockBack(double dx, double dz);
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) override;
 
+    short GetHealth();
+
     // Sound
     float GetSoundVolume() const;
     float GetSoundModifier() const;

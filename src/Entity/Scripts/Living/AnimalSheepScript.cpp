@@ -4,8 +4,7 @@
 #include "Entity/EntityPlayer.h"
 #include "Util/FloatUtil.h"
 #include "World/World.h"
-
-#include "Logging/Logger.h"
+#include "Util/ColorUtil.h"
 
 namespace Scripting
 {
@@ -57,7 +56,7 @@ void AnimalSheepScript::OnUpdateTick()
             findFeederUpdate(baseEntity);
         }
         makeBabyUpdate(baseEntity);
-        if(isSheared || entityAgeIsBaby())
+        if(isSheared || EntityAgeIsBaby())
         {
         	EatGrassUpdate(baseEntity);
         }
@@ -84,7 +83,7 @@ void AnimalSheepScript::OnInteract(World::EntityPlayer* player)
     }
 	if(player->LookItemInHand() != nullptr)
 	{
-		if(player->LookItemInHand()->getItemId() == 359 && !isSheared && !entityAgeIsBaby())
+		if(player->LookItemInHand()->getItemId() == 359 && !isSheared && !EntityAgeIsBaby())
 		{
 			SetSheared(true);
 			baseEntity->GetWorld()->PlaySound(baseEntity->x, baseEntity->y, baseEntity->z, L"mob.sheep.shear", 1.0f, 1.0f,2);
@@ -110,9 +109,37 @@ void AnimalSheepScript::OnReachDestination()
     }
 }
 
+void AnimalSheepScript::makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity){
+	AIMakeBaby::makeBabySpawnBaby(scriptedEntity);
+	char babyFleeceColor = GetBabyFleeceColor(this, scriptedEntity->GetScript());
+	if(babyFleeceColor != -1)
+	{
+		AnimalSheepScript* babySheepScript = dynamic_cast<AnimalSheepScript*>(babyScript);
+		if(babySheepScript != nullptr)
+			babySheepScript->SetFleeceColor(babyFleeceColor);
+	}
+}
+
 char AnimalSheepScript::GetFleeceColor()
 {
 	return (baseEntity->GetMetadataManager()->GetCharEntityMetadata(16) & 0x0F);
+}
+
+char AnimalSheepScript::GetBabyFleeceColor(LivingEntityScript* parent1, LivingEntityScript* parent2)
+{
+
+	AnimalSheepScript* parent1Script = dynamic_cast<AnimalSheepScript*>(parent1);
+	AnimalSheepScript* parent2Script = dynamic_cast<AnimalSheepScript*>(parent2);
+	if(parent1Script!= nullptr && parent2Script!= nullptr)
+	{
+		char dyeColor1 = parent1Script->GetFleeceColor();
+		char dyeColor2 = parent1Script->GetFleeceColor();
+		return Util::ColorUtil::Instance().GetMatchingRecipe(dyeColor1, dyeColor2);
+	}
+	else
+	{
+		return -1;
+	}
 }
 
 char AnimalSheepScript::GetRandomFleeceColor()
@@ -129,10 +156,10 @@ void AnimalSheepScript::SetFleeceColor(char fleeceColor){
 
 void AnimalSheepScript::EatGrassBonus()
 {
-	if(entityAgeIsBaby())
+	if(EntityAgeIsBaby())
 	{
-		entityAgeGrow(baseEntity, 60);
-		if(entityAgeIsBaby())
+		EntityAgeGrow(baseEntity, 60);
+		if(EntityAgeIsBaby())
 			EatGrassStart();
 	}
 	else{

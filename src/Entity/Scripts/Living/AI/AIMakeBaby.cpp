@@ -6,6 +6,7 @@
 #include "Inventory/ItemStack.h"
 #include "World/World.h"
 #include "Entity/Scripts/Database/ScriptedEntityList.h"
+#include "Entity/Scripts/Living/AnimalSheepScript.h"
 
 namespace Scripting
 {
@@ -18,6 +19,7 @@ AIMakeBaby::AIMakeBaby()
     , makeBabySpawnBabyTimer(0)
     , makeBabySearchMateBoundingBox(0, 0,  0)
     , baseScript(nullptr)
+	, babyScript(nullptr)
 {
 }
 
@@ -38,7 +40,7 @@ void AIMakeBaby::makeBabyUpdate(World::ScriptedLivingEntity* baseEntity)
         if (makeBabySpawnBabyTimer == 0)
         {
         	LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(baseScript);
-        	ageScript->entityAgeSetAge(baseEntity, 0);
+        	ageScript->EntityAgeSetAge(baseEntity, 0);
         }
         return;
     }
@@ -49,7 +51,7 @@ void AIMakeBaby::makeBabyUpdate(World::ScriptedLivingEntity* baseEntity)
         if (makeBabySpawnBabyTimer == 0)
         {
         	LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(baseScript);
-        	ageScript->entityAgeSetAge(baseEntity, 0);
+        	ageScript->EntityAgeSetAge(baseEntity, 0);
         }
         return;
     }
@@ -155,11 +157,11 @@ void AIMakeBaby::makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity)
     World::ScriptedLivingEntity* baby = World::ScriptedEntityList::Instance().CreateNewEntity(entityTypeId, scriptedEntity->x, scriptedEntity->y, scriptedEntity->z);
     baby->Rotate(scriptedEntity->GetYaw(), scriptedEntity->GetPitch());
     scriptedEntity->GetWorld()->AddEntity(baby);
-    LivingEntityScript* script = baby->GetScript();
-    LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(script);
+    babyScript = baby->GetScript();
+    LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(babyScript);
     if (ageScript != nullptr)
     {
-        ageScript->entityAgeSetBaby(scriptedEntity);
+        ageScript->EntityAgeSetBaby(scriptedEntity);
     }
 }
 

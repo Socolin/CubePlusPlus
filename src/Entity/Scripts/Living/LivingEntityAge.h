@@ -19,13 +19,13 @@ class LivingEntityAge {
 public:
 	LivingEntityAge();
 	virtual ~LivingEntityAge();
-	void entityAgeInit(LivingEntityScript* script);
-	void entityAgeGrow(World::ScriptedLivingEntity* baseEntity, int age);
-	int entityAgeGetAge(World::ScriptedLivingEntity* baseEntity);
-	void entityAgeSetAge(World::ScriptedLivingEntity* baseEntity, int age);
-	void entityAgeSetBaby(World::ScriptedLivingEntity* baseEntity);
-	bool entityAgeIsBaby();
-	void entityAgeUpdate(World::ScriptedLivingEntity* baseEntity);
+	void EntityAgeInit(LivingEntityScript* script);
+	void EntityAgeGrow(World::ScriptedLivingEntity* baseEntity, int age);
+	int EntityAgeGetAge(World::ScriptedLivingEntity* baseEntity);
+	void EntityAgeSetAge(World::ScriptedLivingEntity* baseEntity, int age);
+	void EntityAgeSetBaby(World::ScriptedLivingEntity* baseEntity);
+	bool EntityAgeIsBaby();
+	void EntityAgeUpdate(World::ScriptedLivingEntity* baseEntity);
 protected:
 	int entityAge;
 	LivingEntityScript* baseScript;

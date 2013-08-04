@@ -106,6 +106,11 @@ short LivingEntity::GetMaxHealth()
     return DEFAULT_MAX_HEALTH;
 }
 
+short LivingEntity::GetHealth()
+{
+	return health;
+}
+
 void LivingEntity::SetCustomName(const std::wstring& customName)
 {
     metadataManager.SetEntityMetadata(5, customName);

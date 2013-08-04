@@ -15,51 +15,51 @@ LivingEntityAge::~LivingEntityAge()
 {
 }
 
-void LivingEntityAge::entityAgeInit(LivingEntityScript* script)
+void LivingEntityAge::EntityAgeInit(LivingEntityScript* script)
 {
     baseScript = script;
 }
 
-void LivingEntityAge::entityAgeGrow(World::ScriptedLivingEntity* baseEntity, int age)
+void LivingEntityAge::EntityAgeGrow(World::ScriptedLivingEntity* baseEntity, int age)
 {
-	int currentAge = entityAgeGetAge(baseEntity);
+	int currentAge = EntityAgeGetAge(baseEntity);
 	currentAge += age * 20;
 	if(currentAge > 0){
 		currentAge=0;
 	}
 	entityAge=currentAge;
-	entityAgeSetAge(baseEntity,currentAge);
+	EntityAgeSetAge(baseEntity,currentAge);
 }
 
-void LivingEntityAge::entityAgeSetAge(World::ScriptedLivingEntity* baseEntity, int age)
+void LivingEntityAge::EntityAgeSetAge(World::ScriptedLivingEntity* baseEntity, int age)
 {
 	baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(age));
 }
 
-int LivingEntityAge::entityAgeGetAge(World::ScriptedLivingEntity* baseEntity)
+int LivingEntityAge::EntityAgeGetAge(World::ScriptedLivingEntity* baseEntity)
 {
 	return baseEntity->GetMetadataManager()->GetIntEntityMetadata(12);
 }
 
-void LivingEntityAge::entityAgeSetBaby(World::ScriptedLivingEntity* baseEntity)
+void LivingEntityAge::EntityAgeSetBaby(World::ScriptedLivingEntity* baseEntity)
 {
     entityAge = -24000;
-    entityAgeSetAge(baseEntity, -24000);
+    EntityAgeSetAge(baseEntity, -24000);
 }
 
-bool LivingEntityAge::entityAgeIsBaby()
+bool LivingEntityAge::EntityAgeIsBaby()
 {
     return entityAge < 0;
 }
 
-void LivingEntityAge::entityAgeUpdate(World::ScriptedLivingEntity* baseEntity)
+void LivingEntityAge::EntityAgeUpdate(World::ScriptedLivingEntity* baseEntity)
 {
-	entityAge = entityAgeGetAge(baseEntity);
+	entityAge = EntityAgeGetAge(baseEntity);
 	if(entityAge < 0){
-		entityAgeSetAge(baseEntity, entityAge++);
+		EntityAgeSetAge(baseEntity, entityAge++);
 	}
 	else if(entityAge > 0){
-		entityAgeSetAge(baseEntity, entityAge--);
+		EntityAgeSetAge(baseEntity, entityAge--);
 	}
 }
 

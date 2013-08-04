@@ -3,11 +3,12 @@
 
 #include "AnimalScript.h"
 #include "AI/AIMakeBaby.h"
+#include "LivingEntityTameable.h"
 
 namespace Scripting
 {
 
-class AnimalWolfScript : public AnimalScript, public AIMakeBaby
+class AnimalWolfScript : public AnimalScript, public AIMakeBaby, public LivingEntityTameable
 {
     typedef AnimalScript parent_type;
 public:
@@ -22,6 +23,13 @@ public:
     virtual void OnDeath() override;
     virtual void OnInteract(World::EntityPlayer* player) override;
     virtual void OnReachDestination() override;
+    bool IsAngry();
+    void SetAngry(bool value);
+    char GetCollarColor();
+    void SetCollarColor(char color);
+private:
+    void entityInit();
+    void updateLivingSound();
 };
 
 } /* namespace Scripting */

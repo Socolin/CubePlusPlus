@@ -6,6 +6,11 @@
 #include "AI/AIFindFeeder.h"
 #include "AI/AIEatGrass.h"
 
+namespace
+{
+class ColorUtil;
+}
+
 namespace Scripting
 {
 
@@ -28,8 +33,12 @@ public:
     void SetSheared(bool isSheared);
     void EatGrassBonus();
     char GetFleeceColor();
+    char GetBabyFleeceColor(LivingEntityScript* parent1, LivingEntityScript* parent2);
+    void SpawnBabySheep();
     char GetRandomFleeceColor();
     void SetFleeceColor(char fleeceColor);
+protected:
+    virtual void makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity) override;
 private:
     bool isSheared;
     char fleeceColor;
