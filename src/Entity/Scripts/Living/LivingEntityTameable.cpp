@@ -6,6 +6,8 @@ namespace Scripting{
 LivingEntityTameable::LivingEntityTameable()
 	: baseScript(nullptr)
 	, scriptedEntity(nullptr)
+	, isTamed(false)
+	, isSitting(false)
 {
 
 }
@@ -22,7 +24,7 @@ void LivingEntityTameable::EntityTameableInit(LivingEntityScript* script, World:
 
 std::wstring LivingEntityTameable::GetOwnerName()
 {
-	return scriptedEntity->GetMetadataManager()->GetStringMetadata(17);
+	return ownerName;
 }
 
 void LivingEntityTameable::SetOwner(std::wstring ownerName)
@@ -32,8 +34,7 @@ void LivingEntityTameable::SetOwner(std::wstring ownerName)
 
 bool LivingEntityTameable::IsTamed()
 {
-	char isTame = scriptedEntity->GetMetadataManager()->GetCharEntityMetadata(16);
-	return (isTame & 0x4) != 0;
+	return isTamed;
 }
 
 void LivingEntityTameable::SetTamed(bool value)
@@ -47,12 +48,12 @@ void LivingEntityTameable::SetTamed(bool value)
 	{
 		scriptedEntity->GetMetadataManager()->SetEntityMetadata(16, char((status & 0xFB) & 0x07));
 	}
+	isTamed = value;
 }
 
 bool LivingEntityTameable::IsSitting()
 {
-	char isTame = scriptedEntity->GetMetadataManager()->GetCharEntityMetadata(16);
-	return (isTame & 0x1) != 0;
+	return isSitting;
 }
 
 void LivingEntityTameable::SetSitting(bool value)
@@ -66,6 +67,7 @@ void LivingEntityTameable::SetSitting(bool value)
 	{
 		scriptedEntity->GetMetadataManager()->SetEntityMetadata(16, char((status & 0xFE) & 0x07));
 	}
+	isSitting = value;
 }
 
 } /* namespace Scripting */

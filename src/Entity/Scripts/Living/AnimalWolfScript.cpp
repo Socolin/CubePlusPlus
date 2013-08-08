@@ -10,6 +10,9 @@ namespace Scripting
 
 AnimalWolfScript::AnimalWolfScript()
     : AnimalScript("entityliving_wolf")
+	, collarColor(0)
+	, isAngry(false)
+	, isBegging(false)
 {
 }
 
@@ -25,11 +28,14 @@ LivingEntityScript* AnimalWolfScript::Copy()
 void AnimalWolfScript::Init()
 {
     parent_type::Init();
+    baseEntity->SetLivingSound(L"mob.wolf.bark");
     baseEntity->SetHurtSound(L"mob.wolf.hurt");
     baseEntity->SetDeathSound(L"mob.wolf.death");
     baseEntity->SetLivingSoundInterval(120);
     baseEntity->SetWidthHeight(0.6, 1.8);
     makeBabyInit(this);
+    protectOwnerInit(this);
+    followOwnerInit(this);
     EntityTameableInit(this, baseEntity);
     entityInit();
 }
@@ -43,18 +49,14 @@ void AnimalWolfScript::entityInit()
 
 void AnimalWolfScript::OnUpdateTick()
 {
-    if (panicMoveIsPanic())
-    {
-        panicMoveUpdate();
-    }
-    else
-    {
-        if (!makeBabyHasMate())
-        {
-        	randomMoveUpdate();
-        }
-        makeBabyUpdate(baseEntity);
-    }
+	updateLivingSound();
+
+
+	if (!makeBabyHasMate() && !IsTamed())
+	{
+		randomMoveUpdate();
+	}
+	//makeBabyUpdate(baseEntity);
 }
 
 void AnimalWolfScript::OnDeath()
@@ -63,16 +65,20 @@ void AnimalWolfScript::OnDeath()
 
 void AnimalWolfScript::OnInteract(World::EntityPlayer* player)
 {
-	if (makeBabyCanBeInLove())
-    {
-		i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
-        if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
-        {
-            if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)
-                player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
-        }
-    }
-	if(player->LookItemInHand() == nullptr){
+	if(IsTamed())
+	{
+		if (makeBabyCanBeInLove())
+		{
+			i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
+			if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
+			{
+				if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)
+					player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
+			}
+		}
+	}
+	if(player->LookItemInHand() == nullptr)
+	{
 		SetSitting(!IsSitting());
 	}
 }
@@ -80,6 +86,7 @@ void AnimalWolfScript::OnInteract(World::EntityPlayer* player)
 void AnimalWolfScript::OnReceiveAttack(World::LivingEntity* attacker, int& damage)
 {
     parent_type::OnReceiveAttack(attacker, damage);
+    protectOwnerStartDefending(attacker);
     makeBabyResetInLove();
 }
 
@@ -96,17 +103,18 @@ void AnimalWolfScript::OnReachDestination()
 
 char AnimalWolfScript::GetCollarColor()
 {
-	return baseEntity->GetMetadataManager()->GetCharEntityMetadata(20) & 0x0F;
+	return collarColor;
 }
 
 void AnimalWolfScript::SetCollarColor(char color)
 {
 	baseEntity->GetMetadataManager()->SetEntityMetadata(20, (color & 0x0F));
+	collarColor = color;
 }
 
 bool AnimalWolfScript::IsAngry()
 {
-	return (baseEntity->GetMetadataManager()->GetCharEntityMetadata(16) & 0x02) != 0;
+	return isAngry;
 }
 
 void AnimalWolfScript::SetAngry(bool value)
@@ -119,6 +127,37 @@ void AnimalWolfScript::SetAngry(bool value)
 	else
 	{
 		baseEntity->GetMetadataManager()->SetEntityMetadata(16, char((status & 0xFD) & 0x07));
+	}
+	isAngry=value;
+}
+
+bool AnimalWolfScript::IsBegging()
+{
+	return isBegging;
+}
+
+void AnimalWolfScript::SetBegging(bool value)
+{
+	if(value)
+	{
+		baseEntity->GetMetadataManager()->SetEntityMetadata(19, char(1));
+	}
+	else
+	{
+		baseEntity->GetMetadataManager()->SetEntityMetadata(19, char(0));
+	}
+	isBegging=value;
+}
+
+
+void AnimalWolfScript::makeBabyInitBabyScript(LivingEntityScript* babyScript)
+{
+	AIMakeBaby::makeBabyInitBabyScript(babyScript);
+	AnimalWolfScript* babyWolfScript = dynamic_cast<AnimalWolfScript*>(babyScript);
+	if(babyWolfScript != nullptr)
+	{
+		babyWolfScript->SetTamed(true);
+		babyWolfScript->SetOwner(this->GetOwnerName());
 	}
 }
 

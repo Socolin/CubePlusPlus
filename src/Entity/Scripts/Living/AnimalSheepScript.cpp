@@ -109,9 +109,9 @@ void AnimalSheepScript::OnReachDestination()
     }
 }
 
-void AnimalSheepScript::makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity){
-	AIMakeBaby::makeBabySpawnBaby(scriptedEntity);
-	char babyFleeceColor = GetBabyFleeceColor(this, scriptedEntity->GetScript());
+void AnimalSheepScript::makeBabyInitBabyScript(LivingEntityScript* babyScript){
+	AIMakeBaby::makeBabyInitBabyScript(babyScript);
+	char babyFleeceColor = GetBabyFleeceColor(this, babyScript);
 	if(babyFleeceColor != -1)
 	{
 		AnimalSheepScript* babySheepScript = dynamic_cast<AnimalSheepScript*>(babyScript);
@@ -162,7 +162,8 @@ void AnimalSheepScript::EatGrassBonus()
 		if(EntityAgeIsBaby())
 			EatGrassStart();
 	}
-	else{
+	else
+	{
 		SetSheared(false);
 	}
 }

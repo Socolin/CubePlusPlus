@@ -3,12 +3,14 @@
 
 #include "AnimalScript.h"
 #include "AI/AIMakeBaby.h"
+#include "AI/AIProtectOwner.h"
+#include "AI/AIFollowOwner.h"
 #include "LivingEntityTameable.h"
 
 namespace Scripting
 {
 
-class AnimalWolfScript : public AnimalScript, public AIMakeBaby, public LivingEntityTameable
+class AnimalWolfScript : public AnimalScript, public LivingEntityTameable, public AIMakeBaby, public AIProtectOwner, public AIFollowOwner
 {
     typedef AnimalScript parent_type;
 public:
@@ -25,11 +27,18 @@ public:
     virtual void OnReachDestination() override;
     bool IsAngry();
     void SetAngry(bool value);
+    bool IsBegging();
+    void SetBegging(bool value);
     char GetCollarColor();
     void SetCollarColor(char color);
+protected:
+    virtual void makeBabyInitBabyScript(LivingEntityScript* babyScript) override;
 private:
     void entityInit();
     void updateLivingSound();
+    char collarColor;
+    bool isAngry;
+    bool isBegging;
 };
 
 } /* namespace Scripting */

@@ -19,7 +19,6 @@ AIMakeBaby::AIMakeBaby()
     , makeBabySpawnBabyTimer(0)
     , makeBabySearchMateBoundingBox(0, 0,  0)
     , baseScript(nullptr)
-	, babyScript(nullptr)
 {
 }
 
@@ -157,12 +156,17 @@ void AIMakeBaby::makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity)
     World::ScriptedLivingEntity* baby = World::ScriptedEntityList::Instance().CreateNewEntity(entityTypeId, scriptedEntity->x, scriptedEntity->y, scriptedEntity->z);
     baby->Rotate(scriptedEntity->GetYaw(), scriptedEntity->GetPitch());
     scriptedEntity->GetWorld()->AddEntity(baby);
-    babyScript = baby->GetScript();
+    LivingEntityScript* babyScript = baby->GetScript();
     LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(babyScript);
-    if (ageScript != nullptr)
-    {
-        ageScript->EntityAgeSetBaby(scriptedEntity);
-    }
+	if (ageScript != nullptr)
+	{
+		ageScript->EntityAgeSetBaby(baby);
+	}
+	makeBabyInitBabyScript(babyScript);
+}
+
+void AIMakeBaby::makeBabyInitBabyScript(LivingEntityScript* babyScript)
+{
 }
 
 bool AIMakeBaby::makeBabyCanBeInLove()

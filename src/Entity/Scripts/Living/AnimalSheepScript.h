@@ -34,11 +34,10 @@ public:
     void EatGrassBonus();
     char GetFleeceColor();
     char GetBabyFleeceColor(LivingEntityScript* parent1, LivingEntityScript* parent2);
-    void SpawnBabySheep();
-    char GetRandomFleeceColor();
     void SetFleeceColor(char fleeceColor);
 protected:
-    virtual void makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity) override;
+    char GetRandomFleeceColor();
+    virtual void makeBabyInitBabyScript(LivingEntityScript* babyScript) override;
 private:
     bool isSheared;
     char fleeceColor;
