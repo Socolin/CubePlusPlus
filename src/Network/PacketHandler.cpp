@@ -642,7 +642,7 @@ bool NetworkSession::UpdateTick()
             SendPacket(keepAlivePacket);
         }
     }
-    while (SendPendingData());
+    while (sendBuffer.Send(socket) > 0);
 
     return true;
 }

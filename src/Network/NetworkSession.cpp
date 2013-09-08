@@ -25,12 +25,8 @@ NetworkSession::NetworkSession(int socket, const std::string& ip) :
     , aesEncryptor(nullptr)
     , aesEncryptBuffer{0}
     , player(nullptr)
-    , sendBuffer{0}
     , lastSendKeepAliveTick(0)
     , lastKeepAliveId(0)
-    , pendingDataMaxSize(0)
-    , pendingDataSize(0)
-    , pendingDataPos(0)
     , waitLoginId(0)
 {
 
@@ -204,7 +200,7 @@ void NetworkSession::disconnect(std::wstring message)
     {
         LOG_INFO << L"Disconnect session: " << message << std::endl;
     }
-    shutdown(socket, 2);
+    shutdown(socket, SHUT_RDWR);
 }
 
 void NetworkSession::kick(std::wstring message)
@@ -277,19 +273,28 @@ void NetworkSession::SendPacket(const NetworkPacket& packet)
 
     if (cryptedMode)
     {
-        size_t sendSize = 0;
-        size_t sendBufferSize = SEND_BUFFER_SIZE;
         size_t toSendSize = packet.getPacketSize();
         size_t sended = 0;
-        sendSize = std::min(sendBufferSize,toSendSize);
-        while (sendSize > 0)
+        while (toSendSize > 0)
         {
-            aesEncryptor->ProcessData((byte*)sendBuffer,(byte*)&packet.getPacketData()[sended],sendSize);
-            SendDelayedData(reinterpret_cast<char*>(sendBuffer), sendSize);
-            toSendSize -= sendSize;
-            sended += sendSize;
-            sendSize = std::min(sendBufferSize,toSendSize);
+            char* data;
+            int size = sendBuffer.GetBufferForWriting(&data, toSendSize);
+            if (size > 0)
+            {
+                aesEncryptor->ProcessData((byte*)data, (byte*)&packet.getPacketData()[sended], size);
+                toSendSize -= size;
+                sended += size;
+            }
+            else if (size == -1)
+            {
+                disconnect(std::wstring(L"Buffer is full"));
+            }
+            else
+            {
+                break;
+            }
         }
+        sendBuffer.Send(socket);
     }
     else
     {
@@ -328,119 +333,10 @@ std::wstring NetworkSession::readString(const int maxSize) throw (NetworkExcepti
     return utf16RealText;
 }
 
-void NetworkSession::SendDelayedData(char* buffer, int len)
+
+bool NetworkSession::IsSendBufferHalfFull()
 {
-    if (HasPendingData())
-    {
-        while (SendPendingData());
-    }
-
-    if (HasPendingData())
-    {
-        AppendPendingDataToSend(buffer, len);
-    }
-    else
-    {
-        struct timeval a;
-        a.tv_sec= 0;
-        a.tv_usec = 0;
-        fd_set rfd;
-        FD_ZERO( &rfd );
-        FD_SET(socket, &rfd );
-        if (select(socket + 1, nullptr, &rfd, nullptr, &a) > 0)
-        {
-            int res = send(socket, buffer, len, MSG_NOSIGNAL);
-            if (res == -1)
-            {
-                if (errno == EAGAIN)
-                {
-                    AppendPendingDataToSend(reinterpret_cast<char*>(buffer), len);
-                    return;
-                }
-                disconnect(std::wstring(L"Socket error"));
-                return;
-            }
-        }
-        else
-        {
-            AppendPendingDataToSend(reinterpret_cast<char*>(buffer), len);
-        }
-    }
-}
-
-
-void NetworkSession::AppendPendingDataToSend(char* buffer, int len)
-{
-    if (pendingDataSize + len > pendingDataMaxSize)
-    {
-        if (pendingDataPos > 1024)
-        {
-            memmove(&(pendingData[0]),&(pendingData[pendingDataPos]), pendingDataSize - pendingDataPos);
-            pendingDataSize -= pendingDataPos;
-            pendingDataPos = 0;
-        }
-        if (pendingDataSize + len > pendingDataMaxSize)
-        {
-            pendingData.resize(pendingDataSize + len);
-            pendingDataMaxSize = pendingDataSize + len;
-        }
-        if (pendingDataSize + len > 1024 * 1024)
-        {
-            disconnect(L"Buffer overflow");
-        }
-    }
-
-    std::memmove((char*)pendingData.data() + pendingDataSize, buffer, len);
-    pendingDataSize += len;
-}
-
-bool NetworkSession::HasPendingData()
-{
-    return pendingDataSize > 0;
-}
-
-bool NetworkSession::SendPendingData()
-{
-    if (isDisconnected())
-        return false;
-
-    int pendingSize = pendingDataSize - pendingDataPos;
-    if (pendingSize <= 0)
-        return false;
-
-    int sendSize = std::min(SEND_BUFFER_SIZE, pendingSize);
-
-    struct timeval a;
-    a.tv_sec= 0;
-    a.tv_usec = 0;
-    fd_set rfd;
-    FD_ZERO(&rfd);
-    FD_SET(socket, &rfd);
-    if (select(socket + 1, nullptr, &rfd, nullptr, &a) > 0)
-    {
-        int res = send(socket, (char*)pendingData.data() + pendingDataPos, sendSize, MSG_NOSIGNAL);
-        if (res == -1)
-        {
-            if (errno == EAGAIN)
-            {
-                return false;
-            }
-            disconnect(std::wstring(L"Socket error 10"));
-            return false;
-        }
-        pendingDataPos += res;
-    }
-    else
-    {
-        return false;
-    }
-    if (pendingDataPos >= pendingDataSize)
-    {
-        pendingDataPos = 0;
-        pendingDataSize = 0;
-        return false;
-    }
-    return true;
+    return sendBuffer.isHalfFull() > 0;
 }
 
 }
