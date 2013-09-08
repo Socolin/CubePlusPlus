@@ -7,7 +7,7 @@ namespace Scripting
 
 AIRandomMove::AIRandomMove()
     : randomMoveTimer(0)
-    , notMoving(false)
+    , randomMoveNotMoving(false)
     , randomMoveSpeed(0.1)
     , baseScript(nullptr)
 {
@@ -33,7 +33,7 @@ void AIRandomMove::randomMoveUpdate()
     else
         randomMoveTimer--;
 
-    if (!notMoving)
+    if (!randomMoveNotMoving)
         baseScript->MoveToDestination(randomMoveSpeed);
 }
 
@@ -41,11 +41,11 @@ void AIRandomMove::randomMoveUpdateDestination()
 {
     if (rand() % 3 == 0)
     {
-        notMoving = true;
+        randomMoveNotMoving = true;
     }
     else
     {
-        notMoving = false;
+        randomMoveNotMoving = false;
         randomMoveTimer = 100 + (rand() % 200);
         baseScript->GenerateDestination(5);
     }

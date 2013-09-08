@@ -13,7 +13,7 @@ AIMakeBaby::AIMakeBaby()
     : makeBabyTimer(0)
     , makeBabyInLoveTimer(0)
     , makeBabyMate(-1)
-    , makeBabyFoodId(295)
+    , makeBabyFoodId(0)
     , makeBabySpawnBabyTimer(0)
     , makeBabySearchMateBoundingBox(0, 0,  0)
     , baseScript(nullptr)
@@ -24,8 +24,9 @@ AIMakeBaby::~AIMakeBaby()
 {
 }
 
-void AIMakeBaby::makeBabyInit(LivingEntityScript* script)
+void AIMakeBaby::makeBabyInit(LivingEntityScript* script, i_item foodId)
 {
+    makeBabyFoodId = foodId;
     baseScript = script;
 }
 

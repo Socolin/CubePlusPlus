@@ -17,23 +17,22 @@ namespace Scripting
 class LivingEntityScript;
 class AIMakeBaby
 {
-public:
+protected:
     AIMakeBaby();
     virtual ~AIMakeBaby();
 
-protected:
-    void makeBabyInit(LivingEntityScript* script);
+    void makeBabyInit(LivingEntityScript* script, i_item foodId);
     bool makeBabyCanBeInLove();
     bool makeBabyIsInLove();
     bool makeBabyHasMate();
     bool makeBabyIsBaby();
     void makeBabySetBaby(World::ScriptedLivingEntity* baseEntity);
     bool makeBabyTryFallInLove(const Inventory::ItemStack* item);
-    void makeBabySetMate(int entityId);
     void makeBabyUpdate(World::ScriptedLivingEntity* baseEntity);
-    void makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity);
     void makeBabyResetInLove();
 private:
+    void makeBabySetMate(int entityId);
+    void makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity);
     void makeBabyFindMate(World::ScriptedLivingEntity* baseEntity);
     void makeBabyUpdateMate(World::ScriptedLivingEntity* baseEntity);
 private:

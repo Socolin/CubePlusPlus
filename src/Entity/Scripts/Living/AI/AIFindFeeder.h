@@ -22,8 +22,9 @@ protected:
 
     void findFeederInit(LivingEntityScript* script, i_item foodId);
     void findFeederUpdate(World::ScriptedLivingEntity* baseEntity);
-    void findFeederSearchFeeder(World::ScriptedLivingEntity* baseEntity);
     bool findFeederHasTarget();
+private:
+    void findFeederSearchFeeder(World::ScriptedLivingEntity* baseEntity);
     void findFeederResetTarget();
 private:
     int findFeederTimer;
