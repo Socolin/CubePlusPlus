@@ -7,21 +7,17 @@ namespace Scripting
 class LivingEntityScript;
 class AIRandomMove
 {
-public:
+protected:
     AIRandomMove();
     virtual ~AIRandomMove();
 
-protected:
     void randomMoveInit(LivingEntityScript* script, float speed);
     void randomMoveUpdate();
     void randomMoveUpdateDestination();
 private:
-
-    // Random move module
     int randomMoveTimer;
-    bool notMoving;
+    bool randomMoveNotMoving;
     float randomMoveSpeed;
-private:
     LivingEntityScript* baseScript;
 };
 

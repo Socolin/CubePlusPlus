@@ -13,12 +13,12 @@ namespace Scripting
 class LivingEntityScript;
 class AIDropItem
 {
-public:
+protected:
     AIDropItem();
     virtual ~AIDropItem();
 
-    void DropItemInit(LivingEntityScript* script, i_item itemId, i_data itemData, i_stackSize itemQuantity, int minTimer, int maxTimer);
-    void DropItemUpdate(World::LivingEntity* baseEntity);
+    void dropItemInit(LivingEntityScript* script, i_item itemId, i_data itemData, i_stackSize itemQuantity, int minTimer, int maxTimer);
+    void dropItemUpdate(World::LivingEntity* baseEntity);
 private:
     int dropItemTimer;
     int dropItemMinTimer;

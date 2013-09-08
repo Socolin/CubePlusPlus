@@ -90,7 +90,7 @@ void EntityPlayer::UpdateTick()
             {
                 if (session == nullptr)
                     return;
-                if (session->HasPendingData())
+                if (session->IsSendBufferHalfFull())
                     break;
                 const ChunkToSendData& chunkToSendData =  chunkToSend.top();
                 world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);

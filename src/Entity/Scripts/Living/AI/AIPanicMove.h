@@ -6,10 +6,10 @@ namespace Scripting
 class LivingEntityScript;
 class AIPanicMove
 {
-public:
+protected:
     AIPanicMove();
     virtual ~AIPanicMove();
-protected:
+
     void panicMoveInit(LivingEntityScript* script, float speed);
     void panicMoveStart();
     void panicMoveUpdate();

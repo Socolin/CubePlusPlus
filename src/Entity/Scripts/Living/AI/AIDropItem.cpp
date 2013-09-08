@@ -22,7 +22,7 @@ AIDropItem::~AIDropItem()
 {
 }
 
-void AIDropItem::DropItemInit(LivingEntityScript* script, i_item itemId, i_data itemData, i_stackSize itemQuantity, int minTimer, int maxTimer)
+void AIDropItem::dropItemInit(LivingEntityScript* script, i_item itemId, i_data itemData, i_stackSize itemQuantity, int minTimer, int maxTimer)
 {
     baseScript = script;
 
@@ -38,7 +38,7 @@ void AIDropItem::DropItemInit(LivingEntityScript* script, i_item itemId, i_data 
         dropItemTimer = dropItemMinTimer + (rand() % (dropItemMaxTimer - dropItemMinTimer));
 }
 
-void AIDropItem::DropItemUpdate(World::LivingEntity* baseEntity)
+void AIDropItem::dropItemUpdate(World::LivingEntity* baseEntity)
 {
     if (dropItemTimer <= 0)
     {

@@ -31,8 +31,8 @@ void AnimalChickenScript::Init()
     baseEntity->SetDeathSound(L"mob.chicken.hurt");
     baseEntity->SetLivingSoundInterval(120);
     baseEntity->SetWidthHeight(0.3, 0.7);
-    DropItemInit(this, 344, 0, 1, 6000, 12000);
-    makeBabyInit(this);
+    dropItemInit(this, 344, 0, 1, 6000, 12000);
+    makeBabyInit(this, 295);
     findFeederInit(this, 295);
 }
 
@@ -51,7 +51,7 @@ void AnimalChickenScript::OnUpdateTick()
             findFeederUpdate(baseEntity);
         }
         if (!EntityAgeIsBaby())
-            DropItemUpdate(baseEntity);
+            dropItemUpdate(baseEntity);
         makeBabyUpdate(baseEntity);
     }
 }

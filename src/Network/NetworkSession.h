@@ -8,6 +8,8 @@
 #include <cryptopp/aes.h>
 #include <cryptopp/socketft.h>
 
+#include "Util/RingBuffer.h"
+
 namespace World
 {
 class EntityPlayer;
@@ -25,7 +27,6 @@ namespace Network
 #define CURRENT_VERSION_PROTOCOL 61
 #define CURRENT_VERSION_PROTOCOL_WSTR L"61"
 #define MAX_STRING_SIZE 256
-#define SEND_BUFFER_SIZE 1024
 
 enum eSessionState
 {
@@ -120,7 +121,7 @@ public:
         return (state & (STATES_DISCONNECT));
     }
 
-    bool HasPendingData();
+    bool IsSendBufferHalfFull();
     bool SendPendingData();
 private:
     void readData(int length, char* data) throw (NetworkException);
@@ -133,9 +134,6 @@ private:
     float readFloat() throw (NetworkException);
     double readDouble() throw (NetworkException);
     Inventory::ItemStack* readSlot()  throw (NetworkException);
-
-    void SendDelayedData(char* buffer, int len);
-    void AppendPendingDataToSend(char* buffer, int len);
 
 private:
     int socket;
@@ -161,14 +159,10 @@ private:
     std::wstring serverId;
     World::EntityPlayer* player;
 
-    unsigned char sendBuffer[SEND_BUFFER_SIZE];
+    Util::RingBuffer<14> sendBuffer;//19
+
     size_t lastSendKeepAliveTick;
     int lastKeepAliveId;
-
-    std::vector<char*> pendingData;
-    size_t pendingDataMaxSize;
-    size_t pendingDataSize;
-    size_t pendingDataPos;
 
     int waitLoginId;
     std::string decryptedSecretKey;
