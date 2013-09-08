@@ -30,7 +30,7 @@ void AnimalPigScript::Init()
     baseEntity->SetDeathSound(L"mob.pig.death");
     baseEntity->SetLivingSoundInterval(120);
     baseEntity->SetWidthHeight(0.9, 0.9);
-    makeBabyInit(this);
+    makeBabyInit(this, 391);
     findFeederInit(this, 391);
 }
 

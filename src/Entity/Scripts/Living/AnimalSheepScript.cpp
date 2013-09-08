@@ -33,7 +33,7 @@ void AnimalSheepScript::Init()
     baseEntity->SetDeathSound(L"mob.sheep.say");
     baseEntity->SetLivingSoundInterval(120);
     baseEntity->SetWidthHeight(0.6, 1.3);
-    makeBabyInit(this);
+    makeBabyInit(this, 296);
     findFeederInit(this, 296);
     EatGrassInit(this);
     SetFleeceColor(GetRandomFleeceColor());

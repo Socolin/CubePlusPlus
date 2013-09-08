@@ -30,7 +30,7 @@ void AnimalCowScript::Init()
     baseEntity->SetDeathSound(L"mob.cow.hurt");
     baseEntity->SetLivingSoundInterval(120);
     baseEntity->SetWidthHeight(0.9, 1.3);
-    makeBabyInit(this);
+    makeBabyInit(this, 296);
     findFeederInit(this, 296);
 }
 

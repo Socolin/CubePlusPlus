@@ -33,7 +33,7 @@ void AnimalWolfScript::Init()
     baseEntity->SetDeathSound(L"mob.wolf.death");
     baseEntity->SetLivingSoundInterval(120);
     baseEntity->SetWidthHeight(0.6, 1.8);
-    makeBabyInit(this);
+    makeBabyInit(this, 363);
     protectOwnerInit(this);
     followOwnerInit(this);
     EntityTameableInit(this, baseEntity);
