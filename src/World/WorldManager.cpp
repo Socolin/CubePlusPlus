@@ -82,7 +82,6 @@ void WorldManager::RemovePlayer(EntityPlayer* player)
         world->RemovePlayer(player);
         playerList.erase(player);
         playerByNameList.erase(player->GetUsername());
-        // TODO: fiind where delete player
     }
 }
 

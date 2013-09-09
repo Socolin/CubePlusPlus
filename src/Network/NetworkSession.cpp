@@ -271,41 +271,39 @@ void NetworkSession::SendPacket(const NetworkPacket& packet)
     if (isDisconnected())
         return;
 
-    if (cryptedMode)
+    size_t toSendSize = packet.getPacketSize();
+    size_t sended = 0;
+    while (toSendSize > 0)
     {
-        size_t toSendSize = packet.getPacketSize();
-        size_t sended = 0;
-        while (toSendSize > 0)
+        char* data;
+        int size = sendBuffer.GetBufferForWriting(&data, toSendSize);
+        if (size > 0)
         {
-            char* data;
-            int size = sendBuffer.GetBufferForWriting(&data, toSendSize);
-            if (size > 0)
+            if (cryptedMode)
             {
                 aesEncryptor->ProcessData((byte*)data, (byte*)&packet.getPacketData()[sended], size);
-                toSendSize -= size;
-                sended += size;
-            }
-            else if (size == -1)
-            {
-                disconnect(std::wstring(L"Buffer is full"));
             }
             else
             {
-                break;
+                memcpy(data, &packet.getPacketData()[sended], size);
             }
+            toSendSize -= size;
+            sended += size;
         }
-        sendBuffer.Send(socket);
-    }
-    else
-    {
-        int res = send(socket, &packet.getPacketData()[0], packet.getPacketSize(), 0);
-        if (res == -1)
+        else if (size == -1)
         {
-            if (errno != EAGAIN)
-            {
-                disconnect(std::wstring(L"Socket error 22"));
-            }
+            disconnect(L"Buffer is full");
         }
+        else
+        {
+            break;
+        }
+    }
+
+    int res = sendBuffer.Send(socket);
+    if (res == -1)
+    {
+        disconnect(L"Error while sending data");
     }
 }
 
