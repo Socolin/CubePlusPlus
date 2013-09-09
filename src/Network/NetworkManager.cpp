@@ -14,6 +14,7 @@
 #include <fcntl.h>
 #include <stdlib.h>
 
+
 #include "Logging/Logger.h"
 
 namespace Network
@@ -40,6 +41,7 @@ static int create_and_bind(unsigned short port)
 
     int optval = 1;
     int res = setsockopt(listenfd, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof optval);
+
     if (res == -1)
     {
         perror("setsockopt");

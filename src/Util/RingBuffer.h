@@ -2,6 +2,7 @@
 #define RINGBUFFER_H_
 
 #include <array>
+#include <sys/socket.h>
 
 #define SEND_BUFFER_SIZE 1024
 
@@ -122,12 +123,12 @@ inline int Util::RingBuffer<BufferSizeNPow>::Send(int socket)
     {
         size_t toRead = std::min(size - (readPos & mask), avaible);
         toRead = std::min(toRead, size_t(SEND_BUFFER_SIZE));
-        res = write(socket, &(buffer[readPos & mask]), toRead);
+        res = send(socket, &(buffer[readPos & mask]), toRead, MSG_NOSIGNAL);
         if (res == -1)
         {
             if (errno == EAGAIN || errno == EWOULDBLOCK)
                 break;
-            perror("write");
+            perror("send");
             return -1;
         }
         avaible -= res;

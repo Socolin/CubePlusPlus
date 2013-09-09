@@ -159,7 +159,7 @@ private:
     std::wstring serverId;
     World::EntityPlayer* player;
 
-    Util::RingBuffer<14> sendBuffer;//19
+    Util::RingBuffer<19> sendBuffer;
 
     size_t lastSendKeepAliveTick;
     int lastKeepAliveId;
