@@ -293,6 +293,7 @@ void NetworkSession::SendPacket(const NetworkPacket& packet)
         else if (size == -1)
         {
             disconnect(L"Buffer is full");
+            return;
         }
         else
         {
