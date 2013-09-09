@@ -390,6 +390,7 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
         World::WorldManager& worldManager = World::WorldManager::Instance();
         if (!worldManager.IsOnlineMode())
         {
+            LOG_INFO << "Player join [" << username << "] ip:[" << ip << "]" << std::endl;
             player = worldManager.LoadAndJoinWorld(username, this);
             if (player != NULL)
                 state = STATE_INGAME;
