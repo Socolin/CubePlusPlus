@@ -3,9 +3,9 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Jul 27, 2013 at 08:40 PM
+-- Generation Time: Sep 27, 2013 at 01:34 PM
 -- Server version: 5.5.32-0ubuntu0.13.04.1
--- PHP Version: 5.4.9-4ubuntu2.2
+-- PHP Version: 5.4.9-4ubuntu2.3
 
 SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
@@ -1538,7 +1538,7 @@ CREATE TABLE IF NOT EXISTS `entity_living` (
   `clientType` int(11) NOT NULL,
   `scriptId` int(11) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=5 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
 
 --
 -- Dumping data for table `entity_living`
@@ -1548,7 +1548,9 @@ INSERT INTO `entity_living` (`id`, `name`, `clientType`, `scriptId`) VALUES
 (1, 'Chicken', 93, 36),
 (2, 'Cow', 92, 37),
 (3, 'Pig', 90, 38),
-(4, 'Sheep', 91, 39);
+(4, 'Sheep', 91, 39),
+(5, 'Wolf', 95, 40),
+(6, 'Zombie', 54, 42);
 
 -- --------------------------------------------------------
 
@@ -2022,7 +2024,7 @@ CREATE TABLE IF NOT EXISTS `script` (
   `paramCount` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=40 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=51 ;
 
 --
 -- Dumping data for table `script`
@@ -2064,7 +2066,10 @@ INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (36, 'entityliving_chicken', 0),
 (37, 'entityliving_cow', 0),
 (38, 'entityliving_pig', 0),
-(39, 'entityliving_sheep', 0);
+(39, 'entityliving_sheep', 0),
+(40, 'entityliving_wolf', 0),
+(41, 'entityliving_mob', 0),
+(42, 'entityliving_zombie', 0);
 
 -- --------------------------------------------------------
 
