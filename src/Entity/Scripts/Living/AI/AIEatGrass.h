@@ -11,17 +11,17 @@ class AnimalSheepScript;
 class AIEatGrass
 {
 public:
-	AIEatGrass();
-	virtual ~AIEatGrass();
+    AIEatGrass();
+    virtual ~AIEatGrass();
 
 protected:
-	void EatGrassInit(AnimalSheepScript* script);
-	void EatGrassStart();
-	void EatGrassUpdate(World::ScriptedLivingEntity* baseEntity);
+    void EatGrassInit(AnimalSheepScript* script);
+    void EatGrassStart();
+    void EatGrassUpdate(World::ScriptedLivingEntity* baseEntity);
 
 private:
-	AnimalSheepScript* baseScript;
-	int eatGrassTimer;
+    AnimalSheepScript* baseScript;
+    int eatGrassTimer;
 };
 } /* namespace Scripting */
 #endif /* AIEATGRASS_H_ */

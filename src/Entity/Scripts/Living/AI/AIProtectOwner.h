@@ -17,14 +17,14 @@ namespace Scripting
 class LivingEntityScript;
 class AIProtectOwner {
 public:
-	AIProtectOwner();
-	virtual ~AIProtectOwner();
+    AIProtectOwner();
+    virtual ~AIProtectOwner();
 protected:
-	void protectOwnerInit(LivingEntityScript* defender);
-	void protectOwnerStartDefending(World::LivingEntity* attacker);
+    void protectOwnerInit(LivingEntityScript* defender);
+    void protectOwnerStartDefending(World::LivingEntity* attacker);
 private:
-	World::LivingEntity* ownerAttackerScript;
-	LivingEntityScript* ownerDefenderScript;
+    World::LivingEntity* ownerAttackerScript;
+    LivingEntityScript* ownerDefenderScript;
 };
 
 } /* namespace Scripting */

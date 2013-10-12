@@ -4,7 +4,7 @@ namespace Scripting
 {
 
 MobScript::MobScript()
-	: LivingEntityScript("entityliving_mob")
+    : LivingEntityScript("entityliving_mob")
 {
 }
 
@@ -29,12 +29,12 @@ void MobScript::Init()
 
 void MobScript::OnUpdateTick()
 {
-	randomMoveUpdate();
+    randomMoveUpdate();
 }
 
 void MobScript::OnReachDestination()
 {
-	randomMoveUpdateDestination();
+    randomMoveUpdateDestination();
 }
 
 } /* namespace Scripting */

@@ -17,12 +17,12 @@ namespace Scripting
 class AnimalWolfScript;
 class AIBeg {
 public:
-	AIBeg();
-	virtual ~AIBeg();
+    AIBeg();
+    virtual ~AIBeg();
 protected:
-	void begInit(AnimalWolfScript* script);
-	void begStartBegging();
-	void begUpdate(World::ScriptedLivingEntity* baseEntity);
+    void begInit(AnimalWolfScript* script);
+    void begStartBegging();
+    void begUpdate(World::ScriptedLivingEntity* baseEntity);
 private:
     AnimalWolfScript* wolfScript;
     int begTimer;

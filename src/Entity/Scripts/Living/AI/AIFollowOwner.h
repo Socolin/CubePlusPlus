@@ -18,14 +18,14 @@ class LivingEntityScript;
 class AIFollowOwner
 {
 public:
-	AIFollowOwner();
-	virtual ~AIFollowOwner();
+    AIFollowOwner();
+    virtual ~AIFollowOwner();
 protected:
-	void followOwnerInit(LivingEntityScript* follower);
-	void followOwnerStartFollowing(World::LivingEntity* owner);
+    void followOwnerInit(LivingEntityScript* follower);
+    void followOwnerStartFollowing(World::LivingEntity* owner);
 private:
-	World::LivingEntity* ownerScript;
-	LivingEntityScript* followerScript;
+    World::LivingEntity* ownerScript;
+    LivingEntityScript* followerScript;
 };
 
 } /* namespace Scripting */

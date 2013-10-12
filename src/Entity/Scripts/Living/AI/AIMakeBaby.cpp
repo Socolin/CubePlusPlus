@@ -39,8 +39,8 @@ void AIMakeBaby::makeBabyUpdate(World::ScriptedLivingEntity* baseEntity)
         makeBabySpawnBabyTimer--;
         if (makeBabySpawnBabyTimer == 0)
         {
-        	LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(baseScript);
-        	ageScript->EntityAgeSetAge(baseEntity, 0);
+            LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(baseScript);
+            ageScript->EntityAgeSetAge(baseEntity, 0);
         }
         return;
     }
@@ -50,8 +50,8 @@ void AIMakeBaby::makeBabyUpdate(World::ScriptedLivingEntity* baseEntity)
         makeBabySpawnBabyTimer++;
         if (makeBabySpawnBabyTimer == 0)
         {
-        	LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(baseScript);
-        	ageScript->EntityAgeSetAge(baseEntity, 0);
+            LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(baseScript);
+            ageScript->EntityAgeSetAge(baseEntity, 0);
         }
         return;
     }
@@ -159,11 +159,11 @@ void AIMakeBaby::makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity)
     scriptedEntity->GetWorld()->AddEntity(baby);
     LivingEntityScript* babyScript = baby->GetScript();
     LivingEntityAge* ageScript = dynamic_cast<LivingEntityAge*>(babyScript);
-	if (ageScript != nullptr)
-	{
-		ageScript->EntityAgeSetBaby(baby);
-	}
-	makeBabyInitBabyScript(babyScript);
+    if (ageScript != nullptr)
+    {
+        ageScript->EntityAgeSetBaby(baby);
+    }
+    makeBabyInitBabyScript(babyScript);
 }
 
 void AIMakeBaby::makeBabyInitBabyScript(LivingEntityScript* babyScript)

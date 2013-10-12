@@ -7,14 +7,14 @@
 namespace Util{
 class ColorUtil : public Singleton<ColorUtil>
 {
-	friend class Singleton<ColorUtil>;
+    friend class Singleton<ColorUtil>;
 public:
-	virtual ~ColorUtil();
-	char GetMatchingRecipe(char color1, char color2);
+    virtual ~ColorUtil();
+    char GetMatchingRecipe(char color1, char color2);
 private:
-	void init();
-	ColorUtil();
-	std::map<std::pair<char,char>,char> matchingRecipe;
+    void init();
+    ColorUtil();
+    std::map<std::pair<char,char>,char> matchingRecipe;
 };
 } /* namespace Util */
 #endif /* COLORUTIL_H_ */

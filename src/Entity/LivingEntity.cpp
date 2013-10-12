@@ -14,20 +14,20 @@ namespace World
 
 LivingEntity::LivingEntity(eEntityType entityType, int entityTypeFlag, double x, double y, double z)
     : Entity(entityType, entityTypeFlag | ENTITY_TYPEFLAG_LIVING_ENTITY, x, y, z)
-	, hasChangeItemInHand(false)
-	, hasTakeDamage(false)
-	, entityEat(false)
-	, health(DEFAULT_MAX_HEALTH)
-	, hurtTime(0)
-	, deathTime(0)
-	, attackTime(0)
-	, canPickUpLoot(false)
-	, persistenceRequired(false)
-	, equipementInventory(nullptr)
-	, livingSoundTimer(0)
-	, livingSoundInterval(DEFAULT_LIVINGSOUND_INTERVAL)
-	, hurtSound(L"damage.hit")
-	, deathSound(L"damage.hit")
+    , hasChangeItemInHand(false)
+    , hasTakeDamage(false)
+    , entityEat(false)
+    , health(DEFAULT_MAX_HEALTH)
+    , hurtTime(0)
+    , deathTime(0)
+    , attackTime(0)
+    , canPickUpLoot(false)
+    , persistenceRequired(false)
+    , equipementInventory(nullptr)
+    , livingSoundTimer(0)
+    , livingSoundInterval(DEFAULT_LIVINGSOUND_INTERVAL)
+    , hurtSound(L"damage.hit")
+    , deathSound(L"damage.hit")
 {
     equipementInventory = new Inventory::InventoryEntityEquipement();
 }
@@ -108,7 +108,7 @@ short LivingEntity::GetMaxHealth()
 
 short LivingEntity::GetHealth()
 {
-	return health;
+    return health;
 }
 
 void LivingEntity::SetCustomName(const std::wstring& customName)
@@ -212,7 +212,7 @@ void LivingEntity::DealDamage(int damage)
 
 void LivingEntity::SetEntityEat()
 {
-	entityEat = true;
+    entityEat = true;
 }
 
 void LivingEntity::Kill()
@@ -231,8 +231,8 @@ void LivingEntity::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
     }
     if (entityEat)
     {
-    	entityEat = false;
-    	packet << (unsigned char)Network::OP_ENTITY_STATUS << entityId << char(10);
+        entityEat = false;
+        packet << (unsigned char)Network::OP_ENTITY_STATUS << entityId << char(10);
     }
 }
 

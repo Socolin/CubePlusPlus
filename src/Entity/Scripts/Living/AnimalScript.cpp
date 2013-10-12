@@ -39,8 +39,8 @@ void AnimalScript::OnUpdateTick()
     if (panicMoveIsPanic())
         panicMoveUpdate();
     else
-    	if(EntityAgeIsBaby())
-    		EntityAgeUpdate(baseEntity);
+        if(EntityAgeIsBaby())
+            EntityAgeUpdate(baseEntity);
         randomMoveUpdate();
 }
 

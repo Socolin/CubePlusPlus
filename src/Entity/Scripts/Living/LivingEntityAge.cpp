@@ -5,9 +5,9 @@
 namespace Scripting
 {
 LivingEntityAge::LivingEntityAge()
-	: entityAge(0)
-	, baseScript(nullptr)
-	, sizeMultiplier(1.0F)
+    : entityAge(0)
+    , baseScript(nullptr)
+    , sizeMultiplier(1.0F)
 {
 }
 
@@ -22,23 +22,23 @@ void LivingEntityAge::EntityAgeInit(LivingEntityScript* script)
 
 void LivingEntityAge::EntityAgeGrow(World::ScriptedLivingEntity* baseEntity, int age)
 {
-	int currentAge = EntityAgeGetAge(baseEntity);
-	currentAge += age * 20;
-	if(currentAge > 0){
-		currentAge=0;
-	}
-	entityAge=currentAge;
-	EntityAgeSetAge(baseEntity,currentAge);
+    int currentAge = EntityAgeGetAge(baseEntity);
+    currentAge += age * 20;
+    if(currentAge > 0){
+        currentAge=0;
+    }
+    entityAge=currentAge;
+    EntityAgeSetAge(baseEntity,currentAge);
 }
 
 void LivingEntityAge::EntityAgeSetAge(World::ScriptedLivingEntity* baseEntity, int age)
 {
-	baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(age));
+    baseEntity->GetMetadataManager()->SetEntityMetadata(12, int(age));
 }
 
 int LivingEntityAge::EntityAgeGetAge(World::ScriptedLivingEntity* baseEntity)
 {
-	return baseEntity->GetMetadataManager()->GetIntEntityMetadata(12);
+    return baseEntity->GetMetadataManager()->GetIntEntityMetadata(12);
 }
 
 void LivingEntityAge::EntityAgeSetBaby(World::ScriptedLivingEntity* baseEntity)
@@ -54,13 +54,13 @@ bool LivingEntityAge::EntityAgeIsBaby()
 
 void LivingEntityAge::EntityAgeUpdate(World::ScriptedLivingEntity* baseEntity)
 {
-	entityAge = EntityAgeGetAge(baseEntity);
-	if(entityAge < 0){
-		EntityAgeSetAge(baseEntity, entityAge++);
-	}
-	else if(entityAge > 0){
-		EntityAgeSetAge(baseEntity, entityAge--);
-	}
+    entityAge = EntityAgeGetAge(baseEntity);
+    if(entityAge < 0){
+        EntityAgeSetAge(baseEntity, entityAge++);
+    }
+    else if(entityAge > 0){
+        EntityAgeSetAge(baseEntity, entityAge--);
+    }
 }
 
 } /* namespace Scripting */

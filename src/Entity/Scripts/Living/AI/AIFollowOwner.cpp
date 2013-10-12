@@ -11,8 +11,8 @@ namespace Scripting
 {
 
 AIFollowOwner::AIFollowOwner()
-	: ownerScript(nullptr)
-	, followerScript(nullptr)
+    : ownerScript(nullptr)
+    , followerScript(nullptr)
 {
 }
 
@@ -22,11 +22,11 @@ AIFollowOwner::~AIFollowOwner()
 
 void AIFollowOwner::followOwnerInit(LivingEntityScript* follower)
 {
-	followerScript = follower;
+    followerScript = follower;
 }
 void AIFollowOwner::followOwnerStartFollowing(World::LivingEntity* owner)
 {
-	ownerScript = owner;
+    ownerScript = owner;
 }
 
 } /* namespace Scripting */

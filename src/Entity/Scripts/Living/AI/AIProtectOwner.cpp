@@ -11,8 +11,8 @@ namespace Scripting
 {
 
 AIProtectOwner::AIProtectOwner()
-	: ownerAttackerScript(nullptr)
-	, ownerDefenderScript(nullptr)
+    : ownerAttackerScript(nullptr)
+    , ownerDefenderScript(nullptr)
 {
 }
 
@@ -22,11 +22,11 @@ AIProtectOwner::~AIProtectOwner()
 
 void AIProtectOwner::protectOwnerInit(LivingEntityScript* defender)
 {
-	ownerDefenderScript = defender;
+    ownerDefenderScript = defender;
 }
 
 void AIProtectOwner::protectOwnerStartDefending(World::LivingEntity* attacker){
-	ownerAttackerScript = attacker;
+    ownerAttackerScript = attacker;
 }
 
 } /* namespace Scripting */

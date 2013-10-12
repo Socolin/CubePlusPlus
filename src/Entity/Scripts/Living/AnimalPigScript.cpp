@@ -59,9 +59,9 @@ void AnimalPigScript::OnDeath()
 
 void AnimalPigScript::OnInteract(World::EntityPlayer* player)
 {
-	if (makeBabyCanBeInLove())
+    if (makeBabyCanBeInLove())
     {
-		i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
+        i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
         if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
         {
             if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)

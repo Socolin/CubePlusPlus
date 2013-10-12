@@ -13,8 +13,8 @@ namespace Scripting
 {
 
 AIBeg::AIBeg()
-	: wolfScript(nullptr)
-	, begTimer(0)
+    : wolfScript(nullptr)
+    , begTimer(0)
 {
 }
 
@@ -29,20 +29,20 @@ void AIBeg::begInit(AnimalWolfScript* script)
 
 void AIBeg::begStartBegging()
 {
-	wolfScript->SetBegging(true);
-	begTimer = 40 + rand()%40;
+    wolfScript->SetBegging(true);
+    begTimer = 40 + rand()%40;
 }
 
 void AIBeg::begUpdate(World::ScriptedLivingEntity* baseEntity)
 {
-	if(wolfScript->IsBegging() && begTimer==0)
-	{
+    if(wolfScript->IsBegging() && begTimer==0)
+    {
 
-	}
-	else
-	{
+    }
+    else
+    {
 
-	}
+    }
 }
 
 } /* namespace Scripting */
