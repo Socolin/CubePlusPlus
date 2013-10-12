@@ -1,4 +1,5 @@
 #include "PlayerModuleMgr.h"
+#include "PlayerModule.h"
 
 namespace Plugin
 {
