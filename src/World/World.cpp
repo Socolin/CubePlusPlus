@@ -1263,21 +1263,18 @@ void World::load()
 
     if (!root)
     {
-        delete root;
         return;
     }
 
     nbt::TagCompound* rootCompound = dynamic_cast<nbt::TagCompound*>(root);
     if (!rootCompound)
     {
-        delete root;
         return;
     }
 
     nbt::TagCompound* dataCompound = rootCompound->getValueAt<nbt::TagCompound>("Data");
     if (!dataCompound)
     {
-        delete root;
         return;
     }
 
