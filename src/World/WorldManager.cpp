@@ -30,7 +30,6 @@ WorldManager::WorldManager()
     }
     loadBanList();
     loadAdminList();
-    loadVipList();
 }
 
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
@@ -55,11 +54,6 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
     if (adminList.find(name) != adminList.end())
     {
         player->SetAdmin(true);
-    }
-
-    if (vipList.find(name) != vipList.end())
-    {
-        player->SetVip(true);
     }
 
     Network::NetworkPacket packet(Network::OP_LOGIN_REQUEST);
@@ -214,15 +208,15 @@ void WorldManager::Ban(const std::wstring& playerName)
         EntityPlayer* oldPlr = playerItr->second;
         if (oldPlr)
         {
-            banList.insert(playerName);
             oldPlr->Kick(L"Banned");
-            std::ofstream banFileList;
-            std::string stringPlayerName;
-            Util::WStringToString(playerName, stringPlayerName);
-            banFileList.open("ban", std::fstream::out | std::fstream::app);
-            banFileList << stringPlayerName << std::endl;
-            banFileList.close();
         }
+        banList.insert(playerName);
+        std::ofstream banFileList;
+        std::string stringPlayerName;
+        Util::WStringToString(playerName, stringPlayerName);
+        banFileList.open("ban", std::fstream::out | std::fstream::app);
+        banFileList << stringPlayerName << std::endl;
+        banFileList.close();
     }
 }
 
@@ -240,7 +234,6 @@ void WorldManager::Reload()
 {
     loadBanList();
     loadAdminList();
-    loadVipList();
 }
 
 void WorldManager::loadBanList()
@@ -274,25 +267,6 @@ void WorldManager::loadAdminList()
 bool WorldManager::IsAdmin(const std::wstring& playerName)
 {
     return (adminList.find(playerName) != adminList.end());
-}
-
-bool WorldManager::IsVip(const std::wstring& playerName)
-{
-    return (vipList.find(playerName) != vipList.end());
-}
-
-void WorldManager::loadVipList()
-{
-    vipList.clear();
-    std::ifstream vipFileList("vip");
-    std::string line;
-    while (std::getline(vipFileList,line))
-    {
-        std::wstring playerName;
-        Util::StringToWString(playerName, line);
-        vipList.insert(playerName);
-    }
-    vipFileList.close();
 }
 
 int WorldManager::GetLateness() const

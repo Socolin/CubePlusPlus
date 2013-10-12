@@ -261,9 +261,6 @@ public:
      */
     bool isAdmin() const;
     void SetAdmin(bool admin);
-    bool isVip() const;
-    void SetVip(bool vip);
-    void Vanish(bool active);
     void SendChatMessage(const std::wstring& message);
 
     Plugin::PlayerModule* GetPlayerModule(int id);
@@ -305,10 +302,6 @@ private:
     Window::Window* currentWindow;
     Window::Window* inventoryWindow;
     bool admin;
-    bool vip;
-    bool vanish;
-    bool vanishStateChange;
-    bool vanishNeedSendDestoyPacketToHimSelf;
 
     // Plugins
     std::map<int, Plugin::PlayerModule*> moduleList;

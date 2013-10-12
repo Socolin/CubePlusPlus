@@ -28,10 +28,6 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
 {
     if (message.substr(0, 1) == L"/")
     {
-        if (player->isVip() || player->isAdmin())
-        {
-            handleVipCommand(player, message);
-        }
         if (player->isAdmin())
             handleAdminCommand(player, message);
         return true;
@@ -119,18 +115,6 @@ void ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(6, player->x, player->y, player->z);
         entity->Rotate(player->GetYaw(), player->GetPitch());
         player->GetWorld()->AddEntity(entity);
-    }
-}
-
-void ChatManager::handleVipCommand(World::EntityPlayer* player, std::wstring& message)
-{
-    if (message.find(L"/vanish") == 0)
-    {
-        player->Vanish(true);
-    }
-    else if (message.find(L"/unvanish") == 0)
-    {
-        player->Vanish(false);
     }
 }
 
