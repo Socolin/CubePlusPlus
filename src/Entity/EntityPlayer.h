@@ -12,6 +12,10 @@ namespace Network
 {
 class NetworkSession;
 }
+namespace Plugin
+{
+class PlayerModule;
+}
 namespace Window
 {
 class Window;
@@ -257,10 +261,13 @@ public:
      */
     void SendChatMessage(const std::wstring& message);
 
+    Plugin::PlayerModule* GetPlayerModule(int id);
 
     virtual void Attack(LivingEntity* attacker, int& damage) override;
 
     const Inventory::ItemStack* LookItemInHand() const;
+private:
+    void registerModules();
 private:
     typedef struct
     {
@@ -292,6 +299,9 @@ private:
     char animationId;
     Window::Window* currentWindow;
     Window::Window* inventoryWindow;
+
+    // Plugins
+    std::map<int, Plugin::PlayerModule*> moduleList;
 };
 
 } /* namespace World */

@@ -13,6 +13,8 @@
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "Logging/Logger.h"
+#include "Plugins/PlayerModule.h"
+#include "Plugins/PlayerModuleMgr.h"
 #include "Util/FloatUtil.h"
 #include "Window/Window.h"
 #include "Window/WindowList.h"
@@ -45,6 +47,7 @@ EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& na
     inventoryWindow->AddInventory(armorInventory);
     inventoryWindow->AddInventory(mainInventory);
     inventoryWindow->AddInventory(handsInventory, Window::Window::PRIORITY_HIGH);
+    registerModules();
 }
 
 EntityPlayer::~EntityPlayer()
@@ -63,6 +66,11 @@ EntityPlayer::~EntityPlayer()
     delete handsInventory;
     delete mainInventory;
     delete enderChestInventory;
+    for (auto moduleItr : moduleList)
+    {
+        Plugin::PlayerModule* module = moduleItr.second;
+        delete module;
+    }
 }
 
 void EntityPlayer::Send(const Network::NetworkPacket& packet) const
@@ -107,6 +115,11 @@ void EntityPlayer::UpdateTick()
         }
     }
     UpdateInventories();
+
+    for (auto moduleItr : moduleList)
+    {
+        moduleItr.second->OnTickUpdate(this);
+    }
 }
 
 void EntityPlayer::Respawn(double x, double y, double z)
@@ -139,6 +152,11 @@ void EntityPlayer::OnJoinWorld(World* world)
     session->SendSetExperience(0, 0.f, 0);
 
     inventoryWindow->OpenWindow(false);
+
+    for (auto moduleItr : moduleList)
+    {
+        moduleItr.second->OnPlayerJoinWorld(this);
+    }
 }
 
 void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
@@ -155,6 +173,11 @@ void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
     packet << (unsigned char) Network::OP_ENTITY_METADATA
             << entityId;
     metadataManager.Write(packet);
+
+    for (auto moduleItr : moduleList)
+    {
+        moduleItr.second->GetCreatePacket(this, packet);
+    }
 }
 
 void EntityPlayer::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
@@ -349,6 +372,11 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
         packet << (unsigned char) Network::OP_ANIMATION << entityId << animationId;
         animationId = -1;
     }
+
+    for (auto moduleItr : moduleList)
+    {
+        moduleItr.second->GetUpdatePacket(this, packet);
+    }
 }
 
 void EntityPlayer::ResetBlock(int x, unsigned char y, int z)
@@ -525,5 +553,25 @@ const Inventory::ItemStack* EntityPlayer::LookItemInHand() const
     i_slot handSlotId = handsInventory->getHandSlotId();
     return handsInventory->LookSlot(handSlotId);
 }
+
+Plugin::PlayerModule* EntityPlayer::GetPlayerModule(int id)
+{
+    auto moduleItr = moduleList.find(id);
+    if (moduleItr == moduleList.end())
+    {
+        return nullptr;
+    }
+    return moduleItr->second;
+}
+
+void EntityPlayer::registerModules()
+{
+    Plugin::PlayerModuleMgr& moduleMgr = Plugin::PlayerModuleMgr::Instance();
+    for (auto moduleItr : moduleMgr.GetModuleIdMap())
+    {
+        moduleList[moduleItr.first] = moduleItr.second->GetNewModule();
+    }
+}
+
 
 } /* namespace World */
