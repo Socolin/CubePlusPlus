@@ -9,10 +9,10 @@
 #include "Inventory/Item.h"
 #include "Inventory/ItemStack.h"
 #include "Inventory/InventoryCraft.h"
+#include "Logging/Logger.h"
 #include "Network/NetworkSession.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
-#include "Logging/Logger.h"
 #include "Plugins/PlayerModule.h"
 #include "Plugins/PlayerModuleMgr.h"
 #include "Util/FloatUtil.h"
@@ -163,14 +163,14 @@ void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
 {
     packet << (unsigned char) Network::OP_SPAWN_NAMED_ENTITY << entityId << name << networkX << networkY << networkZ << (char)  (yaw * 256.f / 360.f) << (char)  (pitch * 256.f / 360.f) << (unsigned short) 0 /* Current item*/;
     // Metadata
-    packet << (char)0 << (char)0 << (unsigned char)127; // TODO: classe metadata
-    packet << (unsigned char) Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
+    packet << char(0) << char(0) << (unsigned char)127; // TODO: classe metadata
+    packet << (unsigned char)Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
 
     const Inventory::ItemStack* itemInHand = handsInventory->LookSlot(handsInventory->getHandSlotId());
     if (itemInHand != nullptr)
-        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << itemInHand;
+        packet << (unsigned char)Network::OP_ENTITY_EQUIPEMENT << entityId << short(0) << itemInHand;
 
-    packet << (unsigned char) Network::OP_ENTITY_METADATA
+    packet << (unsigned char)Network::OP_ENTITY_METADATA
             << entityId;
     metadataManager.Write(packet);
 
