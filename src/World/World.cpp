@@ -627,6 +627,8 @@ void World::UpdateTime()
         Network::NetworkPacket updateTimePacket(Network::OP_TIME_UPDATE);
         updateTimePacket << ageOfWorld << currentTime;
         SendPacketToPlayerInWorld(updateTimePacket);
+
+        //TODO : In 1.6, if negative the time will stop moving on client
     }
 
     for (int deadEntityId : deadEntity)
@@ -1413,6 +1415,8 @@ long long World::GetAgeOfWorld() const
 long long World::GetCurrentTime() const
 {
     return currentTime;
+
+    //TODO : In 1.6, if negative the time will stop moving on client.
 }
 
 bool World::isReadOnly() const
