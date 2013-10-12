@@ -259,6 +259,11 @@ public:
      * player, for optimisation, generate packet and send it to all.
      * @param message messsage to send
      */
+    bool isAdmin() const;
+    void SetAdmin(bool admin);
+    bool isVip() const;
+    void SetVip(bool vip);
+    void Vanish(bool active);
     void SendChatMessage(const std::wstring& message);
 
     Plugin::PlayerModule* GetPlayerModule(int id);
@@ -299,6 +304,11 @@ private:
     char animationId;
     Window::Window* currentWindow;
     Window::Window* inventoryWindow;
+    bool admin;
+    bool vip;
+    bool vanish;
+    bool vanishStateChange;
+    bool vanishNeedSendDestoyPacketToHimSelf;
 
     // Plugins
     std::map<int, Plugin::PlayerModule*> moduleList;

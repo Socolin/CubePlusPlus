@@ -35,6 +35,11 @@ EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& na
     , currentWindowId(0)
     , animationId(-1)
     , currentWindow(nullptr)
+    , admin(false)
+    , vip(false)
+    , vanish(false)
+    , vanishStateChange(false)
+    , vanishNeedSendDestoyPacketToHimSelf(false)
 {
     mainInventory = new Inventory::Inventory(27, Inventory::INVENTORY_TYPE_PLAYER_MAIN);
     handsInventory = new Inventory::InventoryPlayer();
@@ -115,6 +120,12 @@ void EntityPlayer::UpdateTick()
             entity->OnCollideWithPlayer(this);
         }
     }
+    if (vanishNeedSendDestoyPacketToHimSelf)
+        {
+            Network::NetworkPacket destroyPacket;
+            GetDestroyPacket(destroyPacket);
+            Send(destroyPacket);
+        }
     UpdateInventories();
 
     for (auto moduleItr : moduleList)
@@ -142,7 +153,12 @@ void EntityPlayer::OnJoinWorld(World* world)
     packetSpawnPosition << (int) x << (int) y << (int) z;
     session->SendPacket(packetSpawnPosition);
 
-    session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
+    if (isAdmin())
+        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
+    else if (isVip())
+        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY);
+    else
+        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE);
 
     session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
 
@@ -162,8 +178,11 @@ void EntityPlayer::OnJoinWorld(World* world)
 
 void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
 {
-    packet << (unsigned char) Network::OP_SPAWN_NAMED_ENTITY << entityId << name << networkX << networkY << networkZ << (char)  (yaw * 256.f / 360.f) << (char)  (pitch * 256.f / 360.f) << (unsigned short) 0 /* Current item*/;
-    // Metadata
+    if (vanish)
+    {
+        return;
+    }
+    packet << (unsigned char) Network::OP_SPAWN_NAMED_ENTITY << entityId << name << networkX << networkY << networkZ << (char)  (yaw * 256.f / 360.f) << (char)  (pitch * 256.f / 360.f) << (unsigned short) 0 /* Current item*/;    // Metadata
     packet << char(0) << char(0) << (unsigned char)127; // TODO: classe metadata
     packet << (unsigned char)Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
 
@@ -363,6 +382,24 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
 void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
 {
     parent_type::GetSpecificUpdatePacket(packet);
+    if (vanishStateChange)
+    {
+        vanishStateChange = false;
+        if (vanish)
+        {
+            GetDestroyPacket(packet);
+        }
+        else
+        {
+            GetDestroyPacket(packet);
+            GetCreatePacket(packet);
+            vanishNeedSendDestoyPacketToHimSelf = true;
+        }
+    }
+    if (vanish)
+    {
+        return;
+    }
     if (hasChangeItemInHand)
     {
         hasChangeItemInHand = false;
@@ -532,10 +569,40 @@ bool EntityPlayer::Save(nbt::TagCompound* tagNbtData)
     return parent_type::Save(tagNbtData);
 }
 
+bool EntityPlayer::isAdmin() const
+{
+    return admin;
+}
+
+bool EntityPlayer::isVip() const
+{
+    return vip;
+}
+
+void EntityPlayer::SetVip(bool vip)
+{
+    this->vip = vip;
+}
+
+void EntityPlayer::SetAdmin(bool admin)
+{
+    this->admin = admin;
+}
+
+
 Window::Window* EntityPlayer::GetInventoryWindow() const
 {
     return inventoryWindow;
 }
+
+void EntityPlayer::Vanish(bool active)
+{
+    if (vanish == active)
+        return;
+    vanishStateChange = true;
+    vanish = active;
+}
+
 
 void EntityPlayer::SendChatMessage(const std::wstring& message)
 {

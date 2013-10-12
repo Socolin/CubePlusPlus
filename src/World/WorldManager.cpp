@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <cppnbt.h>
+#include <fstream>
 
 #include "Config/Config.h"
 #include "Entity/EntityPlayer.h"
@@ -27,10 +28,18 @@ WorldManager::WorldManager()
         LOG_ERROR << "Invalid difficulty value: " << difficulty << ", max value is :" << DIFFICULTY_MAX - 1 << std::endl;
         difficulty = DIFFICULTY_MAX - 1;
     }
+    loadBanList();
+    loadAdminList();
+    loadVipList();
 }
 
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
 {
+    if (IsBan(name))
+    {
+        session->kick(L"Banned !");
+        return nullptr;
+    }
     auto playerItr = playerByNameList.find(name);
     if (playerItr != playerByNameList.end())
     {
@@ -42,6 +51,16 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
         }
     }
     EntityPlayer* player = new EntityPlayer(world->GetValidSpawnPosition(), name, session);
+
+    if (adminList.find(name) != adminList.end())
+    {
+        player->SetAdmin(true);
+    }
+
+    if (vipList.find(name) != vipList.end())
+    {
+        player->SetVip(true);
+    }
 
     Network::NetworkPacket packet(Network::OP_LOGIN_REQUEST);
     std::wstring levelType(L"flat");
@@ -173,6 +192,107 @@ bool WorldManager::IsFull() const
 bool WorldManager::IsOnlineMode() const
 {
     return onlineMode;
+}
+
+void WorldManager::Kick(const std::wstring& playerName)
+{
+    auto playerItr = playerByNameList.find(playerName);
+    if (playerItr != playerByNameList.end())
+    {
+        EntityPlayer* oldPlr = playerItr->second;
+        if (oldPlr)
+        {
+            oldPlr->Kick(L"Kicked");
+        }
+    }
+}
+void WorldManager::Ban(const std::wstring& playerName)
+{
+    auto playerItr = playerByNameList.find(playerName);
+    if (playerItr != playerByNameList.end())
+    {
+        EntityPlayer* oldPlr = playerItr->second;
+        if (oldPlr)
+        {
+            banList.insert(playerName);
+            oldPlr->Kick(L"Banned");
+            std::ofstream banFileList;
+            std::string stringPlayerName;
+            Util::WStringToString(playerName, stringPlayerName);
+            banFileList.open("ban", std::fstream::out | std::fstream::app);
+            banFileList << stringPlayerName << std::endl;
+            banFileList.close();
+        }
+    }
+}
+
+bool WorldManager::IsBan(const std::wstring& playerName)
+{
+    auto playerItr = banList.find(playerName);
+    if (playerItr != banList.end())
+    {
+        return true;
+    }
+    return false;
+}
+
+void WorldManager::Reload()
+{
+    loadBanList();
+    loadAdminList();
+    loadVipList();
+}
+
+void WorldManager::loadBanList()
+{
+    banList.clear();
+    std::ifstream banFileList("ban");
+    std::string line;
+    while (std::getline(banFileList,line))
+    {
+        std::wstring playerName;
+        Util::StringToWString(playerName, line);
+        banList.insert(playerName);
+    }
+    banFileList.close();
+}
+
+void WorldManager::loadAdminList()
+{
+    adminList.clear();
+    std::ifstream adminFileList("admin");
+    std::string line;
+    while (std::getline(adminFileList,line))
+    {
+        std::wstring playerName;
+        Util::StringToWString(playerName, line);
+        adminList.insert(playerName);
+    }
+    adminFileList.close();
+}
+
+bool WorldManager::IsAdmin(const std::wstring& playerName)
+{
+    return (adminList.find(playerName) != adminList.end());
+}
+
+bool WorldManager::IsVip(const std::wstring& playerName)
+{
+    return (vipList.find(playerName) != vipList.end());
+}
+
+void WorldManager::loadVipList()
+{
+    vipList.clear();
+    std::ifstream vipFileList("vip");
+    std::string line;
+    while (std::getline(vipFileList,line))
+    {
+        std::wstring playerName;
+        Util::StringToWString(playerName, line);
+        vipList.insert(playerName);
+    }
+    vipFileList.close();
 }
 
 int WorldManager::GetLateness() const

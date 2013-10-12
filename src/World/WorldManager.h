@@ -59,11 +59,23 @@ public:
     bool IsOnlineMode() const;
     int GetLateness() const;
     void SetLateness(int lateness);
+    void Kick(const std::wstring& playerName);
+    void Ban(const std::wstring& playerName);
+    bool IsBan(const std::wstring& playerName);
+    void Reload();
+    bool IsAdmin(const std::wstring& playerName);
+    bool IsVip(const std::wstring& playerName);
 
 private:
+    void loadBanList();
+    void loadAdminList();
+    void loadVipList();
     Chat::ChatManager chatManager;
     std::set<EntityPlayer*> playerList;
     std::map<std::wstring, EntityPlayer*> playerByNameList;
+    std::set<std::wstring> adminList;
+    std::set<std::wstring> banList;
+    std::set<std::wstring> vipList;
     static WorldManager* instance;
     World* world;
     bool isRunning;
