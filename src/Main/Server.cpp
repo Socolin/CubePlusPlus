@@ -91,6 +91,7 @@ int main(void)
                 LOG_ERROR << "Tick take more than 50ms: "<< diffInMsSeconds / CLOCKS_PER_SEC << "ms, (lateness:" << lateness / CLOCKS_PER_SEC << "ms)" << std::endl;
             usleep(1);
         }
+        worldManager.SetLateness(lateness);
     }
 
     Network::LoginManager::Instance().Stop();

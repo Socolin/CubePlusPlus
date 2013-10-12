@@ -57,6 +57,9 @@ public:
     int GetMaxPlayerCount() const;
     void SetMaxPlayerCount(int maxPlayerCount);
     bool IsOnlineMode() const;
+    int GetLateness() const;
+    void SetLateness(int lateness);
+
 private:
     Chat::ChatManager chatManager;
     std::set<EntityPlayer*> playerList;
@@ -70,6 +73,7 @@ private:
     std::string serverMotd;
     bool onlineMode;
     unsigned int difficulty;
+    int lateness;
 };
 
 } /* namespace World */

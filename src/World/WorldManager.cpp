@@ -15,7 +15,7 @@
 namespace World
 {
 WorldManager::WorldManager()
-        : world(nullptr), isRunning(true), playerCount(0), maxPlayerCount(0)
+        : world(nullptr), isRunning(true), playerCount(0), maxPlayerCount(0), lateness(0)
 {
     Config::Config::getConfig().lookupValue("server.general.maxplayers", maxPlayerCount);
     Config::Config::getConfig().lookupValue("server.general.name", serverName);
@@ -173,6 +173,16 @@ bool WorldManager::IsFull() const
 bool WorldManager::IsOnlineMode() const
 {
     return onlineMode;
+}
+
+int WorldManager::GetLateness() const
+{
+    return lateness;
+}
+
+void WorldManager::SetLateness(int lateness)
+{
+    this->lateness = lateness;
 }
 
 } /* namespace World */
