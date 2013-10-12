@@ -210,14 +210,14 @@ void WorldManager::Ban(const std::wstring& playerName)
         {
             oldPlr->Kick(L"Banned");
         }
-        banList.insert(playerName);
-        std::ofstream banFileList;
-        std::string stringPlayerName;
-        Util::WStringToString(playerName, stringPlayerName);
-        banFileList.open("ban", std::fstream::out | std::fstream::app);
-        banFileList << stringPlayerName << std::endl;
-        banFileList.close();
     }
+    banList.insert(playerName);
+    std::ofstream banFileList;
+    std::string stringPlayerName;
+    Util::WStringToString(playerName, stringPlayerName);
+    banFileList.open("ban", std::fstream::out | std::fstream::app);
+    banFileList << stringPlayerName << std::endl;
+    banFileList.close();
 }
 
 bool WorldManager::IsBan(const std::wstring& playerName)

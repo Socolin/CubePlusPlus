@@ -64,7 +64,7 @@ void ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         player->SendChatMessage(L"§aYou switch time to day");
         World::WorldManager::Instance().GetWorld()->SetTime(1000);
     }
-    else if (message.substr(0, 5) == L"/kick")
+    else if (message.substr(0, 6) == L"/kick ")
     {
         std::wstring playerName = message.substr(6, message.size() - 6);
         if (playerName.size() > 0)
@@ -72,7 +72,7 @@ void ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
             World::WorldManager::Instance().Kick(playerName);
         }
     }
-    else if (message.substr(0, 4) == L"/ban")
+    else if (message.substr(0, 5) == L"/ban ")
     {
         std::wstring playerName = message.substr(5, message.size() - 5);
         if (playerName.size() > 0)
