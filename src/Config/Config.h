@@ -24,8 +24,10 @@ private:
     ~Config();
 public:
     static libconfig::Config& getConfig();
+    static unsigned int getChunkSentPerTick();
 private:
     libconfig::Config serverConfig;
+    unsigned int chunkSentPerTick;
 };
 
 } /* namespace Config */

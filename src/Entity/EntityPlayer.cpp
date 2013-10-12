@@ -5,6 +5,7 @@
 #include "Block/Block.h"
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
+#include "Config/Config.h"
 #include "Entity/Object/EntityItem.h"
 #include "Inventory/Item.h"
 #include "Inventory/ItemStack.h"
@@ -92,7 +93,7 @@ void EntityPlayer::UpdateTick()
         return;
     if (world != nullptr)
     {
-        for (int i = 0; i < 15; i++)
+        for (unsigned int i = 0; i < Config::Config::getChunkSentPerTick(); i++)
         {
             if (!chunkToSend.empty())
             {

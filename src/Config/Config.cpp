@@ -29,6 +29,13 @@ Config::Config()
         LOG_ERROR << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
         exit(EXIT_FAILURE);
     }
+
+    serverConfig.lookupValue("server.world.chunk.chunk-sent-per-tick", chunkSentPerTick);
+    if (chunkSentPerTick < 1 || chunkSentPerTick > 16)
+    {
+        LOG_ERROR << "Invalid chunkSentPerTick value: " << chunkSentPerTick << ", value must be between 1 and 16" << std::endl;
+        chunkSentPerTick = 16;
+    }
 }
 
 Config::~Config()
@@ -38,6 +45,11 @@ Config::~Config()
 libconfig::Config& Config::getConfig()
 {
     return Config::Instance().serverConfig;
+}
+
+unsigned int Config::getChunkSentPerTick()
+{
+    return Config::Instance().chunkSentPerTick;
 }
 
 } /* namespace Config */
