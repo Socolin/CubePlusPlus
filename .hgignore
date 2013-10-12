@@ -14,3 +14,4 @@ lib/cppNBT
 bin
 .project
 lib/SFML-2.0
+.cproject
