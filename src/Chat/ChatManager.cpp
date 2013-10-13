@@ -78,6 +78,20 @@ void ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         if (playerName.size() > 0)
         {
             World::WorldManager::Instance().Ban(playerName);
+            std::wostringstream confirmMessage;
+            confirmMessage << L"§a" << playerName << L" banned";
+            player->SendChatMessage(confirmMessage.str());
+        }
+    }
+    else if (message.substr(0, 10) == L"/addadmin ")
+    {
+        std::wstring playerName = message.substr(10, message.size() - 10);
+        if (playerName.size() > 0)
+        {
+            World::WorldManager::Instance().SetAdmin(playerName);
+            std::wostringstream confirmMessage;
+            confirmMessage << L"§a" << playerName << L" is now admin";
+            player->SendChatMessage(confirmMessage.str());
         }
     }
     else if (message == L"/spawn chicken")

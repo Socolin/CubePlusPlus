@@ -200,6 +200,7 @@ void WorldManager::Kick(const std::wstring& playerName)
         }
     }
 }
+
 void WorldManager::Ban(const std::wstring& playerName)
 {
     auto playerItr = playerByNameList.find(playerName);
@@ -211,23 +212,44 @@ void WorldManager::Ban(const std::wstring& playerName)
             oldPlr->Kick(L"Banned");
         }
     }
-    banList.insert(playerName);
-    std::ofstream banFileList;
-    std::string stringPlayerName;
-    Util::WStringToString(playerName, stringPlayerName);
-    banFileList.open("ban", std::fstream::out | std::fstream::app);
-    banFileList << stringPlayerName << std::endl;
-    banFileList.close();
+    if(!IsBan(playerName))
+    {
+        banList.insert(playerName);
+        std::ofstream banFileList;
+        std::string stringPlayerName;
+        Util::WStringToString(playerName, stringPlayerName);
+        banFileList.open("ban", std::fstream::out | std::fstream::app);
+        banFileList << stringPlayerName << std::endl;
+        banFileList.close();
+    }
+}
+
+void WorldManager::SetAdmin(const std::wstring& playerName)
+{
+    auto playerItr = playerByNameList.find(playerName);
+    if (playerItr != playerByNameList.end())
+    {
+        EntityPlayer* oldPlr = playerItr->second;
+        if (oldPlr)
+        {
+            oldPlr->SetAdmin(true);
+        }
+    }
+    if(!IsAdmin(playerName))
+    {
+        adminList.insert(playerName);
+        std::ofstream adminFileList;
+        std::string stringPlayerName;
+        Util::WStringToString(playerName, stringPlayerName);
+        adminFileList.open("admin", std::fstream::out | std::fstream::app);
+        adminFileList << stringPlayerName << std::endl;
+        adminFileList.close();
+    }
 }
 
 bool WorldManager::IsBan(const std::wstring& playerName)
 {
-    auto playerItr = banList.find(playerName);
-    if (playerItr != banList.end())
-    {
-        return true;
-    }
-    return false;
+    return (banList.find(playerName) != banList.end());
 }
 
 void WorldManager::Reload()

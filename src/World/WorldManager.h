@@ -61,6 +61,7 @@ public:
     void SetLateness(int lateness);
     void Kick(const std::wstring& playerName);
     void Ban(const std::wstring& playerName);
+    void SetAdmin(const std::wstring& playerName);
     bool IsBan(const std::wstring& playerName);
     void Reload();
     bool IsAdmin(const std::wstring& playerName);
