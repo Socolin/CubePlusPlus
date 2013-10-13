@@ -29,7 +29,6 @@ World::World(const std::string& worldName)
     : worldName(worldName)
     , regionManager(worldName + "/")
     , updateInProgress(false)
-    , viewDistance(10)
     , currentEntityId(10)
     , sunReduceValue(0)
     , ageOfWorld(0)
@@ -49,6 +48,12 @@ World::World(const std::string& worldName)
     Config::Config::getConfig().lookupValue("server.world.time.locked-value", lockedTimeValue);
     Config::Config::getConfig().lookupValue("server.world.time.locked-value", lockedTimeValue);
     Config::Config::getConfig().lookupValue("server.world.chunk.update-tick", enableUpdateChunk);
+    Config::Config::getConfig().lookupValue("server.world.view-distance", viewDistance);
+    if (viewDistance < 7 || viewDistance > 15)
+    {
+        LOG_ERROR << "Invalid viewDistance value: " << viewDistance << ", value must be between 7 and 15" << std::endl;
+        viewDistance = 10;
+    }
     load();
 }
 
