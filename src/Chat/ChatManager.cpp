@@ -70,6 +70,9 @@ void ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         if (playerName.size() > 0)
         {
             World::WorldManager::Instance().Kick(playerName);
+            std::wostringstream confirmMessage;
+            confirmMessage << L"§a" << playerName << L" kicked";
+            player->SendChatMessage(confirmMessage.str());
         }
     }
     else if (message.substr(0, 5) == L"/ban ")
@@ -129,6 +132,10 @@ void ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(6, player->x, player->y, player->z);
         entity->Rotate(player->GetYaw(), player->GetPitch());
         player->GetWorld()->AddEntity(entity);
+    }
+    else
+    {
+        player->SendChatMessage(L"§cNot a valid command");
     }
 }
 
