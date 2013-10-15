@@ -51,7 +51,7 @@ void ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
     }
     else if (message == L"/reload")
     {
-        player->SendChatMessage(L"§aReloading the server");
+        player->SendChatMessage(L"§aReloading VIP and Admin list");
         World::WorldManager::Instance().Reload();
     }
     else if (message == L"/night")

@@ -1,6 +1,7 @@
 #include <Network/NetworkManager.h>
 #include <Network/Opcode.h>
 
+#include "Shell/ShellCommandManager.h"
 #include "Config/Config.h"
 #include "Craft/CraftManager.h"
 #include "Block/BlockList.h"
@@ -63,6 +64,8 @@ int main(void)
 
     Network::LoginManager::Instance().Start();
 
+    Shell::ShellCommandManager::Instance();
+
     // Tick time management
     clock_t time = std::clock();
     struct timespec requestTime;
@@ -92,6 +95,7 @@ int main(void)
             usleep(1);
         }
         worldManager.SetLateness(lateness);
+        Shell::ShellCommandManager::Instance().HandleShellInput();
     }
 
     Network::LoginManager::Instance().Stop();
