@@ -35,6 +35,11 @@ int main(void)
     signal(SIGTSTP, stopHandler);
 
     Database::DatabaseManager::InitInstance();
+    if(!Database::DatabaseManager::Instance()->connect())
+    {
+        LOG_ERROR << "Not started" << std::endl;
+        return 1;
+    }
     Network::initOpcode();
     Network::NetworkManager manager;
     World::WorldManager& worldManager = World::WorldManager::Instance();

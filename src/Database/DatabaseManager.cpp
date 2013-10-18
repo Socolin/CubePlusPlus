@@ -1,6 +1,7 @@
 #include "DatabaseManager.h"
 
 #include "Logging/Logger.h"
+#include "Config/Config.h"
 
 namespace Database
 {
@@ -23,27 +24,41 @@ DatabaseManager::~DatabaseManager()
 
 }
 
-void DatabaseManager::connect()
+bool DatabaseManager::connect()
 {
     if (driver != nullptr) // TODO change this, connect only if needed
-        return;
+        return false;
     driver = get_driver_instance();
 
-    /* create a database connection using the Driver */
-    con = driver->connect("tcp://127.0.0.1:3306", "mcpp", "mcpp");
+    Config::Config::getConfig().lookupValue("server.database.address", address);
+    Config::Config::getConfig().lookupValue("server.database.username", username);
+    Config::Config::getConfig().lookupValue("server.database.password", password);
+    Config::Config::getConfig().lookupValue("server.database.schema", schema);
 
-    /* alternate syntax using auto_ptr to create the db connection */
-    //auto_ptr  con (driver -> connect(url, user, password));
-    /* turn off the autocommit */
-//    con->setAutoCommit(0);
+    try
+    {
+        /* create a database connection using the Driver */
+        con = driver->connect(address, username, password);
 
-//    std::cout << "\nDatabase connection\'s autocommit mode = " << con->getAutoCommit() << std::endl;
+        /* alternate syntax using auto_ptr to create the db connection */
+        //auto_ptr  con (driver -> connect(url, user, password));
+        /* turn off the autocommit */
+        //    con->setAutoCommit(0);
 
-    /* select appropriate database schema */
-    con->setSchema("mcpp");
+        //    std::cout << "\nDatabase connection\'s autocommit mode = " << con->getAutoCommit() << std::endl;
 
-    /* create a statement object */
-    stmt = con->createStatement();
+        /* select appropriate database schema */
+        con->setSchema(schema);
+
+        /* create a statement object */
+        stmt = con->createStatement();
+        return true;
+    }
+    catch (sql::SQLException &e)
+    {
+        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+    }
+    return false;
 }
 
 void DatabaseManager::execute(std::string request)
@@ -54,9 +69,7 @@ void DatabaseManager::execute(std::string request)
     }
     catch (sql::SQLException &e)
     {
-        LOG_ERROR << "# ERR: " << e.what();
-        LOG_ERROR << " (MySQL error code: " << e.getErrorCode();
-        LOG_ERROR << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
 }
 
@@ -68,9 +81,7 @@ sql::ResultSet* DatabaseManager::querry(std::string request)
     }
     catch (sql::SQLException &e)
     {
-        LOG_ERROR << "# ERR: " << e.what();
-        LOG_ERROR << " (MySQL error code: " << e.getErrorCode();
-        LOG_ERROR << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
     return nullptr;
 }
@@ -83,9 +94,7 @@ void DatabaseManager::execute(sql::PreparedStatement* pstmt)
     }
     catch (sql::SQLException &e)
     {
-        LOG_ERROR << "# ERR: " << e.what();
-        LOG_ERROR << " (MySQL error code: " << e.getErrorCode();
-        LOG_ERROR << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
 }
 
@@ -97,9 +106,7 @@ sql::ResultSet* DatabaseManager::querry(sql::PreparedStatement* pstmt)
     }
     catch (sql::SQLException &e)
     {
-        LOG_ERROR << "# ERR: " << e.what();
-        LOG_ERROR << " (MySQL error code: " << e.getErrorCode();
-        LOG_ERROR << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
     return nullptr;
 }

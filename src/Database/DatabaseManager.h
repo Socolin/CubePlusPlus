@@ -18,7 +18,7 @@ public:
     static DatabaseManager* Instance();
 
     /// Connexion a MySql
-    void connect();
+    bool connect();
 
     /// Execution d'une requête MySql (Update/Insert/Delete)
     void execute(std::string request);
@@ -42,6 +42,11 @@ private:
     sql::Connection* con;
 
     sql::Statement* stmt;
+
+    std::string address;
+    std::string username;
+    std::string password;
+    std::string schema;
 };
 
 } /* namespace Database */
