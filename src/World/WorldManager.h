@@ -66,6 +66,8 @@ public:
     void Reload();
     bool IsAdmin(const std::wstring& playerName);
 
+    EntityPlayer* GetPlayerByName(const std::wstring& playerName);
+
 private:
     void loadBanList();
     void loadAdminList();

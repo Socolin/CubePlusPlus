@@ -301,4 +301,15 @@ void WorldManager::SetLateness(int lateness)
     this->lateness = lateness;
 }
 
+EntityPlayer* WorldManager::GetPlayerByName(const std::wstring& playerName)
+{
+    auto playerItr = playerByNameList.find(playerName);
+    if (playerItr != playerByNameList.end())
+    {
+        EntityPlayer* oldPlr = playerItr->second;
+        return oldPlr;
+    }
+    return nullptr;
+}
+
 } /* namespace World */
