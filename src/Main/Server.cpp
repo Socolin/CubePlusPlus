@@ -20,6 +20,7 @@
 #include <iostream>
 #include <ctime>
 #include <signal.h>
+#include <string>
 
 
 void stopHandler(int sig)
@@ -28,11 +29,31 @@ void stopHandler(int sig)
     signal(sig, stopHandler);
 }
 
+void handleArgument(std::string arg)
+{
+    if(arg.substr(0, 14) == "--config-file=")
+    {
+        std::string fileName = arg.substr(14, arg.size() - 14);
+        Config::Config::Instance().SetConfigFileName(fileName);
+    }
+}
 
-int main(void)
+
+int main(int argc, char* argv[])
 {
     signal(SIGINT, stopHandler);
     signal(SIGTSTP, stopHandler);
+
+    if(argc > 1)
+    {
+        int i;
+        for(i=0; i < argc; i++)
+        {
+            handleArgument(std::string(argv[i]));
+        }
+    }
+
+    Config::Config::Instance().Init();
 
     Database::DatabaseManager::InitInstance();
     if(!Database::DatabaseManager::Instance()->connect())

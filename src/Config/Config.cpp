@@ -12,16 +12,26 @@ namespace Config
 {
 
 
-Config::Config()
+Config::Config():
+    chunkSentPerTick(16)
+{
+    fileName = "server.cfg";
+}
+
+Config::~Config()
+{
+}
+
+void Config::Init()
 {
     try
     {
         LOG_INFO << "Loading Config File..." << std::endl;
-        serverConfig.readFile("server.cfg");
+        serverConfig.readFile(fileName.c_str());
     }
     catch(const libconfig::FileIOException &fioex)
     {
-        LOG_ERROR << "Can't read server.cfg file. Abording." << std::endl;
+        LOG_ERROR << "Can't read file \"" << fileName << "\". Abording." << std::endl;
         exit(EXIT_FAILURE);
     }
     catch(const libconfig::ParseException &pex)
@@ -38,8 +48,9 @@ Config::Config()
     }
 }
 
-Config::~Config()
+void Config::SetConfigFileName(std::string configFileName)
 {
+    fileName = configFileName;
 }
 
 libconfig::Config& Config::getConfig()

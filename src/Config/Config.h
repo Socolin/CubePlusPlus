@@ -11,6 +11,7 @@
 #include "Util/Singleton.h"
 
 #include <iostream>
+#include <string>
 #include <libconfig.h++>
 
 namespace Config
@@ -25,9 +26,12 @@ private:
 public:
     static libconfig::Config& getConfig();
     static unsigned int getChunkSentPerTick();
+    void Init();
+    void SetConfigFileName(std::string fileName);
 private:
     libconfig::Config serverConfig;
     unsigned int chunkSentPerTick;
+    std::string fileName;
 };
 
 } /* namespace Config */
