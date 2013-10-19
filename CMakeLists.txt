@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 2.6) 
+cmake_minimum_required(VERSION 2.6)
 
 project(Server)
 
@@ -33,7 +33,7 @@ else ()
     message(FATAL_ERROR "Your C++ compiler does not support C++11.")
 endif ()
 
-# Define includes directories (for headers)  
+# Define includes directories (for headers)
 include_directories(
     ${Boost_INCLUDE_DIRS}
     lib/cppNBT/src
@@ -71,9 +71,4 @@ target_link_libraries(
     sfml-system
 )
 
-configure_file(
-	server.cfg
-    ${EXECUTABLE_OUTPUT_PATH}/server.cfg
-	COPYONLY
-)
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory bin/log)
