@@ -28,8 +28,14 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
 {
     if (message.substr(0, 1) == L"/")
     {
+        bool commandHandled = false;
         if (player->isAdmin())
-            handleAdminCommand(player, message);
+            commandHandled |= handleAdminCommand(player, message);
+
+        if (!commandHandled)
+        {
+            player->SendChatMessage(L"§cNot a valid command");
+        }
         return true;
     }
 
@@ -42,7 +48,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     return false;
 }
 
-void ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& message)
+bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& message)
 {
     if (message == L"/stop")
     {
@@ -135,8 +141,10 @@ void ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
     }
     else
     {
-        player->SendChatMessage(L"§cNot a valid command");
+        return false;
     }
+
+    return true;
 }
 
 } /* namespace Chat */

@@ -19,7 +19,7 @@ public:
     virtual ~ChatManager();
     bool HandleChatMessage(World::EntityPlayer* player, std::wstring& message);
 private:
-    void handleAdminCommand(World::EntityPlayer* player, std::wstring& message);
+    bool handleAdminCommand(World::EntityPlayer* player, std::wstring& message);
 };
 
 } /* namespace Chat */
