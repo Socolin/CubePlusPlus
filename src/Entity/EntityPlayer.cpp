@@ -579,6 +579,27 @@ Plugin::PlayerModule* EntityPlayer::GetPlayerModule(int id)
     return moduleItr->second;
 }
 
+void EntityPlayer::ShowCape(char showCape)
+{
+    char flags = metadataManager.GetCharEntityMetadata(16);
+    if (!showCape)
+    {
+        flags |= 0x2;
+    }
+    else
+    {
+        flags &= ~0x2;
+    }
+    metadataManager.SetEntityMetadata(16, flags);
+    if (metadataManager.HasChanged())
+    {
+        Network::NetworkPacket packet(Network::OP_ENTITY_METADATA);
+        packet << -1;
+        metadataManager.Write(packet);
+        Send(packet);
+    }
+}
+
 void EntityPlayer::registerModules()
 {
     Plugin::PlayerModuleMgr& moduleMgr = Plugin::PlayerModuleMgr::Instance();
