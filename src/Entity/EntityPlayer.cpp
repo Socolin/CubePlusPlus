@@ -150,6 +150,20 @@ void EntityPlayer::OnJoinWorld(World* world)
 
     session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
 
+    for (unsigned int i = 0; i < Config::Config::getChunkSentPerTick(); i++)
+     {
+         if (!chunkToSend.empty())
+         {
+             if (session == nullptr)
+                 return;
+             if (session->IsSendBufferHalfFull())
+                 break;
+             const ChunkToSendData& chunkToSendData =  chunkToSend.top();
+             world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
+             chunkToSend.pop();
+         }
+     }
+
     session->SendSetPositionAndLook(x, y, y + 1.62, z, 0.f, 0.f, false);
 
     session->SendUpdateHealth(20,20,5.f);
