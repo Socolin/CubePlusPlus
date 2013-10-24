@@ -53,7 +53,7 @@ public:
     bool IsFull() const;
     int GetPlayerCount() const;
     const std::string& GetName() const;
-    const std::string& GetMotd() const;
+    const std::string& GetDescription() const;
     int GetMaxPlayerCount() const;
     void SetMaxPlayerCount(int maxPlayerCount);
     bool IsOnlineMode() const;
@@ -82,7 +82,9 @@ private:
     int playerCount;
     int maxPlayerCount;
     std::string serverName;
-    std::string serverMotd;
+    std::string serverDescription;
+    std::string* serverMotd;
+    int motdArraySize;
     bool onlineMode;
     unsigned int difficulty;
     int lateness;

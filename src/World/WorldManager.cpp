@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cppnbt.h>
 #include <fstream>
+#include <libconfig.h++>
 
 #include "Config/Config.h"
 #include "Entity/EntityPlayer.h"
@@ -16,17 +17,28 @@
 namespace World
 {
 WorldManager::WorldManager()
-        : world(nullptr), isRunning(true), playerCount(0), maxPlayerCount(0), lateness(0)
+        : world(nullptr), isRunning(true), playerCount(0), maxPlayerCount(0), motdArraySize(0), lateness(0)
 {
     Config::Config::getConfig().lookupValue("server.general.maxplayers", maxPlayerCount);
     Config::Config::getConfig().lookupValue("server.general.name", serverName);
-    Config::Config::getConfig().lookupValue("server.general.motd", serverMotd);
+    Config::Config::getConfig().lookupValue("server.general.description", serverDescription);
     Config::Config::getConfig().lookupValue("server.general.online", onlineMode);
     Config::Config::getConfig().lookupValue("server.general.difficulty", difficulty);
     if (difficulty >= DIFFICULTY_MAX)
     {
         LOG_ERROR << "Invalid difficulty value: " << difficulty << ", max value is :" << DIFFICULTY_MAX - 1 << std::endl;
         difficulty = DIFFICULTY_MAX - 1;
+    }
+    libconfig::Setting& setting = Config::Config::getConfig().lookup("server.general");
+    if(setting["motd"].isArray())
+    {
+        int i;
+        motdArraySize = setting["motd"].getLength();
+        serverMotd = new std::string[motdArraySize];
+        for(i=0; i<motdArraySize; i++)
+        {
+            serverMotd[i] = setting["motd"][i].c_str();
+        }
     }
     loadBanList();
     loadAdminList();
@@ -84,6 +96,15 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
 
     playerByNameList[name] = player;
 
+    Network::NetworkPacket packetChatMessage(Network::OP_CHAT_MESSAGE);
+    int i;
+    for(i=0; i<motdArraySize; i++)
+    {
+        std::wostringstream motdMessage;
+        std::wstring motdWS (serverMotd[i].begin(), serverMotd[i].end());
+        motdMessage << L"§a" << motdWS;
+        player->SendChatMessage(motdMessage.str());
+    }
     return player;
 }
 
@@ -158,9 +179,10 @@ const std::string& WorldManager::GetName() const
 {
     return serverName;
 }
-const std::string& WorldManager::GetMotd() const
+
+const std::string& WorldManager::GetDescription() const
 {
-    return serverMotd;
+    return serverDescription;
 }
 
 int WorldManager::GetPlayerCount() const

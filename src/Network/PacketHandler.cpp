@@ -535,7 +535,7 @@ void NetworkSession::handlePing() throw (NetworkException)
     DEBUG_CHAR(magic)
 
     const World::WorldManager& worldMgr = World::WorldManager::Instance();
-    const std::string& motd = worldMgr.GetMotd();
+    const std::string& desc = worldMgr.GetDescription();
     int maxplayers = worldMgr.GetMaxPlayerCount();
     std::ostringstream oss;
     oss << maxplayers;
@@ -549,7 +549,7 @@ void NetworkSession::handlePing() throw (NetworkException)
     std::wstring answer(L"\u00a7\u0031\u0001");
     answer += CURRENT_VERSION_PROTOCOL_WSTR;
     answer += L"\u00011.5.2\u0001";
-    std::copy(motd.begin(), motd.end(), std::back_inserter(answer));
+    std::copy(desc.begin(), desc.end(), std::back_inserter(answer));
     answer += L"\u0001";
     std::copy(str_currentPlayers.begin(), str_currentPlayers.end(), std::back_inserter(answer));
     answer += L"\u0001";
