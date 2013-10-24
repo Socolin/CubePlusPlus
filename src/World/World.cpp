@@ -614,9 +614,14 @@ void World::RequestChunk(EntityPlayer* player, int x, int z)
     player->Send(tileEntitiesPacket);
 }
 
-int World::getViewDistance()
+int World::GetViewDistance()
 {
     return viewDistance;
+}
+
+int World::GetGameType()
+{
+    return gameType;
 }
 
 void World::UpdateTime()

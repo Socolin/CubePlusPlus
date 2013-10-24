@@ -12,10 +12,11 @@ namespace Config
 {
 
 
-Config::Config():
-    chunkSentPerTick(16)
+Config::Config()
+    : chunkSentPerTick(16)
+    , gamemode(-1)
+    , fileName("server.cfg")
 {
-    fileName = "server.cfg";
 }
 
 Config::~Config()
@@ -46,6 +47,12 @@ void Config::Init()
         LOG_ERROR << "Invalid chunkSentPerTick value: " << chunkSentPerTick << ", value must be between 1 and 16" << std::endl;
         chunkSentPerTick = 16;
     }
+    serverConfig.lookupValue("server.general.gamemode", gamemode);
+    if(gamemode < -1 || gamemode > 2)
+    {
+        LOG_ERROR << "Invalid gamemode value: " << gamemode << ", world gamemode will be used" << std::endl;
+        gamemode = -1;
+    }
 }
 
 void Config::SetConfigFileName(std::string configFileName)
@@ -61,6 +68,11 @@ libconfig::Config& Config::getConfig()
 unsigned int Config::getChunkSentPerTick()
 {
     return Config::Instance().chunkSentPerTick;
+}
+
+int Config::getGamemode()
+{
+    return Config::Instance().gamemode;
 }
 
 } /* namespace Config */

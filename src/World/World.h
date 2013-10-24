@@ -64,7 +64,8 @@ public:
 
     void RequestChunk(EntityPlayer* player, int x, int z);
     void Unload();
-    int getViewDistance();
+    int GetViewDistance();
+    int GetGameType();
     void SetTime(long long time);
 
     /*Blocks utils*/

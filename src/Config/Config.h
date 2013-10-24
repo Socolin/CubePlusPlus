@@ -26,11 +26,13 @@ private:
 public:
     static libconfig::Config& getConfig();
     static unsigned int getChunkSentPerTick();
+    static int getGamemode();
     void Init();
     void SetConfigFileName(std::string fileName);
 private:
     libconfig::Config serverConfig;
     unsigned int chunkSentPerTick;
+    int gamemode;
     std::string fileName;
 };
 

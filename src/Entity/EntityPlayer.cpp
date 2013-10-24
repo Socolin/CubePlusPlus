@@ -143,6 +143,10 @@ void EntityPlayer::OnJoinWorld(World* world)
     packetSpawnPosition << (int) x << (int) y << (int) z;
     session->SendPacket(packetSpawnPosition);
 
+    int gamemode = Config::Config::getGamemode();
+    if(gamemode == -1)
+        gamemode = world->GetGameType();
+
     if (isAdmin())
         session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
     else
@@ -207,7 +211,7 @@ void EntityPlayer::moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ
 }
 void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
 {
-    int viewDistance = world->getViewDistance();
+    int viewDistance = world->GetViewDistance();
 
     while (!chunkToSend.empty())
     {
