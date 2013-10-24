@@ -21,7 +21,8 @@ DatabaseManager::DatabaseManager()
 
 DatabaseManager::~DatabaseManager()
 {
-
+    delete con;
+    delete stmt;
 }
 
 bool DatabaseManager::connect()
@@ -40,12 +41,8 @@ bool DatabaseManager::connect()
         /* create a database connection using the Driver */
         con = driver->connect(address, username, password);
 
-        /* alternate syntax using auto_ptr to create the db connection */
-        //auto_ptr  con (driver -> connect(url, user, password));
-        /* turn off the autocommit */
-        //    con->setAutoCommit(0);
-
-        //    std::cout << "\nDatabase connection\'s autocommit mode = " << con->getAutoCommit() << std::endl;
+        bool autoreconnect = true;
+        con->setClientOption("OPT_RECONNECT", &autoreconnect);
 
         /* select appropriate database schema */
         con->setSchema(schema);
@@ -56,7 +53,7 @@ bool DatabaseManager::connect()
     }
     catch (sql::SQLException &e)
     {
-        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "[SQL]" << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
     return false;
 }
@@ -69,7 +66,7 @@ void DatabaseManager::execute(std::string request)
     }
     catch (sql::SQLException &e)
     {
-        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "[SQL]" << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
 }
 
@@ -81,7 +78,7 @@ sql::ResultSet* DatabaseManager::querry(std::string request)
     }
     catch (sql::SQLException &e)
     {
-        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "[SQL]" << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
     return nullptr;
 }
@@ -94,7 +91,7 @@ void DatabaseManager::execute(sql::PreparedStatement* pstmt)
     }
     catch (sql::SQLException &e)
     {
-        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "[SQL]" << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
 }
 
@@ -106,7 +103,7 @@ sql::ResultSet* DatabaseManager::querry(sql::PreparedStatement* pstmt)
     }
     catch (sql::SQLException &e)
     {
-        LOG_ERROR << "# ERR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
+        LOG_ERROR << "[SQL]" << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << " )" << std::endl;
     }
     return nullptr;
 }

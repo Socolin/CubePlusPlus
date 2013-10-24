@@ -379,6 +379,9 @@ void NetworkSession::handleClientSettings() throw (NetworkException)
     DEBUG_CHAR(chatFlag)
     DEBUG_CHAR(difficulty)
     DEBUG_CHAR(showCape)
+    if (player != nullptr)
+        player->ShowCape(showCape);
+
 }
 void NetworkSession::handleClientStatuses() throw (NetworkException)
 {

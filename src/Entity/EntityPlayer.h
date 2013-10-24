@@ -262,6 +262,7 @@ public:
     bool isAdmin() const;
     void SetAdmin(bool admin);
     void SendChatMessage(const std::wstring& message);
+    void ShowCape(char showCape);
 
     Plugin::PlayerModule* GetPlayerModule(int id);
 

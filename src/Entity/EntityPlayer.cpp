@@ -150,6 +150,20 @@ void EntityPlayer::OnJoinWorld(World* world)
 
     session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
 
+    for (unsigned int i = 0; i < Config::Config::getChunkSentPerTick(); i++)
+     {
+         if (!chunkToSend.empty())
+         {
+             if (session == nullptr)
+                 return;
+             if (session->IsSendBufferHalfFull())
+                 break;
+             const ChunkToSendData& chunkToSendData =  chunkToSend.top();
+             world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
+             chunkToSend.pop();
+         }
+     }
+
     session->SendSetPositionAndLook(x, y, y + 1.62, z, 0.f, 0.f, false);
 
     session->SendUpdateHealth(20,20,5.f);
@@ -577,6 +591,27 @@ Plugin::PlayerModule* EntityPlayer::GetPlayerModule(int id)
         return nullptr;
     }
     return moduleItr->second;
+}
+
+void EntityPlayer::ShowCape(char showCape)
+{
+    char flags = metadataManager.GetCharEntityMetadata(16);
+    if (!showCape)
+    {
+        flags |= 0x2;
+    }
+    else
+    {
+        flags &= ~0x2;
+    }
+    metadataManager.SetEntityMetadata(16, flags);
+    if (metadataManager.HasChanged())
+    {
+        Network::NetworkPacket packet(Network::OP_ENTITY_METADATA);
+        packet << -1;
+        metadataManager.Write(packet);
+        Send(packet);
+    }
 }
 
 void EntityPlayer::registerModules()
