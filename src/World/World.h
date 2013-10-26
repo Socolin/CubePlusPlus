@@ -203,8 +203,10 @@ private:
      */
     void loadGameMode(nbt::TagCompound* tagData);
 private:
-    /// Name of the world, it name also directory where files are store
+    /// Name of the world
     std::string worldName;
+    //Name of the directory where world files are store
+    std::string worldPath;
     /// Manager for regions files
     RegionManager regionManager;
 

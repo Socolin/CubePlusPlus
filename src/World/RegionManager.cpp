@@ -5,6 +5,11 @@
 namespace World
 {
 
+RegionManager::RegionManager()
+    : worldPath("")
+{
+}
+
 RegionManager::RegionManager(const std::string& worldPath)
     : worldPath(worldPath)
 {

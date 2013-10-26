@@ -16,6 +16,7 @@
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "Region.h"
+#include "RegionManager.h"
 #include "Util/FloatUtil.h"
 #include "Util/types.h"
 #include "VirtualChunk.h"
@@ -27,7 +28,7 @@ namespace World
 
 World::World(const std::string& worldName)
     : worldName(worldName)
-    , regionManager(worldName + "/")
+    , worldPath(worldName + "/")
     , updateInProgress(false)
     , currentEntityId(10)
     , sunReduceValue(0)
@@ -54,6 +55,8 @@ World::World(const std::string& worldName)
         LOG_ERROR << "Invalid viewDistance value: " << viewDistance << ", value must be between 7 and 15" << std::endl;
         viewDistance = 10;
     }
+    Config::Config::getConfig().lookupValue("server.general.world-dir", worldPath);
+    regionManager = RegionManager(worldPath + "/");
     load();
 }
 
@@ -1258,11 +1261,12 @@ Scripting::BlockRedstoneTorchBurnoutMgr* World::GetRedstoneTorchBurnoutMgr() con
 void World::load()
 {
     std::stringstream fileName;
-    fileName << worldName << "/level.dat";
+    fileName << worldPath << "/level.dat";
 
-    nbt::NbtFile nbtFile(fileName.str());
+    nbt::NbtFile nbtFile;
     try
     {
+        nbtFile = nbt::NbtFile(fileName.str());
         nbtFile.read();
     }
     catch (nbt::GzipIOException& e)

@@ -29,7 +29,6 @@ namespace World
 
 EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& name, Network::NetworkSession* session)
     : LivingEntity(ENTITY_TYPE_PLAYER, 0, spawnPosition.x, spawnPosition.y, spawnPosition.z)
-    , gameMode(GAMEMODE_CREATVE)
     , name(name)
     , session(session)
     , currentWindowId(0)
@@ -50,6 +49,13 @@ EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& na
     inventoryWindow->AddInventory(mainInventory);
     inventoryWindow->AddInventory(handsInventory, Window::Window::PRIORITY_HIGH);
     registerModules();
+    int gamemodeConf = Config::Config::getGamemode();
+    if(gamemodeConf == -1)
+    {
+        gamemodeConf = world->GetGameType();
+        LOG_DEBUG << "World gamemode used : " << gamemodeConf << std::endl;
+    }
+    gameMode = (eGameMode)gamemodeConf;
 }
 
 EntityPlayer::~EntityPlayer()
@@ -142,10 +148,6 @@ void EntityPlayer::OnJoinWorld(World* world)
     Network::NetworkPacket packetSpawnPosition(Network::OP_SPAWN_POSITION);
     packetSpawnPosition << (int) x << (int) y << (int) z;
     session->SendPacket(packetSpawnPosition);
-
-    int gamemode = Config::Config::getGamemode();
-    if(gamemode == -1)
-        gamemode = world->GetGameType();
 
     if (isAdmin())
         session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);

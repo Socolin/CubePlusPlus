@@ -12,6 +12,7 @@ class Region;
 class RegionManager
 {
 public:
+    RegionManager();
     RegionManager(const std::string& worldPath);
     virtual ~RegionManager();
     Region* GetRegion(int x, int z);

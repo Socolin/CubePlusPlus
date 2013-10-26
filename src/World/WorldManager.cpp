@@ -70,7 +70,7 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
 
     Network::NetworkPacket packet(Network::OP_LOGIN_REQUEST);
     std::wstring levelType(L"flat");
-    packet  << int(-1) << levelType << (char)1 << (char)0 << (char)difficulty << (char)0 << (maxPlayerCount > 120 ? char(120) : char(maxPlayerCount));
+    packet  << int(-1) << levelType << (char)player->GetGameMode() << (char)0 << (char)difficulty << (char)0 << (maxPlayerCount > 120 ? char(120) : char(maxPlayerCount));
     session->SendPacket(packet);
 
     std::string stringName;
