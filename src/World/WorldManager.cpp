@@ -17,7 +17,7 @@
 namespace World
 {
 WorldManager::WorldManager()
-        : world(nullptr), isRunning(true), playerCount(0), maxPlayerCount(0), motdArraySize(0), lateness(0)
+        : world(nullptr), isRunning(true), playerCount(0), maxPlayerCount(0), banFileName("ban"), adminFileName("admin"), motdArraySize(0), lateness(0)
 {
     Config::Config::getConfig().lookupValue("server.general.maxplayers", maxPlayerCount);
     Config::Config::getConfig().lookupValue("server.general.name", serverName);
@@ -29,17 +29,9 @@ WorldManager::WorldManager()
         LOG_ERROR << "Invalid difficulty value: " << difficulty << ", max value is :" << DIFFICULTY_MAX - 1 << std::endl;
         difficulty = DIFFICULTY_MAX - 1;
     }
-    libconfig::Setting& setting = Config::Config::getConfig().lookup("server.general");
-    if(setting["motd"].isArray())
-    {
-        int i;
-        motdArraySize = setting["motd"].getLength();
-        serverMotd = new std::string[motdArraySize];
-        for(i=0; i<motdArraySize; i++)
-        {
-            serverMotd[i] = setting["motd"][i].c_str();
-        }
-    }
+    Config::Config::getConfig().lookupValue("server.general.ban-file", banFileName);
+    Config::Config::getConfig().lookupValue("server.general.admin-file", adminFileName);
+    loadMotd();
     loadBanList();
     loadAdminList();
 }
@@ -240,7 +232,7 @@ void WorldManager::Ban(const std::wstring& playerName)
         std::ofstream banFileList;
         std::string stringPlayerName;
         Util::WStringToString(playerName, stringPlayerName);
-        banFileList.open("ban", std::fstream::out | std::fstream::app);
+        banFileList.open(banFileName.c_str(), std::fstream::out | std::fstream::app);
         banFileList << stringPlayerName << std::endl;
         banFileList.close();
     }
@@ -263,7 +255,7 @@ void WorldManager::SetAdmin(const std::wstring& playerName)
         std::ofstream adminFileList;
         std::string stringPlayerName;
         Util::WStringToString(playerName, stringPlayerName);
-        adminFileList.open("admin", std::fstream::out | std::fstream::app);
+        adminFileList.open(adminFileName.c_str(), std::fstream::out | std::fstream::app);
         adminFileList << stringPlayerName << std::endl;
         adminFileList.close();
     }
@@ -283,7 +275,7 @@ void WorldManager::Reload()
 void WorldManager::loadBanList()
 {
     banList.clear();
-    std::ifstream banFileList("ban");
+    std::ifstream banFileList(banFileName.c_str());
     std::string line;
     while (std::getline(banFileList,line))
     {
@@ -297,7 +289,7 @@ void WorldManager::loadBanList()
 void WorldManager::loadAdminList()
 {
     adminList.clear();
-    std::ifstream adminFileList("admin");
+    std::ifstream adminFileList(adminFileName.c_str());
     std::string line;
     while (std::getline(adminFileList,line))
     {
@@ -306,6 +298,21 @@ void WorldManager::loadAdminList()
         adminList.insert(playerName);
     }
     adminFileList.close();
+}
+
+void WorldManager::loadMotd()
+{
+    libconfig::Setting& setting = Config::Config::getConfig().lookup("server.general");
+    if(setting["motd"].isArray())
+    {
+        int i;
+        motdArraySize = setting["motd"].getLength();
+        serverMotd = new std::string[motdArraySize];
+        for(i=0; i<motdArraySize; i++)
+        {
+            serverMotd[i] = setting["motd"][i].c_str();
+        }
+    }
 }
 
 bool WorldManager::IsAdmin(const std::wstring& playerName)

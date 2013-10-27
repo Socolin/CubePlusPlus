@@ -1263,10 +1263,9 @@ void World::load()
     std::stringstream fileName;
     fileName << worldPath << "/level.dat";
 
-    nbt::NbtFile nbtFile;
+    nbt::NbtFile nbtFile = nbt::NbtFile(fileName.str());
     try
     {
-        nbtFile = nbt::NbtFile(fileName.str());
         nbtFile.read();
     }
     catch (nbt::GzipIOException& e)

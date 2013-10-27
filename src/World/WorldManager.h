@@ -71,6 +71,7 @@ public:
 private:
     void loadBanList();
     void loadAdminList();
+    void loadMotd();
     Chat::ChatManager chatManager;
     std::set<EntityPlayer*> playerList;
     std::map<std::wstring, EntityPlayer*> playerByNameList;
@@ -84,6 +85,8 @@ private:
     std::string serverName;
     std::string serverDescription;
     std::string* serverMotd;
+    std::string banFileName;
+    std::string adminFileName;
     int motdArraySize;
     bool onlineMode;
     unsigned int difficulty;
