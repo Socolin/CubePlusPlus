@@ -27,10 +27,12 @@ public:
     static libconfig::Config& getConfig();
     static unsigned int getChunkSentPerTick();
     static int getGamemode();
+    static std::string getLogDir();
     void Init();
     void SetConfigFileName(std::string fileName);
 private:
     libconfig::Config serverConfig;
+    std::string logDir;
     unsigned int chunkSentPerTick;
     int gamemode;
     std::string fileName;

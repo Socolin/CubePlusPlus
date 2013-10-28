@@ -8,13 +8,16 @@
 #include "Config.h"
 #include "Logging/Logger.h"
 
+#include <string>
+
 namespace Config
 {
 
 
 Config::Config()
-    : chunkSentPerTick(16)
-    , gamemode(-1)
+    : logDir("log")
+    , chunkSentPerTick(16)
+    , gamemode(1)
     , fileName("server.cfg")
 {
 }
@@ -40,7 +43,7 @@ void Config::Init()
         LOG_ERROR << "Parse error at " << pex.getFile() << ":" << pex.getLine() << " - " << pex.getError() << std::endl;
         exit(EXIT_FAILURE);
     }
-
+    serverConfig.lookupValue("server.general.log-dir", logDir);
     serverConfig.lookupValue("server.world.chunk.chunk-sent-per-tick", chunkSentPerTick);
     if (chunkSentPerTick < 1 || chunkSentPerTick > 16)
     {
@@ -48,10 +51,10 @@ void Config::Init()
         chunkSentPerTick = 16;
     }
     serverConfig.lookupValue("server.general.gamemode", gamemode);
-    if(gamemode < -1 || gamemode > 2)
+    if(gamemode < 0 || gamemode > 2)
     {
-        LOG_ERROR << "Invalid gamemode value: " << gamemode << ", world gamemode will be used" << std::endl;
-        gamemode = -1;
+        LOG_ERROR << "Invalid gamemode value: " << gamemode << ", gamemode 1 used (survival)" << std::endl;
+        gamemode = 1;
     }
 }
 
@@ -73,6 +76,11 @@ unsigned int Config::getChunkSentPerTick()
 int Config::getGamemode()
 {
     return Config::Instance().gamemode;
+}
+
+std::string Config::getLogDir()
+{
+    return Config::Instance().logDir;
 }
 
 } /* namespace Config */

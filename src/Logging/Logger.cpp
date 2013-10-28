@@ -1,4 +1,5 @@
 #include "Logger.h"
+#include "Config/Config.h"
 
 #include <sstream>
 #include <iomanip>
@@ -6,11 +7,12 @@
 namespace Logging
 {
 
-Logger Logger::debug(std::cout, "log/debug.log");
-Logger Logger::info(std::cout, "log/server.log");
-Logger Logger::error(std::cerr, "log/error.log");
+Logger Logger::debug(std::cout, "debug.log");
+Logger Logger::info(std::cout, "server.log");
+Logger Logger::error(std::cerr, "error.log");
+
 Logger::Logger(std::ostream& streamOutput, const std::string& fileName)
-        : std::ofstream(fileName, std::ios::out | std::ios::app), streamOutput(streamOutput)
+        : std::ofstream(Config::Config::getLogDir() + "/" + fileName, std::ios::out | std::ios::app), streamOutput(streamOutput)
 {
 }
 

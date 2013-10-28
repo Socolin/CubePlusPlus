@@ -49,13 +49,7 @@ EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& na
     inventoryWindow->AddInventory(mainInventory);
     inventoryWindow->AddInventory(handsInventory, Window::Window::PRIORITY_HIGH);
     registerModules();
-    int gamemodeConf = Config::Config::getGamemode();
-    if(gamemodeConf == -1)
-    {
-        gamemodeConf = world->GetGameType();
-        LOG_DEBUG << "World gamemode used : " << gamemodeConf << std::endl;
-    }
-    gameMode = (eGameMode)gamemodeConf;
+    gameMode = (eGameMode)Config::Config::getGamemode();
 }
 
 EntityPlayer::~EntityPlayer()
