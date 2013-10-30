@@ -66,6 +66,7 @@ public:
         std::wstring str(var);
         return *this << str;
     }
+    void SetLogDir(const std::string& fileName);
 private:
     std::ostream& streamOutput;
 };

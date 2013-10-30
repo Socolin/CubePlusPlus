@@ -33,5 +33,11 @@ std::string getNowDateTime()
     date << "[" << std::setw(2) << ltm->tm_mday << "/" << std::setw(2) << 1 + ltm->tm_mon << "/" << 1900 + ltm->tm_year << " " << std::setw(2) << ltm->tm_hour << ":" << std::setw(2) << ltm->tm_min << ":" << std::setw(2) << ltm->tm_sec << "] ";
     return date.str();
 }
+
+void Logger::SetLogDir(const std::string& fileName)
+{
+    close();
+    open(fileName.c_str(), std::ios::out | std::ios::app);
+}
 } /* namespace Logging */
 

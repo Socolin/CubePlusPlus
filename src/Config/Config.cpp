@@ -45,6 +45,14 @@ void Config::Init()
         exit(EXIT_FAILURE);
     }
     serverConfig.lookupValue("server.general.log-dir", logDir);
+    if(logDir != "log")
+    {
+        #ifndef NDEBUG
+            Logging::Logger::debug.SetLogDir(logDir + "/debug.log");
+        #endif
+        Logging::Logger::info.SetLogDir(logDir + "/server.log");
+        Logging::Logger::error.SetLogDir(logDir + "/error.log");
+    }
     serverConfig.lookupValue("server.world.chunk.chunk-sent-per-tick", chunkSentPerTick);
     if (chunkSentPerTick < 1 || chunkSentPerTick > 16)
     {
