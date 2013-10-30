@@ -7,7 +7,7 @@
 #include <iostream>
 #include <sstream>
 
-
+#include "Entity/EntityPlayer.h"
 #include "World/WorldManager.h"
 #include "World/World.h"
 
@@ -115,6 +115,20 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         {
             printf(">> Not a valid player name\n");
         }
+    }
+    else if (message.substr(0,11) == L"playercount")
+    {
+        std::wcout << L">> Connected players : " << World::WorldManager::Instance().GetPlayerCount() << std::endl;
+    }
+    else if (message.substr(0,10) == L"playerlist")
+    {
+        std::map<std::wstring, World::EntityPlayer*>* playerList = World::WorldManager::Instance().GetPlayerByNameList();
+        std::wcout << L">> Connected players : " << std::endl;
+        for(auto itr : *playerList)
+        {
+            std::wcout << itr.first << L" - ";
+        }
+        std::wcout << L"Total : " << World::WorldManager::Instance().GetPlayerCount() << L" players connected" << std::endl;
     }
     else
     {

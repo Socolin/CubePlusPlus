@@ -89,8 +89,7 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
     playerByNameList[name] = player;
 
     Network::NetworkPacket packetChatMessage(Network::OP_CHAT_MESSAGE);
-    int i;
-    for(i=0; i<motdArraySize; i++)
+    for(int i=0; i<motdArraySize; i++)
     {
         std::wostringstream motdMessage;
         std::wstring motdWS (serverMotd[i].begin(), serverMotd[i].end());
@@ -339,6 +338,11 @@ EntityPlayer* WorldManager::GetPlayerByName(const std::wstring& playerName)
         return oldPlr;
     }
     return nullptr;
+}
+
+std::map<std::wstring, EntityPlayer*>* WorldManager::GetPlayerByNameList()
+{
+    return &playerByNameList;
 }
 
 } /* namespace World */

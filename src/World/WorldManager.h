@@ -67,6 +67,7 @@ public:
     bool IsAdmin(const std::wstring& playerName);
 
     EntityPlayer* GetPlayerByName(const std::wstring& playerName);
+    std::map<std::wstring, EntityPlayer*>* GetPlayerByNameList();
 
 private:
     void loadBanList();
