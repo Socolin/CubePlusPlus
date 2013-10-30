@@ -14,6 +14,7 @@
 #endif
 
 #define LOG_INFO Logging::Logger::info << Logging::getNowDateTime()
+#define LOG_INFO_CONCAT Logging::Logger::info
 #define LOG_ERROR Logging::Logger::error << Logging::getNowDateTime()
 
 namespace Logging

@@ -8,6 +8,7 @@
 #include <sstream>
 
 #include "Entity/EntityPlayer.h"
+#include "Logging/Logger.h"
 #include "World/WorldManager.h"
 #include "World/World.h"
 
@@ -118,17 +119,17 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
     }
     else if (message.substr(0,11) == L"playercount")
     {
-        std::wcout << L">> Connected players : " << World::WorldManager::Instance().GetPlayerCount() << std::endl;
+        LOG_INFO << L"Connected players : " << World::WorldManager::Instance().GetPlayerCount() << std::endl;
     }
     else if (message.substr(0,10) == L"playerlist")
     {
         std::map<std::wstring, World::EntityPlayer*>* playerList = World::WorldManager::Instance().GetPlayerByNameList();
-        std::wcout << L">> Connected players : " << std::endl;
+        LOG_INFO << L"Connected players : " << std::endl;
         for(auto itr : *playerList)
         {
-            std::wcout << itr.first << L" - ";
+            LOG_INFO_CONCAT << itr.first << L" - ";
         }
-        std::wcout << L"Total : " << World::WorldManager::Instance().GetPlayerCount() << L" players connected" << std::endl;
+        LOG_INFO_CONCAT << L"Total : " << World::WorldManager::Instance().GetPlayerCount() << L" players connected" << std::endl;
     }
     else
     {
