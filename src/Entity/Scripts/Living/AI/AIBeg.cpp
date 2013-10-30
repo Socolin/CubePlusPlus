@@ -33,7 +33,7 @@ void AIBeg::begStartBegging()
     begTimer = 40 + rand()%40;
 }
 
-void AIBeg::begUpdate(World::ScriptedLivingEntity* baseEntity)
+void AIBeg::begUpdate(/*World::ScriptedLivingEntity* baseEntity*/)
 {
     if(wolfScript->IsBegging() && begTimer==0)
     {

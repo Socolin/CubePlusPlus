@@ -22,7 +22,7 @@ public:
 protected:
     void begInit(AnimalWolfScript* script);
     void begStartBegging();
-    void begUpdate(World::ScriptedLivingEntity* baseEntity);
+    void begUpdate(/*World::ScriptedLivingEntity* baseEntity*/);
 private:
     AnimalWolfScript* wolfScript;
     int begTimer;

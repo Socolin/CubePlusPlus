@@ -4,8 +4,8 @@
 
 namespace Scripting{
 LivingEntityTameable::LivingEntityTameable()
-    : baseScript(nullptr)
-    , scriptedEntity(nullptr)
+    : scriptedEntity(nullptr)
+    , baseScript(nullptr)
     , isTamed(false)
     , isSitting(false)
 {

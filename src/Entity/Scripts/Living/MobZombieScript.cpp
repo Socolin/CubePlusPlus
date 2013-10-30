@@ -48,10 +48,10 @@ void MobZombieScript::OnDeath()
     //TODO : Drop rare items (carrots, gold...)
 }
 
-void MobZombieScript::OnInteract(World::EntityPlayer* player)
+/*void MobZombieScript::OnInteract(World::EntityPlayer* player)
 {
     //TODO : Zombie villager may be healed with gold apple
-}
+}*/
 
 void MobZombieScript::setChild(bool value)
 {

@@ -109,8 +109,8 @@ void AnimalSheepScript::OnReachDestination()
     }
 }
 
-void AnimalSheepScript::makeBabyInitBabyScript(LivingEntityScript* babyScript){
-    AIMakeBaby::makeBabyInitBabyScript(babyScript);
+/*void AnimalSheepScript::makeBabyInitBabyScript(LivingEntityScript* babyScript){
+    //AIMakeBaby::makeBabyInitBabyScript(babyScript);
     char babyFleeceColor = GetBabyFleeceColor(this, babyScript);
     if(babyFleeceColor != -1)
     {
@@ -118,7 +118,7 @@ void AnimalSheepScript::makeBabyInitBabyScript(LivingEntityScript* babyScript){
         if(babySheepScript != nullptr)
             babySheepScript->SetFleeceColor(babyFleeceColor);
     }
-}
+}*/
 
 char AnimalSheepScript::GetFleeceColor()
 {

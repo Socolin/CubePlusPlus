@@ -150,16 +150,16 @@ void AnimalWolfScript::SetBegging(bool value)
 }
 
 
-void AnimalWolfScript::makeBabyInitBabyScript(LivingEntityScript* babyScript)
+/*void AnimalWolfScript::makeBabyInitBabyScript(LivingEntityScript* babyScript)
 {
-    AIMakeBaby::makeBabyInitBabyScript(babyScript);
+    //AIMakeBaby::makeBabyInitBabyScript(babyScript);
     AnimalWolfScript* babyWolfScript = dynamic_cast<AnimalWolfScript*>(babyScript);
     if(babyWolfScript != nullptr)
     {
         babyWolfScript->SetTamed(true);
         babyWolfScript->SetOwner(this->GetOwnerName());
     }
-}
+}*/
 
 void AnimalWolfScript::updateLivingSound()
 {

@@ -23,12 +23,11 @@ public:
     bool IsSitting();
     void SetSitting(bool value);
 protected:
+    World::ScriptedLivingEntity* scriptedEntity;
+    LivingEntityScript* baseScript;
     std::wstring ownerName;
     bool isTamed;
     bool isSitting;
-    World::ScriptedLivingEntity* scriptedEntity;
-    LivingEntityScript* baseScript;
-
 };
 } /* namespace Scripting */
 #endif /* LIVINGENTITYTAMEABLE_H_ */

@@ -163,10 +163,10 @@ void AIMakeBaby::makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity)
     {
         ageScript->EntityAgeSetBaby(baby);
     }
-    makeBabyInitBabyScript(babyScript);
+    //makeBabyInitBabyScript(babyScript);
 }
 
-void AIMakeBaby::makeBabyInitBabyScript(LivingEntityScript* babyScript)
+void AIMakeBaby::makeBabyInitBabyScript(/*LivingEntityScript* babyScript*/)
 {
 }
 

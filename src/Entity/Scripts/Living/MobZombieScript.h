@@ -18,7 +18,7 @@ public:
     virtual void Init() override;
     virtual void OnUpdateTick() override;
     virtual void OnDeath() override;
-    virtual void OnInteract(World::EntityPlayer* player) override;
+    //virtual void OnInteract(World::EntityPlayer* player) override;
 private:
     void setChild(bool value);
     void setVillager(bool value);

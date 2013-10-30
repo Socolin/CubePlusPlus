@@ -32,7 +32,7 @@ public:
     char GetCollarColor();
     void SetCollarColor(char color);
 protected:
-    virtual void makeBabyInitBabyScript(LivingEntityScript* babyScript) override;
+    //virtual void makeBabyInitBabyScript(LivingEntityScript* babyScript) override;
 private:
     void entityInit();
     void updateLivingSound();

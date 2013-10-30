@@ -37,7 +37,7 @@ public:
     void SetFleeceColor(char fleeceColor);
 protected:
     char GetRandomFleeceColor();
-    virtual void makeBabyInitBabyScript(LivingEntityScript* babyScript) override;
+    //virtual void makeBabyInitBabyScript(LivingEntityScript* babyScript) override;
 private:
     bool isSheared;
     char fleeceColor;

@@ -28,7 +28,7 @@ protected:
     bool makeBabyTryFallInLove(const Inventory::ItemStack* item);
     void makeBabyUpdate(World::ScriptedLivingEntity* baseEntity);
     void makeBabyResetInLove();
-    virtual void makeBabyInitBabyScript(LivingEntityScript* babyScript);
+    virtual void makeBabyInitBabyScript(/*LivingEntityScript* babyScript*/);
 private:
     void makeBabySetMate(int entityId);
     void makeBabySpawnBaby(World::ScriptedLivingEntity* scriptedEntity);
