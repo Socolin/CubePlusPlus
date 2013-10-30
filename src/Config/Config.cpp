@@ -30,17 +30,18 @@ void Config::Init()
 {
     try
     {
-        fprintf(stdout, "Loading Config File \"%s\" ...\n", fileName.c_str());
+        std::cerr << "Loading Config File " << fileName << std::endl;
         serverConfig.readFile(fileName.c_str());
     }
     catch(const libconfig::FileIOException &fioex)
     {
-        fprintf(stderr, "Can't read file \" %s \". Abording.\n", fileName.c_str());
+        std::cerr << "Can't read file " << fileName << ". Aborting." << std::endl;
         exit(EXIT_FAILURE);
     }
     catch(const libconfig::ParseException &pex)
     {
-        fprintf(stderr, "Parse error at %s : %d - %s\n", pex.getFile(), pex.getLine(), pex.getError());
+        std::cerr << "Parse error at " << pex.getFile() << ":" << pex.getLine()
+            << " - " << pex.getError() << std::endl;
         exit(EXIT_FAILURE);
     }
     serverConfig.lookupValue("server.general.log-dir", logDir);
