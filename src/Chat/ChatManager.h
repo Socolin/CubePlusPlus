@@ -19,8 +19,11 @@ public:
     ChatManager();
     virtual ~ChatManager();
     bool HandleChatMessage(World::EntityPlayer* player, std::wstring& message);
+    bool AddForbiddenWord(const std::wstring& word);
 private:
     bool handleAdminCommand(World::EntityPlayer* player, std::wstring& message);
+    void loadForbiddenWordsList();
+    std::string fwFileName;
     std::set<std::wstring> forbiddenWords;
 };
 

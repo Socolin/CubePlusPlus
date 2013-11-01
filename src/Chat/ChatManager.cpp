@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "Config/Config.h"
 #include "Entity/EntityPlayer.h"
 #include "Entity/Scripts/Database/ScriptedEntityList.h"
 #include "Entity/Scripts/ScriptedLivingEntity.h"
@@ -16,9 +17,11 @@ namespace Chat
 {
 
 ChatManager::ChatManager()
+    : fwFileName("forbiddenWords")
 {
     // TODO Auto-generated constructor stub
-    forbiddenWords = {L"java", L"mojang", L"test"};
+    Config::Config::getConfig().lookupValue("server.general.forbidden-words-file", fwFileName);
+    loadForbiddenWordsList();
 }
 
 ChatManager::~ChatManager()
@@ -118,6 +121,21 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
             player->SendChatMessage(confirmMessage.str());
         }
     }
+    else if (message.substr(0, 9) == L"/addword ")
+    {
+        std::wstring word = message.substr(9, message.size() - 9);
+        if (word.size() > 0)
+        {
+            if(AddForbiddenWord(word))
+            {
+                player->SendChatMessage(L"§aWord added to blacklist");
+            }
+            else
+            {
+                player->SendChatMessage(L"§cWord already added to blacklist");
+            }
+        }
+    }
     else if (message == L"/spawn chicken")
     {
         World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(1, player->x, player->y, player->z);
@@ -161,5 +179,42 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
 
     return true;
 }
+
+void ChatManager::loadForbiddenWordsList()
+{
+    forbiddenWords.clear();
+    std::ifstream forbiddenWordsList(fwFileName.c_str());
+    std::string line;
+    while (std::getline(forbiddenWordsList, line))
+    {
+        std::wstring forbiddenWord;
+        Util::StringToWString(forbiddenWord, line);
+        forbiddenWords.insert(forbiddenWord);
+    }
+    forbiddenWordsList.close();
+}
+
+bool ChatManager::AddForbiddenWord(const std::wstring& word)
+{
+    auto forbiddenWordsItr = forbiddenWords.find(word);
+    if (forbiddenWordsItr != forbiddenWords.end())
+    {
+        return false;
+    }
+    else
+    {
+        std::wstring wordLow = word;
+        boost::algorithm::to_lower(wordLow);
+        forbiddenWords.insert(wordLow);
+        std::ofstream forbiddenWordsList;
+        std::string stringWord;
+        Util::WStringToString(wordLow, stringWord);
+        forbiddenWordsList.open(fwFileName.c_str(), std::fstream::out | std::fstream::app);
+        forbiddenWordsList << stringWord << std::endl;
+        forbiddenWordsList.close();
+        return true;
+    }
+}
+
 
 } /* namespace Chat */
