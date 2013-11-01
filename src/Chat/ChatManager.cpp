@@ -4,11 +4,13 @@
 #include <sstream>
 
 #include "Entity/EntityPlayer.h"
+#include "Entity/Scripts/Database/ScriptedEntityList.h"
+#include "Entity/Scripts/ScriptedLivingEntity.h"
 #include "Logging/Logger.h"
 #include "World/WorldManager.h"
 #include "World/World.h"
-#include "Entity/Scripts/Database/ScriptedEntityList.h"
-#include "Entity/Scripts/ScriptedLivingEntity.h"
+
+#include <boost/algorithm/string.hpp>
 
 namespace Chat
 {
@@ -16,7 +18,7 @@ namespace Chat
 ChatManager::ChatManager()
 {
     // TODO Auto-generated constructor stub
-
+    forbiddenWords = {L"java", L"mojang", L"test"};
 }
 
 ChatManager::~ChatManager()
@@ -37,6 +39,19 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
             player->SendChatMessage(L"§cNot a valid command");
         }
         return true;
+    }
+
+    std::set<std::wstring>::iterator it;
+    std::wstring messageLow = message;
+    boost::algorithm::to_lower(messageLow);
+    for(it = forbiddenWords.begin(); it != forbiddenWords.end(); ++it)
+    {
+        if(messageLow.find(*it) != messageLow.npos)
+        {
+            player->SendChatMessage(L"§cYour message include forbidden words and will not be send");
+            LOG_INFO << "Invalid message send by player " << player->GetUsername() << " : " << message << std::endl;
+            return true;
+        }
     }
 
     std::wcout << player->GetUsername() << ":" << message << std::endl;

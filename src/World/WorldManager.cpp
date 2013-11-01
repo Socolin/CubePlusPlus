@@ -304,10 +304,9 @@ void WorldManager::loadMotd()
     libconfig::Setting& setting = Config::Config::getConfig().lookup("server.general");
     if(setting["motd"].isArray())
     {
-        int i;
         motdArraySize = setting["motd"].getLength();
         serverMotd = new std::string[motdArraySize];
-        for(i=0; i<motdArraySize; i++)
+        for(int i=0; i<motdArraySize; i++)
         {
             serverMotd[i] = setting["motd"][i].c_str();
         }

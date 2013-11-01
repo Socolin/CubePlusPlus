@@ -3,6 +3,7 @@
 #define CHATMANAGER_H_
 
 #include <string>
+#include <set>
 
 namespace World
 {
@@ -20,6 +21,7 @@ public:
     bool HandleChatMessage(World::EntityPlayer* player, std::wstring& message);
 private:
     bool handleAdminCommand(World::EntityPlayer* player, std::wstring& message);
+    std::set<std::wstring> forbiddenWords;
 };
 
 } /* namespace Chat */
