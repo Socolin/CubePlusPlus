@@ -441,7 +441,7 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
             hashOutput.fill('0');
             for (const unsigned char * ptr = digest; ptr < digest + 20; ptr++)
                 hashOutput << std::setw(2) << (unsigned int)*ptr;
-            hashOutput << std::dec << std::endl;
+            hashOutput << std::dec;
 
             std::string result = hashOutput.str();
             while (result[0] == '0')

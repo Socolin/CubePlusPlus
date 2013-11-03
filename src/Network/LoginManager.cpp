@@ -1,7 +1,13 @@
 #include "LoginManager.h"
 
-#include <SFML/Network.hpp>
 #include <sstream>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <cstring>
+#include <unistd.h>
+#include <netdb.h>
+
+#include "Logging/Logger.h"
 
 namespace Network
 {
@@ -65,7 +71,7 @@ void LoginManager::work()
         }
         else
         {
-            usleep(1000);
+            usleep(10000);
         }
     }
 }
@@ -87,26 +93,120 @@ void LoginManager::Stop()
 
 int LoginManager::checkLogin(const std::string& login, const std::string& id)
 {
-    sf::Http http("http://session.minecraft.net");
-    sf::Http::Request request;
-    request.setMethod(sf::Http::Request::Get);
-    std::stringstream stream;
-    stream << "/game/checkserver.jsp?user=" << login << "&serverId=" << id;
-    request.setUri(stream.str());
-    request.setHttpVersion(1, 1); // HTTP 1.1
-    sf::Http::Response response = http.sendRequest(request, sf::seconds(1));
+    // Here I don't use LOG_DEBUG/LOG_INFO because these are not thread safe yet.
 
-    if (response.getStatus() == sf::Http::Response::Ok)
+    const char* CRLF = "\r\n";
+
+    // Connect to session/minecraft.net
+    struct addrinfo resolveInfo;
+    struct addrinfo *connectInfo = nullptr;
+
+    memset(&resolveInfo, 0, sizeof resolveInfo);
+    resolveInfo.ai_family = AF_UNSPEC;
+    resolveInfo.ai_socktype = SOCK_STREAM;
+
+    int res = getaddrinfo("session.minecraft.net", "80", &resolveInfo, &connectInfo);
+    if (res == -1)
     {
-        if (response.getBody() == "YES")
-            return 1;
-        return 0;
-    }
-    else if (response.getStatus() == sf::Http::Response::ConnectionFailed)
-    {
+        freeaddrinfo(connectInfo);
+        perror("[LOGIN]getaddrinfo");
         return -1;
     }
-    return -2;
+
+    int sockfd = socket(connectInfo->ai_family, connectInfo->ai_socktype, connectInfo->ai_protocol);
+    if (sockfd == -1)
+    {
+        perror("[LOGIN]socket");
+        return -1;
+    }
+
+    res = connect(sockfd, connectInfo->ai_addr, connectInfo->ai_addrlen);
+    if (res == -1)
+    {
+        close(sockfd);
+        perror("[LOGIN]connect");
+        return -1;
+    }
+
+    freeaddrinfo(connectInfo);
+    connectInfo = nullptr;
+
+    // Send HTTP/1.1 request to server
+    std::stringstream request;
+
+    request << "GET /game/checkserver.jsp?user=" << login << "&serverId=" << id << " HTTP/1.1" << CRLF;
+    request << "Host: session.minecraft.net"<< CRLF;
+    request  << CRLF;
+
+    const std::string& requestStr = request.str();
+    res = write(sockfd, requestStr.c_str(), requestStr.length());
+    if (res == -1)
+    {
+        close(sockfd);
+        perror("[LOGIN]write");
+        return -1;
+    }
+
+    // Parse result
+    char buffer[512];
+
+    int len = read(sockfd, buffer, 512);
+    if (len == -1)
+    {
+        close(sockfd);
+        perror("[LOGIN]read");
+        return -1;
+    }
+    bool findCRLF = false;
+    bool findCR = false;
+    int pos = 0;
+    bool requestNotComplete = true;
+    while (requestNotComplete)
+    {
+        if (buffer[pos] == '\r')
+        {
+            findCR = true;
+        }
+        else if (findCR && buffer[pos] == '\n')
+        {
+            if (findCRLF)
+            {
+                pos++;
+                break;
+            }
+            findCRLF = true;
+        }
+        else
+        {
+            findCR = false;
+            findCRLF = false;
+        }
+        pos++;
+        if (pos >= len)
+        {
+            len = read(sockfd, buffer, 512);
+            if (len == -1)
+            {
+                close(sockfd);
+                perror("[LOGIN]read2");
+                return -1;
+            }
+            pos = 0;
+        }
+
+    }
+    close(sockfd);
+
+    if (pos < len)
+    {
+        if (buffer[pos] == 'Y')
+            return 1;
+        else
+            return 0;
+    }
+    return -1;
+
+    return -1;
 }
 
 ToDoData::ToDoData()
