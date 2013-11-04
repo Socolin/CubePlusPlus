@@ -49,7 +49,7 @@ EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& na
     inventoryWindow->AddInventory(mainInventory);
     inventoryWindow->AddInventory(handsInventory, Window::Window::PRIORITY_HIGH);
     registerModules();
-    gameMode = (eGameMode)Config::Config::getGamemode();
+    gameMode = (eGameMode)Config::Config::GetGamemode();
 }
 
 EntityPlayer::~EntityPlayer()
@@ -94,7 +94,7 @@ void EntityPlayer::UpdateTick()
         return;
     if (world != nullptr)
     {
-        for (unsigned int i = 0; i < Config::Config::getChunkSentPerTick(); i++)
+        for (unsigned int i = 0; i < Config::Config::GetChunkSentPerTick(); i++)
         {
             if (!chunkToSend.empty())
             {
@@ -150,7 +150,7 @@ void EntityPlayer::OnJoinWorld(World* world)
 
     session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
 
-    for (unsigned int i = 0; i < Config::Config::getChunkSentPerTick(); i++)
+    for (unsigned int i = 0; i < Config::Config::GetChunkSentPerTick(); i++)
      {
          if (!chunkToSend.empty())
          {

@@ -31,10 +31,10 @@ bool DatabaseManager::connect()
         return false;
     driver = get_driver_instance();
 
-    Config::Config::getConfig().lookupValue("server.database.address", address);
-    Config::Config::getConfig().lookupValue("server.database.username", username);
-    Config::Config::getConfig().lookupValue("server.database.password", password);
-    Config::Config::getConfig().lookupValue("server.database.schema", schema);
+    Config::Config::GetConfig().lookupValue("server.database.address", address);
+    Config::Config::GetConfig().lookupValue("server.database.username", username);
+    Config::Config::GetConfig().lookupValue("server.database.password", password);
+    Config::Config::GetConfig().lookupValue("server.database.schema", schema);
 
     try
     {

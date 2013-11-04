@@ -24,10 +24,10 @@ private:
     Config();
     ~Config();
 public:
-    static libconfig::Config& getConfig();
-    static unsigned int getChunkSentPerTick();
-    static int getGamemode();
-    static std::string getLogDir();
+    static libconfig::Config& GetConfig();
+    static unsigned int GetChunkSentPerTick();
+    static int GetGamemode();
+    static std::string GetLogDir();
     void Init();
     void SetConfigFileName(std::string fileName);
 private:

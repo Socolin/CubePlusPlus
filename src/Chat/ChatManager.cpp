@@ -19,7 +19,7 @@ namespace Chat
 ChatManager::ChatManager()
     : fwFileName("forbiddenWords")
 {
-    Config::Config::getConfig().lookupValue("server.general.forbidden-words-file", fwFileName);
+    Config::Config::GetConfig().lookupValue("server.general.forbidden-words-file", fwFileName);
     loadForbiddenWordsList();
 }
 

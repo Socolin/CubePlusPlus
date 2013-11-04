@@ -44,18 +44,18 @@ World::World(const std::string& worldName)
     , weatherActivated(false)
 {
     redstoneTorchBurnoutMgr = new Scripting::BlockRedstoneTorchBurnoutMgr();
-    Config::Config::getConfig().lookupValue("server.world.read-only", readOnly);
-    Config::Config::getConfig().lookupValue("server.world.time.locked", lockedTime);
-    Config::Config::getConfig().lookupValue("server.world.time.locked-value", lockedTimeValue);
-    Config::Config::getConfig().lookupValue("server.world.time.locked-value", lockedTimeValue);
-    Config::Config::getConfig().lookupValue("server.world.chunk.update-tick", enableUpdateChunk);
-    Config::Config::getConfig().lookupValue("server.world.view-distance", viewDistance);
+    Config::Config::GetConfig().lookupValue("server.world.read-only", readOnly);
+    Config::Config::GetConfig().lookupValue("server.world.time.locked", lockedTime);
+    Config::Config::GetConfig().lookupValue("server.world.time.locked-value", lockedTimeValue);
+    Config::Config::GetConfig().lookupValue("server.world.time.locked-value", lockedTimeValue);
+    Config::Config::GetConfig().lookupValue("server.world.chunk.update-tick", enableUpdateChunk);
+    Config::Config::GetConfig().lookupValue("server.world.view-distance", viewDistance);
     if (viewDistance < 7 || viewDistance > 15)
     {
         LOG_ERROR << "Invalid viewDistance value: " << viewDistance << ", value must be between 7 and 15" << std::endl;
         viewDistance = 10;
     }
-    Config::Config::getConfig().lookupValue("server.general.world-dir", worldPath);
+    Config::Config::GetConfig().lookupValue("server.general.world-dir", worldPath);
     regionManager = RegionManager(worldPath + "/");
     load();
 }

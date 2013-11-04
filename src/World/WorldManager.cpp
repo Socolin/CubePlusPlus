@@ -19,18 +19,18 @@ namespace World
 WorldManager::WorldManager()
         : world(nullptr), isRunning(true), playerCount(0), maxPlayerCount(0), banFileName("ban"), adminFileName("admin"), motdArraySize(0), lateness(0)
 {
-    Config::Config::getConfig().lookupValue("server.general.maxplayers", maxPlayerCount);
-    Config::Config::getConfig().lookupValue("server.general.name", serverName);
-    Config::Config::getConfig().lookupValue("server.general.description", serverDescription);
-    Config::Config::getConfig().lookupValue("server.general.online", onlineMode);
-    Config::Config::getConfig().lookupValue("server.general.difficulty", difficulty);
+    Config::Config::GetConfig().lookupValue("server.general.maxplayers", maxPlayerCount);
+    Config::Config::GetConfig().lookupValue("server.general.name", serverName);
+    Config::Config::GetConfig().lookupValue("server.general.description", serverDescription);
+    Config::Config::GetConfig().lookupValue("server.general.online", onlineMode);
+    Config::Config::GetConfig().lookupValue("server.general.difficulty", difficulty);
     if (difficulty >= DIFFICULTY_MAX)
     {
         LOG_ERROR << "Invalid difficulty value: " << difficulty << ", max value is :" << DIFFICULTY_MAX - 1 << std::endl;
         difficulty = DIFFICULTY_MAX - 1;
     }
-    Config::Config::getConfig().lookupValue("server.general.ban-file", banFileName);
-    Config::Config::getConfig().lookupValue("server.general.admin-file", adminFileName);
+    Config::Config::GetConfig().lookupValue("server.general.ban-file", banFileName);
+    Config::Config::GetConfig().lookupValue("server.general.admin-file", adminFileName);
     loadMotd();
     loadBanList();
     loadAdminList();
@@ -301,7 +301,7 @@ void WorldManager::loadAdminList()
 
 void WorldManager::loadMotd()
 {
-    libconfig::Setting& setting = Config::Config::getConfig().lookup("server.general");
+    libconfig::Setting& setting = Config::Config::GetConfig().lookup("server.general");
     if(setting["motd"].isArray())
     {
         motdArraySize = setting["motd"].getLength();

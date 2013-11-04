@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
     int port = 25565;
 
     Scripting::ScriptManager::Instance().RegisterAllScripts();
-    if((Config::Config::getConfig()).lookupValue("server.network.port", port))
+    if((Config::Config::GetConfig()).lookupValue("server.network.port", port))
     {
         LOG_INFO << "Custom port " << port << " detected" << std::endl;
     }

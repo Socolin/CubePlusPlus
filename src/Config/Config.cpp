@@ -56,13 +56,13 @@ void Config::Init()
     serverConfig.lookupValue("server.world.chunk.chunk-sent-per-tick", chunkSentPerTick);
     if (chunkSentPerTick < 1 || chunkSentPerTick > 16)
     {
-        std::cout << "Invalid chunkSentPerTick value: " <<  chunkSentPerTick << ", value must be between 1 and 16" << std::endl;
+        std::cerr << "Invalid chunkSentPerTick value: " <<  chunkSentPerTick << ", value must be between 1 and 16" << std::endl;
         chunkSentPerTick = 16;
     }
     serverConfig.lookupValue("server.general.gamemode", gamemode);
     if(gamemode < 0 || gamemode > 2)
     {
-        std::cout << "Invalid gamemode value: " << gamemode << ", gamemode 1 used (creative)" << std::endl;
+        std::cerr << "Invalid gamemode value: " << gamemode << ", gamemode 1 used (creative)" << std::endl;
         gamemode = 1;
     }
 }
@@ -72,22 +72,22 @@ void Config::SetConfigFileName(std::string configFileName)
     fileName = configFileName;
 }
 
-libconfig::Config& Config::getConfig()
+libconfig::Config& Config::GetConfig()
 {
     return Config::Instance().serverConfig;
 }
 
-unsigned int Config::getChunkSentPerTick()
+unsigned int Config::GetChunkSentPerTick()
 {
     return Config::Instance().chunkSentPerTick;
 }
 
-int Config::getGamemode()
+int Config::GetGamemode()
 {
     return Config::Instance().gamemode;
 }
 
-std::string Config::getLogDir()
+std::string Config::GetLogDir()
 {
     return Config::Instance().logDir;
 }
