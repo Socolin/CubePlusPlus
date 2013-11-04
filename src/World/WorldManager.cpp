@@ -89,7 +89,7 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
     playerByNameList[name] = player;
 
     Network::NetworkPacket packetChatMessage(Network::OP_CHAT_MESSAGE);
-    for(int i=0; i<motdArraySize; i++)
+    for(int i = 0; i < motdArraySize; i++)
     {
         std::wostringstream motdMessage;
         std::wstring motdWS (serverMotd[i].begin(), serverMotd[i].end());
@@ -306,7 +306,7 @@ void WorldManager::loadMotd()
     {
         motdArraySize = setting["motd"].getLength();
         serverMotd = new std::string[motdArraySize];
-        for(int i=0; i<motdArraySize; i++)
+        for(int i = 0; i < motdArraySize; i++)
         {
             serverMotd[i] = setting["motd"][i].c_str();
         }

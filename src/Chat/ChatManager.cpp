@@ -19,14 +19,12 @@ namespace Chat
 ChatManager::ChatManager()
     : fwFileName("forbiddenWords")
 {
-    // TODO Auto-generated constructor stub
     Config::Config::getConfig().lookupValue("server.general.forbidden-words-file", fwFileName);
     loadForbiddenWordsList();
 }
 
 ChatManager::~ChatManager()
 {
-    // TODO Auto-generated destructor stub
 }
 
 bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& message)

@@ -56,13 +56,13 @@ void Config::Init()
     serverConfig.lookupValue("server.world.chunk.chunk-sent-per-tick", chunkSentPerTick);
     if (chunkSentPerTick < 1 || chunkSentPerTick > 16)
     {
-        fprintf(stderr, "Invalid chunkSentPerTick value: %d, value must be between 1 and 16\n", chunkSentPerTick);
+        std::cout << "Invalid chunkSentPerTick value: " <<  chunkSentPerTick << ", value must be between 1 and 16" << std::endl;
         chunkSentPerTick = 16;
     }
     serverConfig.lookupValue("server.general.gamemode", gamemode);
     if(gamemode < 0 || gamemode > 2)
     {
-        fprintf(stderr, "Invalid gamemode value: %d, gamemode 1 used (survival)\n", gamemode);
+        std::cout << "Invalid gamemode value: " << gamemode << ", gamemode 1 used (creative)" << std::endl;
         gamemode = 1;
     }
 }
