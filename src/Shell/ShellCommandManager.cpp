@@ -60,22 +60,22 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
 
     if (message.substr(0, 4) == L"stop")
     {
-        printf(">> Stopping the server...\n");
+        std::cout << ">> Stopping the server..." << std::endl;
         World::WorldManager::Instance().Stop();
     }
     else if (message.substr(0, 6) == L"reload")
     {
-        printf(">> Reloading VIP and Admin list\n");
+        std::cout << ">> Reloading VIP and Admin list" << std::endl;
         World::WorldManager::Instance().Reload();
     }
     else if (message.substr(0, 5) == L"night")
     {
-        printf(">> You switch time to night\n");
+        std::cout << ">> You switch time to night" << std::endl;
         World::WorldManager::Instance().GetWorld()->SetTime(20000);
     }
     else if (message.substr(0, 3) == L"day")
     {
-        printf(">> You switch time to day\n");
+        std::cout << ">> You switch time to day" << std::endl;
         World::WorldManager::Instance().GetWorld()->SetTime(1000);
     }
     else if (message.substr(0, 5) == L"kick ")
@@ -88,7 +88,7 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         }
         else
         {
-            printf(">> Not a valid player name\n");
+            std::cout << ">> Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0, 4) == L"ban ")
@@ -96,12 +96,39 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         std::wstring playerName = message.substr(4, message.size() - 5);
         if (playerName.size() > 0)
         {
-            World::WorldManager::Instance().Ban(playerName);
-            std::wcout << L">> Player "<< playerName.c_str() << L" banned" << std::endl;
+            if(!World::WorldManager::Instance().IsBan(playerName))
+            {
+                World::WorldManager::Instance().Ban(playerName);
+                std::wcout << L">> Player "<< playerName.c_str() << L" banned" << std::endl;
+            }
+            else
+            {
+                std::wcout << L">> Player "<< playerName.c_str() << L" is already banned" << std::endl;
+            }
         }
         else
         {
-            printf(">> Not a valid player name\n");
+            std::cout << ">> Not a valid player name" << std::endl;
+        }
+    }
+    else if (message.substr(0, 6) == L"unban ")
+    {
+        std::wstring playerName = message.substr(6, message.size() - 7);
+        if (playerName.size() > 0)
+        {
+            if(World::WorldManager::Instance().IsBan(playerName))
+            {
+                World::WorldManager::Instance().UnBan(playerName);
+                std::wcout << L">> Player "<< playerName.c_str() << L" unbanned" << std::endl;
+            }
+            else
+            {
+                std::wcout << L">> Player "<< playerName.c_str() << L" is not banned" << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << ">> Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0, 9) == L"addadmin ")
@@ -109,12 +136,39 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         std::wstring playerName = message.substr(9, message.size() - 10);
         if (playerName.size() > 0)
         {
-            World::WorldManager::Instance().SetAdmin(playerName);
-            std::wcout << L">> Player "<< playerName.c_str() << L" is now admin" << std::endl;
+            if(!World::WorldManager::Instance().IsAdmin(playerName))
+            {
+                World::WorldManager::Instance().SetAdmin(playerName);
+                std::wcout << L">> Player "<< playerName.c_str() << L" is now admin" << std::endl;
+            }
+            else
+            {
+                std::wcout << L">> Player "<< playerName.c_str() << L" is already admin" << std::endl;
+            }
         }
         else
         {
-            printf(">> Not a valid player name\n");
+            std::cout << ">> Not a valid player name" << std::endl;
+        }
+    }
+    else if (message.substr(0, 8) == L"unadmin ")
+    {
+        std::wstring playerName = message.substr(8, message.size() - 9);
+        if (playerName.size() > 0)
+        {
+            if(World::WorldManager::Instance().IsAdmin(playerName))
+            {
+                World::WorldManager::Instance().UnAdmin(playerName);
+                std::wcout << L">> Player "<< playerName.c_str() << L" is no longer admin" << std::endl;
+            }
+            else
+            {
+                std::wcout << L">> Player "<< playerName.c_str() << L" is not admin" << std::endl;
+            }
+        }
+        else
+        {
+            std::cout << ">> Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0,11) == L"playercount")
@@ -133,7 +187,7 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
     }
     else
     {
-        printf(">> Not a valid command\n");
+        std::cout << ">> Not a valid command" << std::endl;
     }
 }
 

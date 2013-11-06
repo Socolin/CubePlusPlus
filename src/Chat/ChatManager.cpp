@@ -102,10 +102,39 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         std::wstring playerName = message.substr(5, message.size() - 5);
         if (playerName.size() > 0)
         {
-            World::WorldManager::Instance().Ban(playerName);
-            std::wostringstream confirmMessage;
-            confirmMessage << L"§a" << playerName << L" banned";
-            player->SendChatMessage(confirmMessage.str());
+            if(!World::WorldManager::Instance().IsBan(playerName))
+            {
+                World::WorldManager::Instance().Ban(playerName);
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§a" << playerName << L" banned";
+                player->SendChatMessage(confirmMessage.str());
+            }
+            else
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§c" << playerName << L" is already banned";
+                player->SendChatMessage(confirmMessage.str());
+            }
+        }
+    }
+    else if (message.substr(0, 7) == L"/unban ")
+    {
+        std::wstring playerName = message.substr(7, message.size() - 7);
+        if (playerName.size() > 0)
+        {
+            if(World::WorldManager::Instance().IsBan(playerName))
+            {
+                World::WorldManager::Instance().UnBan(playerName);
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§a" << playerName << L" unbanned";
+                player->SendChatMessage(confirmMessage.str());
+            }
+            else
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§c" << playerName << L" is not banned";
+                player->SendChatMessage(confirmMessage.str());
+            }
         }
     }
     else if (message.substr(0, 10) == L"/addadmin ")
@@ -113,10 +142,39 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         std::wstring playerName = message.substr(10, message.size() - 10);
         if (playerName.size() > 0)
         {
-            World::WorldManager::Instance().SetAdmin(playerName);
-            std::wostringstream confirmMessage;
-            confirmMessage << L"§a" << playerName << L" is now admin";
-            player->SendChatMessage(confirmMessage.str());
+            if(!World::WorldManager::Instance().IsAdmin(playerName))
+            {
+                World::WorldManager::Instance().SetAdmin(playerName);
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§a" << playerName << L" is now admin";
+                player->SendChatMessage(confirmMessage.str());
+            }
+            else
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§c" << playerName << L" is already admin";
+                player->SendChatMessage(confirmMessage.str());
+            }
+        }
+    }
+    else if (message.substr(0, 9) == L"/unadmin ")
+    {
+        std::wstring playerName = message.substr(9, message.size() - 9);
+        if (playerName.size() > 0)
+        {
+            if(World::WorldManager::Instance().IsAdmin(playerName))
+            {
+                World::WorldManager::Instance().UnAdmin(playerName);
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§a" << playerName << L" is no longer admin";
+                player->SendChatMessage(confirmMessage.str());
+            }
+            else
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§c" << playerName << L" is not admin";
+                player->SendChatMessage(confirmMessage.str());
+            }
         }
     }
     else if (message.substr(0, 9) == L"/addword ")

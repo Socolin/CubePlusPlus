@@ -17,7 +17,14 @@
 namespace World
 {
 WorldManager::WorldManager()
-        : world(nullptr), isRunning(true), playerCount(0), maxPlayerCount(0), banFileName("ban"), adminFileName("admin"), motdArraySize(0), lateness(0)
+    : world(nullptr)
+    , isRunning(true)
+    , playerCount(0)
+    , maxPlayerCount(0)
+    , banFileName("ban")
+    , adminFileName("admin")
+    , motdArraySize(0)
+    , lateness(0)
 {
     Config::Config::GetConfig().lookupValue("server.general.maxplayers", maxPlayerCount);
     Config::Config::GetConfig().lookupValue("server.general.name", serverName);
@@ -237,6 +244,23 @@ void WorldManager::Ban(const std::wstring& playerName)
     }
 }
 
+void WorldManager::UnBan(const std::wstring& playerName)
+{
+    if(IsBan(playerName))
+    {
+        banList.erase(playerName);
+        std::ofstream banFileList;
+        std::string stringPlayerName;
+        banFileList.open(banFileName.c_str(), std::fstream::out | std::fstream::trunc);
+        for (auto itrPlr = banList.begin(); itrPlr != banList.end(); itrPlr++)
+        {
+            Util::WStringToString(*itrPlr, stringPlayerName);
+            banFileList << stringPlayerName << std::endl;
+        }
+        banFileList.close();
+    }
+}
+
 void WorldManager::SetAdmin(const std::wstring& playerName)
 {
     auto playerItr = playerByNameList.find(playerName);
@@ -256,6 +280,23 @@ void WorldManager::SetAdmin(const std::wstring& playerName)
         Util::WStringToString(playerName, stringPlayerName);
         adminFileList.open(adminFileName.c_str(), std::fstream::out | std::fstream::app);
         adminFileList << stringPlayerName << std::endl;
+        adminFileList.close();
+    }
+}
+
+void WorldManager::UnAdmin(const std::wstring& playerName)
+{
+    if(IsAdmin(playerName))
+    {
+        adminList.erase(playerName);
+        std::ofstream adminFileList;
+        std::string stringPlayerName;
+        adminFileList.open(adminFileName.c_str(), std::fstream::out | std::fstream::trunc);
+        for (auto itrPlr = adminList.begin(); itrPlr != adminList.end(); itrPlr++)
+        {
+            Util::WStringToString(*itrPlr, stringPlayerName);
+            adminFileList << stringPlayerName << std::endl;
+        }
         adminFileList.close();
     }
 }
