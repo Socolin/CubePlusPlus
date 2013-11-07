@@ -23,6 +23,8 @@ WorldManager::WorldManager()
     , maxPlayerCount(0)
     , banFileName("ban")
     , adminFileName("admin")
+    , whitelistFileName("whitelist")
+    , useWhitelist(false)
     , motdArraySize(0)
     , lateness(0)
 {
@@ -38,6 +40,12 @@ WorldManager::WorldManager()
     }
     Config::Config::GetConfig().lookupValue("server.general.ban-file", banFileName);
     Config::Config::GetConfig().lookupValue("server.general.admin-file", adminFileName);
+    Config::Config::GetConfig().lookupValue("server.general.whitelist", useWhitelist);
+    if(useWhitelist)
+    {
+        Config::Config::GetConfig().lookupValue("server.general.whitelist-file", whitelistFileName);
+        loadWhitelist();
+    }
     loadMotd();
     loadBanList();
     loadAdminList();
@@ -48,6 +56,11 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
     if (IsBan(name))
     {
         session->kick(L"Banned !");
+        return nullptr;
+    }
+    if(useWhitelist && !IsWhitelisted(name))
+    {
+        session->kick(L"Not In Server Whitelist !");
         return nullptr;
     }
     auto playerItr = playerByNameList.find(name);
@@ -301,11 +314,6 @@ void WorldManager::UnAdmin(const std::wstring& playerName)
     }
 }
 
-bool WorldManager::IsBan(const std::wstring& playerName)
-{
-    return (banList.find(playerName) != banList.end());
-}
-
 void WorldManager::Reload()
 {
     loadBanList();
@@ -354,9 +362,37 @@ void WorldManager::loadMotd()
     }
 }
 
+void WorldManager::loadWhitelist()
+{
+    whitelist.clear();
+    std::ifstream whitelistFile(whitelistFileName.c_str());
+    std::string line;
+    while (std::getline(whitelistFile,line))
+    {
+        std::wstring playerName;
+        Util::StringToWString(playerName, line);
+        whitelist.insert(playerName);
+    }
+    whitelistFile.close();
+}
+
 bool WorldManager::IsAdmin(const std::wstring& playerName)
 {
     return (adminList.find(playerName) != adminList.end());
+}
+
+bool WorldManager::IsBan(const std::wstring& playerName)
+{
+    return (banList.find(playerName) != banList.end());
+}
+
+bool WorldManager::IsWhitelisted(const std::wstring& playerName)
+{
+    if(!useWhitelist)
+    {
+        return false;
+    }
+    return (whitelist.find(playerName) != whitelist.end());
 }
 
 int WorldManager::GetLateness() const
