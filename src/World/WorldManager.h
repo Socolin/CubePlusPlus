@@ -60,10 +60,12 @@ public:
     int GetLateness() const;
     void SetLateness(int lateness);
     void Kick(const std::wstring& playerName);
-    void Ban(const std::wstring& playerName);
-    void UnBan(const std::wstring& playerName);
-    void SetAdmin(const std::wstring& playerName);
-    void UnAdmin(const std::wstring& playerName);
+    bool Ban(const std::wstring& playerName);
+    bool UnBan(const std::wstring& playerName);
+    bool SetAdmin(const std::wstring& playerName);
+    bool UnAdmin(const std::wstring& playerName);
+    bool AddToWhitelist(const std::wstring& playerName);
+    bool UnWhitelist(const std::wstring& playerName);
     void Reload();
     bool IsBan(const std::wstring& playerName);
     bool IsAdmin(const std::wstring& playerName);

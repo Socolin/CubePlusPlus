@@ -234,7 +234,7 @@ void WorldManager::Kick(const std::wstring& playerName)
     }
 }
 
-void WorldManager::Ban(const std::wstring& playerName)
+bool WorldManager::Ban(const std::wstring& playerName)
 {
     auto playerItr = playerByNameList.find(playerName);
     if (playerItr != playerByNameList.end())
@@ -254,10 +254,12 @@ void WorldManager::Ban(const std::wstring& playerName)
         banFileList.open(banFileName.c_str(), std::fstream::out | std::fstream::app);
         banFileList << stringPlayerName << std::endl;
         banFileList.close();
+        return true;
     }
+    return false;
 }
 
-void WorldManager::UnBan(const std::wstring& playerName)
+bool WorldManager::UnBan(const std::wstring& playerName)
 {
     if(IsBan(playerName))
     {
@@ -271,10 +273,12 @@ void WorldManager::UnBan(const std::wstring& playerName)
             banFileList << stringPlayerName << std::endl;
         }
         banFileList.close();
+        return true;
     }
+    return false;
 }
 
-void WorldManager::SetAdmin(const std::wstring& playerName)
+bool WorldManager::SetAdmin(const std::wstring& playerName)
 {
     auto playerItr = playerByNameList.find(playerName);
     if (playerItr != playerByNameList.end())
@@ -294,10 +298,12 @@ void WorldManager::SetAdmin(const std::wstring& playerName)
         adminFileList.open(adminFileName.c_str(), std::fstream::out | std::fstream::app);
         adminFileList << stringPlayerName << std::endl;
         adminFileList.close();
+        return true;
     }
+    return false;
 }
 
-void WorldManager::UnAdmin(const std::wstring& playerName)
+bool WorldManager::UnAdmin(const std::wstring& playerName)
 {
     if(IsAdmin(playerName))
     {
@@ -311,13 +317,63 @@ void WorldManager::UnAdmin(const std::wstring& playerName)
             adminFileList << stringPlayerName << std::endl;
         }
         adminFileList.close();
+        return true;
     }
+    return false;
+}
+
+bool WorldManager::AddToWhitelist(const std::wstring& playerName)
+{
+    if(!IsWhitelisted(playerName))
+    {
+        whitelist.insert(playerName);
+        std::ofstream whitelistFile;
+        std::string stringPlayerName;
+        Util::WStringToString(playerName, stringPlayerName);
+        whitelistFile.open(whitelistFileName.c_str(), std::fstream::out | std::fstream::app);
+        whitelistFile << stringPlayerName << std::endl;
+        whitelistFile.close();
+        return true;
+    }
+    return false;
+}
+
+bool WorldManager::UnWhitelist(const std::wstring& playerName)
+{
+    auto playerItr = playerByNameList.find(playerName);
+    if (playerItr != playerByNameList.end())
+    {
+        EntityPlayer* oldPlr = playerItr->second;
+        if (oldPlr)
+        {
+            oldPlr->Kick(L"Not In Server Whitelist !");
+        }
+    }
+    if(IsWhitelisted(playerName))
+    {
+        whitelist.erase(playerName);
+        std::ofstream whitelistFile;
+        std::string stringPlayerName;
+        whitelistFile.open(whitelistFileName.c_str(), std::fstream::out | std::fstream::trunc);
+        for (auto itrPlr = whitelist.begin(); itrPlr != whitelist.end(); itrPlr++)
+        {
+            Util::WStringToString(*itrPlr, stringPlayerName);
+            whitelistFile << stringPlayerName << std::endl;
+        }
+        whitelistFile.close();
+        return true;
+    }
+    return false;
 }
 
 void WorldManager::Reload()
 {
     loadBanList();
     loadAdminList();
+    if(useWhitelist)
+    {
+        loadWhitelist();
+    }
 }
 
 void WorldManager::loadBanList()
@@ -390,7 +446,7 @@ bool WorldManager::IsWhitelisted(const std::wstring& playerName)
 {
     if(!useWhitelist)
     {
-        return false;
+        return true;
     }
     return (whitelist.find(playerName) != whitelist.end());
 }

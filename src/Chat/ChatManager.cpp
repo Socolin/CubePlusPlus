@@ -73,7 +73,7 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
     }
     else if (message == L"/reload")
     {
-        player->SendChatMessage(L"§aReloading VIP and Admin list");
+        player->SendChatMessage(L"§aReloading VIP list, Admin list and Whitelist");
         World::WorldManager::Instance().Reload();
     }
     else if (message == L"/night")
@@ -102,9 +102,8 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         std::wstring playerName = message.substr(5, message.size() - 5);
         if (playerName.size() > 0)
         {
-            if(!World::WorldManager::Instance().IsBan(playerName))
+            if(World::WorldManager::Instance().Ban(playerName))
             {
-                World::WorldManager::Instance().Ban(playerName);
                 std::wostringstream confirmMessage;
                 confirmMessage << L"§a" << playerName << L" banned";
                 player->SendChatMessage(confirmMessage.str());
@@ -122,9 +121,8 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         std::wstring playerName = message.substr(7, message.size() - 7);
         if (playerName.size() > 0)
         {
-            if(World::WorldManager::Instance().IsBan(playerName))
+            if(World::WorldManager::Instance().UnBan(playerName))
             {
-                World::WorldManager::Instance().UnBan(playerName);
                 std::wostringstream confirmMessage;
                 confirmMessage << L"§a" << playerName << L" unbanned";
                 player->SendChatMessage(confirmMessage.str());
@@ -142,9 +140,8 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         std::wstring playerName = message.substr(10, message.size() - 10);
         if (playerName.size() > 0)
         {
-            if(!World::WorldManager::Instance().IsAdmin(playerName))
+            if(World::WorldManager::Instance().SetAdmin(playerName))
             {
-                World::WorldManager::Instance().SetAdmin(playerName);
                 std::wostringstream confirmMessage;
                 confirmMessage << L"§a" << playerName << L" is now admin";
                 player->SendChatMessage(confirmMessage.str());
@@ -162,9 +159,8 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         std::wstring playerName = message.substr(9, message.size() - 9);
         if (playerName.size() > 0)
         {
-            if(World::WorldManager::Instance().IsAdmin(playerName))
+            if(World::WorldManager::Instance().UnAdmin(playerName))
             {
-                World::WorldManager::Instance().UnAdmin(playerName);
                 std::wostringstream confirmMessage;
                 confirmMessage << L"§a" << playerName << L" is no longer admin";
                 player->SendChatMessage(confirmMessage.str());
@@ -173,6 +169,44 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
             {
                 std::wostringstream confirmMessage;
                 confirmMessage << L"§c" << playerName << L" is not admin";
+                player->SendChatMessage(confirmMessage.str());
+            }
+        }
+    }
+    else if (message.substr(0, 11) == L"/whitelist ")
+    {
+        std::wstring playerName = message.substr(11, message.size() - 11);
+        if (playerName.size() > 0)
+        {
+            if(World::WorldManager::Instance().AddToWhitelist(playerName))
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§a" << playerName << L" added to whitelist";
+                player->SendChatMessage(confirmMessage.str());
+            }
+            else
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§c" << playerName << L" is already in whitelist";
+                player->SendChatMessage(confirmMessage.str());
+            }
+        }
+    }
+    else if (message.substr(0, 13) == L"/unwhitelist ")
+    {
+        std::wstring playerName = message.substr(13, message.size() - 13);
+        if (playerName.size() > 0)
+        {
+            if(World::WorldManager::Instance().UnWhitelist(playerName))
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§a" << playerName << L" is no longer in whitelist";
+                player->SendChatMessage(confirmMessage.str());
+            }
+            else
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§c" << playerName << L" is not in whitelist";
                 player->SendChatMessage(confirmMessage.str());
             }
         }
@@ -257,19 +291,16 @@ bool ChatManager::AddForbiddenWord(const std::wstring& word)
     {
         return false;
     }
-    else
-    {
-        std::wstring wordLow = word;
-        boost::algorithm::to_lower(wordLow);
-        forbiddenWords.insert(wordLow);
-        std::ofstream forbiddenWordsList;
-        std::string stringWord;
-        Util::WStringToString(wordLow, stringWord);
-        forbiddenWordsList.open(fwFileName.c_str(), std::fstream::out | std::fstream::app);
-        forbiddenWordsList << stringWord << std::endl;
-        forbiddenWordsList.close();
-        return true;
-    }
+    std::wstring wordLow = word;
+    boost::algorithm::to_lower(wordLow);
+    forbiddenWords.insert(wordLow);
+    std::ofstream forbiddenWordsList;
+    std::string stringWord;
+    Util::WStringToString(wordLow, stringWord);
+    forbiddenWordsList.open(fwFileName.c_str(), std::fstream::out | std::fstream::app);
+    forbiddenWordsList << stringWord << std::endl;
+    forbiddenWordsList.close();
+    return true;
 }
 
 
