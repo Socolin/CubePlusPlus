@@ -73,7 +73,7 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
     }
     else if (message == L"/reload")
     {
-        player->SendChatMessage(L"§aReloading VIP list, Admin list and Whitelist");
+        player->SendChatMessage(L"§aReloading Ban list, Admin list and Whitelist");
         World::WorldManager::Instance().Reload();
     }
     else if (message == L"/night")
@@ -279,6 +279,7 @@ void ChatManager::loadForbiddenWordsList()
     {
         std::wstring forbiddenWord;
         Util::StringToWString(forbiddenWord, line);
+        boost::algorithm::to_lower(forbiddenWord);
         forbiddenWords.insert(forbiddenWord);
     }
     forbiddenWordsList.close();
@@ -286,17 +287,17 @@ void ChatManager::loadForbiddenWordsList()
 
 bool ChatManager::AddForbiddenWord(const std::wstring& word)
 {
-    auto forbiddenWordsItr = forbiddenWords.find(word);
+    std::wstring forbiddenWord = word;
+    boost::algorithm::to_lower(forbiddenWord);
+    auto forbiddenWordsItr = forbiddenWords.find(forbiddenWord);
     if (forbiddenWordsItr != forbiddenWords.end())
     {
         return false;
     }
-    std::wstring wordLow = word;
-    boost::algorithm::to_lower(wordLow);
-    forbiddenWords.insert(wordLow);
+    forbiddenWords.insert(forbiddenWord);
     std::ofstream forbiddenWordsList;
     std::string stringWord;
-    Util::WStringToString(wordLow, stringWord);
+    Util::WStringToString(forbiddenWord, stringWord);
     forbiddenWordsList.open(fwFileName.c_str(), std::fstream::out | std::fstream::app);
     forbiddenWordsList << stringWord << std::endl;
     forbiddenWordsList.close();

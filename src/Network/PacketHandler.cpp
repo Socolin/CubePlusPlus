@@ -59,13 +59,9 @@ void NetworkSession::handleChatMessage() throw (NetworkException)
 void NetworkSession::handleHandShake() throw (NetworkException)
 {
     World:: WorldManager& worldManager = World:: WorldManager::Instance();
-    if (worldManager.IsFull())
-    {
-        kick(std::wstring(L"Server is full"));
-        return;
-    }
 
     unsigned char protocolVersion = readByte();
+
     if (protocolVersion != CURRENT_VERSION_PROTOCOL)
     {
         kick(std::wstring(L"Bad protocol version, use 1.5.2"));
@@ -73,6 +69,25 @@ void NetworkSession::handleHandShake() throw (NetworkException)
     }
 
     username = readString(16);
+
+    if (worldManager.IsFull() && !worldManager.IsAdmin(username))
+    {
+        kick(std::wstring(L"Server is full"));
+        return;
+    }
+
+    if (worldManager.IsBan(username))
+    {
+        kick(std::wstring(L"Banned !"));
+        return;
+    }
+
+    if(!worldManager.IsWhitelisted(username))
+    {
+        kick(std::wstring(L"Not In Server Whitelist !"));
+        return;
+    }
+
     std::wstring serverHost = readString(255);
     int serverPort = readInt();
 

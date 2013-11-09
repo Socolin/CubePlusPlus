@@ -60,22 +60,22 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
 
     if (message.substr(0, 4) == L"stop")
     {
-        std::cout << ">> Stopping the server..." << std::endl;
+        LOG_INFO << "Stopping the server..." << std::endl;
         World::WorldManager::Instance().Stop();
     }
     else if (message.substr(0, 6) == L"reload")
     {
-        std::cout << ">> Reloading VIP list, Admin list and Whitelist" << std::endl;
+        LOG_INFO << "Reloading Ban list, Admin list and Whitelist" << std::endl;
         World::WorldManager::Instance().Reload();
     }
     else if (message.substr(0, 5) == L"night")
     {
-        std::cout << ">> You switch time to night" << std::endl;
+        LOG_INFO << "You switch time to night" << std::endl;
         World::WorldManager::Instance().GetWorld()->SetTime(20000);
     }
     else if (message.substr(0, 3) == L"day")
     {
-        std::cout << ">> You switch time to day" << std::endl;
+        LOG_INFO << "You switch time to day" << std::endl;
         World::WorldManager::Instance().GetWorld()->SetTime(1000);
     }
     else if (message.substr(0, 5) == L"kick ")
@@ -84,11 +84,11 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         if (playerName.size() > 1)
         {
             World::WorldManager::Instance().Kick(playerName);
-            std::wcout << L">> Player "<< playerName.c_str() << L" kicked" << std::endl;
+            LOG_INFO << "Player "<< playerName.c_str() << " kicked" << std::endl;
         }
         else
         {
-            std::cout << ">> Not a valid player name" << std::endl;
+            LOG_ERROR << "Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0, 4) == L"ban ")
@@ -98,16 +98,16 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         {
             if(World::WorldManager::Instance().Ban(playerName))
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" banned" << std::endl;
+                LOG_INFO << "Player "<< playerName.c_str() << " banned" << std::endl;
             }
             else
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" is already banned" << std::endl;
+                LOG_ERROR << "Player "<< playerName.c_str() << " is already banned" << std::endl;
             }
         }
         else
         {
-            std::cout << ">> Not a valid player name" << std::endl;
+            LOG_ERROR << "Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0, 6) == L"unban ")
@@ -117,16 +117,16 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         {
             if(World::WorldManager::Instance().UnBan(playerName))
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" unbanned" << std::endl;
+                LOG_INFO << "Player "<< playerName.c_str() << " unbanned" << std::endl;
             }
             else
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" is not banned" << std::endl;
+                LOG_ERROR << "Player "<< playerName.c_str() << " is not banned" << std::endl;
             }
         }
         else
         {
-            std::cout << ">> Not a valid player name" << std::endl;
+            LOG_ERROR << "Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0, 9) == L"addadmin ")
@@ -136,16 +136,16 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         {
             if(World::WorldManager::Instance().SetAdmin(playerName))
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" is now admin" << std::endl;
+                LOG_INFO << "Player "<< playerName.c_str() << " is now admin" << std::endl;
             }
             else
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" is already admin" << std::endl;
+                LOG_ERROR << "Player "<< playerName.c_str() << " is already admin" << std::endl;
             }
         }
         else
         {
-            std::cout << ">> Not a valid player name" << std::endl;
+            LOG_ERROR << "Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0, 8) == L"unadmin ")
@@ -155,16 +155,16 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         {
             if(World::WorldManager::Instance().UnAdmin(playerName))
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" is no longer admin" << std::endl;
+                LOG_INFO << "Player "<< playerName.c_str() << " is no longer admin" << std::endl;
             }
             else
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" is not admin" << std::endl;
+                LOG_ERROR << "Player "<< playerName.c_str() << " is not admin" << std::endl;
             }
         }
         else
         {
-            std::cout << ">> Not a valid player name" << std::endl;
+            LOG_ERROR << "Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0, 10) == L"whitelist ")
@@ -174,16 +174,16 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         {
             if(World::WorldManager::Instance().AddToWhitelist(playerName))
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" added to whitelist" << std::endl;
+                LOG_INFO << "Player "<< playerName.c_str() << " added to whitelist" << std::endl;
             }
             else
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" is already in whitelist" << std::endl;
+                LOG_ERROR << "Player "<< playerName.c_str() << " is already in whitelist" << std::endl;
             }
         }
         else
         {
-            std::cout << ">> Not a valid player name" << std::endl;
+            LOG_ERROR << "Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0, 12) == L"unwhitelist ")
@@ -193,35 +193,35 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         {
             if(World::WorldManager::Instance().UnWhitelist(playerName))
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" is no longer in whitelist" << std::endl;
+                LOG_INFO << "Player "<< playerName.c_str() << " is no longer in whitelist" << std::endl;
             }
             else
             {
-                std::wcout << L">> Player "<< playerName.c_str() << L" is not in whitelist" << std::endl;
+                LOG_ERROR << "Player "<< playerName.c_str() << " is not in whitelist" << std::endl;
             }
         }
         else
         {
-            std::cout << ">> Not a valid player name" << std::endl;
+            LOG_ERROR << "Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0,11) == L"playercount")
     {
-        LOG_INFO << L"Connected players : " << World::WorldManager::Instance().GetPlayerCount() << std::endl;
+        LOG_INFO << "Connected players : " << World::WorldManager::Instance().GetPlayerCount() << std::endl;
     }
     else if (message.substr(0,10) == L"playerlist")
     {
         std::map<std::wstring, World::EntityPlayer*>* playerList = World::WorldManager::Instance().GetPlayerByNameList();
-        LOG_INFO << L"Connected players : " << std::endl;
+        LOG_INFO << "Connected players : " << std::endl;
         for(auto itr : *playerList)
         {
-            LOG_INFO_CONCAT << itr.first << L" - ";
+            LOG_INFO_CONCAT << itr.first << " - ";
         }
-        LOG_INFO_CONCAT << L"Total : " << World::WorldManager::Instance().GetPlayerCount() << L" players connected" << std::endl;
+        LOG_INFO_CONCAT << "Total : " << World::WorldManager::Instance().GetPlayerCount() << " players connected" << std::endl;
     }
     else
     {
-        std::cout << ">> Not a valid command" << std::endl;
+        LOG_ERROR << "Not a valid command" << std::endl;
     }
 }
 

@@ -53,16 +53,6 @@ WorldManager::WorldManager()
 
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
 {
-    if (IsBan(name))
-    {
-        session->kick(L"Banned !");
-        return nullptr;
-    }
-    if(useWhitelist && !IsWhitelisted(name))
-    {
-        session->kick(L"Not In Server Whitelist !");
-        return nullptr;
-    }
     auto playerItr = playerByNameList.find(name);
     if (playerItr != playerByNameList.end())
     {
