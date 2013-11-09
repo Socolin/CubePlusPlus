@@ -218,11 +218,34 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(AddForbiddenWord(word))
             {
-                player->SendChatMessage(L"§aWord added to blacklist");
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§a" << word << L" added to forbidden word list";
+                player->SendChatMessage(confirmMessage.str());
             }
             else
             {
-                player->SendChatMessage(L"§cWord already added to blacklist");
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§c" << word << L" is already in forbidden word list";
+                player->SendChatMessage(confirmMessage.str());
+            }
+        }
+    }
+    else if (message.substr(0, 8) == L"/unword ")
+    {
+        std::wstring word = message.substr(8, message.size() - 8);
+        if (word.size() > 0)
+        {
+            if(RemoveForbiddenWord(word))
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§a" << word << L" is no longer in forbidden word list";
+                player->SendChatMessage(confirmMessage.str());
+            }
+            else
+            {
+                std::wostringstream confirmMessage;
+                confirmMessage << L"§c" << word << L" is not in forbidden word list";
+                player->SendChatMessage(confirmMessage.str());
             }
         }
     }
@@ -289,19 +312,45 @@ bool ChatManager::AddForbiddenWord(const std::wstring& word)
 {
     std::wstring forbiddenWord = word;
     boost::algorithm::to_lower(forbiddenWord);
-    auto forbiddenWordsItr = forbiddenWords.find(forbiddenWord);
-    if (forbiddenWordsItr != forbiddenWords.end())
+    if (!IsForbiddenWord(forbiddenWord))
     {
-        return false;
+        forbiddenWords.insert(forbiddenWord);
+        std::ofstream forbiddenWordsList;
+        std::string stringWord;
+        Util::WStringToString(forbiddenWord, stringWord);
+        forbiddenWordsList.open(fwFileName.c_str(), std::fstream::out | std::fstream::app);
+        forbiddenWordsList << stringWord << std::endl;
+        forbiddenWordsList.close();
+        return true;
     }
-    forbiddenWords.insert(forbiddenWord);
-    std::ofstream forbiddenWordsList;
-    std::string stringWord;
-    Util::WStringToString(forbiddenWord, stringWord);
-    forbiddenWordsList.open(fwFileName.c_str(), std::fstream::out | std::fstream::app);
-    forbiddenWordsList << stringWord << std::endl;
-    forbiddenWordsList.close();
-    return true;
+    return false;
+
+}
+
+bool ChatManager::RemoveForbiddenWord(const std::wstring& word)
+{
+    std::wstring forbiddenWord = word;
+    boost::algorithm::to_lower(forbiddenWord);
+    if (IsForbiddenWord(forbiddenWord))
+    {
+        forbiddenWords.erase(forbiddenWord);
+        std::ofstream forbiddenWordsListFile;
+        std::string stringWord;
+        forbiddenWordsListFile.open(fwFileName.c_str(), std::fstream::out | std::fstream::trunc);
+        for (auto itrPlr = forbiddenWords.begin(); itrPlr != forbiddenWords.end(); itrPlr++)
+        {
+            Util::WStringToString(*itrPlr, stringWord);
+            forbiddenWordsListFile << stringWord << std::endl;
+        }
+        forbiddenWordsListFile.close();
+        return true;
+    }
+    return false;
+}
+
+bool ChatManager::IsForbiddenWord(const std::wstring& word)
+{
+    return (forbiddenWords.find(word) != forbiddenWords.end());
 }
 
 

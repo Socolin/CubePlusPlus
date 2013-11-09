@@ -295,6 +295,15 @@ bool WorldManager::SetAdmin(const std::wstring& playerName)
 
 bool WorldManager::UnAdmin(const std::wstring& playerName)
 {
+    auto playerItr = playerByNameList.find(playerName);
+    if (playerItr != playerByNameList.end())
+    {
+        EntityPlayer* oldPlr = playerItr->second;
+        if (oldPlr)
+        {
+            oldPlr->SetAdmin(false);
+        }
+    }
     if(IsAdmin(playerName))
     {
         adminList.erase(playerName);
