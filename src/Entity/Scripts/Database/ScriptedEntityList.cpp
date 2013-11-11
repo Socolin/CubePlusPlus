@@ -37,11 +37,10 @@ void ScriptedEntityList::Initialize()
     }
 
     LOG_INFO << "Loading living entities's datas" << std::endl;
-    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << Logging::BOLD_BLUE
               << "Id" << "\t"
               << "type" << "\t"
               << "script" << "\t"
-              << UTIL_TEXT_SHELL_NONE
               << std::endl;
     while(result->next())
     {

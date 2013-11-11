@@ -34,13 +34,12 @@ void PaintingData::load()
     }
 
     LOG_INFO << "Loading paitings's datas" << std::endl;
-    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << Logging::BOLD_BLUE
               << "title" << "\t\t"
               << "sizeX" << "\t"
               << "sizeY" << "\t"
               << "itemId" << "\t"
               << "itemData" << "\t"
-              << UTIL_TEXT_SHELL_NONE
               << std::endl;
 
     while(result->next())

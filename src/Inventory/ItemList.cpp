@@ -51,7 +51,7 @@ void ItemList::Initialize()
     }
 
     LOG_INFO << "Loading items's datas" << std::endl;
-    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << Logging::BOLD_BLUE
               << "itemId" << "\t"
               << "StackSz" << "\t"
               << "MDamage" << "\t"
@@ -60,7 +60,6 @@ void ItemList::Initialize()
               << "burning" << "\t"
               << "script" << "\t"
               << "name" << "\t"
-              << UTIL_TEXT_SHELL_NONE
               << std::endl;
     while(result->next())
     {

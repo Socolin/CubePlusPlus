@@ -67,14 +67,13 @@ void FurnaceRecipes::load()
     }
 
     LOG_INFO << "Loading furnace recipes's datas" << std::endl;
-    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << Logging::BOLD_BLUE
               << "itemId" << "\t"
               << "itemDat" << "\t"
               << "resultI" << "\t"
               << "resultD" << "\t"
               << "resultQ" << "\t"
               << "experi" << "\t"
-              << UTIL_TEXT_SHELL_NONE
               << std::endl;
 
     while(result->next())

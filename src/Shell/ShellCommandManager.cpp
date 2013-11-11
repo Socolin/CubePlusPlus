@@ -88,7 +88,7 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         }
         else
         {
-            LOG_ERROR  << "Not a valid player name" << Logging::ENDL;
+            LOG_ERROR  << "Not a valid player name" << std::endl;
         }
     }
     else if (message.substr(0, 4) == L"ban ")
@@ -221,7 +221,7 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
     }
     else
     {
-        LOG_ERROR << "Not a valid command" << Logging::ENDL;
+        LOG_ERROR << "Not a valid command" << std::endl;
     }
 }
 

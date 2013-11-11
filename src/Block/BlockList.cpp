@@ -49,7 +49,7 @@ void BlockList::Initialize()
     }
 
     LOG_INFO << "Loading block's datas" << std::endl;
-    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << Logging::BOLD_BLUE
               << "blockId" << "\t"
               << "lightOp" << "\t"
               << "lightVa" << "\t"
@@ -72,7 +72,6 @@ void BlockList::Initialize()
               << "burning" << "\t"
               << "useNeighborBrightness" << "\t"
               << "name" << " "
-              << UTIL_TEXT_SHELL_NONE
               << std::endl;
     while(result->next())
     {
@@ -206,12 +205,12 @@ void BlockList::LoadSounds()
 
     if (result == nullptr)
     {
-        LOG_ERROR << "ERROR: no block found in database";
+        LOG_ERROR << "ERROR: no block found in database" << std::endl;
         return;
     }
 
     LOG_DEBUG << "Loading sound's datas" << std::endl;
-    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << Logging::BOLD_BLUE
               << "soundId" << "\t"
               << "volume" << "\t"
               << "modifie" << "\t"
@@ -219,7 +218,6 @@ void BlockList::LoadSounds()
               << "placeSound" << "\t"
               << "breakSound" << "\t"
               << "name" << "\t"
-              << UTIL_TEXT_SHELL_NONE
               << std::endl;
     while(result->next())
     {
@@ -267,7 +265,7 @@ void BlockList::LoadMaterials()
 
 
     LOG_DEBUG << "Loading material's datas" << std::endl;
-    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << Logging::BOLD_BLUE
               << "matId" << "\t"
               << "canBurn" << "\t"
               << "replaca" << "\t"
@@ -277,7 +275,6 @@ void BlockList::LoadMaterials()
               << "solid" << "\t"
               << "liquid" << "\t"
               << "name" << "\t"
-              << UTIL_TEXT_SHELL_NONE
               << std::endl;
     while(result->next())
     {

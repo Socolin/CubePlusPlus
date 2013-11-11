@@ -46,14 +46,13 @@ void WindowList::Initialize()
     }
 
     LOG_DEBUG << "Loading window's datas" << std::endl;
-    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << Logging::BOLD_BLUE
               << "id" << "\t"
               << "maxSlot" << "\t"
               << "NetSlot" << "\t"
               << "script" << "\t"
               << "clientWindowId" << "\t"
               << "name" << "\t"
-              << UTIL_TEXT_SHELL_NONE
               << std::endl;
     while(result->next())
     {

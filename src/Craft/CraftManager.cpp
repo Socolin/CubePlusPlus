@@ -53,7 +53,7 @@ void CraftManager::load()
     }
 
     LOG_INFO << "Loading craft's datas" << std::endl;
-    LOG_DEBUG << UTIL_TEXT_SHELL_BOLD_BLUE
+    LOG_DEBUG << Logging::BOLD_BLUE
                 << "id" << "\t"
                 << "width" << "\t"
                 << "height" << "\t"
@@ -61,7 +61,7 @@ void CraftManager::load()
                 << "resultDa" << "\t"
                 << "resultQu" << "\t"
                 << "scriptId" << "\t"
-                << UTIL_TEXT_SHELL_NONE << std::endl;
+                << std::endl;
     while (result->next())
     {
         int craftId = result->getInt(TableCraft::id);

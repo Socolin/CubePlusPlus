@@ -24,8 +24,8 @@ std::string getNowDateTime();
 enum eColor
 {
     NONE,
-    ENDL,
-    BOLD_RED
+    BOLD_RED,
+    BOLD_BLUE
 };
 class Logger: public std::ofstream
 {
@@ -48,6 +48,7 @@ public:
     {
         manip(streamOutput);
         manip(static_cast<std::ofstream&>(*this));
+        streamOutput << UTIL_TEXT_SHELL_NONE;
         return (*this);
     }
 
@@ -81,12 +82,11 @@ public:
             case NONE :
                 streamOutput << UTIL_TEXT_SHELL_NONE;
                 break;
-            case ENDL :
-                streamOutput << UTIL_TEXT_SHELL_NONE;
-                (*this) << std::endl;
-                break;
             case BOLD_RED :
                 streamOutput << UTIL_TEXT_SHELL_BOLD_RED;
+                break;
+            case BOLD_BLUE :
+                streamOutput << UTIL_TEXT_SHELL_BOLD_BLUE;
                 break;
             default :
                 break;
