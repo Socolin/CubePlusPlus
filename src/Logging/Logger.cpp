@@ -12,7 +12,8 @@ Logger Logger::info(std::cout, "server.log");
 Logger Logger::error(std::cerr, "error.log");
 
 Logger::Logger(std::ostream& streamOutput, const std::string& fileName)
-        : std::ofstream(Config::Config::GetLogDir() + "/" + fileName, std::ios::out | std::ios::app), streamOutput(streamOutput)
+    : std::ofstream(Config::Config::GetLogDir() + "/" + fileName, std::ios::out | std::ios::app)
+    , streamOutput(streamOutput)
 {
 }
 

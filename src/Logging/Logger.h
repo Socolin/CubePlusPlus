@@ -15,11 +15,18 @@
 
 #define LOG_INFO Logging::Logger::info << Logging::getNowDateTime()
 #define LOG_INFO_CONCAT Logging::Logger::info
-#define LOG_ERROR Logging::Logger::error << Logging::getNowDateTime()
+#define LOG_ERROR Logging::Logger::error << Logging::getNowDateTime() << Logging::BOLD_RED
+
 
 namespace Logging
 {
 std::string getNowDateTime();
+enum eColor
+{
+    NONE,
+    ENDL,
+    BOLD_RED
+};
 class Logger: public std::ofstream
 {
 public:
@@ -66,6 +73,27 @@ public:
         std::wstring str(var);
         return *this << str;
     }
+
+    Logger& operator<<(eColor col)
+    {
+        switch(col)
+        {
+            case NONE :
+                streamOutput << UTIL_TEXT_SHELL_NONE;
+                break;
+            case ENDL :
+                streamOutput << UTIL_TEXT_SHELL_NONE;
+                (*this) << std::endl;
+                break;
+            case BOLD_RED :
+                streamOutput << UTIL_TEXT_SHELL_BOLD_RED;
+                break;
+            default :
+                break;
+        }
+        return (*this);
+    }
+
     void SetLogDir(const std::string& fileName);
 private:
     std::ostream& streamOutput;
