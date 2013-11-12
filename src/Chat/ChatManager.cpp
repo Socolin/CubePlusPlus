@@ -37,7 +37,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
 
         if (!commandHandled)
         {
-            player->SendChatMessage(Chat::REDNot a valid command");
+            player->GetChat() << Chat::RED << "Not a valid command";
         }
         return true;
     }
@@ -49,7 +49,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     {
         if(messageLow.find(*it) != messageLow.npos)
         {
-            player->SendChatMessage(Chat::REDYour message include forbidden words and will not be send");
+            player->GetChat() << Chat::RED << "Your message include forbidden words and will not be send";
             LOG_INFO << "Invalid message send by player " << player->GetUsername() << " : " << message << std::endl;
             return true;
         }
