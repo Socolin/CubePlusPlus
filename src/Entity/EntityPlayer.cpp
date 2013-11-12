@@ -31,6 +31,7 @@ EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& na
     : LivingEntity(ENTITY_TYPE_PLAYER, 0, spawnPosition.x, spawnPosition.y, spawnPosition.z)
     , name(name)
     , session(session)
+    , chat(this)
     , currentWindowId(0)
     , animationId(-1)
     , currentWindow(nullptr)
@@ -612,6 +613,11 @@ void EntityPlayer::ShowCape(char showCape)
         metadataManager.Write(packet);
         Send(packet);
     }
+}
+
+Chat::PlayerChat& EntityPlayer::GetChat()
+{
+    return chat;
 }
 
 void EntityPlayer::registerModules()

@@ -4,6 +4,8 @@
 #include "LivingEntity.h"
 #include "Inventory/InventoryPlayer.h"
 
+#include "Chat/PlayerChat.h"
+
 #include <boost/heap/binomial_heap.hpp>
 #include <string>
 #include <queue>
@@ -269,6 +271,8 @@ public:
     virtual void Attack(LivingEntity* attacker, int& damage) override;
 
     const Inventory::ItemStack* LookItemInHand() const;
+    Chat::PlayerChat& GetChat();
+
 private:
     void registerModules();
 private:
@@ -290,6 +294,7 @@ private:
     eGameMode gameMode;
     std::wstring name;
     Network::NetworkSession* session;
+    Chat::PlayerChat chat;
     boost::heap::binomial_heap<ChunkToSendData,boost::heap::compare<CompareChunkToSendData>> chunkToSend;
     std::vector<ChunkToSendData> sortChunkToSend;
     Inventory::Inventory* mainInventory;

@@ -104,15 +104,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(World::WorldManager::Instance().Ban(playerName))
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§a" << playerName << L" banned";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§a" << playerName << L" banned" << std::endl;;
             }
             else
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§c" << playerName << L" is already banned";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§c" << playerName << L" is already banned" << std::endl;;
             }
         }
     }
@@ -123,15 +119,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(World::WorldManager::Instance().UnBan(playerName))
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§a" << playerName << L" unbanned";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§a" << playerName << L" unbanned" << std::endl;
             }
             else
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§c" << playerName << L" is not banned";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§c" << playerName << L" is not banned" << std::endl;
             }
         }
     }
@@ -142,15 +134,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(World::WorldManager::Instance().SetAdmin(playerName))
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§a" << playerName << L" is now admin";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§a" << playerName << L" is now admin" << std::endl;
             }
             else
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§c" << playerName << L" is already admin";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§c" << playerName << L" is already admin" << std::endl;
             }
         }
     }
@@ -161,15 +149,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(World::WorldManager::Instance().UnAdmin(playerName))
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§a" << playerName << L" is no longer admin";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§a" << playerName << L" is no longer admin" << std::endl;
             }
             else
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§c" << playerName << L" is not admin";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§c" << playerName << L" is not admin" << std::endl;
             }
         }
     }
@@ -180,15 +164,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(World::WorldManager::Instance().AddToWhitelist(playerName))
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§a" << playerName << L" added to whitelist";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§a" << playerName << L" added to whitelist" << std::endl;
             }
             else
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§c" << playerName << L" is already in whitelist";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§c" << playerName << L" is already in whitelist" << std::endl;
             }
         }
     }
@@ -199,15 +179,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(World::WorldManager::Instance().UnWhitelist(playerName))
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§a" << playerName << L" is no longer in whitelist";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§a" << playerName << L" is no longer in whitelist" << std::endl;
             }
             else
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§c" << playerName << L" is not in whitelist";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§c" << playerName << L" is not in whitelist" << std::endl;
             }
         }
     }
@@ -218,15 +194,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(AddForbiddenWord(word))
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§a" << word << L" added to forbidden word list";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§a" << word << L" added to forbidden word list" << std::endl;
             }
             else
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§c" << word << L" is already in forbidden word list";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§c" << word << L" is already in forbidden word list" << std::endl;
             }
         }
     }
@@ -237,15 +209,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(RemoveForbiddenWord(word))
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§a" << word << L" is no longer in forbidden word list";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§a" << word << L" is no longer in forbidden word list" << std::endl;
             }
             else
             {
-                std::wostringstream confirmMessage;
-                confirmMessage << L"§c" << word << L" is not in forbidden word list";
-                player->SendChatMessage(confirmMessage.str());
+                player->GetChat() << L"§c" << word << L" is not in forbidden word list" << std::endl;
             }
         }
     }
