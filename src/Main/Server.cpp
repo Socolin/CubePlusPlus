@@ -11,6 +11,7 @@
 #include "Database/MiscData/PaintingData.h"
 #include "Database/MiscData/FurnaceRecipes.h"
 #include "Logging/Logger.h"
+#include "Message/MessageList.h"
 #include "Network/LoginManager.h"
 #include "Scripting/ScriptManager.h"
 #include "Window/WindowList.h"
@@ -82,6 +83,7 @@ int main(int argc, char* argv[])
     Craft::CraftManager::Instance().InitInstance();
     Database::PaintingData::Instance().InitInstance();
     Database::FurnaceRecipes::Instance().InitInstance();
+    Message::MessageList::Instance().InitInstance();
     Block::RegisterTileEntities();
 
     Network::LoginManager::Instance().Start();

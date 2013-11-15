@@ -20,6 +20,7 @@
 #include "LoginManager.h"
 #include "Logging/Logger.h"
 #include "Util/StringUtil.h"
+#include "Message/MessageList.h"
 
 #ifndef NDEBUG
 # define DEBUG_STR(value)        LOG_DEBUG << "\t" << #value << "String: size: "<< value.length() << " value:\"" << value << "\"" << std::endl;
@@ -78,7 +79,7 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 
     if (worldManager.IsBan(username))
     {
-        kick(std::wstring(L"Banned !"));
+        kick(std::wstring(Message::MessageList::GetMessage(1, "network.kick.isban")));
         return;
     }
 

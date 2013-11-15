@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.5.8.1deb1
+-- version 4.0.6deb1
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Sep 27, 2013 at 01:34 PM
--- Server version: 5.5.32-0ubuntu0.13.04.1
--- PHP Version: 5.4.9-4ubuntu2.3
+-- Generation Time: Nov 15, 2013 at 10:38 PM
+-- Server version: 5.5.34-0ubuntu0.13.10.1
+-- PHP Version: 5.5.3-1ubuntu2
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -1968,6 +1968,32 @@ INSERT INTO `material` (`materialId`, `name`, `canBurn`, `replacable`, `transluc
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `message`
+--
+
+CREATE TABLE IF NOT EXISTS `message` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `langId` int(11) NOT NULL,
+  `key` varchar(64) COLLATE utf8_bin NOT NULL,
+  `text` varchar(255) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
+
+--
+-- Dumping data for table `message`
+--
+
+INSERT INTO `message` (`id`, `langId`, `key`, `text`) VALUES
+(1, 0, 'network.kick.badprotocol', 'Bad protocol version, use 1.5.2'),
+(2, 0, 'network.kick.serverisfull', 'Server is full'),
+(3, 0, 'network.kick.isban', 'Banned !'),
+(4, 0, 'network.kick.notinwhitelist', 'Not in server whitelist'),
+(5, 1, 'network.kick.badprotocol', 'Mauvaise version de Minecraft, utiliser la 1.5.2'),
+(6, 1, 'network.kick.isban', 'Banni !');
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `painting`
 --
 
@@ -2024,7 +2050,7 @@ CREATE TABLE IF NOT EXISTS `script` (
   `paramCount` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=51 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=43 ;
 
 --
 -- Dumping data for table `script`

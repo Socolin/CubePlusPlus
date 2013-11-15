@@ -124,6 +124,17 @@ enum eDatabaseField
 };
 }
 
+namespace TableMessage
+{
+enum eDatabaseField
+{
+    id = 1,
+    langId,
+    key,
+    text,
+};
+}
+
 namespace TablePainting
 {
 enum eDatabaseField
