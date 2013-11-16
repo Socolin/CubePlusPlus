@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: Nov 15, 2013 at 10:38 PM
+-- Generation Time: Nov 16, 2013 at 03:10 PM
 -- Server version: 5.5.34-0ubuntu0.13.10.1
 -- PHP Version: 5.5.3-1ubuntu2
 
@@ -1977,7 +1977,7 @@ CREATE TABLE IF NOT EXISTS `message` (
   `key` varchar(64) COLLATE utf8_bin NOT NULL,
   `text` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
 
 --
 -- Dumping data for table `message`
@@ -1989,7 +1989,30 @@ INSERT INTO `message` (`id`, `langId`, `key`, `text`) VALUES
 (3, 0, 'network.kick.isban', 'Banned !'),
 (4, 0, 'network.kick.notinwhitelist', 'Not in server whitelist'),
 (5, 1, 'network.kick.badprotocol', 'Mauvaise version de Minecraft, utiliser la 1.5.2'),
-(6, 1, 'network.kick.isban', 'Banni !');
+(6, 1, 'network.kick.isban', 'Banni !'),
+(7, 1, 'network.kick.notinwhitelist', 'Vous n''êtes pas sur la whitelist du serveur'),
+(8, 1, 'network.kick.serverisfull', 'Le serveur est plein');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `message_lang`
+--
+
+CREATE TABLE IF NOT EXISTS `message_lang` (
+  `id` int(11) NOT NULL,
+  `lang` varchar(64) COLLATE utf8_bin NOT NULL,
+  `description` varchar(255) COLLATE utf8_bin NOT NULL,
+  UNIQUE KEY `id` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
+
+--
+-- Dumping data for table `message_lang`
+--
+
+INSERT INTO `message_lang` (`id`, `lang`, `description`) VALUES
+(0, 'English', 'Default language'),
+(1, 'French', 'Français (cocorico)');
 
 -- --------------------------------------------------------
 

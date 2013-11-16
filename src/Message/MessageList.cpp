@@ -1,5 +1,7 @@
 #include "MessageList.h"
 
+#include <sstream>
+
 #include "Config/Config.h"
 #include "Database/DatabaseManager.h"
 #include "Logging/Logger.h"
@@ -9,9 +11,10 @@ namespace Message
 {
 
 MessageList::MessageList()
-    : lang("english")
+    : configLang("english")
+    , requestedLanguage(0)
 {
-    Config::Config::GetConfig().lookupValue("server.general.lang", lang);
+    Config::Config::GetConfig().lookupValue("server.general.lang", configLang);
 }
 
 MessageList::~MessageList()
@@ -20,27 +23,25 @@ MessageList::~MessageList()
 
 void MessageList::InitInstance()
 {
-    Initialize();
+    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
+    db->connect();
+    InitializeVector(db);
+    InitializeMessageList(db);
+    InitializeLang(db);
 }
 
-std::wstring MessageList::GetMessage(int langId, const std::string& key)
+std::wstring MessageList::GetMessage(const std::string& key)
 {
-    int msgListSize = Instance().messageList.size();
-    if(msgListSize <= langId)
-    {
-        LOG_ERROR << "GetMessage : Not a valid language" << std::endl;
-        return(L"");
-    }
-    auto itr = Instance().messageList[langId].find(key);
-    if( itr != Instance().messageList[langId].end())
+    auto itr = Instance().messageList[Instance().requestedLanguage].find(key);
+    if( itr != Instance().messageList[Instance().requestedLanguage].end())
     {
         return (*itr).second;
     }
-    if(langId != 0)
+    if(Instance().requestedLanguage != 0)
     {
-        LOG_ERROR << "Message with key : " << key << " not found for selected language : " << Instance().lang << ", searching english message instead" << std::endl;
+        LOG_ERROR << "Message with key : " << key << " not found for selected language : " << Instance().configLang << ", searching english message instead" << std::endl;
         auto itrEng = Instance().messageList[0].find(key);
-        if(itrEng != Instance().messageList[langId].end())
+        if(itrEng != Instance().messageList[0].end())
         {
             return (*itrEng).second;
         }
@@ -49,11 +50,24 @@ std::wstring MessageList::GetMessage(int langId, const std::string& key)
     return (L"");
 }
 
-void MessageList::Initialize()
+void MessageList::InitializeVector(Database::DatabaseManager* db)
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
+    sql::ResultSet* result = db->querry("SELECT MAX(`id`) FROM `message_lang`");
 
+    if(result == nullptr)
+    {
+        LOG_ERROR << "Table message_lang is empty" << std::endl;
+        return;
+    }
+    result->first();
+    int vectSize = result->getInt(TableMessageLang::id) + 1;
+    messageList.resize(vectSize);
+    LOG_DEBUG << "Available language : " << vectSize << std::endl;
+    delete result;
+}
+
+void MessageList::InitializeMessageList(Database::DatabaseManager* db)
+{
     sql::ResultSet* result = db->querry("SELECT * FROM `message` ORDER BY `langId` ASC");
 
     if(result == nullptr)
@@ -61,16 +75,12 @@ void MessageList::Initialize()
         LOG_ERROR << "No Text found in database" << std::endl;
         return;
     }
-
-    LOG_INFO << "Loading Text" << std::endl;
-
+    LOG_INFO << "Loading message text" << std::endl;
     LOG_DEBUG << Logging::BOLD_BLUE
               << "id" << "\t"
               << "langId" << "\t"
-              << "key" << "\t"
-              << "text" << "\t"
+              << "key"
               << std::endl;
-
     int langItr = 0;
     std::map<std::string, std::wstring> tempMessage;
 
@@ -81,10 +91,9 @@ void MessageList::Initialize()
         std::string key = result->getString(TableMessage::key);
         std::string text = result->getString(TableMessage::text);
 
-        LOG_DEBUG << id << "\t"
+        LOG_DEBUG << id << "\t\t"
                   << langId << "\t"
-                  << key << "\t"
-                  << text << "\t"
+                  << key
                   << std::endl;
 
         std::wstring wText;
@@ -92,17 +101,32 @@ void MessageList::Initialize()
 
         if(langId > langItr)
         {
-            messageList.push_back(tempMessage);
+            messageList[langItr] = tempMessage;
             tempMessage.clear();
             langItr = langId;
         }
         tempMessage[key] = wText;
     }
+    messageList[langItr] = tempMessage;
+    delete result;
+}
 
-    messageList.push_back(tempMessage);
+void MessageList::InitializeLang(Database::DatabaseManager* db)
+{
+    std::ostringstream querry;
+    querry << "SELECT DISTINCT `id` FROM `message_lang` WHERE UPPER(`lang`) LIKE UPPER('%" << configLang << "%')";
+    sql::ResultSet* result = db->querry(querry.str());
 
-    LOG_DEBUG << "Available langage : " << messageList.size() << std::endl;
-
+    if(result == nullptr || !result->first())
+    {
+        LOG_ERROR << "Requested language '" << configLang << "' not available, english will be used" << std::endl;
+        requestedLanguage = 0;
+    }
+    else
+    {
+        result->first();
+        requestedLanguage = result->getInt(TableMessageLang::id);
+    }
     delete result;
 }
 

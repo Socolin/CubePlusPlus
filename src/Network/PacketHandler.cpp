@@ -65,7 +65,7 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 
     if (protocolVersion != CURRENT_VERSION_PROTOCOL)
     {
-        kick(std::wstring(L"Bad protocol version, use 1.5.2"));
+        kick(Message::MessageList::GetMessage("network.kick.badprotocol"));
         return;
     }
 
@@ -73,19 +73,19 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 
     if (worldManager.IsFull() && !worldManager.IsAdmin(username))
     {
-        kick(std::wstring(L"Server is full"));
+        kick(Message::MessageList::GetMessage("network.kick.serverisfull"));
         return;
     }
 
     if (worldManager.IsBan(username))
     {
-        kick(std::wstring(Message::MessageList::GetMessage(1, "network.kick.isban")));
+        kick(Message::MessageList::GetMessage("network.kick.isban"));
         return;
     }
 
     if(!worldManager.IsWhitelisted(username))
     {
-        kick(std::wstring(L"Not In Server Whitelist !"));
+        kick(Message::MessageList::GetMessage("network.kick.notinwhitelist"));
         return;
     }
 
