@@ -37,7 +37,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
 
         if (!commandHandled)
         {
-            player->GetChat() << Chat::RED << "Not a valid command";
+            player->GetChat() << Chat::RED << "Not a valid command" << std::endl;;
         }
         return true;
     }

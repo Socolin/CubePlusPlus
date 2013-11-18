@@ -21,70 +21,70 @@ public:
         switch (color)
         {
         case BLACK:
-            message << "§0";
+            message << L"§0";
             break;
         case DARK_BLUE:
-            message << "§1";
+            message << L"§1";
             break;
         case DARK_GREEN:
-            message << "§2";
+            message << L"§2";
             break;
         case DARK_AQUA:
-            message << "§3";
+            message << L"§3";
             break;
         case DARK_RED:
-            message << "§4";
+            message << L"§4";
             break;
         case DARK_PURPLE:
-            message << "§5";
+            message << L"§5";
             break;
         case GOLD:
-            message << "§6";
+            message << L"§6";
             break;
         case GRAY:
-            message << "§7";
+            message << L"§7";
             break;
         case DARK_GRAY:
-            message << "§8";
+            message << L"§8";
             break;
         case BLUE:
-            message << "§9";
+            message << L"§9";
             break;
         case GREEN:
-            message << "§a";
+            message << L"§a";
             break;
         case AQUA:
-            message << "§b";
+            message << L"§b";
             break;
         case RED:
-            message << "§c";
+            message << L"§c";
             break;
         case LIGHT_PURPLE:
-            message << "§d";
+            message << L"§d";
             break;
         case YELLOW:
-            message << "§e";
+            message << L"§e";
             break;
         case WHITE:
-            message << "§f";
+            message << L"§f";
             break;
         case OBFUSCATED:
-            message << "§k";
+            message << L"§k";
             break;
         case BOLD:
-            message << "§l";
+            message << L"§l";
             break;
         case STRIKE:
-            message << "§m";
+            message << L"§m";
             break;
         case UNDERLINE:
-            message << "§n";
+            message << L"§n";
             break;
         case ITALIC:
-            message << "§o";
+            message << L"§o";
             break;
         case RESET:
-            message << "§p";
+            message << L"§p";
             break;
         default:
             break;
