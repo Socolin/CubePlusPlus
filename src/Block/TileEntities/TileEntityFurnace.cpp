@@ -1,6 +1,6 @@
 #include "TileEntityFurnace.h"
 
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 #include "Database/MiscData/FurnaceRecipes.h"
 #include "Inventory/Item.h"
@@ -131,24 +131,24 @@ TileEntity* TileEntityFurnace::Create(World::World* world, int blockX, i_height 
     return new TileEntityFurnace(world, blockX, blockY, blockZ);
 }
 
-void TileEntityFurnace::Load(nbt::TagCompound* nbtData)
+void TileEntityFurnace::Load(NBT::TagCompound* nbtData)
 {
-    nbt::TagList* itemList = nbtData->getValueAt<nbt::TagList>("Items");
+    NBT::TagList* itemList = nbtData->GetTagAs<NBT::TagList>("Items");
     if (itemList)
     {
         inventory->Load(itemList);
     }
 
-    nbt::TagShort* tagBurnTime = nbtData->getValueAt<nbt::TagShort>("BurnTime");
+    NBT::TagShort* tagBurnTime = nbtData->GetTagAs<NBT::TagShort>("BurnTime");
     if (tagBurnTime)
     {
-        fuel = tagBurnTime->getValue();
+        fuel = tagBurnTime->GetValue();
     }
 
-    nbt::TagShort* tagCookTime = nbtData->getValueAt<nbt::TagShort>("CookTime");
+    NBT::TagShort* tagCookTime = nbtData->GetTagAs<NBT::TagShort>("CookTime");
     if (tagBurnTime)
     {
-        progress = tagCookTime->getValue();
+        progress = tagCookTime->GetValue();
     }
 
     maxfuel = fuel;
@@ -163,7 +163,7 @@ void TileEntityFurnace::Load(nbt::TagCompound* nbtData)
     }
 }
 
-void TileEntityFurnace::Save(nbt::TagCompound* /*nbtData*/)
+void TileEntityFurnace::Save(NBT::TagCompound* /*nbtData*/)
 {
     /*FIXME*/
 }

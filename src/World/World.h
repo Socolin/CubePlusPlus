@@ -21,11 +21,11 @@ namespace Network
 {
 class NetworkPacket;
 }
-namespace nbt
+namespace NBT
 {
-class NbtBuffer;
+class Buffer;
+class File;
 class TagCompound;
-class NbtFile;
 }
 namespace World
 {
@@ -143,7 +143,7 @@ public:
     Scripting::BlockRedstoneTorchBurnoutMgr* GetRedstoneTorchBurnoutMgr() const;
     const Position& GetSpawnPosition() const;
     Position GetValidSpawnPosition();
-    nbt::NbtFile* LoadNbtDatasForPlayer(const std::string& playerName);
+    NBT::TagCompound* LoadNbtDatasForPlayer(const std::string& playerName);
     long long GetAgeOfWorld() const;
     long long GetCurrentTime() const;
     bool isReadOnly() const;
@@ -153,7 +153,7 @@ private:
     VirtualChunk* CreateVirtualChunk(int x, int z);
     VirtualSmallChunk* CreateVirtualSmallChunk(int x, int z);
     Chunk* LoadChunk(int x, int z);
-    nbt::NbtBuffer* GetChunkNbtData(int x, int z);
+    NBT::TagCompound* GetChunkNbtData(int x, int z);
     void MarkEntityForDelete(Entity* entity);
     void MarkPlayerForRemove(EntityPlayer* entity);
 
@@ -183,7 +183,7 @@ private:
      * Load spawn data from nbt in level.dat
      * @param tagData data to load
      */
-    void loadSpawn(nbt::TagCompound* tagData);
+    void loadSpawn(NBT::TagCompound* tagData);
 
     /**
      * Load time and weather data from nbt in level.dat
@@ -192,7 +192,7 @@ private:
      * Thunfer state/time
      * @param tagData data to load
      */
-    void loadTimeAndWeather(nbt::TagCompound* tagData);
+    void loadTimeAndWeather(NBT::TagCompound* tagData);
 
     /**
      * Load gamemode and some data from world nbt data in level.dat
@@ -201,7 +201,7 @@ private:
      * GameType
      * @param tagData data to load
      */
-    void loadGameMode(nbt::TagCompound* tagData);
+    void loadGameMode(NBT::TagCompound* tagData);
 private:
     /// Name of the world
     std::string worldName;

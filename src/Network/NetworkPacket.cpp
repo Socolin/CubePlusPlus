@@ -1,15 +1,8 @@
-/*
- * NetworkPacket.cpp
- *
- *  Created on: 22 nov. 2012
- *      Author: bertrand
- */
-
 #include "NetworkPacket.h"
 
 #include <zlib.h>
 #include <cstring>
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 #include "Inventory/ItemStack.h"
 #include "Logging/Logger.h"
@@ -109,13 +102,13 @@ NetworkPacket& NetworkPacket::operator <<(const Inventory::ItemStack* item)
         if (item->getItemId() > 0)
         {
             *this << (char)item->getStackSize() << item->getItemData();
-            nbt::Tag* specialData = item->GetSpecialData();
+            NBT::TagCompound* specialData = item->GetSpecialData();
             if (specialData != nullptr)
             {
-                nbt::NbtBuffer nbtBuffer;
-                unsigned int len = 0;
+                NBT::Buffer nbtBuffer(specialData);
+                uLongf len = 0;
 
-                char* buffer = nbtBuffer.writeGzip(specialData, len);
+                char* buffer = nbtBuffer.GetCompressedBufferAsGzip(len);
                 if (buffer != nullptr)
                 {
                     *this << (short)len;
@@ -125,6 +118,7 @@ NetworkPacket& NetworkPacket::operator <<(const Inventory::ItemStack* item)
                 {
                     *this << short(-1) /*No nbt data*/;
                 }
+                nbtBuffer.ClearRoot();
             }
             else
             {

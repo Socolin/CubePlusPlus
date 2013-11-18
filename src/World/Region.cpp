@@ -4,7 +4,7 @@
 #include <sstream>
 #include <cassert>
 
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 #include "Logging/Logger.h"
 #include "Util/StringUtil.h"
@@ -102,7 +102,7 @@ Region::~Region()
     file.close();
 }
 
-nbt::NbtBuffer* Region::GetNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ)
+NBT::TagCompound* Region::GetNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ)
 {
     if (!opened)
         return nullptr;
@@ -132,9 +132,32 @@ nbt::NbtBuffer* Region::GetNbtChunkData(i_small_coord chunkX, i_small_coord chun
     uint8_t* buffer = new uint8_t[dataSize - 1];
     file.read(reinterpret_cast<char*>(buffer), dataSize - 1);
 
-    nbt::NbtBuffer* chunkData = new nbt::NbtBuffer(buffer, dataSize - 1);
+    NBT::TagCompound* rootAsCompound = nullptr;
+    NBT::Buffer chunkData(buffer, dataSize - 1);
+    if (!chunkData.Load())
+    {
+        LOG_ERROR << "While loading chunk " << chunkX << " " << chunkZ
+                << " in region " << regionX << " " << regionZ << " : "
+                << chunkData.GetLastErrorMessage() << std::endl;
+    }
+    else
+    {
+        NBT::Tag* root = chunkData.TakeRoot();
+        if (root != nullptr)
+        {
+            rootAsCompound = root->GetTagAs<NBT::TagCompound>();
+            if (rootAsCompound == nullptr)
+            {
+                LOG_ERROR << "While loading chunk " << chunkX << " " << chunkZ
+                        << " in region " << regionX << " " << regionZ << " : "
+                        << "Root tag was not a TagCompound but : " << root->GetType() << std::endl;
+                delete root;
+            }
+        }
+    }
     delete[] buffer;
-    return chunkData;
+
+    return rootAsCompound;
 }
 
 } /* namespace World */

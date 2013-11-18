@@ -94,8 +94,8 @@ public:
     virtual void moveToChunk(int newChunkX, int newChunkZ) override;
 
 
-    virtual bool Load(nbt::TagCompound* tagNbtData) override;
-    virtual bool Save(nbt::TagCompound* tagNbtData) override;
+    virtual bool Load(NBT::TagCompound* tagNbtData) override;
+    virtual bool Save(NBT::TagCompound* tagNbtData) override;
 
     /**
      * Kick player by sending kick packet and set session to null

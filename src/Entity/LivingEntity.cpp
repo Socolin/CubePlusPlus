@@ -1,6 +1,6 @@
 #include "LivingEntity.h"
 
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 #include "Util/StringUtil.h"
 #include "Inventory/InventoryEntityEquipement.h"
@@ -43,21 +43,19 @@ float LivingEntity::getEyeHeight()
     return 1.62f;
 }
 
-bool LivingEntity::Load(nbt::TagCompound* tagNbtData)
+bool LivingEntity::Load(NBT::TagCompound* tagNbtData)
 {
     bool loadSucess = parent_type::Load(tagNbtData);
-    if (tagNbtData->hasKey("Health"))
-        health = tagNbtData->getShort("Health");
-    else
-        health = GetMaxHealth();
 
-    hurtTime = tagNbtData->getShort("HurtTime");
-    deathTime = tagNbtData->getShort("DeathTime");
-    attackTime = tagNbtData->getShort("AttackTime");
-    canPickUpLoot = tagNbtData->getBool("CanPickUpLoot");
-    persistenceRequired = tagNbtData->getBool("PersistenceRequired");
+    health = tagNbtData->GetShort("Health", GetMaxHealth());
 
-    if (tagNbtData->hasKey("CustomName"))
+    hurtTime = tagNbtData->GetShort("HurtTime", 0);
+    deathTime = tagNbtData->GetShort("DeathTime", 0);
+    attackTime = tagNbtData->GetShort("AttackTime", 0);
+    canPickUpLoot = tagNbtData->GetBool("CanPickUpLoot", false);
+    persistenceRequired = tagNbtData->GetBool("PersistenceRequired", false);
+
+    if (tagNbtData->HasKey("CustomName"))
     {
 //        const std::string& customName = tagNbtData->getString("CustomName");
 //        std::wstring customWName;
@@ -65,30 +63,30 @@ bool LivingEntity::Load(nbt::TagCompound* tagNbtData)
 //        SetCustomName(customWName);
     }
 
-    nbt::TagList* tagEquipement = tagNbtData->getValueAt<nbt::TagList>("Equipment");
+    NBT::TagList* tagEquipement = tagNbtData->GetTagAs<NBT::TagList>("Equipment");
     if (tagEquipement)
     {
         equipementInventory->Load(tagEquipement);
     }
 
-    nbt::TagList* tagActiveEffects = tagNbtData->getValueAt<nbt::TagList>("ActiveEffects");
+    NBT::TagList* tagActiveEffects = tagNbtData->GetTagAs<NBT::TagList>("ActiveEffects");
     if (tagActiveEffects)
     {
         //TODO: load potion effect
     }
 
-    nbt::TagList* tagDropChances = tagNbtData->getValueAt<nbt::TagList>("DropChances");
+    NBT::TagList* tagDropChances = tagNbtData->GetTagAs<NBT::TagList>("DropChances");
     if (tagDropChances)
     {
         i_slot equipementId = 0;
-        const std::vector<nbt::Tag *>& dropChanceList = tagDropChances->getValue();
-        for (nbt::Tag* tag : dropChanceList)
+        const std::vector<NBT::Tag *>& dropChanceList = tagDropChances->GetTagList();
+        for (NBT::Tag* tag : dropChanceList)
         {
-            nbt::TagFloat* tagChance = dynamic_cast<nbt::TagFloat*>(tag);
+            NBT::TagFloat* tagChance = dynamic_cast<NBT::TagFloat*>(tag);
             if (!tagChance)
                 continue;
 
-            float chance = tagChance->getValue();
+            float chance = tagChance->GetValue();
             equipementInventory->SetDropChance(equipementId++, chance);
         }
     }
@@ -96,7 +94,7 @@ bool LivingEntity::Load(nbt::TagCompound* tagNbtData)
     return loadSucess;
 }
 
-bool LivingEntity::Save(nbt::TagCompound* tagNbtData)
+bool LivingEntity::Save(NBT::TagCompound* tagNbtData)
 {
     return parent_type::Save(tagNbtData);
 }

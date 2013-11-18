@@ -3,7 +3,7 @@
 
 #include "ItemList.h"
 
-namespace nbt
+namespace NBT
 {
 class TagCompound;
 }
@@ -15,7 +15,7 @@ class ItemStack
 public:
     ItemStack(int id, int stackSize, int itemData);
     ItemStack(const ItemStack& itemStack);
-    ItemStack(nbt::TagCompound* itemData);
+    ItemStack(NBT::TagCompound* itemData);
     virtual ~ItemStack();
 
     /**
@@ -89,13 +89,13 @@ public:
      */
     bool Full() const;
 
-    nbt::TagCompound* GetSpecialData() const;
+    NBT::TagCompound* GetSpecialData() const;
 
 private:
     i_item itemId;
     i_damage itemData;
     i_stackSize stackSize;
-    nbt::TagCompound* specialData;
+    NBT::TagCompound* specialData;
 };
 
 } /* namespace Inventory */

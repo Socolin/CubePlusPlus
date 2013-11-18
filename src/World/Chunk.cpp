@@ -1,14 +1,7 @@
-/*
- * Chunk.cpp
- *
- *  Created on: 5 déc. 2012
- *      Author: bertrand
- */
-
 #include "Chunk.h"
 
 #include <iostream>
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 #include "Block/TileEntities/TileEntity.h"
 #include "Block/TileEntities/TileEntityManager.h"
@@ -65,7 +58,7 @@ void Chunk::Load()
     flagSectionExists = 0;
     flagSectionUseAdd = 0;
 
-    nbt::NbtBuffer* nbtData = world->GetChunkNbtData(posX, posZ);
+    NBT::TagCompound* nbtData = world->GetChunkNbtData(posX, posZ);
     if (!loadFromFile(nbtData))
     {
         if (nbtData)
@@ -768,94 +761,86 @@ i_height Chunk::getMinHeight() const
     return minHeight;
 }
 
-bool Chunk::loadFromFile(nbt::NbtBuffer* nbtData)
+bool Chunk::loadFromFile(NBT::TagCompound* nbtData)
 {
     if (nbtData)
     {
-        nbt::Tag *root = nbtData->getRoot();
-        if (!root)
-            return false;
-
-        nbt::TagCompound* file_root = dynamic_cast<nbt::TagCompound*>(root);
-        if (!file_root)
-            return false;
-
-        nbt::TagCompound* level = dynamic_cast<nbt::TagCompound*>(file_root->getValueAt("Level"));
+        NBT::TagCompound* level = nbtData->GetTagAs<NBT::TagCompound>("Level");
         if (!level)
             return false;
 
-        nbt::TagByteArray* biomesArray = level->getValueAt<nbt::TagByteArray>("Biomes");
+        NBT::TagByteArray* biomesArray = level->GetTagAs<NBT::TagByteArray>("Biomes");
         if (biomesArray != nullptr)
         {
-            if (biomesArray->getSize() != CHUNK_SURFACE)
+            if (biomesArray->GetSize() != CHUNK_SURFACE)
                 return false;
 
-            memcpy(biomeData, biomesArray->getValues(), CHUNK_SURFACE);
+            memcpy(biomeData, biomesArray->GetData(), CHUNK_SURFACE);
         }
 
 
-        nbt::TagIntArray* heightMapArray = level->getValueAt<nbt::TagIntArray>("HeightMap");
+        NBT::TagIntArray* heightMapArray = level->GetTagAs<NBT::TagIntArray>("HeightMap");
         if (!heightMapArray)
             return false;
-        if (heightMapArray->getSize() != CHUNK_SURFACE)
+        if (heightMapArray->GetSize() != CHUNK_SURFACE)
             return false;
         for (int i = 0; i < CHUNK_SURFACE; i++)
-            heightMap[i] = heightMapArray->getValues()[i];
+            heightMap[i] = heightMapArray->GetData()[i];
 
 
-        nbt::TagList* sections = level->getValueAt<nbt::TagList>("Sections");
+        NBT::TagList* sections = level->GetTagAs<NBT::TagList>("Sections");
         if (!sections)
             return false;
 
-        const std::vector<nbt::Tag *>& sectionsList = sections->getValue();
-        for (nbt::Tag* tag : sectionsList)
+        const std::vector<NBT::Tag *>& sectionsList = sections->GetTagList();
+        for (NBT::Tag* tag : sectionsList)
         {
-            nbt::TagCompound* chunkSection = dynamic_cast<nbt::TagCompound*>(tag);
+            NBT::TagCompound* chunkSection = dynamic_cast<NBT::TagCompound*>(tag);
             if (!chunkSection)
                 return false;
 
-            nbt::TagByte* yPos = chunkSection->getValueAt<nbt::TagByte>("Y");
+            NBT::TagByte* yPos = chunkSection->GetTagAs<NBT::TagByte>("Y");
             if (!yPos)
                 return false;
-            int chunkSectionId = yPos->getValue();
+            int chunkSectionId = yPos->GetValue();
             if (chunkSectionId >= CHUNK_DATA_COUNT || chunkSectionId < 0)
                 return false;
 
             ChunkData* chunkData = getOrCreateData(chunkSectionId);
 
-            nbt::TagByteArray* metadataArray = chunkSection->getValueAt<nbt::TagByteArray>("Data");
+            NBT::TagByteArray* metadataArray = chunkSection->GetTagAs<NBT::TagByteArray>("Data");
             if (!metadataArray)
                 return false;
-            if (metadataArray->getSize() != CHUNK_BLOCK_NIBBLE_SIZE)
+            if (metadataArray->GetSize() != CHUNK_BLOCK_NIBBLE_SIZE)
                 return false;
-            memcpy(chunkData->metadata, metadataArray->getValues(), CHUNK_BLOCK_NIBBLE_SIZE);
+            memcpy(chunkData->metadata, metadataArray->GetData(), CHUNK_BLOCK_NIBBLE_SIZE);
 
-            nbt::TagByteArray* skyLightArray = chunkSection->getValueAt<nbt::TagByteArray>("SkyLight");
+            NBT::TagByteArray* skyLightArray = chunkSection->GetTagAs<NBT::TagByteArray>("SkyLight");
             if (!skyLightArray)
                 return false;
-            if (skyLightArray->getSize() != CHUNK_BLOCK_NIBBLE_SIZE)
+            if (skyLightArray->GetSize() != CHUNK_BLOCK_NIBBLE_SIZE)
                 return false;
-            memcpy(chunkData->skyLight, skyLightArray->getValues(), CHUNK_BLOCK_NIBBLE_SIZE);
+            memcpy(chunkData->skyLight, skyLightArray->GetData(), CHUNK_BLOCK_NIBBLE_SIZE);
 
 
-            nbt::TagByteArray* blockLightArray = chunkSection->getValueAt<nbt::TagByteArray>("BlockLight");
+            NBT::TagByteArray* blockLightArray = chunkSection->GetTagAs<NBT::TagByteArray>("BlockLight");
             if (!blockLightArray)
                 return false;
-            if (blockLightArray->getSize() != CHUNK_BLOCK_NIBBLE_SIZE)
+            if (blockLightArray->GetSize() != CHUNK_BLOCK_NIBBLE_SIZE)
                 return false;
-            memcpy(chunkData->blocklight, blockLightArray->getValues(), CHUNK_BLOCK_NIBBLE_SIZE);
+            memcpy(chunkData->blocklight, blockLightArray->GetData(), CHUNK_BLOCK_NIBBLE_SIZE);
 
-            nbt::TagByteArray* blocksArray = chunkSection->getValueAt<nbt::TagByteArray>("Blocks");
+            NBT::TagByteArray* blocksArray = chunkSection->GetTagAs<NBT::TagByteArray>("Blocks");
             if (!blocksArray)
                 return false;
-            if (blocksArray->getSize() != CHUNK_BLOCK_COUNT)
+            if (blocksArray->GetSize() != CHUNK_BLOCK_COUNT)
                 return false;
-            memcpy(chunkData->blocks, blocksArray->getValues(), CHUNK_BLOCK_COUNT);
+            memcpy(chunkData->blocks, blocksArray->GetData(), CHUNK_BLOCK_COUNT);
 
-            nbt::TagByteArray* addMetadataArray = chunkSection->getValueAt<nbt::TagByteArray>("Add");
+            NBT::TagByteArray* addMetadataArray = chunkSection->GetTagAs<NBT::TagByteArray>("Add");
             if (addMetadataArray != nullptr)
             {
-                if (addMetadataArray->getSize() != CHUNK_BLOCK_NIBBLE_SIZE)
+                if (addMetadataArray->GetSize() != CHUNK_BLOCK_NIBBLE_SIZE)
                     return false;
                 if (chunkData->addData == nullptr)
                 {
@@ -863,38 +848,38 @@ bool Chunk::loadFromFile(nbt::NbtBuffer* nbtData)
                     chunkData->clearAddData();
                     flagSectionUseAdd |= (1 << chunkSectionId);
                 }
-                memcpy(chunkData->addData, addMetadataArray->getValues(), CHUNK_BLOCK_NIBBLE_SIZE);
+                memcpy(chunkData->addData, addMetadataArray->GetData(), CHUNK_BLOCK_NIBBLE_SIZE);
             }
         }
 
-        nbt::TagList* tileEntities = level->getValueAt<nbt::TagList>("TileEntities");
+        NBT::TagList* tileEntities = level->GetTagAs<NBT::TagList>("TileEntities");
         if (tileEntities)
         {
-            const std::vector<nbt::Tag *>& tileEntitiesList = tileEntities->getValue();
-            for (nbt::Tag* tag : tileEntitiesList)
+            const std::vector<NBT::Tag *>& tileEntitiesList = tileEntities->GetTagList();
+            for (NBT::Tag* tag : tileEntitiesList)
             {
-                nbt::TagCompound* tileEntityData = dynamic_cast<nbt::TagCompound*>(tag);
+                NBT::TagCompound* tileEntityData = dynamic_cast<NBT::TagCompound*>(tag);
                 if (!tileEntityData)
                     continue;
 
-                nbt::TagString* tileEntityId = tileEntityData->getValueAt<nbt::TagString>("id");
+                NBT::TagString* tileEntityId = tileEntityData->GetTagAs<NBT::TagString>("id");
                 if (!tileEntityId)
                     continue;
 
-                nbt::TagInt* tileEntityX = tileEntityData->getValueAt<nbt::TagInt>("x");
+                NBT::TagInt* tileEntityX = tileEntityData->GetTagAs<NBT::TagInt>("x");
                 if (!tileEntityX)
                     continue;
-                nbt::TagInt* tileEntityY = tileEntityData->getValueAt<nbt::TagInt>("y");
+                NBT::TagInt* tileEntityY = tileEntityData->GetTagAs<NBT::TagInt>("y");
                 if (!tileEntityY)
                     continue;
-                nbt::TagInt* tileEntityZ = tileEntityData->getValueAt<nbt::TagInt>("z");
+                NBT::TagInt* tileEntityZ = tileEntityData->GetTagAs<NBT::TagInt>("z");
                 if (!tileEntityZ)
                     continue;
 
-                int x = tileEntityX->getValue();
-                i_height y = tileEntityY->getValue();
-                int z = tileEntityZ->getValue();
-                Block::TileEntity* tileEntity = Block::TileEntityManager::Instance().GetNewTileEntityByName(tileEntityId->getValue(), world, x, y, z);
+                int x = tileEntityX->GetValue();
+                i_height y = tileEntityY->GetValue();
+                int z = tileEntityZ->GetValue();
+                Block::TileEntity* tileEntity = Block::TileEntityManager::Instance().GetNewTileEntityByName(tileEntityId->GetValue(), world, x, y, z);
                 if (tileEntity)
                 {
                     tileEntity->Load(tileEntityData);
@@ -904,42 +889,42 @@ bool Chunk::loadFromFile(nbt::NbtBuffer* nbtData)
             return true;
         }
 
-        nbt::TagList* tileTicks = level->getValueAt<nbt::TagList>("TileTicks");
+        NBT::TagList* tileTicks = level->GetTagAs<NBT::TagList>("TileTicks");
         if (tileTicks)
         {
-            const std::vector<nbt::Tag *>& toUpdateBlock = tileTicks->getValue();
-            for (nbt::Tag* tag : toUpdateBlock)
+            const std::vector<NBT::Tag *>& toUpdateBlock = tileTicks->GetTagList();
+            for (NBT::Tag* tag : toUpdateBlock)
             {
-                nbt::TagCompound* tileTickData = dynamic_cast<nbt::TagCompound*>(tag);
+                NBT::TagCompound* tileTickData = dynamic_cast<NBT::TagCompound*>(tag);
                 if (!tileTickData)
                     continue;
-                nbt::TagInt* tileTickX = tileTickData->getValueAt<nbt::TagInt>("x");
+                NBT::TagInt* tileTickX = tileTickData->GetTagAs<NBT::TagInt>("x");
                 if (!tileTickX)
                     continue;
-                int x = tileTickX->getValue();
+                int x = tileTickX->GetValue();
 
-                nbt::TagInt* tileTickY = tileTickData->getValueAt<nbt::TagInt>("y");
+                NBT::TagInt* tileTickY = tileTickData->GetTagAs<NBT::TagInt>("y");
                 if (!tileTickY)
                     continue;
-                int y = tileTickY->getValue();
+                int y = tileTickY->GetValue();
 
-                nbt::TagInt* tileTickZ = tileTickData->getValueAt<nbt::TagInt>("z");
+                NBT::TagInt* tileTickZ = tileTickData->GetTagAs<NBT::TagInt>("z");
                 if (!tileTickZ)
                     continue;
-                int z = tileTickZ->getValue();
+                int z = tileTickZ->GetValue();
 
-                nbt::TagInt* tileTickI = tileTickData->getValueAt<nbt::TagInt>("i");
+                NBT::TagInt* tileTickI = tileTickData->GetTagAs<NBT::TagInt>("i");
                 if (!tileTickI)
                     continue;
-                int i = tileTickI->getValue();
+                int i = tileTickI->GetValue();
 
-                nbt::TagInt* tileTickT = tileTickData->getValueAt<nbt::TagInt>("t");
+                NBT::TagInt* tileTickT = tileTickData->GetTagAs<NBT::TagInt>("t");
                 if (!tileTickT)
                     continue;
-                int t = tileTickT->getValue();
+                int t = tileTickT->GetValue();
 
                 /*Unused yet, optionnal for old map
-                 * nbt::TagInt* tileTickP = tileTickData->getValueAt<nbt::TagInt>("p");
+                 * NBT::TagInt* tileTickP = tileTickData->GetTagAs<NBT::TagInt>("p");
                 if (!tileTickP)
                     continue;*/
                 MarkForUpdate(x & 0xf, y, z & 0xf, i, t);

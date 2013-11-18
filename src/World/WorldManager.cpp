@@ -1,9 +1,9 @@
 #include "WorldManager.h"
 
 #include <iostream>
-#include <cppnbt.h>
 #include <fstream>
 #include <libconfig.h++>
+#include <NBTField/NBTField.h>
 
 #include "Config/Config.h"
 #include "Entity/EntityPlayer.h"
@@ -77,19 +77,14 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
 
     std::string stringName;
     Util::WStringToString(name, stringName);
-    nbt::NbtFile* file = world->LoadNbtDatasForPlayer(stringName);
-    if (file != nullptr)
+
+    NBT::TagCompound* playerNbtData = world->LoadNbtDatasForPlayer(stringName);
+    if (playerNbtData)
     {
-        nbt::Tag* tag = file->getRoot();
-        if (tag)
-        {
-            nbt::TagCompound* tagCompound = dynamic_cast<nbt::TagCompound*>(tag);
-            if (tagCompound)
-            {
-                player->Load(tagCompound);
-            }
-        }
+        player->Load(playerNbtData);
+        delete playerNbtData;
     }
+
     world->AddPlayer(player);
 
     if (playerList.find(player) == playerList.end())

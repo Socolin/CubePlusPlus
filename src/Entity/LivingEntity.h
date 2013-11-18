@@ -23,8 +23,8 @@ public:
     virtual float getEyeHeight();
 
     virtual void UpdateTick() override;
-    virtual bool Load(nbt::TagCompound* tagNbtData) override;
-    virtual bool Save(nbt::TagCompound* tagNbtData) override;
+    virtual bool Load(NBT::TagCompound* tagNbtData) override;
+    virtual bool Save(NBT::TagCompound* tagNbtData) override;
 
     virtual void MoveLiving(double dx, double dz);
     virtual short GetMaxHealth();

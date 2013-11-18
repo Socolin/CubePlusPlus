@@ -9,7 +9,7 @@
 #include "ItemStack.h"
 #include "Util/types.h"
 
-namespace nbt
+namespace NBT
 {
 class TagList;
 }
@@ -204,7 +204,7 @@ public:
      * Load inventory from data
      * @param nbtData
      */
-    virtual void Load(nbt::TagList* nbtData);
+    virtual void Load(NBT::TagList* nbtData);
 protected:
     struct playerData
     {

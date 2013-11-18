@@ -1,13 +1,6 @@
-/*
- * Entity.cpp
- *
- *  Created on: 24 déc. 2012
- *      Author: bertrand
- */
-
 #include "Entity.h"
 
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 #include "Network/Opcode.h"
 #include "Network/NetworkPacket.h"
@@ -344,34 +337,35 @@ void Entity::SetFlag(char flag)
     metadataManager.SetEntityMetadata(0, flag);
 }
 
-bool Entity::Load(nbt::TagCompound* tagNbtData)
+bool Entity::Load(NBT::TagCompound* tagNbtData)
 {
-    nbt::TagList* tagPos = tagNbtData->getValueAt<nbt::TagList>("Pos");
+    assert(tagNbtData != nullptr);
+    NBT::TagList* tagPos = tagNbtData->GetTagAs<NBT::TagList>("Pos");
     if (!tagPos)
         return false;
 
-    tagPos->fillVariablesWithList<nbt::TagDouble, double>({&x, &y, &z});
+    tagPos->FillVariablesWithList<NBT::TagDouble, double>({&x, &y, &z});
 
-    nbt::TagList* tagMotion = tagNbtData->getValueAt<nbt::TagList>("Motion");
+    NBT::TagList* tagMotion = tagNbtData->GetTagAs<NBT::TagList>("Motion");
     if (!tagMotion)
         return false;
 
-    tagMotion->fillVariablesWithList<nbt::TagDouble, double>({&motionX, &motionY, &motionZ});
+    tagMotion->FillVariablesWithList<NBT::TagDouble, double>({&motionX, &motionY, &motionZ});
 
-    nbt::TagList* tagRotation = tagNbtData->getValueAt<nbt::TagList>("Rotation");
+    NBT::TagList* tagRotation = tagNbtData->GetTagAs<NBT::TagList>("Rotation");
     if (!tagRotation)
         return false;
 
-    tagRotation->fillVariablesWithList<nbt::TagFloat, float>({&yaw, &pitch});
+    tagRotation->FillVariablesWithList<NBT::TagFloat, float>({&yaw, &pitch});
 
 
-    fallDistance = tagNbtData->getFloat("FallDistance");
-    fire = tagNbtData->getShort("Fire");
-    air = tagNbtData->getShort("Air");
-    onGround = tagNbtData->getBool("OnGround");
-    dimension = tagNbtData->getInt("Dimension");
-    invulnerable = tagNbtData->getBool("Invulnerable");
-    portalCooldown = tagNbtData->getInt("PortalCooldown");
+    fallDistance = tagNbtData->GetFloat("FallDistance", 0);
+    fire = tagNbtData->GetShort("Fire", -20);
+    air = tagNbtData->GetShort("Air", 300);
+    onGround = tagNbtData->GetBool("OnGround", true);
+    dimension = tagNbtData->GetInt("Dimension", 0);
+    invulnerable = tagNbtData->GetBool("Invulnerable", false);
+    portalCooldown = tagNbtData->GetInt("PortalCooldown", 0);
 
     networkX = (int)(x * 32.0);
     networkY = (int)(y * 32.0);
@@ -387,7 +381,7 @@ bool Entity::Load(nbt::TagCompound* tagNbtData)
     return true;
 }
 
-bool Entity::Save(nbt::TagCompound* /*tagNbtData*/)
+bool Entity::Save(NBT::TagCompound* /*tagNbtData*/)
 {
     return true;
 }

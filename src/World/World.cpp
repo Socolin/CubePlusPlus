@@ -3,7 +3,7 @@
 #include <cmath>
 #include <sstream>
 #include <algorithm>
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 #include "Chunk.h"
 #include "Block/Block.h"
@@ -551,13 +551,12 @@ Chunk* World::LoadChunk(int x, int z)
     chunkMap[CHUNK_KEY(x,z)] = chunk;
     return chunk;
 }
-nbt::NbtBuffer* World::GetChunkNbtData(int x, int z)
+NBT::TagCompound* World::GetChunkNbtData(int x, int z)
 {
     Region* region = regionManager.GetRegion(x >> 5, z >> 5);
     if (region)
     {
-        nbt::NbtBuffer* nbtData = region->GetNbtChunkData(x & 0x1f, z & 0x1f);
-        return nbtData;
+        return region->GetNbtChunkData(x & 0x1f, z & 0x1f);
     }
     return nullptr;
 }
@@ -1263,31 +1262,28 @@ void World::load()
     std::stringstream fileName;
     fileName << worldPath << "/level.dat";
 
-    nbt::NbtFile nbtFile = nbt::NbtFile(fileName.str());
-    try
+    NBT::File nbtFile = NBT::File(fileName.str());
+    if (!nbtFile.Load())
     {
-        nbtFile.read();
-    }
-    catch (nbt::GzipIOException& e)
-    {
-        LOG_ERROR << "No map found in world/ !" << std::endl;
+        LOG_ERROR << "Error while loading world data: " << nbtFile.GetFilename() << " : "
+                << nbtFile.GetLastErrorMessage() << std::endl;
         return;
     }
 
-    nbt::Tag* root = nbtFile.getRoot();
 
+    NBT::Tag* root = nbtFile.GetRoot();
     if (!root)
     {
         return;
     }
 
-    nbt::TagCompound* rootCompound = dynamic_cast<nbt::TagCompound*>(root);
+    NBT::TagCompound* rootCompound = root->GetTagAs<NBT::TagCompound>();
     if (!rootCompound)
     {
         return;
     }
 
-    nbt::TagCompound* dataCompound = rootCompound->getValueAt<nbt::TagCompound>("Data");
+    NBT::TagCompound* dataCompound = rootCompound->GetTagAs<NBT::TagCompound>("Data");
     if (!dataCompound)
     {
         return;
@@ -1298,16 +1294,16 @@ void World::load()
     loadGameMode(dataCompound);
 }
 
-void World::loadSpawn(nbt::TagCompound* tagData)
+void World::loadSpawn(NBT::TagCompound* tagData)
 {
-    nbt::TagInt* tagSpawnX = tagData->getValueAt<nbt::TagInt>("SpawnX");
-    nbt::TagInt* tagSpawnY = tagData->getValueAt<nbt::TagInt>("SpawnY");
-    nbt::TagInt* tagSpawnZ = tagData->getValueAt<nbt::TagInt>("SpawnZ");
+    NBT::TagInt* tagSpawnX = tagData->GetTagAs<NBT::TagInt>("SpawnX");
+    NBT::TagInt* tagSpawnY = tagData->GetTagAs<NBT::TagInt>("SpawnY");
+    NBT::TagInt* tagSpawnZ = tagData->GetTagAs<NBT::TagInt>("SpawnZ");
     if (tagSpawnX && tagSpawnY && tagSpawnZ)
     {
-        int spawnX = tagSpawnX->getValue();
-        int spawnY = tagSpawnY->getValue();
-        int spawnZ = tagSpawnZ->getValue();
+        int spawnX = tagSpawnX->GetValue();
+        int spawnY = tagSpawnY->GetValue();
+        int spawnZ = tagSpawnZ->GetValue();
         spawnPosition.Relocate(spawnX, spawnY, spawnZ);
     }
     else
@@ -1317,37 +1313,37 @@ void World::loadSpawn(nbt::TagCompound* tagData)
     }
 }
 
-void World::loadTimeAndWeather(nbt::TagCompound* tagData)
+void World::loadTimeAndWeather(NBT::TagCompound* tagData)
 {
-    nbt::TagLong* tagTime = tagData->getValueAt<nbt::TagLong>("Time");
+    NBT::TagLong* tagTime = tagData->GetTagAs<NBT::TagLong>("Time");
     if (tagTime)
     {
-        ageOfWorld = tagTime->getValue();
-        currentTime = tagTime->getValue();
+        ageOfWorld = tagTime->GetValue();
+        currentTime = tagTime->GetValue();
     }
 
-    nbt::TagInt* tagRainTime = tagData->getValueAt<nbt::TagInt>("rainTime");
+    NBT::TagInt* tagRainTime = tagData->GetTagAs<NBT::TagInt>("rainTime");
     if (tagRainTime)
     {
-        rainTime = tagRainTime->getValue();
+        rainTime = tagRainTime->GetValue();
     }
 
-    nbt::TagByte* tagRaining = tagData->getValueAt<nbt::TagByte>("raining");
+    NBT::TagByte* tagRaining = tagData->GetTagAs<NBT::TagByte>("raining");
     if (tagRaining)
     {
-        raining = tagRaining->getValue() == 1;
+        raining = tagRaining->GetValue() == 1;
     }
 
-    nbt::TagInt* tagThunderTime = tagData->getValueAt<nbt::TagInt>("thunderTime");
+    NBT::TagInt* tagThunderTime = tagData->GetTagAs<NBT::TagInt>("thunderTime");
     if (tagThunderTime)
     {
-        thunderTime = tagThunderTime->getValue();
+        thunderTime = tagThunderTime->GetValue();
     }
 
-    nbt::TagByte* tagThundering = tagData->getValueAt<nbt::TagByte>("thundering");
+    NBT::TagByte* tagThundering = tagData->GetTagAs<NBT::TagByte>("thundering");
     if (tagThundering)
     {
-        thundering = tagThundering->getValue() == 1;
+        thundering = tagThundering->GetValue() == 1;
     }
 
 }
@@ -1377,41 +1373,50 @@ Position World::GetValidSpawnPosition()
     return validPosition;
 }
 
-nbt::NbtFile* World::LoadNbtDatasForPlayer(const std::string& playerName)
+NBT::TagCompound* World::LoadNbtDatasForPlayer(const std::string& playerName)
 {
     std::stringstream fileName;
     fileName << worldName << "/players/" << playerName << ".dat";
 
-    try
-    {
-        nbt::NbtFile* file = new nbt::NbtFile(fileName.str());
-        file->read();
-        return file;
-    } catch(nbt::GzipIOException& e)
+    NBT::File file(fileName.str());
+    if (!file.Load())
     {
         // No file found or corrupted file
+        // TODO: maybe add check on error, to know if it's first
+        // connection of player, or an error while loading nbt
         return nullptr;
     }
+    NBT::Tag* root = file.TakeRoot();
+    NBT::TagCompound* rootAsCompound = nullptr;
+    if (root)
+    {
+        rootAsCompound = root->GetTagAs<NBT::TagCompound>();
+        if (rootAsCompound == nullptr)
+        {
+            delete root;
+        }
+    }
+    return rootAsCompound;
 }
 
-void World::loadGameMode(nbt::TagCompound* tagData)
+void World::loadGameMode(NBT::TagCompound* tagData)
 {
-    nbt::TagByte* tagHardcore = tagData->getValueAt<nbt::TagByte>("hardcore");
+    NBT::TagByte* tagHardcore = tagData->GetTagAs<NBT::TagByte>("hardcore");
     if (tagHardcore)
     {
-        hardcore = tagHardcore->getValue() == 1;
+        hardcore = tagHardcore->GetValue() == 1;
     }
 
-    nbt::TagLong* tagRandoSeed = tagData->getValueAt<nbt::TagLong>("RandomSeed");
+    NBT::TagLong* tagRandoSeed = tagData->GetTagAs<NBT::TagLong>("RandomSeed");
     if (tagRandoSeed)
     {
-        seed = tagRandoSeed->getValue();
+        seed = tagRandoSeed->GetValue();
     }
 
-    nbt::TagInt* tagGameType = tagData->getValueAt<nbt::TagInt>("GameType");
+    NBT::TagInt* tagGameType = tagData->GetTagAs<NBT::TagInt>("GameType");
     if (tagGameType)
     {
-        gameType = tagGameType->getValue();
+        gameType = tagGameType->GetValue();
     }
 }
 

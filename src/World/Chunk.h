@@ -16,9 +16,9 @@
 #include "Network/NetworkPacket.h"
 #include "WorldConstants.h"
 
-namespace nbt
+namespace NBT
 {
-class NbtBuffer;
+class TagCompound;
 }
 namespace Block
 {
@@ -110,7 +110,7 @@ private:
 
     i_lightopacity getBlockLightOpacity(i_small_coord x, i_height y, i_small_coord z);
 
-    bool loadFromFile(nbt::NbtBuffer* nbtData);
+    bool loadFromFile(NBT::TagCompound* nbtData);
 private:
     // 16 x 16 x 16
     typedef struct

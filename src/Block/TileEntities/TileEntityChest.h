@@ -27,8 +27,8 @@ public:
     virtual void NotifyPlayerUse(int action) override;
 
     virtual TileEntity* Create(World::World* world, int blockX, i_height blockY, int blockZ) override;
-    virtual void Load(nbt::TagCompound* nbtData) override;
-    virtual void Save(nbt::TagCompound* nbtData) override;
+    virtual void Load(NBT::TagCompound* nbtData) override;
+    virtual void Save(NBT::TagCompound* nbtData) override;
     virtual const char* GetName() override;
 
     Inventory::Inventory* GetSecondInventory();

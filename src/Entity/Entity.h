@@ -158,14 +158,14 @@ public:
      * @param tagNbtData
      * @return
      */
-    virtual bool Load(nbt::TagCompound* tagNbtData);
+    virtual bool Load(NBT::TagCompound* tagNbtData);
 
     /**
      * Save entity into nbt data
      * @param tagNbtData
      * @return
      */
-    virtual bool Save(nbt::TagCompound* tagNbtData);
+    virtual bool Save(NBT::TagCompound* tagNbtData);
 
     /**
      * When a player collide this entity

@@ -66,11 +66,11 @@ TileEntity* TileEntityEnderChest::Create(World::World* world, int blockX, i_heig
     return new TileEntityEnderChest(world, blockX, blockY, blockZ);
 }
 
-void TileEntityEnderChest::Load(nbt::TagCompound* /*nbtData*/)
+void TileEntityEnderChest::Load(NBT::TagCompound* /*nbtData*/)
 {
 }
 
-void TileEntityEnderChest::Save(nbt::TagCompound* /*nbtData*/)
+void TileEntityEnderChest::Save(NBT::TagCompound* /*nbtData*/)
 {
 }
 

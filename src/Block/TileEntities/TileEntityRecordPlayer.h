@@ -20,8 +20,8 @@ public:
     virtual bool HasNetworkData() override;
 
     virtual TileEntity* Create(World::World* world, int blockX, i_height blockY, int blockZ) override;
-    virtual void Load(nbt::TagCompound* nbtData) override;
-    virtual void Save(nbt::TagCompound* nbtData) override;
+    virtual void Load(NBT::TagCompound* nbtData) override;
+    virtual void Save(NBT::TagCompound* nbtData) override;
     virtual const char* GetName() override;
 
     void SetRecordItem(World::World* world, int x, i_height y, int z, Inventory::ItemStack* item);

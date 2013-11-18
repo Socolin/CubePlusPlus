@@ -37,12 +37,12 @@ TileEntity* TileEntityRecordPlayer::Create(World::World* world, int blockX, i_he
     return new TileEntityRecordPlayer(world, blockX, blockY, blockZ);
 }
 
-void TileEntityRecordPlayer::Load(nbt::TagCompound* /*nbtData*/)
+void TileEntityRecordPlayer::Load(NBT::TagCompound* /*nbtData*/)
 {
     /*FIXME*/
 }
 
-void TileEntityRecordPlayer::Save(nbt::TagCompound* /*nbtData*/)
+void TileEntityRecordPlayer::Save(NBT::TagCompound* /*nbtData*/)
 {
     /*FIXME*/
 }

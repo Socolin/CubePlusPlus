@@ -540,12 +540,12 @@ void EntityPlayer::DoAction(char action)
     }
 }
 
-bool EntityPlayer::Load(nbt::TagCompound* tagNbtData)
+bool EntityPlayer::Load(NBT::TagCompound* tagNbtData)
 {
     return parent_type::Load(tagNbtData);
 }
 
-bool EntityPlayer::Save(nbt::TagCompound* tagNbtData)
+bool EntityPlayer::Save(NBT::TagCompound* tagNbtData)
 {
     return parent_type::Save(tagNbtData);
 }

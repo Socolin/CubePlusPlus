@@ -6,9 +6,9 @@
 
 #include "Util/types.h"
 
-namespace nbt
+namespace NBT
 {
-class NbtBuffer;
+class TagCompound;
 }
 namespace World
 {
@@ -25,7 +25,7 @@ public:
     Region(const std::string& worldPath, int x, int z);
     virtual ~Region();
 
-    nbt::NbtBuffer* GetNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ);
+    NBT::TagCompound* GetNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ);
 private:
     union offset
     {

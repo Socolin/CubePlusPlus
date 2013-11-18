@@ -1,6 +1,6 @@
 #include "ItemStack.h"
 
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 #include "Item.h"
 
 namespace Inventory
@@ -23,11 +23,11 @@ ItemStack::ItemStack(const ItemStack& itemStack)
 {
     if (itemStack.specialData != nullptr)
     {
-        specialData = dynamic_cast<nbt::TagCompound*>(itemStack.specialData->clone());
+        specialData = dynamic_cast<NBT::TagCompound*>(itemStack.specialData->Clone());
     }
 }
 
-ItemStack::ItemStack(nbt::TagCompound* nbtItemData)
+ItemStack::ItemStack(NBT::TagCompound* nbtItemData)
     : itemId(0)
     , itemData(0)
     , stackSize(0)
@@ -35,27 +35,26 @@ ItemStack::ItemStack(nbt::TagCompound* nbtItemData)
 {
     if (nbtItemData)
     {
-        nbt::TagShort* tagItemId = nbtItemData->getValueAt<nbt::TagShort>("id");
+        NBT::TagShort* tagItemId = nbtItemData->GetTagAs<NBT::TagShort>("id");
         if (tagItemId)
         {
-            itemId = tagItemId->getValue();
+            itemId = tagItemId->GetValue();
         }
-        nbt::TagShort* tagItemDamage = nbtItemData->getValueAt<nbt::TagShort>("Damage");
+        NBT::TagShort* tagItemDamage = nbtItemData->GetTagAs<NBT::TagShort>("Damage");
         if (tagItemDamage)
         {
-            itemData = tagItemDamage->getValue();
+            itemData = tagItemDamage->GetValue();
         }
-        nbt::TagByte* tagItemCount = nbtItemData->getValueAt<nbt::TagByte>("Count");
+        NBT::TagByte* tagItemCount = nbtItemData->GetTagAs<NBT::TagByte>("Count");
         if (tagItemCount)
         {
-            stackSize = tagItemCount->getValue();
+            stackSize = tagItemCount->GetValue();
         }
-        nbt::TagCompound* specialData = nbtItemData->getValueAt<nbt::TagCompound>("tag");
+        NBT::TagCompound* specialData = nbtItemData->GetTagAs<NBT::TagCompound>("tag");
         if (specialData)
         {
-            this->specialData = dynamic_cast<nbt::TagCompound*>(specialData->clone());
+            this->specialData = dynamic_cast<NBT::TagCompound*>(specialData->Clone());
         }
-
     }
 }
 
@@ -130,7 +129,7 @@ bool ItemStack::Full() const
     return item->getMaxStackSize() <= stackSize;
 }
 
-nbt::TagCompound* ItemStack::GetSpecialData() const
+NBT::TagCompound* ItemStack::GetSpecialData() const
 {
     return specialData;
 }

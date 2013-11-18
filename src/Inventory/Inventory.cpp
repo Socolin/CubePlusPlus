@@ -1,6 +1,6 @@
 #include "Inventory.h"
 
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 #include "Entity/EntityPlayer.h"
 #include "Network/NetworkPacket.h"
@@ -350,19 +350,19 @@ int Inventory::GetPlayerCount() const
     return playerWithOffsetList.size();
 }
 
-void Inventory::Load(nbt::TagList* nbtData)
+void Inventory::Load(NBT::TagList* nbtData)
 {
-    const std::vector<nbt::Tag *>& itemList = nbtData->getValue();
-    for (nbt::Tag* tag : itemList)
+    const std::vector<NBT::Tag *>& itemList = nbtData->GetTagList();
+    for (NBT::Tag* tag : itemList)
     {
-        nbt::TagCompound* itemData = dynamic_cast<nbt::TagCompound*>(tag);
+        NBT::TagCompound* itemData = dynamic_cast<NBT::TagCompound*>(tag);
         if (!itemData)
             continue;
 
-        nbt::TagByte* tagSlotId = itemData->getValueAt<nbt::TagByte>("Slot");
+        NBT::TagByte* tagSlotId = itemData->GetTagAs<NBT::TagByte>("Slot");
         if (!tagSlotId)
             continue;
-        int slotId = tagSlotId->getValue();
+        int slotId = tagSlotId->GetValue();
 
         if (slotId < 0 || slotId >= maxSlot)
             continue;

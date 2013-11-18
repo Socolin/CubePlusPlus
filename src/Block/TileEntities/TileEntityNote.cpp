@@ -1,6 +1,6 @@
 #include "TileEntityNote.h"
 
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 namespace Block
 {
@@ -37,16 +37,16 @@ TileEntity* TileEntityNote::Create(World::World* world, int blockX, i_height blo
     return new TileEntityNote(world, blockX, blockY, blockZ);
 }
 
-void TileEntityNote::Load(nbt::TagCompound* nbtData)
+void TileEntityNote::Load(NBT::TagCompound* nbtData)
 {
-    nbt::TagByte* tagNote = nbtData->getValueAt<nbt::TagByte>("note");
+    NBT::TagByte* tagNote = nbtData->GetTagAs<NBT::TagByte>("note");
     if (tagNote)
     {
-        noteLevel = tagNote->getValue();
+        noteLevel = tagNote->GetValue();
     }
 }
 
-void TileEntityNote::Save(nbt::TagCompound* /*nbtData*/)
+void TileEntityNote::Save(NBT::TagCompound* /*nbtData*/)
 {
     /*FIXME*/
 }

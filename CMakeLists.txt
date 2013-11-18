@@ -36,13 +36,11 @@ endif ()
 # Define includes directories (for headers)
 include_directories(
     ${Boost_INCLUDE_DIRS}
-    lib/cppNBT/src
     src/
 )
 
 link_directories(
     ${Boost_LIBRARY_DIRS}
-    lib/cppNBT/
 )
 
 # Source files
@@ -66,7 +64,7 @@ target_link_libraries(
 	z
 	config++
 	mysqlcppconn
-    cppnbt
+    nbtfield
     sfml-network
     sfml-system
 )

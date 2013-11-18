@@ -1,6 +1,6 @@
 #include "TileEntityChest.h"
 
-#include <cppnbt.h>
+#include <NBTField/NBTField.h>
 
 #include "Block/BlockConstants.h"
 #include "Inventory/Inventory.h"
@@ -112,16 +112,16 @@ TileEntity* TileEntityChest::Create(World::World* world, int blockX, i_height bl
     return new TileEntityChest(world, blockX, blockY, blockZ);
 }
 
-void TileEntityChest::Load(nbt::TagCompound* nbtData)
+void TileEntityChest::Load(NBT::TagCompound* nbtData)
 {
-    nbt::TagList* itemList = nbtData->getValueAt<nbt::TagList>("Items");
+    NBT::TagList* itemList = nbtData->GetTagAs<NBT::TagList>("Items");
     if (itemList)
     {
         inventory->Load(itemList);
     }
 }
 
-void TileEntityChest::Save(nbt::TagCompound* /*nbtData*/)
+void TileEntityChest::Save(NBT::TagCompound* /*nbtData*/)
 {
     /*FIXME*/
 }

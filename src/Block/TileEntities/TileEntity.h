@@ -8,13 +8,13 @@ namespace Inventory
 {
 class Inventory;
 }
-namespace nbt
-{
-class TagCompound;
-}
 namespace World
 {
 class World;
+}
+namespace NBT
+{
+class TagCompound;
 }
 namespace Block
 {
@@ -48,8 +48,8 @@ public:
     eTileEntityType getType() const;
 
     virtual TileEntity* Create(World::World* world, int blockX, i_height blockY, int blockZ) = 0;
-    virtual void Load(nbt::TagCompound* nbtData) = 0;
-    virtual void Save(nbt::TagCompound* nbtData) = 0;
+    virtual void Load(NBT::TagCompound* nbtData) = 0;
+    virtual void Save(NBT::TagCompound* nbtData) = 0;
 
     virtual const char* GetName() = 0;
     // Add tickFrequence ?
