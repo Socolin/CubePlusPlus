@@ -252,10 +252,10 @@ void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
         int zAdd = newChunkZ + viewDistance * offsetZ;
         for (int x = newChunkX - viewDistance; x <= newChunkX + viewDistance; x++)
         {
-            Chunk* chunk = world->GetChunk(zAdd, x);
+            Chunk* chunk = world->GetChunk(x, zAdd);
             chunk->AddPlayer(this);
             AddChunkToSend(x, zAdd);
-            chunk = world->GetChunk(zRemove, x);
+            chunk = world->GetChunk(x, zRemove);
             chunk->RemovePlayer(this);
         }
     }
