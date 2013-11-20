@@ -41,10 +41,6 @@ inline void NetworkSession::SendChangeGameState(char reason, char gameMode)
     SendPacket(packetAbilities);
 }
 
-bool NetworkSession::SendPendingData()
-{
-}
-
 inline int NetworkSession::GetSocket() const
 {
     return socket;

@@ -122,7 +122,6 @@ public:
     }
 
     bool IsSendBufferHalfFull();
-    bool SendPendingData();
     int GetSocket() const;
 
 private:
