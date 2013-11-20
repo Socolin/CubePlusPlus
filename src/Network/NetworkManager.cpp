@@ -154,7 +154,11 @@ void NetworkManager::ReceiveData()
                 || (!(events[i].events & EPOLLIN)))
         {
             // Déconnexion d'un client
-            OnDisconnectClient(events[i].data.fd);
+            if (sfd != events[i].data.fd)
+            {
+                NetworkSession* session = static_cast<NetworkSession*>(events[i].data.ptr);
+                OnDisconnectClient(session);
+            }
             continue;
         }
         else if (sfd == events[i].data.fd)
@@ -198,7 +202,7 @@ void NetworkManager::ReceiveData()
                 if (s == -1)
                     continue;
 
-                event.data.fd = infd;
+                event.data.ptr = OnNewClient(infd, hbuf);;
                 event.events = EPOLLIN | EPOLLET;
                 s = epoll_ctl(efd, EPOLL_CTL_ADD, infd, &event);
                 if (s == -1)
@@ -206,7 +210,6 @@ void NetworkManager::ReceiveData()
                     perror("epoll_ctl");
                     continue;
                 }
-                OnNewClient(infd, hbuf);
             }
             continue;
         }
@@ -218,13 +221,13 @@ void NetworkManager::ReceiveData()
              and won't get a notification again for the same
              data. */
 
-            NetworkSession* session = sessionList[events[i].data.fd];
+            NetworkSession* session = static_cast<NetworkSession*>(events[i].data.ptr);
 
             if (events[i].events & EPOLLIN)
             {
                 if (session->isDisconnected())
                 {
-                    OnDisconnectClient(events[i].data.fd);
+                    OnDisconnectClient(session);
                 }
                 else
                 {
@@ -235,17 +238,17 @@ void NetworkManager::ReceiveData()
                     catch (NetworkException &e)
                     {
                         LOG_ERROR << "Client network err:" << e.what() << std::endl;
-                        OnDisconnectClient(events[i].data.fd);
+                        OnDisconnectClient(session);
                     }
                 }
             }
             else if (events[i].events & EPOLLRDHUP)
             {
-                OnDisconnectClient(events[i].data.fd);
+                OnDisconnectClient(session);
             }
             else if (events[i].events & EPOLLERR)
             {
-                OnDisconnectClient(events[i].data.fd);
+                OnDisconnectClient(session);
             }
         }
     }
@@ -256,7 +259,7 @@ void NetworkManager::ReceiveData()
         {
             if (!session->UpdateTick())
             {
-                OnDisconnectClient(sessionItr.first);
+                OnDisconnectClient(session);
             }
         }
     }
@@ -266,7 +269,7 @@ void NetworkManager::StopServer()
 {
     for (auto session : sessionList)
     {
-        OnDisconnectClient(session.first);
+        OnDisconnectClient(session.second);
     }
     sessionList.clear();
     free(events);
@@ -274,20 +277,19 @@ void NetworkManager::StopServer()
     close(efd);
 }
 
-void NetworkManager::OnNewClient(int socket, const std::string& ip)
+NetworkSession* NetworkManager::OnNewClient(int socket, const std::string& ip)
 {
     NetworkSession* session = new NetworkSession(socket, ip);
     sessionList[socket] = session;
+    return session;
 }
 
-void NetworkManager::OnDisconnectClient(int socket)
+void NetworkManager::OnDisconnectClient(NetworkSession* session)
 {
-    auto sessionItr = sessionList.find(socket);
-    if (sessionItr != sessionList.end())
+    if (!session->isDisconnected())
     {
-        if (!sessionItr->second->isDisconnected())
-            sessionItr->second->disconnect(std::wstring(L"OnDisconnectClient"));
-        closedSocket.push_back(socket);
+        session->disconnect(L"OnDisconnectClient");
+        closedSocket.push_back(session->GetSocket());
     }
 }
 

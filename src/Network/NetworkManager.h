@@ -22,8 +22,8 @@ public:
     void ReceiveData();
     void StopServer();
 private:
-    void OnNewClient(int socket, const std::string& ip);
-    void OnDisconnectClient(int socket);
+    NetworkSession* OnNewClient(int socket, const std::string& ip);
+    void OnDisconnectClient(NetworkSession* session);
 private:
     std::unordered_map<int, NetworkSession*> sessionList;
     std::vector<int> closedSocket;

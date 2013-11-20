@@ -40,4 +40,14 @@ inline void NetworkSession::SendChangeGameState(char reason, char gameMode)
     packetAbilities << reason << gameMode;
     SendPacket(packetAbilities);
 }
+
+bool NetworkSession::SendPendingData()
+{
+}
+
+inline int NetworkSession::GetSocket() const
+{
+    return socket;
+}
+
 }
