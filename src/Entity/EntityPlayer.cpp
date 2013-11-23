@@ -36,6 +36,7 @@ EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& na
     , animationId(-1)
     , currentWindow(nullptr)
     , admin(false)
+    , breakingBlock(-1)
 {
     mainInventory = new Inventory::Inventory(27, Inventory::INVENTORY_TYPE_PLAYER_MAIN);
     handsInventory = new Inventory::InventoryPlayer();
@@ -123,6 +124,9 @@ void EntityPlayer::UpdateTick()
     {
         moduleItr.second->OnTickUpdate(this);
     }
+
+    if (breakingBlock >= 0)
+        breakingBlock++;
 }
 
 void EntityPlayer::Respawn(double x, double y, double z)
@@ -145,7 +149,11 @@ void EntityPlayer::OnJoinWorld(World* world)
     session->SendPacket(packetSpawnPosition);
 
     if (isAdmin())
+    {
         session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
+        gameMode = GAMEMODE_CREATVE;
+        session->SendChangeGameState(3, 1);
+    }
     else
         session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE);
 
@@ -310,21 +318,72 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*fac
 {
     if (!world)
         return;
-    if (state == 4)
+
+    switch (state)
     {
-       DropItem(handsInventory->TakeSomeItemInSlot(handsInventory->getHandSlotId(), 1));
-       return;
+    case DIG_STATE_START:
+    {
+        if (world->isReadOnly())
+        {
+            ResetBlock(x, y, z);
+        }
+        else
+        {
+            if (gameMode == GAMEMODE_CREATVE)
+            {
+                world->RemoveBlock(x, y, z);
+            }
+            else
+            {
+                breakingBlock = 0;
+            }
+        }
+        break;
+    }
+    case DIG_STATE_CANCEL:
+    {
+        breakingBlock = -1;
+        break;
+    }
+    case DIG_STATE_FINISHED:
+    {
+        if (world->isReadOnly() || gameMode == GAMEMODE_ADVENTURE)
+        {
+            ResetBlock(x, y, z);
+        }
+        else
+        {
+            if (gameMode == GAMEMODE_CREATVE)
+            {
+                world->RemoveBlock(x, y, z);
+            }
+            else if (breakingBlock >= 0) // TODO tick
+            {
+                world->BreakBlock(x, y, z);
+            }
+            else
+            {
+                ResetBlock(x, y, z);
+            }
+        }
+        breakingBlock = -1;
+        break;
+    }
+    case DIG_STATE_DROP_ITEMSTACK:
+        DropItem(handsInventory->TakeSlot(handsInventory->getHandSlotId()));
+        break;
+    case DIG_STATE_DROP_ITEM:
+        DropItem(handsInventory->TakeSomeItemInSlot(handsInventory->getHandSlotId(), 1));
+        break;
+    case DIG_STATE_SHOOT_ARROW:
+        break;
+    default:
+        LOG_ERROR << GetUsername() << " send bad state in DigBlock " << state << std::endl;
+        Kick(L"Error");
+        break;
     }
 
-    if (world->isReadOnly())
-    {
-        ResetBlock(x, y, z);
-        return;
-    }
-    if (state == 0)
-    {
-        world->RemoveBlock(x, y, z);
-    }
+
 }
 void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
 {

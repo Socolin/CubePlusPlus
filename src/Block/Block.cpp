@@ -226,4 +226,9 @@ bool Block::IsFullBlock() const
     return edgeAverageMoreThanOne;
 }
 
+void Block::Drop(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/) const
+{
+}
+
+
 } /* namespace Block */

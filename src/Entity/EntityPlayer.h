@@ -54,6 +54,16 @@ public:
         ACTION_START_SPRINTING,
         ACTION_STOP_SPRINTING,
     };
+
+    enum eDigState
+    {
+        DIG_STATE_START,
+        DIG_STATE_CANCEL,
+        DIG_STATE_FINISHED,
+        DIG_STATE_DROP_ITEMSTACK,
+        DIG_STATE_DROP_ITEM,
+        DIG_STATE_SHOOT_ARROW,
+    };
 public:
     EntityPlayer(const Position& spawnPosition, const std::wstring& name, Network::NetworkSession* session);
     virtual ~EntityPlayer();
@@ -308,7 +318,7 @@ private:
     Window::Window* currentWindow;
     Window::Window* inventoryWindow;
     bool admin;
-
+    int breakingBlock;
     // Plugins
     std::map<int, Plugin::PlayerModule*> moduleList;
 };

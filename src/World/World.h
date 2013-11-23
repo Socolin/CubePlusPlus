@@ -80,6 +80,7 @@ public:
     void ChangeDataNotify(int x, i_height y, int z, i_data blockData);
     void ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData);
     void ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockData, bool playSound = true);
+    void BreakBlock(int x, i_height y, int z);
     void RemoveBlock(int x, i_height y, int z);
     void MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick = 1);
 

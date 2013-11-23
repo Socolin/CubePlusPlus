@@ -199,6 +199,8 @@ public:
     void NotifyTileEntityStateChange(World::World* world, int x, i_height y, int z, int action) const;
 
     bool IsFullBlock() const;
+
+    void Drop(World::World* world, int x, i_height y, int z) const;
     // Getters
     inline i_block GetBlockId() const;
     inline const SoundBlock& GetSound() const;

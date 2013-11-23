@@ -228,6 +228,25 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
     updateAllLightTypes(x, y, z);
 }
 
+void World::BreakBlock(int x, i_height y, int z)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    i_block blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
+    if (blockId > 0)
+    {
+        const Block::Block* block = Block::BlockList::getBlock(blockId);
+        if (block != nullptr)
+        {
+            block->Drop(this, x, y, z);
+        }
+        chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+
+        FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
+            NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, 0);
+        END_FOR_EACH_SIDE
+    }
+    updateAllLightTypes(x, y, z);
+}
 void World::RemoveBlock(int x, i_height y, int z)
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
