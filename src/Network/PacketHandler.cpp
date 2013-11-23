@@ -637,6 +637,7 @@ bool NetworkSession::UpdateTick()
         }
         return true;
     }
+    SendData();
     if (state != STATE_INGAME)
         return true;
     if (lastKeepAliveId != 0)
@@ -662,7 +663,6 @@ bool NetworkSession::UpdateTick()
             SendPacket(keepAlivePacket);
         }
     }
-    while (sendBuffer.Send(socket) > 0);
 
     return true;
 }

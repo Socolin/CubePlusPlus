@@ -123,6 +123,7 @@ public:
 
     bool IsSendBufferHalfFull();
     int GetSocket() const;
+    void SendData();
 
 private:
     void readData(int length, char* data) throw (NetworkException);

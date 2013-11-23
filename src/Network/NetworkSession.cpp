@@ -301,11 +301,6 @@ void NetworkSession::SendPacket(const NetworkPacket& packet)
         }
     }
 
-    int res = sendBuffer.Send(socket);
-    if (res == -1)
-    {
-        disconnect(L"Error while sending data");
-    }
 }
 
 std::wstring NetworkSession::readString(const int maxSize) throw (NetworkException)
@@ -336,6 +331,19 @@ std::wstring NetworkSession::readString(const int maxSize) throw (NetworkExcepti
 bool NetworkSession::IsSendBufferHalfFull()
 {
     return sendBuffer.isHalfFull() > 0;
+}
+
+void NetworkSession::SendData()
+{
+    int res = 0;
+    do
+    {
+        res = sendBuffer.Send(socket);
+        if (res == -1)
+        {
+            disconnect(L"Error while sending data");
+        }
+    } while (res > 0);
 }
 
 }
