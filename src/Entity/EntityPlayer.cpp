@@ -36,7 +36,9 @@ EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& na
     , animationId(-1)
     , currentWindow(nullptr)
     , admin(false)
-    , breakingBlock(-1)
+    , diggingBlock(false)
+    , diggingStep(0)
+    , diggingProgress(0)
 {
     mainInventory = new Inventory::Inventory(27, Inventory::INVENTORY_TYPE_PLAYER_MAIN);
     handsInventory = new Inventory::InventoryPlayer();
@@ -125,8 +127,8 @@ void EntityPlayer::UpdateTick()
         moduleItr.second->OnTickUpdate(this);
     }
 
-    if (breakingBlock >= 0)
-        breakingBlock++;
+    if (diggingBlock)
+        diggingProgress += diggingStep;
 }
 
 void EntityPlayer::Respawn(double x, double y, double z)
@@ -314,7 +316,7 @@ void EntityPlayer::DropItem(Inventory::ItemStack* itemToDrop)
         world->AddEntity(item);
     }
 }
-void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*face*/)
+void EntityPlayer::DigBlock(int state, int x, i_height y, int z, char /*face*/)
 {
     if (!world)
         return;
@@ -323,50 +325,17 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*fac
     {
     case DIG_STATE_START:
     {
-        if (world->isReadOnly())
-        {
-            ResetBlock(x, y, z);
-        }
-        else
-        {
-            if (gameMode == GAMEMODE_CREATVE)
-            {
-                world->RemoveBlock(x, y, z);
-            }
-            else
-            {
-                breakingBlock = 0;
-            }
-        }
+        startDigging(x, y, z);
         break;
     }
     case DIG_STATE_CANCEL:
     {
-        breakingBlock = -1;
+        stopDigging();
         break;
     }
     case DIG_STATE_FINISHED:
     {
-        if (world->isReadOnly() || gameMode == GAMEMODE_ADVENTURE)
-        {
-            ResetBlock(x, y, z);
-        }
-        else
-        {
-            if (gameMode == GAMEMODE_CREATVE)
-            {
-                world->RemoveBlock(x, y, z);
-            }
-            else if (breakingBlock >= 0) // TODO tick
-            {
-                world->BreakBlock(x, y, z);
-            }
-            else
-            {
-                ResetBlock(x, y, z);
-            }
-        }
-        breakingBlock = -1;
+        endDigging(x, y, z);
         break;
     }
     case DIG_STATE_DROP_ITEMSTACK:
@@ -385,7 +354,7 @@ void EntityPlayer::DigBlock(int state, int x, unsigned char y, int z, char /*fac
 
 
 }
-void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
+void EntityPlayer::PlaceBlock(int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
 {
     if (!world)
         return;
@@ -499,6 +468,7 @@ void EntityPlayer::UseEntity(int target, bool leftClick)
 void EntityPlayer::ItemInHandHasChange()
 {
     hasChangeItemInHand = true;
+    stopDigging();
 }
 
 void EntityPlayer::PlayAnimation(char animationId)
@@ -648,10 +618,19 @@ void EntityPlayer::Attack(LivingEntity* /*attacker*/, int& damage)
     damage = -1;
 }
 
-const Inventory::ItemStack* EntityPlayer::LookItemInHand() const
+const Inventory::ItemStack* EntityPlayer::LookItemStackInHand() const
 {
     i_slot handSlotId = handsInventory->getHandSlotId();
     return handsInventory->LookSlot(handSlotId);
+}
+
+const Inventory::Item* EntityPlayer::LookItemInHand() const
+{
+    i_slot handSlotId = handsInventory->getHandSlotId();
+    const Inventory::ItemStack* itemStack = handsInventory->LookSlot(handSlotId);
+    if (itemStack)
+        return itemStack->getItem();
+    return nullptr;
 }
 
 Plugin::PlayerModule* EntityPlayer::GetPlayerModule(int id)
@@ -712,6 +691,84 @@ void EntityPlayer::useItemInHand(ItemUseResult result)
             handsInventory->RemoveSomeItemInSlot(handsInventory->getHandSlotId(), result.amount);
         }
     }
+}
+float EntityPlayer::getDamageDonePerTickAgainstBlock(const Block::Block* block)
+{
+    float damageDone = block->GetDamageDonePerTickByItem(LookItemInHand());
+
+    //TODO, enchantement (aqua afinity, efficiency...) , potion (digSlowdown, digSpeed), and water reduction
+    if (!isOnGround())
+        damageDone /= 5.f;
+}
+
+void EntityPlayer::startDigging(int x, i_height y, int z)
+{
+    if (world->isReadOnly())
+    {
+        ResetBlock(x, y, z);
+    }
+    else
+    {
+        if (gameMode == GAMEMODE_CREATVE)
+        {
+            world->RemoveBlock(x, y, z);
+        }
+        else
+        {
+            i_block blockId = world->GetBlockId(x, y, z);
+            const Block::Block* block = Block::BlockList::getBlock(blockId);
+            if (block)
+            {
+                diggingBlock = true;
+                diggingStep = getDamageDonePerTickAgainstBlock(block);
+                diggingProgress += diggingStep;
+                if (diggingProgress > 1.f)
+                {
+                    endDigging(x, y, z);
+                }
+            }
+        }
+    }
+}
+
+void EntityPlayer::endDigging(int x, i_height y, int z)
+{
+    if (world->isReadOnly() || gameMode == GAMEMODE_ADVENTURE)
+    {
+        ResetBlock(x, y, z);
+    }
+    else
+    {
+        if (gameMode == GAMEMODE_CREATVE)
+        {
+            world->RemoveBlock(x, y, z);
+        }
+        else if (diggingBlock)
+        {
+            if (diggingProgress >= 1 - (diggingProgress * 2)) // Avoid lag problem, so accept dig block in two less tick than normal
+            {
+                world->BreakBlock(x, y, z);
+            }
+            else
+            {
+                return;
+            }
+        }
+        else
+        {
+            ResetBlock(x, y, z);
+        }
+    }
+    stopDigging();
+}
+
+
+
+void EntityPlayer::stopDigging()
+{
+    diggingBlock = false;
+    diggingProgress = 0;
+    diggingStep = 0;
 }
 
 } /* namespace World */

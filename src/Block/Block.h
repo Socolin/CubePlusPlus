@@ -22,6 +22,7 @@ class World;
 
 namespace Inventory
 {
+class Item;
 class ItemStack;
 }
 
@@ -204,6 +205,8 @@ public:
     bool IsFullBlock() const;
 
     void Drop(World::World* world, int x, i_height y, int z) const;
+
+    float GetDamageDonePerTickByItem(const Inventory::Item* item) const;
     // Getters
     inline i_block GetBlockId() const;
     inline const SoundBlock& GetSound() const;

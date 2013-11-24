@@ -77,7 +77,7 @@ void AnimalWolfScript::OnInteract(World::EntityPlayer* player)
             }
         }
     }
-    if(player->LookItemInHand() == nullptr)
+    if(player->LookItemStackInHand() == nullptr)
     {
         SetSitting(!IsSitting());
     }

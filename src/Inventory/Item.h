@@ -58,6 +58,20 @@ public:
     World::ItemUseResult Use(World::EntityPlayer* user) const;
 
     /**
+     * Test if the item will be efficiency against the block
+     * @param blockId block to break
+     * @return true if the item is efficiency
+     */
+    bool CanHarvestBlock(i_block blockId) const;
+
+    /**
+     * Get
+     * @param blockId
+     * @return
+     */
+    float GetStrengthVsBlock(i_block blockId) const;
+
+    /**
      * Get the container item, like for bucket of water, the container is bucket, so when crafting something with
      * bucket of water, only 'water' is used
      */
@@ -88,6 +102,7 @@ public:
     inline unsigned char getMaxStackSize() const;
 
     inline int getBurningTime() const;
+
 
 private:
     i_item itemId;

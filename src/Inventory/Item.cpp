@@ -42,4 +42,16 @@ World::ItemUseResult Item::Use(World::EntityPlayer* /*user*/) const
     return World::ItemUseResult{false, false, 0};
 }
 
+bool Item::CanHarvestBlock(i_block /*blockId*/) const
+{
+    // TODO: maybe database data ?
+    return false;
+}
+
+float Item::GetStrengthVsBlock(i_block /*blockId*/) const
+{
+    // TODO:
+    return 1.f;
+}
+
 } /* namespace Inventory */

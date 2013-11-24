@@ -81,9 +81,9 @@ void AnimalSheepScript::OnInteract(World::EntityPlayer* player)
             }
         }
     }
-    if(player->LookItemInHand() != nullptr)
+    if(player->LookItemStackInHand() != nullptr)
     {
-        if(player->LookItemInHand()->getItemId() == 359 && !isSheared && !EntityAgeIsBaby())
+        if(player->LookItemStackInHand()->getItemId() == 359 && !isSheared && !EntityAgeIsBaby())
         {
             SetSheared(true);
             baseEntity->GetWorld()->PlaySound(baseEntity->x, baseEntity->y, baseEntity->z, L"mob.sheep.shear", 1.0f, 1.0f,2);

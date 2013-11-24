@@ -8,6 +8,7 @@
 #include "Entity/EntityPlayer.h"
 #include "World/World.h"
 #include "Inventory/ItemStack.h"
+#include "Inventory/Item.h"
 
 namespace Block
 {
@@ -260,6 +261,42 @@ void Block::Drop(World::World* world, int x, i_height y, int z) const
     {
         // TODO: Drop system, to add special loot, with random, different items etc...
     }
+}
+
+float Block::GetDamageDonePerTickByItem(const Inventory::Item* item) const
+{
+    float damageDone = 0.f;
+    if (blockHardness == 0)
+    {
+        return 1000.0F;
+    }
+    else if (blockHardness > 0)
+    {
+        bool hasGoodToolForBlock = false;
+        float strVsBlock = 1.0f;
+        if (material.isRequiresNoTool())
+        {
+            hasGoodToolForBlock = true;
+        }
+        else
+        {
+            if (item)
+            {
+                hasGoodToolForBlock = item->CanHarvestBlock(blockId);
+                strVsBlock = item->GetStrengthVsBlock(blockId);
+            }
+        }
+
+        if (hasGoodToolForBlock)
+        {
+            damageDone = strVsBlock / blockHardness / 100.0F;
+        }
+        else
+        {
+            damageDone = strVsBlock / blockHardness / 30.0F;
+        }
+    }
+    return damageDone;
 }
 
 } /* namespace Block */

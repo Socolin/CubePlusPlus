@@ -52,7 +52,7 @@ void AIFindFeeder::findFeederSearchFeeder(World::ScriptedLivingEntity* baseEntit
         World::EntityPlayer* player = dynamic_cast<World::EntityPlayer*>(entity);
         if (player != nullptr)
         {
-            const Inventory::ItemStack* handItem = player->LookItemInHand();
+            const Inventory::ItemStack* handItem = player->LookItemStackInHand();
             if (handItem != nullptr && handItem->getItemId() == findFeederFoodId)
             {
                 if (entity->GetDistanceSQ(*baseEntity) > 2)

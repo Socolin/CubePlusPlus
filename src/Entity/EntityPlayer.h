@@ -10,6 +10,14 @@
 #include <string>
 #include <queue>
 
+namespace Block
+{
+class Block;
+}
+namespace Inventory
+{
+class InventoryCraft;
+}
 namespace Network
 {
 class NetworkSession;
@@ -144,7 +152,7 @@ public:
      * @param cursorPositionY from network packet
      * @param cursorPositionZ from network packet
      */
-    void PlaceBlock(int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY,char cursorPositionZ);
+    void PlaceBlock(int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY,char cursorPositionZ);
 
     /**
      * Called when a player ask to dig a block
@@ -154,7 +162,7 @@ public:
      * @param z from network packet
      * @param face from network packet
      */
-    void DigBlock(int state, int x, unsigned char y, int z, char face);
+    void DigBlock(int state, int x, i_height y, int z, char face);
 
     void DoAction(char action);
 
@@ -289,12 +297,20 @@ public:
 
     virtual void Attack(LivingEntity* attacker, int& damage) override;
 
-    const Inventory::ItemStack* LookItemInHand() const;
+    const Inventory::ItemStack* LookItemStackInHand() const;
+    const Inventory::Item* LookItemInHand() const;
+
     Chat::PlayerChat& GetChat();
 
 private:
     void registerModules();
     void useItemInHand(ItemUseResult result);
+
+    float getDamageDonePerTickAgainstBlock(const Block::Block* block);
+
+    void startDigging(int x, i_height y, int z);
+    void endDigging(int x, i_height y, int z);
+    void stopDigging();
 private:
     typedef struct
     {
@@ -322,13 +338,15 @@ private:
     Inventory::Inventory* enderChestInventory;
     Inventory::Inventory* clickedItem;
     Inventory::Inventory* armorInventory;
-    Inventory::Inventory* craftingInventory;
+    Inventory::InventoryCraft* craftingInventory;
     i_windowId currentWindowId;
     char animationId;
     Window::Window* currentWindow;
     Window::Window* inventoryWindow;
     bool admin;
-    int breakingBlock;
+    bool diggingBlock;
+    float diggingStep;
+    float diggingProgress;
     // Plugins
     std::map<int, Plugin::PlayerModule*> moduleList;
 };
