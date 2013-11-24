@@ -65,7 +65,7 @@ void BlockEnderChestScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x
     }
 }
 
-bool BlockEnderChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+World::ItemUseResult BlockEnderChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     const Window::WindowStaticData* windowData = Window::WindowList::getWindowData(windowEnderChestChestDataId);
     if (windowData != nullptr)
@@ -73,7 +73,7 @@ bool BlockEnderChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_heigh
         Window::Window* window = new Window::Window(user->GetNextAndSetCurrentWindowId(), user, windowData);
         window->OpenWindow(x, y, z);
     }
-    return true;
+    return World::ItemUseResult{true, false, 0};
 }
 
 Block::TileEntity* BlockEnderChestScript::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const

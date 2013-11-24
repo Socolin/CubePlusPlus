@@ -59,7 +59,7 @@ bool BlockFurnaceScript::UseTileEntity() const
     return true;
 }
 
-bool BlockFurnaceScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+World::ItemUseResult BlockFurnaceScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     const Window::WindowStaticData* windowData = Window::WindowList::getWindowData(windowDataId);
     if (windowData != nullptr)
@@ -67,7 +67,7 @@ bool BlockFurnaceScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
         Window::Window* window = new Window::Window(user->GetNextAndSetCurrentWindowId(), user, windowData);
         window->OpenWindow(x, y, z);
     }
-    return true;
+    return World::ItemUseResult{true, false, 0};
 }
 
 void BlockFurnaceScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i_height /*y*/, int /*z*/, int /*face*/, i_block& /*blockId*/, i_data& data, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const

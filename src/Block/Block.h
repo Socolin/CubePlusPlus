@@ -15,6 +15,7 @@ class BlockScript;
 
 namespace World
 {
+struct ItemUseResult;
 class EntityPlayer;
 class World;
 }
@@ -44,7 +45,9 @@ public:
           float maxX, float maxY, float maxZ,
           const BlockMaterial& material,
           bool useNeighborBrightness, int burningTime,
-          Scripting::BlockScript* script);
+          Scripting::BlockScript* script,
+          i_block replaceBlockId,
+          short dropId, char dropDataMask, short dropCountMin, short dropCountMax);
     virtual ~Block();
 
     void InitScript();
@@ -84,9 +87,9 @@ public:
      * @param cursorPositionX Position of player cursor when he place block
      * @param cursorPositionY Position of player cursor when he place block
      * @param cursorPositionZ Position of player cursor when he place block
-     * @return
+     * @return see ItemUseResult definition
      */
-    bool UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    World::ItemUseResult UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
     /**
      * This method is use for update a block, it can be call when block is in "to update list"
@@ -214,6 +217,7 @@ public:
     inline float GetSlipperiness() const;
     inline bool UseNeighborBrightness() const;
     inline int GetBurningTime() const;
+    inline i_block GetReplaceBlockId() const;
 
 private:
     /// The id of block.
@@ -240,6 +244,11 @@ private:
     bool useNeighborBrightness;
     int burningTime;
     Scripting::BlockScript* script;
+    i_block replaceBlockId;
+    short dropId;
+    char dropDataMask;
+    short dropCountMin;
+    short dropCountMax;
 
     // Calculated data
     bool edgeAverageMoreThanOne;

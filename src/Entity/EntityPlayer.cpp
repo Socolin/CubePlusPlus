@@ -405,13 +405,19 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
     {
         if (block && !IsSneak())
         {
-            if (block->UseBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ))
+            ItemUseResult result = block->UseBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
+            if (result.used)
+            {
+                useItemInHand(result);
                 return;
+            }
         }
         if (item != nullptr)
         {
-            if (item->UseOnBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ))
+            ItemUseResult result = item->UseOnBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
+            if (result.used)
             {
+                useItemInHand(result);
                 return;
             }
             else
@@ -421,17 +427,22 @@ void EntityPlayer::PlaceBlock(int x, unsigned char y, int z, char face, char cur
         }
         if (block && IsSneak())
         {
-            if (block->UseBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ))
+            ItemUseResult result = block->UseBlock(this, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
+            if (result.used)
+            {
+                useItemInHand(result);
                 return;
+            }
         }
     }
     else
     {
         if (item != nullptr)
         {
-            if (item->Use(this))
+            ItemUseResult result = item->Use(this);
+            if (result.used)
             {
-
+                useItemInHand(result);
             }
         }
     }
@@ -688,5 +699,19 @@ void EntityPlayer::registerModules()
     }
 }
 
+void EntityPlayer::useItemInHand(ItemUseResult result)
+{
+    if (gameMode != GAMEMODE_CREATVE)
+    {
+        if (result.damage)
+        {
+            handsInventory->DamageItemInSlot(handsInventory->getHandSlotId(), result.amount);
+        }
+        else
+        {
+            handsInventory->RemoveSomeItemInSlot(handsInventory->getHandSlotId(), result.amount);
+        }
+    }
+}
 
 } /* namespace World */

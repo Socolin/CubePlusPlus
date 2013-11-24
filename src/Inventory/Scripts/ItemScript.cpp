@@ -1,6 +1,7 @@
 #include "ItemScript.h"
 
 #include "Scripting/ScriptManager.h"
+#include "Entity/EntityPlayer.h"
 
 namespace Scripting
 {
@@ -25,14 +26,14 @@ bool ItemScript::OnUse(World::EntityPlayer* /*user*/) const
     return false;
 }
 
-bool ItemScript::OnUseOnEntity(World::EntityPlayer* /*user*/, World::Entity* /*target*/) const
+World::ItemUseResult ItemScript::OnUseOnEntity(World::EntityPlayer* /*user*/, World::Entity* /*target*/) const
 {
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
-bool ItemScript::OnUseOnBlock(World::EntityPlayer* /*user*/, int /*x*/, unsigned char /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+World::ItemUseResult ItemScript::OnUseOnBlock(World::EntityPlayer* /*user*/, int /*x*/, unsigned char /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
 } /* namespace Scripting */

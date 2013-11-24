@@ -27,10 +27,10 @@ ItemScript* ItemSignScript::Copy()
     return new ItemSignScript(*this);
 }
 
-bool ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+World::ItemUseResult ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (face == FACE_BOTTOM)
-        return false;
+        return World::ItemUseResult{false, false, 0};
 
     World::World* world = user->GetWorld();
 
@@ -39,12 +39,12 @@ bool ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, 
     if (clicketBlock != NULL && clicketBlock->GetMaterial().isReplacable())
     {
         if (face == FACE_NONE)
-            return false;
+            return World::ItemUseResult{false, false, 0};
     }
     else
     {
         if (!Util::UpdateXYZForSide(face, x, y, z))
-            return false;
+            return World::ItemUseResult{false, false, 0};
     }
 
     i_block currentBlockId = world->GetBlockId(x, y, z);
@@ -53,7 +53,7 @@ bool ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, 
         const Block::Block* currentBlock = Block::BlockList::getBlock(currentBlockId);
         if (currentBlock && !currentBlock->GetMaterial().isReplacable())
         {
-            return false;
+            return World::ItemUseResult{false, false, 0};
         }
     }
 
@@ -68,13 +68,13 @@ bool ItemSignScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, 
     {
         block->OnBlockPlace(user, x, y, z,face, blockId, metadata, cursorPositionX, cursorPositionY, cursorPositionZ);
         world->ChangeBlock(x, y, z, blockId, metadata, true);
-        return true;
+        return World::ItemUseResult{true, false, 1};
     }
     else
     {
         user->ResetBlock(x, y, z);
     }
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
 void ItemSignScript::InitParam(int paramId, int param)

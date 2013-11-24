@@ -24,22 +24,22 @@ Item::~Item()
     delete script;
 }
 
-bool Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+World::ItemUseResult Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (script != nullptr)
     {
         return script->OnUseOnBlock(user, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
-bool Item::Use(World::EntityPlayer* /*user*/) const
+World::ItemUseResult Item::Use(World::EntityPlayer* /*user*/) const
 {
     if (script != nullptr)
     {
         // TODO
     }
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
 } /* namespace Inventory */

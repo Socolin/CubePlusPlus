@@ -23,7 +23,7 @@ BlockScript* BlockNoteScript::Copy()
 {
     return new BlockNoteScript(*this);
 }
-bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+World::ItemUseResult BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->GetWorld();
     Block::TileEntity* tileEntity = world->GetTileEntity(x, y, z);
@@ -53,7 +53,7 @@ bool BlockNoteScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, i
             world->PlayBlockAction(x, y, z, materialSoundId + 1, note, baseBlock->GetBlockId(), 2);
         }
     }
-    return true;
+    return World::ItemUseResult{true, false, 0};
 }
 
 

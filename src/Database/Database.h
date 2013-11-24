@@ -34,6 +34,11 @@ enum eDatabaseField
     soundId,
     burningTime,
     useNeighborBrightness,
+    replaceBlockId,
+    dropId,
+    dropDataMask,
+    dropCountMin,
+    dropCountMax,
 };
 }
 namespace TableBlockSound

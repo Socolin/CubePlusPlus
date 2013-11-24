@@ -23,13 +23,13 @@ BlockScript* BlockJukeboxScript::Copy()
 {
     return new BlockJukeboxScript(*this);
 }
-bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+World::ItemUseResult BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->GetWorld();
     World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
     if (chunk == nullptr)
     {
-        return false;
+        return World::ItemUseResult{false, false, 0};
     }
     Block::TileEntity* tileEntity = chunk->GetTileEntity(x & 0xf, y, z & 0xf);
     if (tileEntity)
@@ -41,7 +41,7 @@ bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
             if (recordPlayer->GetRecordItem().LookSlot(0) != nullptr)
             {
                 EjectRecord(world, x, y, z);
-                return true;
+                return World::ItemUseResult{true, false, 0};
             }
             else
             {
@@ -52,14 +52,14 @@ bool BlockJukeboxScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y
                     if (item_list.find(item->getItemId()) != item_list.end())
                     {
                         recordPlayer->SetRecordItem(world, x, y, z, item);
-                        return true;
+                        return World::ItemUseResult{true, false, 1};
                     }
                 }
             }
 
         }
     }
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
 Block::TileEntity* BlockJukeboxScript::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const

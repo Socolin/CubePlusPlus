@@ -27,12 +27,12 @@ ItemScript* ItemBlockScript::Copy()
     return new ItemBlockScript(*this);
 }
 
-bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+World::ItemUseResult ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     Inventory::InventoryPlayer* handInventory = user->GetHandsInventory();
     const Inventory::ItemStack* item = handInventory->LookSlot(handInventory->getHandSlotId());
     if (item == nullptr)
-        return false;
+        return World::ItemUseResult{false, false, 0};
 
     World::World* world = user->GetWorld();
 
@@ -41,18 +41,18 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     if (clicketBlock != NULL && clicketBlock->GetMaterial().isReplacable())
     {
         if (face == FACE_NONE)
-            return false;
+            return World::ItemUseResult{false, false, 0};
     }
     else
     {
         if (!Util::UpdateXYZForSide(face, x, y, z))
-            return false;
+            return World::ItemUseResult{false, false, 0};
     }
 
     if (world->isReadOnly())
     {
         user->ResetBlock(x, y, z);
-        return false;
+        return World::ItemUseResult{false, false, 0};
     }
 
     i_block currentBlockId = world->GetBlockId(x, y, z);
@@ -61,7 +61,7 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
         const Block::Block* currentBlock = Block::BlockList::getBlock(currentBlockId);
         if (currentBlock && !currentBlock->GetMaterial().isReplacable())
         {
-            return false;
+            return World::ItemUseResult{false, false, 0};
         }
     }
 
@@ -77,13 +77,13 @@ bool ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_height y,
     {
         block->OnBlockPlace(user, x, y, z,face, blockId, metadata, cursorPositionX, cursorPositionY, cursorPositionZ);
         world->ChangeBlock(x, y, z, blockId, metadata, true);
-        return true;
+        return World::ItemUseResult{true, false, 1};
     }
     else
     {
         user->ResetBlock(x, y, z);
     }
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
 void ItemBlockScript::InitParam(int paramId, int param)

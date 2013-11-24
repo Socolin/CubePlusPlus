@@ -5,6 +5,7 @@
 
 namespace World
 {
+struct ItemUseResult;
 class EntityPlayer;
 }
 namespace Scripting
@@ -14,6 +15,7 @@ class ItemScript;
 namespace Inventory
 {
 class ItemStack;
+
 class Item
 {
 public:
@@ -44,16 +46,16 @@ public:
      * @param cursorPositionX position on block where player click [0;16[
      * @param cursorPositionY position on block where player click [0;16[
      * @param cursorPositionZ position on block where player click [0;16[
-     * @return true if item has been used
+     * @return see ItemUseResult
      */
-    bool UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    World::ItemUseResult UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
     /**
      * Use item in air: do right click, targeting no block.
      * @param user player who use item
-     * @return true if item has been use
+     * @return see ItemUseResult
      */
-    bool Use(World::EntityPlayer* user) const;
+    World::ItemUseResult Use(World::EntityPlayer* user) const;
 
     /**
      * Get the container item, like for bucket of water, the container is bucket, so when crafting something with

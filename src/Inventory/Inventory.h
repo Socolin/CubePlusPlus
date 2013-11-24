@@ -80,6 +80,14 @@ public:
     void RemoveSomeItemInSlot(int slotId, int count);
 
     /**
+     * Increase damage of item in  slot, if item has damage.
+     * if damage > item.GetMaxDamage() then the item is deleted
+     * @param slotId id of slot where is item
+     * @param damage number damage to done
+     */
+    void DamageItemInSlot(int slotId, int damage);
+
+    /**
      * Return the item in slot, it must only be use to "look"
      * it must not be use to insert in another slot or store it in other place
      * @param slotId

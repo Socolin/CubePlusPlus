@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "Scripting/ScriptManager.h"
+#include "Entity/EntityPlayer.h"
 
 namespace Scripting
 {
@@ -49,9 +50,9 @@ void BlockScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x*/, i_
 {
 }
 
-bool BlockScript::OnUseBlock(World::EntityPlayer* /*user*/, int /*x*/, i_height /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+World::ItemUseResult BlockScript::OnUseBlock(World::EntityPlayer* /*user*/, int /*x*/, i_height /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
 bool BlockScript::CanPlace(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, char /*face*/) const

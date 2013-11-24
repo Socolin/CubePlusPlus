@@ -3,6 +3,7 @@
 #include <NBTField/NBTField.h>
 
 #include "Entity/EntityPlayer.h"
+#include "Inventory/Item.h"
 #include "Network/NetworkPacket.h"
 #include "Network/OpcodeList.h"
 #include "World/World.h"
@@ -148,6 +149,30 @@ void Inventory::RemoveSomeItemInSlot(int slotId, int count)
         slot[slotId] = nullptr;
     }
     updatedSlot.push_back(slotId);
+}
+
+
+void Inventory::DamageItemInSlot(int slotId, int damage)
+{
+    ItemStack* oldItem = slot[slotId];
+    if (oldItem == nullptr)
+    {
+        return;
+    }
+    const Item* item = oldItem->getItem();
+    if (item->getMaxDamage() > 0 && item->isHasSubType())
+    {
+        if (oldItem->getItemData() + damage > item->getMaxDamage())
+        {
+            delete oldItem;
+            slot[slotId] = nullptr;
+        }
+        else
+        {
+            oldItem->setItemData(oldItem->getItemData() + damage);
+        }
+        updatedSlot.push_back(slotId);
+    }
 }
 
 

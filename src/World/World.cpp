@@ -238,8 +238,12 @@ void World::BreakBlock(int x, i_height y, int z)
         if (block != nullptr)
         {
             block->Drop(this, x, y, z);
+            chunk->ChangeBlock(x & 0xf, y, z & 0xf, block->GetReplaceBlockId(), 0);
         }
-        chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+        else
+        {
+            chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+        }
 
         FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
             NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, 0);
@@ -253,7 +257,15 @@ void World::RemoveBlock(int x, i_height y, int z)
     i_block blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
     if (blockId > 0)
     {
-        chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+        const Block::Block* block = Block::BlockList::getBlock(blockId);
+        if (block != nullptr)
+        {
+            chunk->ChangeBlock(x & 0xf, y, z & 0xf, block->GetReplaceBlockId(), 0);
+        }
+        else
+        {
+            chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
+        }
 
         FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
             NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, 0);

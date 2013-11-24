@@ -23,7 +23,7 @@ public:
 
     virtual void InitParam(int paramId, int param);
 
-    virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
+    virtual World::ItemUseResult OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
 private:
     i_windowDataId windowDataId;
 };

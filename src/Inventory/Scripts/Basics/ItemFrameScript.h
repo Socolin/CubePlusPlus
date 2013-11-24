@@ -15,7 +15,7 @@ public:
     ItemFrameScript();
     virtual ~ItemFrameScript();
     virtual ItemScript* Copy() override;
-    virtual bool OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
+    virtual World::ItemUseResult OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
 };
 
 } /* namespace Scripting */

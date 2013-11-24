@@ -64,6 +64,11 @@ int Block::GetBurningTime() const
     return burningTime;
 }
 
+i_block Block::GetReplaceBlockId() const
+{
+    return replaceBlockId;
+}
+
 } /* namespace Block */
 
 #endif /* BLOCK_HXX_ */

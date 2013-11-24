@@ -96,6 +96,11 @@ void BlockList::Initialize()
         int materialId = result->getInt(TableBlock::material);
         int burningTime = result->getInt(TableBlock::burningTime);
         bool useNeighborBrightness = result->getInt(TableBlock::useNeighborBrightness);
+        i_block replaceBlockId = result->getInt(TableBlock::replaceBlockId);
+        short dropId = result->getInt(TableBlock::dropId);
+        char dropDataMask = result->getInt(TableBlock::dropDataMask);
+        short dropCountMin = result->getInt(TableBlock::dropCountMin);
+        short dropCountMax = result->getInt(TableBlock::dropCountMax);
         int scriptId = result->getInt(TableBlock::scriptId);
 
         Scripting::BlockScript* script = nullptr;
@@ -158,7 +163,9 @@ void BlockList::Initialize()
                                  minX, minY, minZ, maxX, maxY, maxZ,
                                  materialList[materialId],
                                  useNeighborBrightness, burningTime,
-                                 script);
+                                 script,
+                                 replaceBlockId,
+                                 dropId, dropDataMask, dropCountMin, dropCountMax);
         LOG_DEBUG << blockId << "\t"
                   << (int)lightOpacity << "\t"
                   << (int)lightValue << "\t"

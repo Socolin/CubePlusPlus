@@ -25,12 +25,12 @@ ItemScript* ItemPaintingScript::Copy()
 }
 
 
-bool ItemPaintingScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+World::ItemUseResult ItemPaintingScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     Inventory::InventoryPlayer* handInventory = user->GetHandsInventory();
     const Inventory::ItemStack* item = handInventory->LookSlot(handInventory->getHandSlotId());
     if (item == nullptr)
-        return false;
+        return World::ItemUseResult{false, false, 0};
 
     int orientation = -1;
     switch (face)
@@ -38,7 +38,7 @@ bool ItemPaintingScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned
     case FACE_BOTTOM: // -Y
     case FACE_TOP: // +Y
     case FACE_NONE:
-        return false;
+        return World::ItemUseResult{false, false, 0};
     case FACE_NORTH: // -Z
         orientation = 2;
         break;
@@ -67,11 +67,11 @@ bool ItemPaintingScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned
         else
         {
             delete hangingEntity;
-            return false;
+            return World::ItemUseResult{false, false, 0};
         }
-        return true;
+        return World::ItemUseResult{true, false, 1};
     }
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
 

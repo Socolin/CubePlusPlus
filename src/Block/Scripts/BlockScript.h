@@ -79,9 +79,9 @@ public:
      * @param cursorPositionX position where player clicked on block
      * @param cursorPositionY position where player clicked on block
      * @param cursorPositionZ position where player clicked on block
-     * @return true if something happen and nothing must be done after
+     * @return see ItemUseResult;
      */
-    virtual bool OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    virtual World::ItemUseResult OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
     /**
      * Called after that a block has been place

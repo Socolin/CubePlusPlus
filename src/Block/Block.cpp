@@ -5,7 +5,9 @@
 #include "Util/AABB.h"
 #include "SoundBlock.h"
 #include "Scripts/BlockScript.h"
+#include "Entity/EntityPlayer.h"
 #include "World/World.h"
+#include "Inventory/ItemStack.h"
 
 namespace Block
 {
@@ -18,7 +20,9 @@ Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpaci
              float maxX, float maxY, float maxZ,
              const BlockMaterial& material,
              bool useNeighborBrightness, int burningTime,
-             Scripting::BlockScript* script)
+             Scripting::BlockScript* script,
+             i_block replaceBlockId,
+             short dropId, char dropDataMask, short dropCountMin, short dropCountMax)
     : blockId(blockId)
     , sound(sound)
     , lightOpacity(lightOpacity)
@@ -40,6 +44,11 @@ Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpaci
     , useNeighborBrightness(useNeighborBrightness)
     , burningTime(burningTime)
     , script(script)
+    , replaceBlockId(replaceBlockId)
+    , dropId(dropId)
+    , dropDataMask(dropDataMask)
+    , dropCountMin(dropCountMin)
+    , dropCountMax(dropCountMax)
 {
     edgeAverageMoreThanOne = ((maxX - minX) + (maxY - minY) + (maxZ - minZ)) >= 3;
 }
@@ -85,13 +94,13 @@ bool Block::CanPlace(World::World* world, int x, i_height y, int z, char face) c
 }
 
 
-bool Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+World::ItemUseResult Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (script)
     {
         return script->OnUseBlock(user, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
-    return false;
+    return World::ItemUseResult{false, false, 1};
 }
 
 TileEntity* Block::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const
@@ -226,9 +235,31 @@ bool Block::IsFullBlock() const
     return edgeAverageMoreThanOne;
 }
 
-void Block::Drop(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/) const
+void Block::Drop(World::World* world, int x, i_height y, int z) const
 {
-}
+    if (dropId > 0)
+    {
+        int dropCount = 1;
+        if (dropCountMax == dropCountMin)
+        {
+            dropCount = dropCountMin;
+        }
+        else
+        {
+           dropCount  = dropCountMin + (random() % (dropCountMax - dropCountMin));
+        }
 
+        if (dropCount > 0)
+        {
+            i_data metadata = world->GetBlockData(x, y, z);
+            Inventory::ItemStack* itemStack = new Inventory::ItemStack(dropId, dropCount, metadata & dropDataMask);
+            world->DropItemstackWithRandomDirection(x + 0.5, y + 0.5, z + 0.5, itemStack);
+        }
+    }
+    else if (dropId < 0)
+    {
+        // TODO: Drop system, to add special loot, with random, different items etc...
+    }
+}
 
 } /* namespace Block */
