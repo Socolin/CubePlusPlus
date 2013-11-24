@@ -83,7 +83,7 @@ void DiggingManager::EndDigging()
         }
         else if (diggingBlock)
         {
-            if (diggingProgress >= 1 - (diggingProgress * 2)) // Avoid lag problem, so accept dig block in two less tick than normal
+            if (diggingProgress >= 1 - (diggingStep * 2)) // Avoid lag problem, so accept dig block in two less tick than normal
             {
                 player->GetWorld()->BreakBlock(x, y, z);
             }
