@@ -22,7 +22,7 @@ public:
 
     virtual void OnOpenWindow(World::EntityPlayer* player) override;
     virtual void OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity) override;
-    virtual int GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseOrder) override;
+    virtual int GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseInventoriesOrder, bool& reverseSlotOrder) override;
 private:
     Inventory::InventoryFurnace* furnaceInventory;
 };

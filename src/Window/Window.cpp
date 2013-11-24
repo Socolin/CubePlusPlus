@@ -71,7 +71,7 @@ void Window::OpenWindow(bool sendOpenPacket)
     if (sendOpenPacket)
     {
         Network::NetworkPacket openWindowPacket(Network::OP_OPEN_WINDOW);
-        openWindowPacket << id << windowData->GetClientWindowId() << windowData->getName() << windowData->getNetworkMaxSlot() << true;
+        openWindowPacket << id << windowData->GetClientWindowId() << windowData->getName() << char(maxSlot) << true;
         player->Send(openWindowPacket);
     }
 
@@ -202,14 +202,15 @@ bool Window::ClickOnWindow(i_slot slotId, char button, short action, char mode, 
                     if (script)
                     {
                         i_slot targetSlot = 0;
-                        bool reverseOrder = false;
-                        int inventoryTypeFlag = script->GetInventoryAndSlotShiftClickTarget(invType, inventorySlotId, targetSlot, lookedItemInSlot, reverseOrder);
+                        bool reverseInventoriesOrder = false;
+                        bool reverseSlotOrder = false;
+                        int inventoryTypeFlag = script->GetInventoryAndSlotShiftClickTarget(invType, inventorySlotId, targetSlot, lookedItemInSlot, reverseInventoriesOrder, reverseSlotOrder);
 
                         bool fillEmptySlot = false;
                         int start = 0;
                         int step = 1;
 
-                        if (reverseOrder)
+                        if (reverseInventoriesOrder)
                         {
                             start = inventoryListByPriority.size() - 1;
                             step = -1;
@@ -230,7 +231,7 @@ bool Window::ClickOnWindow(i_slot slotId, char button, short action, char mode, 
                                         {
                                             break;
                                         }
-                                        Inventory::ItemStack* mergeResult = inv->StackStackableItemFromStack(shiftClickedItem, reverseOrder, fillEmptySlot);
+                                        Inventory::ItemStack* mergeResult = inv->StackStackableItemFromStack(shiftClickedItem, reverseSlotOrder, fillEmptySlot);
                                         if (mergeResult != nullptr)
                                             inventory->ClearAndSetSlot(inventorySlotId, mergeResult);
                                     }

@@ -1,15 +1,15 @@
 #include "Craft.h"
 
 #include "Inventory/InventoryCraft.h"
+#include "Scripts/CraftScript.h"
 
 namespace Craft
 {
 
-Craft::Craft(char width, char height, i_item resultId, i_damage resultData, int resultQtt)
+Craft::Craft(char width, char height, i_item resultId, i_damage resultData, int resultQtt, Scripting::CraftScript* script)
     : width(width)
     , height(height)
-    , currentSlot(0)
-    , script(nullptr)
+    , script(script)
 {
     result = new Inventory::ItemStack(resultId, resultQtt, resultData);
 }
@@ -32,43 +32,27 @@ bool Craft::Match(Inventory::InventoryCraft* craftInventory) const
 {
     if (script != nullptr)
     {
-        return false;//TODO
+        return script->Match(craftInventory);
     }
-    bool findCraft = true;
-    for (int x = 0; x < width; x++)
-    {
-        for (int y = 0; y < height; y++)
-        {
-            if (!slots[x][y].Equals(craftInventory->LookSlot(x, y)))
-            {
-                findCraft = false;
-            }
-        }
-    }
-    if (findCraft)
-        return true;
-    findCraft = true;
-    for (int x = 0; x < width; x++)
-    {
-        for (int y = 0; y < height; y++)
-        {
-            if (!slots[width - 1 - x][y].Equals(craftInventory->LookSlot(x, y)))
-            {
-                findCraft = false;
-            }
-        }
-    }
-    return findCraft;
+    return false;
 }
 
 void Craft::SetNextSlot(i_item itemId, i_damage itemData)
 {
-    if (width == 0)
-        return;
-    ItemData& slot = slots[currentSlot % width][currentSlot / width];
-    slot.itemId = itemId;
-    slot.itemData = itemData;
-    currentSlot++;
+    if (script != nullptr)
+    {
+        script->SetNextSlot(itemId, itemData);
+    }
+}
+
+char Craft::GetHeight() const
+{
+    return height;
+}
+
+char Craft::GetWidth() const
+{
+    return width;
 }
 
 } /* namespace Craft */

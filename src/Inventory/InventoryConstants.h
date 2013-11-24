@@ -9,6 +9,7 @@ enum eInventoryType
     INVENTORY_TYPE_PLAYER_HANDS     = 0x2,
     INVENTORY_TYPE_PLAYER_MAIN      = 0x4,
     INVENTORY_TYPE_FURNACE          = 0x8,
+    INVENTORY_TYPE_CRAFT            = 0x10,
 };
 
 }

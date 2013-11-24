@@ -127,7 +127,9 @@ void CraftManager::load()
             }
         }
 
-        Craft* craft = new Craft(width, height, resultId, resultData, resultQuantity);
+        Craft* craft = new Craft(width, height, resultId, resultData, resultQuantity, script);
+        if (script)
+            script->Init(craft);
         LOG_DEBUG << craftId << "\t" << width << "\t" << height << "\t" << resultId << "\t" << resultData << "\t" << resultQuantity << "\t" << scriptId << "\t" << std::endl;
         craftList[CRAFT_KEY(width,height)].push_back(craft);
 

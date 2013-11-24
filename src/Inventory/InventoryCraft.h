@@ -22,10 +22,14 @@ public:
 
     virtual void DropInventory(World::EntityPlayer* player) override;
 
+    int GetCraftHeight() const;
+    int GetCraftWidth() const;
 
 private:
-    int width;
-    int height;
+    const int width;
+    const int height;
+    int craftWidth;
+    int craftHeight;
     int top;
     int left;
 };

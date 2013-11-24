@@ -11,9 +11,11 @@ namespace Inventory
 {
 
 InventoryCraft::InventoryCraft(int width, int height)
-    : Inventory(width * height + 1)
+    : Inventory(width * height + 1, INVENTORY_TYPE_CRAFT)
     , width(width)
     , height(height)
+    , craftWidth(0)
+    , craftHeight(0)
     , top(0)
     , left(0)
 {
@@ -35,7 +37,7 @@ const ItemStack* InventoryCraft::LookSlot(int x, int y) const
 
 bool InventoryCraft::CanPlayerPlaceItemAt(i_slot slotId)
 {
-    return slotId != (width * height);
+    return slotId != 0;
 }
 
 void InventoryCraft::PerformCraftChecking()
@@ -47,19 +49,21 @@ void InventoryCraft::PerformCraftChecking()
     for (int x = 0; x < width; x++)
     {
         for (int y = 0; y < height; y++)
-        if (slot[1 + x + y * height] != nullptr)
         {
-            left = std::min(x, left);
-            top = std::min(y, top);
-            maxX = std::max(x, maxX);
-            maxY = std::max(y, maxY);
+            if (slot[1 + x + y * width] != nullptr)
+            {
+                left = std::min(x, left);
+                top = std::min(y, top);
+                maxX = std::max(x, maxX);
+                maxY = std::max(y, maxY);
+            }
         }
     }
-    int sizeX = maxX - left + 1;
-    int sizeY = maxY - top + 1;
+    craftWidth = maxX - left + 1;
+    craftHeight = maxY - top + 1;
 
     Craft::CraftManager& manager = Craft::CraftManager::Instance();
-    const std::vector<Craft::Craft*>& craftList = manager.GetCraftList(sizeX, sizeY);
+    const std::vector<Craft::Craft*>& craftList = manager.GetCraftList(craftWidth, craftHeight);
     bool foundMatch = false;
     for (Craft::Craft* craft : craftList)
     {
@@ -68,6 +72,19 @@ void InventoryCraft::PerformCraftChecking()
             ClearAndSetSlot(GetResultSlotId(), craft->GetResult()->Copy());
             foundMatch = true;
             break;
+        }
+    }
+    if (!foundMatch && craftWidth > 0 && craftHeight > 0)
+    {
+        const std::vector<Craft::Craft*>& craftList = manager.GetCraftList(0, 0);
+        for (Craft::Craft* craft : craftList)
+        {
+            if (craft->Match(this))
+            {
+                ClearAndSetSlot(GetResultSlotId(), craft->GetResult()->Copy());
+                foundMatch = true;
+                break;
+            }
         }
     }
     if (!foundMatch)
@@ -138,4 +155,15 @@ void InventoryCraft::DropInventory(World::EntityPlayer* player)
         }
     }
 }
+
+int InventoryCraft::GetCraftHeight() const
+{
+    return craftHeight;
+}
+
+int InventoryCraft::GetCraftWidth() const
+{
+    return craftWidth;
+}
+
 } /* namespace Inventory */

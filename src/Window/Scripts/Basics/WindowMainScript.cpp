@@ -1,49 +1,55 @@
-#include "WindowCraftingTableScript.h"
+#include "WindowMainScript.h"
 
-#include <cassert>
-
+#include "Window/Window.h"
 #include "Inventory/InventoryCraft.h"
 #include "Entity/EntityPlayer.h"
-#include "Window/Window.h"
 
 namespace Scripting
 {
 
-WindowCraftingTableScript::WindowCraftingTableScript()
-    : WindowScript("window_craftingtable")
-    , craftInventory(nullptr)
+WindowMainScript::WindowMainScript()
+    : WindowScript("window_main")
 {
 }
 
-WindowCraftingTableScript::~WindowCraftingTableScript()
+WindowMainScript::~WindowMainScript()
 {
-    if (craftInventory)
-        craftInventory->CloseInventoryForDelete();
-    delete craftInventory;
 }
 
-WindowScript* WindowCraftingTableScript::Copy() const
+WindowScript* WindowMainScript::Copy() const
 {
-    return new WindowCraftingTableScript(*this);
+    return new WindowMainScript(*this);
 }
 
-void WindowCraftingTableScript::OnOpenWindow(World::EntityPlayer* player)
+void WindowMainScript::OnCloseWindow(World::EntityPlayer* player)
 {
-    if (craftInventory == nullptr)
-        craftInventory = new Inventory::InventoryCraft(3, 3);
-
-    baseWindow->AddInventory(craftInventory);
-    baseWindow->AddInventory(player->GetMainInventory());
-    baseWindow->AddInventory(player->GetHandsInventory(), Window::Window::PRIORITY_HIGH);
+    Inventory::Inventory* inventory = baseWindow->GetInventoryByType(Inventory::INVENTORY_TYPE_CRAFT);
+    if (inventory != nullptr)
+        inventory->DropInventory(player);
 }
 
-void WindowCraftingTableScript::OnCloseWindow(World::EntityPlayer* player)
+void WindowMainScript::OnPostClickOnWindow(World::EntityPlayer* /*player*/, short /*slotId*/, char /*button*/, short /*action*/, char /*mode*/, const Inventory::ItemStack* /*slot*/)
 {
-    craftInventory->DropInventory(player);
+    Inventory::Inventory* inventory = baseWindow->GetInventoryByType(Inventory::INVENTORY_TYPE_CRAFT);
+    if (inventory != nullptr)
+    {
+        Inventory::InventoryCraft* craftInventory = dynamic_cast<Inventory::InventoryCraft*>(inventory);
+        if (craftInventory)
+            craftInventory->PerformCraftChecking();
+    }
 }
 
-bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short /*action*/, char mode, const Inventory::ItemStack* /*slot*/, bool& retValue)
+bool WindowMainScript::OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short /*action*/, char mode, const Inventory::ItemStack* /*slot*/, bool& retValue)
 {
+    Inventory::Inventory* cr_inventory = baseWindow->GetInventoryByType(Inventory::INVENTORY_TYPE_CRAFT);
+    Inventory::InventoryCraft* craftInventory = nullptr;
+    if (cr_inventory != nullptr)
+    {
+        craftInventory = dynamic_cast<Inventory::InventoryCraft*>(cr_inventory);
+        if (!craftInventory)
+            return false;
+    }
+
     i_slot inventorySlotId = 0;
     Inventory::Inventory* inventory = baseWindow->GetInventoryForSlot(slotId, inventorySlotId);
     if (inventory->GetInventoryType() == Inventory::INVENTORY_TYPE_CRAFT)
@@ -79,8 +85,8 @@ bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* player, sho
                         Inventory::eInventoryType invType = inventory->GetInventoryType();
 
                         i_slot targetSlot = 0;
-                        bool reverseSlotOrder = false;
                         bool reverseInventoriesOrder = false;
+                        bool reverseSlotOrder = false;
                         int inventoryTypeFlag = GetInventoryAndSlotShiftClickTarget(invType, inventorySlotId, targetSlot, lookedCraftResult, reverseInventoriesOrder, reverseSlotOrder);
 
                         bool fillEmptySlot = false;
@@ -102,7 +108,7 @@ bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* player, sho
                             // Two pass, first filling all non empty slot, second fill empty slot
                             for (int i = 0; i < 2; i++)
                             {
-                                for (size_t invId = start; invId >= 0 && invId < inventoryListByPriority.size(); invId += step)
+                                for (size_t invId = start; invId < inventoryListByPriority.size(); invId += step)
                                 {
                                     Inventory::Inventory* inv = inventoryListByPriority[invId];
 
@@ -167,12 +173,7 @@ bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* player, sho
     return false;
 }
 
-void WindowCraftingTableScript::OnPostClickOnWindow(World::EntityPlayer* /*player*/, short /*slotId*/, char /*button*/, short /*action*/, char /*mode*/, const Inventory::ItemStack* /*slot*/)
-{
-    craftInventory->PerformCraftChecking();
-}
-
-int WindowCraftingTableScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* /*slotItemStack*/, bool& reverseInventoriesOrder, bool& reverseSlotOrder)
+int WindowMainScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* /*slotItemStack*/, bool& reverseInventoriesOrder, bool& reverseSlotOrder)
 {
     if (clickedInventoryType == Inventory::INVENTORY_TYPE_CRAFT)
     {
@@ -193,5 +194,4 @@ int WindowCraftingTableScript::GetInventoryAndSlotShiftClickTarget(Inventory::eI
     }
     return 0;
 }
-
 } /* namespace Scripting */

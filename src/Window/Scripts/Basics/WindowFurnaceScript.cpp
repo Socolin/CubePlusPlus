@@ -41,22 +41,24 @@ void WindowFurnaceScript::OnOpenWindow(World::EntityPlayer* /*player*/, Block::T
     this->furnaceInventory = dynamic_cast<Inventory::InventoryFurnace*>(furnaceInventory);
 }
 
-int WindowFurnaceScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseOrder)
+int WindowFurnaceScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot& targetSlot, const Inventory::ItemStack* slotItemStack, bool& reverseInventoriesOrder, bool& reverseSlotOrder)
 {
     if (furnaceInventory == nullptr)
     {
-        return parent_type::GetInventoryAndSlotShiftClickTarget(clickedInventoryType, slotId, targetSlot, slotItemStack, reverseOrder);
+        return parent_type::GetInventoryAndSlotShiftClickTarget(clickedInventoryType, slotId, targetSlot, slotItemStack, reverseInventoriesOrder, reverseSlotOrder);
     }
     if (clickedInventoryType == Inventory::INVENTORY_TYPE_FURNACE)
     {
-        reverseOrder = (slotId == furnaceInventory->GetResultSlotId());
+        reverseInventoriesOrder = (slotId == furnaceInventory->GetResultSlotId());
+        reverseSlotOrder = (slotId == furnaceInventory->GetResultSlotId());
         targetSlot = -1;
         return (Inventory::INVENTORY_TYPE_PLAYER_HANDS | Inventory::INVENTORY_TYPE_PLAYER_MAIN);
     }
     else if (clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_MAIN)
     {
         const Inventory::Item* item = slotItemStack->getItem();
-        reverseOrder = false;
+        reverseInventoriesOrder = false;
+        reverseSlotOrder = false;
         targetSlot = -1;
         if (Database::FurnaceRecipes::Instance().IsValidInput(slotItemStack))
         {
@@ -73,7 +75,8 @@ int WindowFurnaceScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInvento
     else if (clickedInventoryType == Inventory::INVENTORY_TYPE_PLAYER_HANDS)
     {
         const Inventory::Item* item = slotItemStack->getItem();
-        reverseOrder = false;
+        reverseInventoriesOrder = false;
+        reverseSlotOrder = false;
         targetSlot = -1;
         if (Database::FurnaceRecipes::Instance().IsValidInput(slotItemStack))
         {

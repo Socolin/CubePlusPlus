@@ -491,6 +491,11 @@ void EntityPlayer::CloseWindow(i_windowId windowId, bool sendPacket)
         currentWindow = nullptr;
         inventoryWindow->ReOpenAllInventories(this);
     }
+    else if (windowId == 0)
+    {
+        inventoryWindow->CloseWindow(false);
+        inventoryWindow->ReOpenAllInventories(this);
+    }
 }
 
 i_windowId EntityPlayer::GetNextAndSetCurrentWindowId()

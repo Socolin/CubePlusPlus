@@ -40,11 +40,12 @@ void WindowEnderChestScript::OnCloseWindow(World::EntityPlayer* /*player*/)
     enderChestTileEntity->NotifyPlayerUse(Block::TileEntityEnderChest::TILEENTITY_PLAYER_CLOSE);
 }
 
-int WindowEnderChestScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot /*slotId*/, i_slot& targetSlot, const Inventory::ItemStack* /*slotItemStack*/, bool& reverseOrder)
+int WindowEnderChestScript::GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot /*slotId*/, i_slot& targetSlot, const Inventory::ItemStack* /*slotItemStack*/, bool& reverseInventoriesOrder, bool& reverseSlotOrder)
 {
     if (clickedInventoryType == Inventory::INVENTORY_TYPE_DEFAULT)
     {
-        reverseOrder = true;
+        reverseInventoriesOrder = true;
+        reverseSlotOrder = true;
         targetSlot = -1;
         return (Inventory::INVENTORY_TYPE_PLAYER_HANDS | Inventory::INVENTORY_TYPE_PLAYER_MAIN);
     }
