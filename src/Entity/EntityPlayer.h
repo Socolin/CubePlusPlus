@@ -6,6 +6,8 @@
 
 #include "Chat/PlayerChat.h"
 
+#include "DiggingManager.h"
+
 #include <boost/heap/binomial_heap.hpp>
 #include <string>
 #include <queue>
@@ -47,6 +49,7 @@ struct ItemUseResult
 class EntityPlayer: public LivingEntity
 {
     typedef LivingEntity parent_type;
+    friend class DiggingManager;
 public:
     enum PlayerAbilities
     {
@@ -308,9 +311,6 @@ private:
 
     float getDamageDonePerTickAgainstBlock(const Block::Block* block);
 
-    void startDigging(int x, i_height y, int z);
-    void endDigging(int x, i_height y, int z);
-    void stopDigging();
 private:
     typedef struct
     {
@@ -344,9 +344,7 @@ private:
     Window::Window* currentWindow;
     Window::Window* inventoryWindow;
     bool admin;
-    bool diggingBlock;
-    float diggingStep;
-    float diggingProgress;
+    DiggingManager diggingManager;
     // Plugins
     std::map<int, Plugin::PlayerModule*> moduleList;
 };
