@@ -12,10 +12,6 @@
 #include <string>
 #include <queue>
 
-namespace Block
-{
-class Block;
-}
 namespace Inventory
 {
 class InventoryCraft;
@@ -308,8 +304,6 @@ public:
 private:
     void registerModules();
     void useItemInHand(ItemUseResult result);
-
-    float getDamageDonePerTickAgainstBlock(const Block::Block* block);
 
 private:
     typedef struct

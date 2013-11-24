@@ -3,6 +3,10 @@
 
 #include "Util/types.h"
 
+namespace Block
+{
+class Block;
+}
 namespace World
 {
 class EntityPlayer;
@@ -20,8 +24,11 @@ public:
     void StopDigging();
 
 private:
+    float getDamageDonePerTickAgainstBlock(const Block::Block* block);
+private:
     EntityPlayer* player;
     bool diggingBlock;
+    bool playerFinishDigging;
     float diggingStep;
     float diggingProgress;
     int x;

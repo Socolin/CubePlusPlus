@@ -689,16 +689,7 @@ void EntityPlayer::useItemInHand(ItemUseResult result)
         }
     }
 }
-float EntityPlayer::getDamageDonePerTickAgainstBlock(const Block::Block* block)
-{
-    float damageDone = block->GetDamageDonePerTickByItem(LookItemInHand());
 
-    //TODO, enchantement (aqua afinity, efficiency...) , potion (digSlowdown, digSpeed), and water reduction
-    if (!isOnGround())
-        damageDone /= 5.f;
-
-    return damageDone;
-}
 
 
 } /* namespace World */

@@ -1,5 +1,6 @@
 #include "DiggingManager.h"
 
+#include "Block/Block.h"
 #include "EntityPlayer.h"
 #include "World/World.h"
 
@@ -9,6 +10,7 @@ namespace World
 DiggingManager::DiggingManager(EntityPlayer* player)
     : player(player)
     , diggingBlock(false)
+    , playerFinishDigging(false)
     , diggingStep(0)
     , diggingProgress(0)
     , x(0)
@@ -26,8 +28,9 @@ void DiggingManager::Update()
     if (diggingBlock)
     {
         diggingProgress += diggingStep;
-        if (diggingProgress > 1.f)
+        if (playerFinishDigging && diggingProgress > 1.f)
         {
+            playerFinishDigging = false;
             EndDigging();
         }
     }
@@ -35,6 +38,7 @@ void DiggingManager::Update()
 
 void DiggingManager::StartDigging(int x, i_height y, int z)
 {
+    playerFinishDigging = false;
     if (player->GetWorld()->isReadOnly())
     {
         player->ResetBlock(x, y, z);
@@ -55,7 +59,7 @@ void DiggingManager::StartDigging(int x, i_height y, int z)
                 this->y = y;
                 this->z = z;
                 diggingBlock = true;
-                diggingStep = player->getDamageDonePerTickAgainstBlock(block);
+                diggingStep = getDamageDonePerTickAgainstBlock(block);
                 if (diggingStep > 1.f)
                 {
                     EndDigging();
@@ -85,6 +89,7 @@ void DiggingManager::EndDigging()
             }
             else
             {
+                playerFinishDigging = true;
                 return;
             }
         }
@@ -101,6 +106,17 @@ void DiggingManager::StopDigging()
     diggingBlock = false;
     diggingProgress = 0;
     diggingStep = 0;
+}
+
+float DiggingManager::getDamageDonePerTickAgainstBlock(const Block::Block* block)
+{
+    float damageDone = block->GetDamageDonePerTickByItem(player->LookItemInHand());
+
+    //TODO, enchantement (aqua afinity, efficiency...) , potion (digSlowdown, digSpeed), and water reduction
+    if (!player->isOnGround())
+        damageDone /= 5.f;
+
+    return damageDone;
 }
 
 } /* namespace World */
