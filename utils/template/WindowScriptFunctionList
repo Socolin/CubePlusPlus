@@ -1,7 +1,0 @@
-    virtual void OnOpenWindow(World::EntityPlayer* player) override;
-    virtual void OnOpenWindow(World::EntityPlayer* player, Block::TileEntity* tileEntity) override;
-    virtual void OnCloseWindow(World::EntityPlayer* player) override;
-    virtual void OnClickOnWindow(World::EntityPlayer* player, short slotId, char button, short action, char mode, const Inventory::ItemStack* slot) override;
-    virtual void OnConfirmTransaction(World::EntityPlayer* player, short action, bool accepted) override;
-    virtual void OnDoAction(World::EntityPlayer* player, short action) override;
-    virtual int GetInventoryAndSlotShiftClickTarget(Inventory::eInventoryType clickedInventoryType, i_slot slotId, i_slot\\\& targetSlot, const Inventory::ItemStack* slotItemStack, bool\\\& reverseOrder) override;

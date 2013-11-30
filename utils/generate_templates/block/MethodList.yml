@@ -1,0 +1,49 @@
+methods:
+  - name: Init
+    code: void Init(Block::Block* baseBlock)
+    doc: Initialize the script with a pointer to associated block.
+  - name: InitParam
+    doc: Called on script initialize, to load an integer parameter from database
+    code: void InitParam(int paramId, int param)
+  - name: InitParam
+    doc: Called on script initialize, to load an float parameter from database
+    code: void InitParam(int paramId, float param)
+  - name: InitParam
+    doc: Called on script initialize, to load an string parameter from database
+    code: void InitParam(int paramId, const std::string& param)
+  - name: CanPlace
+    code: bool CanPlace(World::World* world, int x, i_height y, int z, char face) const
+    doc: Call to know if a block can be place at the coordinate asked, if not return false, else return true
+  - name: OnBlockPlacedBy
+    doc: Called just before a block is place by player in world, blockId and data are reference, so it can be change in this when block rotation depend of player orientation or where player has click
+    code: void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+  - name: OnUseBlock
+    doc: Called when a player right click on a block if something happen then return "true", so item will not be use after
+    code: World::ItemUseResult OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+  - name: OnBlockAdded
+    doc: Called after that a block has been place
+    code: void OnBlockAdded(World::World* world, int x, i_height y, int z, i_data data) const
+  - name: CreateNewTileEntity
+    doc: "Return a new tile entity which will be store in chunk, to store more data (ex: chest, jukebox...)"
+    code: Block::TileEntity* CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const
+  - name: UseTileEntity
+    doc: Indicate if block use a tile entity or not, if it return true, CreateNewTileEntity must not return nullptr
+    code: bool UseTileEntity() const
+  - name: OnUpdateTick
+    doc: Called to update block. This is call X tick after calling World::MarkBlockForUpdate where X is the waitTick argument This is also called randomly if block has needsRandomTick flag is true, in this case this method is call approximately every 1 time every 1365 tick 
+    code: void OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
+  - name: GetBoundingBoxes
+    doc:  Fill bbList with bounding boxes that compose block, example for entity npc
+    code: void GetBoundingBoxes(int x, int y, int z, i_data data, std::vector<Util::AABB>& bbList) const
+  - name: OnNeighborChange
+    doc: Called when a block on one of 6 faces has change
+    code: void OnNeighborChange(World::World* world, int x, i_height y, int z, i_block neighborBlockId) const
+  - name: OnDestroy
+    doc: Called when block is remove from world
+    code: void OnDestroy(World::World* world, int x, i_height y, int z, i_data data) const
+  - name: HasSolidTopSurface
+    doc: Return true if block has the top surface solid, like for reversedb   stair/slab or glowstone
+    code: bool HasSolidTopSurface(i_data metadata) const
+  - name: CanProvidePower
+    doc:  Indicate if block can generate redstone signal
+    code: bool CanProvidePower() const
