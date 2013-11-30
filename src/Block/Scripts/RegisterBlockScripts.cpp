@@ -21,7 +21,6 @@
 #include "Basics/BlockSignGroundScript.h"
 #include "Basics/BlockSignWallScript.h"
 #include "Basics/BlockStairScript.h"
-#include "Basics/BlockTestScript.h"
 #include "Basics/BlockTorchScript.h"
 #include "Basics/BlockWoodScript.h"
 
@@ -50,7 +49,6 @@ void RegisterBlockScript()
     new BlockSignGroundScript();
     new BlockSignWallScript();
     new BlockStairScript();
-    new BlockTestScript();
     new BlockTorchScript();
     new BlockWoodScript();
 }
