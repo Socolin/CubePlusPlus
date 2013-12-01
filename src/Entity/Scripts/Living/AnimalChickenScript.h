@@ -22,7 +22,7 @@ public:
     virtual void OnUpdateTick() override;
     virtual void OnReceiveAttack(World::LivingEntity* attacker, int& damage) override;
     virtual void OnDeath() override;
-    virtual void OnInteract(World::EntityPlayer* player) override;
+    virtual ItemUseResult OnInteract(World::EntityPlayer* player) override;
     virtual void OnReachDestination() override;
 };
 

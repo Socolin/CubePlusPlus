@@ -57,17 +57,17 @@ void AnimalPigScript::OnDeath()
     baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(319, 1, 0));
 }
 
-void AnimalPigScript::OnInteract(World::EntityPlayer* player)
+ItemUseResult AnimalPigScript::OnInteract(World::EntityPlayer* player)
 {
     if (makeBabyCanBeInLove())
     {
         i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
         if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
         {
-            if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)
-                player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
+            return ItemUseResult{true, false, 1};
         }
     }
+    return ItemUseResult{false, false, 0};
 }
 
 void AnimalPigScript::OnReceiveAttack(World::LivingEntity* attacker, int& damage)

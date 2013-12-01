@@ -33,8 +33,9 @@ void LivingEntityScript::OnReceiveAttack(World::LivingEntity* /*attacker*/, int&
 {
 }
 
-void LivingEntityScript::OnInteract(World::EntityPlayer* /*player*/)
+ItemUseResult LivingEntityScript::OnInteract(World::EntityPlayer* /*player*/)
 {
+    return {false, false, 0};
 }
 
 void LivingEntityScript::GetCreatePacket(Network::NetworkPacket& /*packet*/)

@@ -23,7 +23,7 @@ ItemScript* ItemFrameScript::Copy()
     return new ItemFrameScript(*this);
 }
 
-World::ItemUseResult ItemFrameScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+ItemUseResult ItemFrameScript::OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     int orientation = -1;
     switch (face)
@@ -31,7 +31,7 @@ World::ItemUseResult ItemFrameScript::OnUseOnBlock(World::EntityPlayer* user, in
     case FACE_BOTTOM: // -Y
     case FACE_TOP: // +Y
     case FACE_NONE:
-        return World::ItemUseResult{false, false, 0};
+        return ItemUseResult{false, false, 0};
     case FACE_NORTH: // -Z
         orientation = 2;
         break;
@@ -54,9 +54,9 @@ World::ItemUseResult ItemFrameScript::OnUseOnBlock(World::EntityPlayer* user, in
     {
         World::EntityHangingFrame* hangingEntity = new World::EntityHangingFrame(x, y, z, orientation);
         world->AddEntity(hangingEntity);
-        return World::ItemUseResult{true, false, 1};
+        return ItemUseResult{true, false, 1};
     }
-    return World::ItemUseResult{false, false, 0};
+    return ItemUseResult{false, false, 0};
 }
 
 } /* namespace Scripting */

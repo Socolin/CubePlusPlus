@@ -63,7 +63,7 @@ void AnimalWolfScript::OnDeath()
 {
 }
 
-void AnimalWolfScript::OnInteract(World::EntityPlayer* player)
+ItemUseResult AnimalWolfScript::OnInteract(World::EntityPlayer* player)
 {
     if(IsTamed())
     {
@@ -72,15 +72,16 @@ void AnimalWolfScript::OnInteract(World::EntityPlayer* player)
             i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
             if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
             {
-                if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)
-                    player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
+                return ItemUseResult{true, false, 1};
             }
         }
     }
     if(player->LookItemStackInHand() == nullptr)
     {
         SetSitting(!IsSitting());
+        return ItemUseResult{true, false, 0};
     }
+    return ItemUseResult{false, false, 0};
 }
 
 void AnimalWolfScript::OnReceiveAttack(World::LivingEntity* attacker, int& damage)

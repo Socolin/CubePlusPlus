@@ -95,13 +95,13 @@ bool Block::CanPlace(World::World* world, int x, i_height y, int z, char face) c
 }
 
 
-World::ItemUseResult Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+ItemUseResult Block::UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (script)
     {
         return script->OnUseBlock(user, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
-    return World::ItemUseResult{false, false, 1};
+    return ItemUseResult{false, false, 1};
 }
 
 TileEntity* Block::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const

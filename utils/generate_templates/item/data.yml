@@ -4,3 +4,4 @@ register_script_file: ../src/Inventory/Scripts/RegisterItemScripts.cpp
 database_prefix: item
 class_prefix: Item
 base_class_header: Inventory/Scripts/ItemScript.h
+script_dir: Basics

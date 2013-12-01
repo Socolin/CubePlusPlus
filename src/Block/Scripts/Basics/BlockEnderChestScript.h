@@ -23,7 +23,7 @@ public:
     virtual void InitParam(int paramId, int param);
 
     virtual void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
-    virtual World::ItemUseResult OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
+    virtual ItemUseResult OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const override;
     virtual Block::TileEntity* CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const override;
     virtual bool UseTileEntity() const override;
 private:

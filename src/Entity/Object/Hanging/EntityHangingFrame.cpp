@@ -20,24 +20,28 @@ EntityHangingFrame::~EntityHangingFrame()
 {
 }
 
-void EntityHangingFrame::Interact(EntityPlayer* player)
+ItemUseResult EntityHangingFrame::Interact(EntityPlayer* player)
 {
     const Inventory::ItemStack* itemContained = metadataManager.GetItemEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM);
     if (itemContained == nullptr)
     {
         Inventory::InventoryPlayer* handInventory = player->GetHandsInventory();
-        Inventory::ItemStack* newItem = handInventory->TakeSomeItemInSlot(handInventory->getHandSlotId(), 1);
-        if (newItem != nullptr)
+        const Inventory::ItemStack* usedItem = handInventory->LookSlot(handInventory->getHandSlotId());
+        if (usedItem != nullptr)
         {
+            Inventory::ItemStack* newItem = usedItem->Copy();
+            newItem->setStackSize(1);
             metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM, newItem);
             metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM_ROTATION, (char)0);
         }
+        return ItemUseResult{true, false, 1};
     }
     else
     {
         char oldOrientation = metadataManager.GetCharEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM_ROTATION);
         metadataManager.SetEntityMetadata(ENTITY_HANGING_FRAME_METADATA_ITEM_ROTATION, (char)((oldOrientation + 1) % 4));
     }
+    return ItemUseResult{true, false, 0};
 }
 
 int EntityHangingFrame::getPixelWidth() const

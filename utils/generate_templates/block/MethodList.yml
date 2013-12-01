@@ -19,7 +19,7 @@ methods:
     code: void OnBlockPlacedBy(World::EntityPlayer* player, int x, i_height y, int z, int face, i_block& blockId, i_data& data, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
   - name: OnUseBlock
     doc: Called when a player right click on a block if something happen then return "true", so item will not be use after
-    code: World::ItemUseResult OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+    code: ItemUseResult OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
   - name: OnBlockAdded
     doc: Called after that a block has been place
     code: void OnBlockAdded(World::World* world, int x, i_height y, int z, i_data data) const

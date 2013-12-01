@@ -5,7 +5,6 @@
 
 namespace World
 {
-struct ItemUseResult;
 class EntityPlayer;
 }
 namespace Scripting
@@ -48,14 +47,14 @@ public:
      * @param cursorPositionZ position on block where player click [0;16[
      * @return see ItemUseResult
      */
-    World::ItemUseResult UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    ItemUseResult UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
     /**
      * Use item in air: do right click, targeting no block.
      * @param user player who use item
      * @return see ItemUseResult
      */
-    World::ItemUseResult Use(World::EntityPlayer* user) const;
+    ItemUseResult Use(World::EntityPlayer* user) const;
 
     /**
      * Test if the item will be efficiency against the block

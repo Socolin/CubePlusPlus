@@ -31,9 +31,9 @@ void ScriptedLivingEntity::UpdateTick()
     script->OnUpdateTick();
 }
 
-void ScriptedLivingEntity::Interact(EntityPlayer* player)
+ItemUseResult ScriptedLivingEntity::Interact(EntityPlayer* player)
 {
-    script->OnInteract(player);
+    return script->OnInteract(player);
 }
 
 void ScriptedLivingEntity::Attack(LivingEntity* attacker, int& damage)

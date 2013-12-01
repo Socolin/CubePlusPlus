@@ -24,22 +24,22 @@ Item::~Item()
     delete script;
 }
 
-World::ItemUseResult Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+ItemUseResult Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
 {
     if (script != nullptr)
     {
         return script->OnUseOnBlock(user, x, y, z, face, cursorPositionX, cursorPositionY, cursorPositionZ);
     }
-    return World::ItemUseResult{false, false, 0};
+    return ItemUseResult{false, false, 0};
 }
 
-World::ItemUseResult Item::Use(World::EntityPlayer* user) const
+ItemUseResult Item::Use(World::EntityPlayer* user) const
 {
     if (script != nullptr)
     {
         return script->OnUse(user);
     }
-    return World::ItemUseResult{false, false, 0};
+    return ItemUseResult{false, false, 0};
 }
 
 bool Item::CanHarvestBlock(i_block /*blockId*/) const

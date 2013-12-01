@@ -58,14 +58,14 @@ void BlockLeverScript::OnBlockPlacedBy(World::EntityPlayer* player, int /*x*/, i
      }
 }
 
-World::ItemUseResult BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+ItemUseResult BlockLeverScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->GetWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);
     world->ChangeDataNotify(x, y, z, clickedBlockData ^ 0x8);
 
     notifyNearBlock(world, x, y, z, clickedBlockData);
-    return World::ItemUseResult{true, false, 0};
+    return ItemUseResult{true, false, 0};
 }
 
 

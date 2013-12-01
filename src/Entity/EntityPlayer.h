@@ -33,15 +33,6 @@ namespace World
 #define DEFAULT_WALKING_SPEED 24
 #define DEFAULT_FLYING_SPEED 12
 
-
-// Return value when we use item.
-struct ItemUseResult
-{
-    bool used; // Used or not
-    bool damage; // Damage item is this is at 1, else remove amount of item from stack.
-    unsigned short amount; // Quantity of item used, or how many damage must be done on item.
-};
-
 class EntityPlayer: public LivingEntity
 {
     typedef LivingEntity parent_type;

@@ -81,7 +81,7 @@ public:
      * @param cursorPositionZ position where player clicked on block
      * @return see ItemUseResult;
      */
-    virtual World::ItemUseResult OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    virtual ItemUseResult OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
     /**
      * Called after that a block has been place

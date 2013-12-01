@@ -37,7 +37,7 @@ void BlockCraftingTableScript::InitParam(int paramId, int param)
     }
 }
 
-World::ItemUseResult BlockCraftingTableScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+ItemUseResult BlockCraftingTableScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     const Window::WindowStaticData* windowData = Window::WindowList::getWindowData(windowDataId);
     if (windowData != nullptr)
@@ -45,7 +45,7 @@ World::ItemUseResult BlockCraftingTableScript::OnUseBlock(World::EntityPlayer* u
         Window::Window* window = new Window::Window(user->GetNextAndSetCurrentWindowId(), user, windowData);
         window->OpenWindow(x, y, z);
     }
-    return World::ItemUseResult{true, false, 0};
+    return ItemUseResult{true, false, 0};
 }
 
 } /* namespace Scripting */

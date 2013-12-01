@@ -14,7 +14,7 @@ class EntityHangingFrame : public EntityHanging
 public:
     EntityHangingFrame(int x, i_height y, int z, int direction);
     virtual ~EntityHangingFrame();
-    virtual void Interact(EntityPlayer* player) override;
+    virtual ItemUseResult Interact(EntityPlayer* player) override;
     virtual void GetCreatePacket(Network::NetworkPacket& packet) override;
     virtual void GetSpecificUpdatePacket(Network::NetworkPacket& packet) override;
 protected:

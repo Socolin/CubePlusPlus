@@ -145,7 +145,7 @@ public:
      * Called when player use right click on entity
      * @param player player who clicked
      */
-    virtual void Interact(EntityPlayer* player);
+    virtual ItemUseResult Interact(EntityPlayer* player);
 
     /**
      * Called when the entity is attacked

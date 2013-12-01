@@ -4,3 +4,4 @@ register_script_file: ../src/Block/Scripts/RegisterBlockScripts.cpp
 database_prefix: block
 class_prefix: Block
 base_class_header: Block/Scripts/BlockScript.h
+script_dir: Basics

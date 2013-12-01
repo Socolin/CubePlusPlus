@@ -19,7 +19,7 @@ sub select_type() {
         -titlereverse => 0,
         -labels       => {
             'block'  => 'Block script',
-            'item'  => 'Item script',
+            'item'   => 'Item script',
             'entity' => 'Entity script',
             'window' => 'Window script',
             'craft'  => 'Craft script',
@@ -189,6 +189,7 @@ sub select_methods {
                 -shortcut => 'o',
                 -value    => 1,
                 -onpress  => sub {
+
                     # Checking if file already exist and ask to user if it
                     # must be ovewrite or not
                     my $script_name     = $script_name_box->{-text};
@@ -217,6 +218,7 @@ sub select_methods {
                     $cui->error(
                         -message => 'Script name must be in CamelCase' )
                       unless $script_name =~ m/^[A-Z][a-zA-Z]*$/;
+
                     # Select the script name editor and mark it in red
                     my $this = shift;
                     $this->lose_focus();
@@ -253,17 +255,19 @@ sub select_methods {
     my $header_path       = $data->{'folder'} . $header_filename;
     my $code_path         = $data->{'folder'} . $class_name . ".cpp";
     my $base_class_header = $data->{'base_class_header'};
+    my $script_dir        = $data->{'script_dir'};
 
     # Variable to add lines in Register<Type>Script
     my $register_script_file  = $data->{'register_script_file'};
-    my $register_line_include = "#include \"Basics/$header_filename\"\n";
+    my $register_line_include = "#include \"$script_dir/$header_filename\"\n";
     my $register_line_new     = "    new $class_name();\n";
-    
+
     # Copy current file
     copy( $register_script_file, $register_script_file . ".old" );
 
     # Open backup
-    open my $in,  '<', $register_script_file . ".old";
+    open my $in, '<', $register_script_file . ".old";
+
     # Open and truncate base file
     open my $out, '>', $register_script_file;
 
@@ -273,11 +277,11 @@ sub select_methods {
 
         # Insert line : `#include`, keeping alpha sort
         # Check if we are in `include` block to insert line
-        if ( ( $_ =~ m/^#include "Basics/ )
-            || ( $prev =~ m/^#include "Basics/ ) )
+        if (   ( $_ =~ m/^#include "$script_dir/ )
+            || ( $prev =~ m/^#include "$script_dir/ ) )
         {
-            if ( ( !$prev || $prev lt $register_line_include )
-                && ($_ eq "\n" || $_ gt $register_line_include ) )
+            if (   ( !$prev || $prev lt $register_line_include )
+                && ( $_ eq "\n" || $_ gt $register_line_include ) )
             {
                 print $out $register_line_include;
             }
@@ -286,8 +290,8 @@ sub select_methods {
         # Insert line : `new Script();`, keeping alpha sort
         # Check if we are in `new` block to insert line
         if ( ( $_ =~ m/^    new / ) || ( $prev =~ m/^    new / ) ) {
-            if ( ( !$prev || $prev eq "{\n" || $prev lt $register_line_new )
-                && ($_ eq "\n" || $_ gt $register_line_new ) )
+            if (   ( !$prev || $prev eq "{\n" || $prev lt $register_line_new )
+                && ( $_ eq "\n" || $_ gt $register_line_new ) )
             {
                 print $out $register_line_new;
             }
@@ -295,11 +299,11 @@ sub select_methods {
         $prev = $_;
         print $out $_;
     }
-    
+
     # Close files
     close $out;
     close $in;
-    
+
     # Delete old file
     unlink $register_script_file . ".old";
 
@@ -309,46 +313,57 @@ sub select_methods {
     # Guard
     print HEADER_FILE "#ifndef $guard_name\n";
     print HEADER_FILE "#define $guard_name\n\n";
+
     # Include base class header file
     print HEADER_FILE "#include \"$base_class_header\"\n";
+
     # Namespace
     print HEADER_FILE "\nnamespace Scripting\n{\n";
+
     # Define class
     print HEADER_FILE "\nclass $class_name: public $base_class\n{\n";
+
     # Constructor/Destructor
     print HEADER_FILE "public:\n    $class_name();";
     print HEADER_FILE "\n    virtual ~$class_name ();\n";
+
     # Add Copy method
     print HEADER_FILE "    virtual $base_class* Copy() override;\n";
-
     for (@selected_methods) {
         print HEADER_FILE "    virtual "
-          . $methods_list_data->[$_]->{'code'} . " override;\n";
+          . $methods_list_data->[$_]->{'code'}
+          . " override;\n";
     }
+
     # End of class
     printf HEADER_FILE "};\n ";
+
     # End of namespace
     printf HEADER_FILE "\n} /* namespace Scripting */\n";
+
     # End of guard
     printf HEADER_FILE "#endif /* $guard_name */\n";
     close(HEADER_FILE);
 
     # Create .cpp file
     open( CPP_FILE, ">$code_path" );
-    
+
     # Include header
     print CPP_FILE "#include \"$header_filename\"\n\n";
+
     # Define namespace
     print CPP_FILE "\nnamespace Scripting\n{\n\n";
+
     # Constructor
     print CPP_FILE "$class_name" . "::$class_name()";
     print CPP_FILE "\n    : $base_class(\"$script_name\")\n{\n}\n\n";
+
     # Destructor
     print CPP_FILE "$class_name" . "::~$class_name()\n{\n}\n\n";
+
     # Copy()
     print CPP_FILE "$base_class* $class_name" . "::Copy()\n{\n";
     print CPP_FILE "    return new $class_name(*this);\n}\n\n";
-
     for (@selected_methods) {
         my $code        = $methods_list_data->[$_]->{'code'};
         my @code_split  = split( ' ', $code );
@@ -363,6 +378,7 @@ sub select_methods {
         }
         print CPP_FILE "\n{\n\n}\n\n";
     }
+
     # End of namespace
     printf CPP_FILE "\n} /* namespace Scripting */\n";
     close(CPP_FILE);

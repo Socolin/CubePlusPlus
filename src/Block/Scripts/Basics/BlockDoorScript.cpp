@@ -81,15 +81,15 @@ void BlockDoorScript::OnBlockPlacedBy(World::EntityPlayer* player, int x, i_heig
     }
 }
 
-World::ItemUseResult BlockDoorScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+ItemUseResult BlockDoorScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     if (need_redstone)
-        return World::ItemUseResult{false, false, 0};
+        return ItemUseResult{false, false, 0};
 
     World::World* world = user->GetWorld();
     World::Chunk* chunk = world->GetChunkIfLoaded(x >> 4, z >> 4);
     if (chunk == nullptr)
-        return World::ItemUseResult{false, false, 0};
+        return ItemUseResult{false, false, 0};
 
     int clickedBlockData = chunk->getDataAt(x & 0xf, y, z & 0xf);
     if (SCRIPT_BLOCK_DOOR_ISTOP(clickedBlockData))
@@ -105,7 +105,7 @@ World::ItemUseResult BlockDoorScript::OnUseBlock(World::EntityPlayer* user, int 
     {
         world->ChangeDataNoEvent(x, y, z, clickedBlockData ^ 0x4);
     }
-    return World::ItemUseResult{true, false, 0};
+    return ItemUseResult{true, false, 0};
 }
 
 bool BlockDoorScript::CanPlace(World::World* world, int x, unsigned char y, int z, char face) const

@@ -31,5 +31,12 @@ typedef struct block_position
     int z;
 } s_block_position;
 
+// Return value when we use item.
+struct ItemUseResult
+{
+    bool used; // Used or not
+    bool damage; // Damage item is this is at 1, else remove amount of item from stack.
+    unsigned short amount; // Quantity of item used, or how many damage must be done on item.
+};
 
 #endif /* TYPES_H_ */

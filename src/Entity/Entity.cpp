@@ -279,8 +279,9 @@ void Entity::moveToChunk(int newChunkX, int newChunkZ)
     vChunk->AddEntity(this);
 }
 
-void Entity::Interact(EntityPlayer* /*player*/)
+ItemUseResult Entity::Interact(EntityPlayer* /*player*/)
 {
+    return ItemUseResult{false, false, 0};
 }
 
 bool Entity::CollideWith(const Util::AABB& box)

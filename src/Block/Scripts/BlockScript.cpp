@@ -50,9 +50,9 @@ void BlockScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x*/, i_
 {
 }
 
-World::ItemUseResult BlockScript::OnUseBlock(World::EntityPlayer* /*user*/, int /*x*/, i_height /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+ItemUseResult BlockScript::OnUseBlock(World::EntityPlayer* /*user*/, int /*x*/, i_height /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    return World::ItemUseResult{false, false, 0};
+    return ItemUseResult{false, false, 0};
 }
 
 bool BlockScript::CanPlace(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, char /*face*/) const

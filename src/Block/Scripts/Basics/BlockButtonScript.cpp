@@ -52,7 +52,7 @@ void BlockButtonScript::OnBlockPlacedBy(World::EntityPlayer* /*player*/, int /*x
      }
 }
 
-World::ItemUseResult BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+ItemUseResult BlockButtonScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->GetWorld();
     i_data clickedBlockData = world->GetBlockData(x, y, z);
@@ -63,7 +63,7 @@ World::ItemUseResult BlockButtonScript::OnUseBlock(World::EntityPlayer* user, in
         world->MarkBlockForUpdate(x, y, z, baseBlock->GetBlockId(), 20);
         world->PlaySound((double)x + 0.5, (double)y + 0.5, (double)z + 0.5, soundClick, 0.3, 0.6f, 2);
     }
-    return World::ItemUseResult{true, false, 0};
+    return ItemUseResult{true, false, 0};
 }
 
 bool BlockButtonScript::CanPlace(World::World* world, int x, unsigned char y, int z, char face) const

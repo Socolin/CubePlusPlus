@@ -68,17 +68,14 @@ void AnimalSheepScript::OnDeath()
     baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(35, 1, GetFleeceColor()));
 }
 
-void AnimalSheepScript::OnInteract(World::EntityPlayer* player)
+ItemUseResult AnimalSheepScript::OnInteract(World::EntityPlayer* player)
 {
     if (makeBabyCanBeInLove())
     {
         i_slot handSlotId = player->GetHandsInventory()->getHandSlotId();
         if (makeBabyTryFallInLove(player->GetHandsInventory()->LookSlot(handSlotId)))
         {
-            if (player->GetGameMode() != World::EntityPlayer::GAMEMODE_CREATVE)
-            {
-                player->GetHandsInventory()->RemoveSomeItemInSlot(handSlotId, 1);
-            }
+            return ItemUseResult{true, false, 1};
         }
     }
     if(player->LookItemStackInHand() != nullptr)
@@ -88,8 +85,10 @@ void AnimalSheepScript::OnInteract(World::EntityPlayer* player)
             SetSheared(true);
             baseEntity->GetWorld()->PlaySound(baseEntity->x, baseEntity->y, baseEntity->z, L"mob.sheep.shear", 1.0f, 1.0f,2);
             baseEntity->GetWorld()->DropItemstack(*baseEntity, new Inventory::ItemStack(35, 1 + rand()%3, GetFleeceColor()));
+            return ItemUseResult{true, true, 1};
         }
     }
+    return ItemUseResult{false, false, 0};
 }
 
 void AnimalSheepScript::OnReceiveAttack(World::LivingEntity* attacker, int& damage)

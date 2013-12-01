@@ -15,7 +15,6 @@ class BlockScript;
 
 namespace World
 {
-struct ItemUseResult;
 class EntityPlayer;
 class World;
 }
@@ -90,7 +89,7 @@ public:
      * @param cursorPositionZ Position of player cursor when he place block
      * @return see ItemUseResult definition
      */
-    World::ItemUseResult UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
+    ItemUseResult UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
     /**
      * This method is use for update a block, it can be call when block is in "to update list"

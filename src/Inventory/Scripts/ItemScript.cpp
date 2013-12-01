@@ -21,19 +21,19 @@ void ItemScript::Init(Inventory::Item* item)
     baseItem = item;
 }
 
-World::ItemUseResult ItemScript::OnUse(World::EntityPlayer* /*user*/) const
+ItemUseResult ItemScript::OnUse(World::EntityPlayer* /*user*/) const
 {
-    return World::ItemUseResult{false, false, 0};
+    return ItemUseResult{false, false, 0};
 }
 
-World::ItemUseResult ItemScript::OnUseOnEntity(World::EntityPlayer* /*user*/, World::Entity* /*target*/) const
+ItemUseResult ItemScript::OnUseOnEntity(World::EntityPlayer* /*user*/, World::Entity* /*target*/) const
 {
-    return World::ItemUseResult{false, false, 0};
+    return ItemUseResult{false, false, 0};
 }
 
-World::ItemUseResult ItemScript::OnUseOnBlock(World::EntityPlayer* /*user*/, int /*x*/, unsigned char /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+ItemUseResult ItemScript::OnUseOnBlock(World::EntityPlayer* /*user*/, int /*x*/, unsigned char /*y*/, int /*z*/, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
-    return World::ItemUseResult{false, false, 0};
+    return ItemUseResult{false, false, 0};
 }
 
 } /* namespace Scripting */

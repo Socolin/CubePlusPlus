@@ -25,7 +25,7 @@ public:
      * Called when player use right click on entity
      * @param player player who clicked
      */
-    virtual void Interact(EntityPlayer* player) override;
+    virtual ItemUseResult Interact(EntityPlayer* player) override;
 
     /**
      * Called when the entity is attacked

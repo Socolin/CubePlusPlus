@@ -3,6 +3,7 @@
 
 #include <string>
 
+#include "Util/types.h"
 #include "Network/NetworkPacket.h"
 #include "Entity/Position.h"
 
@@ -48,7 +49,7 @@ public:
      * Called when a player do a right click on entity
      * @param player
      */
-    virtual void OnInteract(World::EntityPlayer* player);
+    virtual ItemUseResult OnInteract(World::EntityPlayer* player);
 
     virtual void GetCreatePacket(Network::NetworkPacket& packet);
 

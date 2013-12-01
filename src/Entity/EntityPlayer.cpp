@@ -458,7 +458,13 @@ void EntityPlayer::UseEntity(int target, bool leftClick)
             }
         }
         else
-            entity->Interact(this);
+        {
+            ItemUseResult result = entity->Interact(this);
+            if (result.used)
+            {
+                useItemInHand(result);
+            }
+        }
     }
 }
 

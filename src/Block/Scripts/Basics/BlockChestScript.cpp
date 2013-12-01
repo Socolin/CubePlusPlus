@@ -204,7 +204,7 @@ bool BlockChestScript::UseTileEntity() const
     return true;
 }
 
-World::ItemUseResult BlockChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
+ItemUseResult BlockChestScript::OnUseBlock(World::EntityPlayer* user, int x, i_height y, int z, char /*face*/, char /*cursorPositionX*/, char /*cursorPositionY*/, char /*cursorPositionZ*/) const
 {
     World::World* world = user->GetWorld();
     bool doubleChest = false;
@@ -224,7 +224,7 @@ World::ItemUseResult BlockChestScript::OnUseBlock(World::EntityPlayer* user, int
         Window::Window* window = new Window::Window(user->GetNextAndSetCurrentWindowId(), user, windowData);
         window->OpenWindow(x, y, z);
     }
-    return World::ItemUseResult{true, false, 0};
+    return ItemUseResult{true, false, 0};
 }
 
 Block::TileEntity* BlockChestScript::CreateNewTileEntity(World::World* world, int blockX, i_height blockY, int blockZ) const
