@@ -14,12 +14,12 @@ sub select_type() {
     my $listbox        = $win->add(
         'type_list',
         'Listbox',
-        -values => [ 'block', 'items', 'entity', 'window', 'craft' ],
+        -values => [ 'block', 'item', 'entity', 'window', 'craft' ],
         -title        => "Select type of script to generate    ",
         -titlereverse => 0,
         -labels       => {
             'block'  => 'Block script',
-            'items'  => 'Item script',
+            'item'  => 'Item script',
             'entity' => 'Entity script',
             'window' => 'Window script',
             'craft'  => 'Craft script',
@@ -271,23 +271,23 @@ sub select_methods {
     my $prev;
     while (<$in>) {
 
-        # Inser line : `#include`, keeping alpha sort
+        # Insert line : `#include`, keeping alpha sort
         # Check if we are in `include` block to insert line
-        if (   ( $_ =~ m/^#include \"Basics/ )
-            || ( $prev =~ m/^#include \"Basics/ ) )
+        if ( ( $_ =~ m/^#include "Basics/ )
+            || ( $prev =~ m/^#include "Basics/ ) )
         {
             if ( ( !$prev || $prev lt $register_line_include )
-                && $_ gt $register_line_include )
+                && ($_ eq "\n" || $_ gt $register_line_include ) )
             {
                 print $out $register_line_include;
             }
         }
 
-        # Inser line : `new Script();`, keeping alpha sort
+        # Insert line : `new Script();`, keeping alpha sort
         # Check if we are in `new` block to insert line
         if ( ( $_ =~ m/^    new / ) || ( $prev =~ m/^    new / ) ) {
-            if ( ( !$prev || $prev lt $register_line_new )
-                && $_ gt $register_line_new )
+            if ( ( !$prev || $prev eq "{\n" || $prev lt $register_line_new )
+                && ($_ eq "\n" || $_ gt $register_line_new ) )
             {
                 print $out $register_line_new;
             }

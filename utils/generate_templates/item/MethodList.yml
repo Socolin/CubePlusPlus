@@ -1,0 +1,22 @@
+methods:
+  - name: Init
+    code: void Init(Inventory::Item* baseBlock)
+    doc: Initialize the script with a pointer to associated items.
+  - name: InitParam
+    doc: Called on script initialize, to load an integer parameter from database
+    code: void InitParam(int paramId, int param)
+  - name: InitParam
+    doc: Called on script initialize, to load an float parameter from database
+    code: void InitParam(int paramId, float param)
+  - name: InitParam
+    doc: Called on script initialize, to load an string parameter from database
+    code: void InitParam(int paramId, const std::string& param)
+  - name: OnUse
+    doc: Called when player click in void with item
+    code: World::ItemUseResult OnUse(World::EntityPlayer* user) const
+  - name: OnUseOnEntity
+    doc: Called when item is clicked on an entity
+    code: World::ItemUseResult OnUseOnEntity(World::EntityPlayer* user, World::Entity* target) const
+  - name: OnUseOnBlock
+    doc: Called when item is used on block
+    code: World::ItemUseResult OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
