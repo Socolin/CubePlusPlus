@@ -160,7 +160,7 @@ void Inventory::DamageItemInSlot(int slotId, int damage)
         return;
     }
     const Item* item = oldItem->getItem();
-    if (item->getMaxDamage() > 0 && item->isHasSubType())
+    if (item->getMaxDamage() > 0 && !item->isHasSubType())
     {
         if (oldItem->getItemData() + damage > item->getMaxDamage())
         {

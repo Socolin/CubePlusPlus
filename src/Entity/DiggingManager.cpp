@@ -105,6 +105,7 @@ void DiggingManager::EndDigging()
                     player->GetWorld()->BreakBlock(x, y, z);
                 else
                     player->GetWorld()->RemoveBlock(x, y, z);
+                player->GetHandsInventory()->DamageItemInSlot(player->GetHandsInventory()->getHandSlotId(), 1);
             }
             else
             {
