@@ -33,11 +33,11 @@ World::ItemUseResult Item::UseOnBlock(World::EntityPlayer* user, int x, unsigned
     return World::ItemUseResult{false, false, 0};
 }
 
-World::ItemUseResult Item::Use(World::EntityPlayer* /*user*/) const
+World::ItemUseResult Item::Use(World::EntityPlayer* user) const
 {
     if (script != nullptr)
     {
-        // TODO
+        return script->OnUse(user);
     }
     return World::ItemUseResult{false, false, 0};
 }

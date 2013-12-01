@@ -21,9 +21,9 @@ void ItemScript::Init(Inventory::Item* item)
     baseItem = item;
 }
 
-bool ItemScript::OnUse(World::EntityPlayer* /*user*/) const
+World::ItemUseResult ItemScript::OnUse(World::EntityPlayer* /*user*/) const
 {
-    return false;
+    return World::ItemUseResult{false, false, 0};
 }
 
 World::ItemUseResult ItemScript::OnUseOnEntity(World::EntityPlayer* /*user*/, World::Entity* /*target*/) const

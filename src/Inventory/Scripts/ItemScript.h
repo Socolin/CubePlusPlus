@@ -31,7 +31,7 @@ public:
     virtual void InitParam(int /*paramId*/, const std::string& /*param*/) {}
 
     // Return false if nothing done, return true if item has been used
-    virtual bool OnUse(World::EntityPlayer* user) const;
+    virtual World::ItemUseResult OnUse(World::EntityPlayer* user) const;
     virtual World::ItemUseResult OnUseOnEntity(World::EntityPlayer* user, World::Entity* target) const;
     virtual World::ItemUseResult OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
