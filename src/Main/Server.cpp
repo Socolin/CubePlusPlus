@@ -10,6 +10,8 @@
 #include "Database/DatabaseManager.h"
 #include "Database/MiscData/PaintingData.h"
 #include "Database/MiscData/FurnaceRecipes.h"
+#include "Database/MiscData/ToolEfficiency.h"
+#include "Database/MiscData/ToolMaterials.h"
 #include "Logging/Logger.h"
 #include "Message/MessageList.h"
 #include "Network/LoginManager.h"
@@ -77,6 +79,8 @@ int main(int argc, char* argv[])
     }
 
     // Load data
+    Database::ToolEfficiency::Instance().InitInstance();
+    Database::ToolMaterials::Instance().InitInstance();
     Block::BlockList::Instance().InitInstance();
     Inventory::ItemList::Instance().InitInstance();
     Window::WindowList::Instance().InitInstance();

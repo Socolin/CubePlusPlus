@@ -308,7 +308,7 @@ sub select_methods {
     unlink $register_script_file . ".old";
 
     # Create .h file
-    open( HEADER_FILE, ">$header_path" );
+    open( HEADER_FILE, ">$header_path" ) or die "$header_path";
 
     # Guard
     print HEADER_FILE "#ifndef $guard_name\n";
@@ -356,7 +356,7 @@ sub select_methods {
 
     # Constructor
     print CPP_FILE "$class_name" . "::$class_name()";
-    print CPP_FILE "\n    : $base_class(\"$script_name\")\n{\n}\n\n";
+    print CPP_FILE "\n    : $base_class(\"$database_name\")\n{\n}\n\n";
 
     # Destructor
     print CPP_FILE "$class_name" . "::~$class_name()\n{\n}\n\n";

@@ -42,15 +42,21 @@ ItemUseResult Item::Use(World::EntityPlayer* user) const
     return ItemUseResult{false, false, 0};
 }
 
-bool Item::CanHarvestBlock(i_block /*blockId*/) const
+bool Item::CanHarvestBlock(i_block blockId) const
 {
-    // TODO: maybe database data ?
+    if (script)
+    {
+        return script->CanHarvestBlock(blockId);
+    }
     return false;
 }
 
-float Item::GetStrengthVsBlock(i_block /*blockId*/) const
+float Item::GetStrengthVsBlock(i_block blockId) const
 {
-    // TODO:
+    if (script)
+    {
+        return script->GetStrengthVsBlock(blockId);
+    }
     return 1.f;
 }
 

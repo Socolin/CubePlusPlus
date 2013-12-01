@@ -29,6 +29,7 @@ private:
     EntityPlayer* player;
     bool diggingBlock;
     bool playerFinishDigging;
+    bool dropAtEnd;
     float diggingStep;
     float diggingProgress;
     int x;

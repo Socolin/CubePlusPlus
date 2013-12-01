@@ -287,7 +287,7 @@ float Block::GetDamageDonePerTickByItem(const Inventory::Item* item) const
             }
         }
 
-        if (hasGoodToolForBlock)
+        if (!hasGoodToolForBlock)
         {
             damageDone = strVsBlock / blockHardness / 100.0F;
         }

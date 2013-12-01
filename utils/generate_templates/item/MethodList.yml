@@ -20,3 +20,9 @@ methods:
   - name: OnUseOnBlock
     doc: Called when item is used on block
     code: ItemUseResult OnUseOnBlock(World::EntityPlayer* user, int x, unsigned char y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const
+  - name: CanHarvestBlock
+    doc: Test if the item will be efficiency against the block
+    code: bool CanHarvestBlock(i_block blockId) const
+  - name: GetStrengthVsBlock
+    doc: Get the strength of item against a block, default = 1.f
+    code: float GetStrengthVsBlock(i_block blockId) const

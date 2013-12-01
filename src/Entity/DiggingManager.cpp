@@ -2,6 +2,7 @@
 
 #include "Block/Block.h"
 #include "EntityPlayer.h"
+#include "Inventory/Item.h"
 #include "World/World.h"
 
 namespace World
@@ -11,6 +12,7 @@ DiggingManager::DiggingManager(EntityPlayer* player)
     : player(player)
     , diggingBlock(false)
     , playerFinishDigging(false)
+    , dropAtEnd(false)
     , diggingStep(0)
     , diggingProgress(0)
     , x(0)
@@ -59,6 +61,20 @@ void DiggingManager::StartDigging(int x, i_height y, int z)
                 this->y = y;
                 this->z = z;
                 diggingBlock = true;
+
+                if (block->GetMaterial().isRequiresNoTool())
+                {
+                    dropAtEnd = true;
+                }
+                else
+                {
+                    const Inventory::Item* item = player->LookItemInHand();
+                    if (item)
+                    {
+                        dropAtEnd = item->CanHarvestBlock(blockId);
+                    }
+                }
+
                 diggingStep = getDamageDonePerTickAgainstBlock(block);
                 if (diggingStep > 1.f)
                 {
@@ -85,7 +101,10 @@ void DiggingManager::EndDigging()
         {
             if (diggingProgress >= 1 - (diggingStep * 2)) // Avoid lag problem, so accept dig block in two less tick than normal
             {
-                player->GetWorld()->BreakBlock(x, y, z);
+                if (dropAtEnd)
+                    player->GetWorld()->BreakBlock(x, y, z);
+                else
+                    player->GetWorld()->RemoveBlock(x, y, z);
             }
             else
             {

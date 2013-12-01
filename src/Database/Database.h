@@ -205,7 +205,30 @@ enum eDatabaseField
     type,
 };
 }
-
+namespace TableToolEfficiency
+{
+enum eDatabaseField
+{
+    id = 1,
+    toolTypeId,
+    blockId,
+    materialId,
+    requireHarvestLevel,
+};
+}
+namespace TableToolMaterial
+{
+enum eDatabaseField
+{
+    id = 1,
+    name,
+    harvestLevel,
+    maxUses,
+    efficiency,
+    damageVsEntity,
+    enchantability,
+};
+}
 namespace TableWindow
 {
 enum eDatabaseField

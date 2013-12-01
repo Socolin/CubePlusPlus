@@ -1,30 +1,5 @@
--- phpMyAdmin SQL Dump
--- version 4.0.6deb1
--- http://www.phpmyadmin.net
---
--- Host: localhost
--- Generation Time: Nov 24, 2013 at 11:31 PM
--- Server version: 5.5.34-0ubuntu0.13.10.1
--- PHP Version: 5.5.3-1ubuntu2
-
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
-
-
-/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
-/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
-/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!40101 SET NAMES utf8 */;
-
---
--- Database: `mcpp`
---
-
--- --------------------------------------------------------
-
---
--- Table structure for table `block`
---
 
 CREATE TABLE IF NOT EXISTS `block` (
   `blockId` int(10) NOT NULL AUTO_INCREMENT,
@@ -57,10 +32,6 @@ CREATE TABLE IF NOT EXISTS `block` (
   PRIMARY KEY (`blockId`),
   KEY `fk_soundId` (`soundId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=159 ;
-
---
--- Dumping data for table `block`
---
 
 INSERT INTO `block` (`blockId`, `name`, `lightOpacity`, `lightValue`, `blockResistance`, `blockHardness`, `needsRandomTick`, `slipperiness`, `isCollidable`, `isOpaqueCube`, `renderAsNormal`, `minX`, `minY`, `minZ`, `maxX`, `maxY`, `maxZ`, `material`, `scriptId`, `soundId`, `burningTime`, `useNeighborBrightness`, `replaceBlockId`, `dropId`, `dropDataMask`, `dropCountMin`, `dropCountMax`) VALUES
 (1, 'tile.stone', 255, 0, 30, 1.5, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 1, 0, 1, 1),
@@ -222,12 +193,6 @@ INSERT INTO `block` (`blockId`, `name`, `lightOpacity`, `lightValue`, `blockResi
 (157, 'tile.activatorRail', 0, 0, 3.5, 0.7, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 0.125, 1, 13, 0, 8, 0, 1, 0, 157, 0, 1, 1),
 (158, 'tile.dropper', 255, 0, 17.5, 3.5, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 1, 0, 0, 0, 158, 0, 1, 1);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `blocksound`
---
-
 CREATE TABLE IF NOT EXISTS `blocksound` (
   `soundId` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(64) COLLATE utf8_bin NOT NULL,
@@ -238,10 +203,6 @@ CREATE TABLE IF NOT EXISTS `blocksound` (
   `breakSound` varchar(64) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`soundId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=13 ;
-
---
--- Dumping data for table `blocksound`
---
 
 INSERT INTO `blocksound` (`soundId`, `name`, `volume`, `modifier`, `stepSound`, `placeSound`, `breakSound`) VALUES
 (1, 'UNKNOW', 1, 1, 'step.stone', 'dig.stone', 'dig.stone'),
@@ -257,12 +218,6 @@ INSERT INTO `blocksound` (`soundId`, `name`, `volume`, `modifier`, `stepSound`, 
 (11, 'UNKNOW', 1, 1, 'step.snow', 'dig.snow', 'dig.snow'),
 (12, 'UNKNOW', 0.3, 1, 'step.anvil', 'random.anvil_land', 'dig.stone');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `craft`
---
-
 CREATE TABLE IF NOT EXISTS `craft` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `width` int(11) NOT NULL,
@@ -273,10 +228,6 @@ CREATE TABLE IF NOT EXISTS `craft` (
   `scriptId` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=187 ;
-
---
--- Dumping data for table `craft`
---
 
 INSERT INTO `craft` (`id`, `width`, `height`, `resultId`, `resultData`, `resultQuantity`, `scriptId`) VALUES
 (1, 3, 3, 270, 0, 1, 43),
@@ -465,12 +416,6 @@ INSERT INTO `craft` (`id`, `width`, `height`, `resultId`, `resultData`, `resultQ
 (184, 1, 1, 143, 0, 1, 43),
 (186, 0, 0, 340, 0, 1, 44);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `craft_slot`
---
-
 CREATE TABLE IF NOT EXISTS `craft_slot` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `craftId` int(11) NOT NULL,
@@ -479,10 +424,6 @@ CREATE TABLE IF NOT EXISTS `craft_slot` (
   PRIMARY KEY (`id`,`craftId`),
   KEY `fk_craft` (`craftId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1051 ;
-
---
--- Dumping data for table `craft_slot`
---
 
 INSERT INTO `craft_slot` (`id`, `craftId`, `itemId`, `itemData`) VALUES
 (1, 1, 5, -1),
@@ -1536,12 +1477,6 @@ INSERT INTO `craft_slot` (`id`, `craftId`, `itemId`, `itemData`) VALUES
 (1049, 186, 339, 0),
 (1050, 186, 339, 0);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `entity_living`
---
-
 CREATE TABLE IF NOT EXISTS `entity_living` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) COLLATE utf8_bin NOT NULL,
@@ -1550,10 +1485,6 @@ CREATE TABLE IF NOT EXISTS `entity_living` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=7 ;
 
---
--- Dumping data for table `entity_living`
---
-
 INSERT INTO `entity_living` (`id`, `name`, `clientType`, `scriptId`) VALUES
 (1, 'Chicken', 93, 36),
 (2, 'Cow', 92, 37),
@@ -1561,12 +1492,6 @@ INSERT INTO `entity_living` (`id`, `name`, `clientType`, `scriptId`) VALUES
 (4, 'Sheep', 91, 39),
 (5, 'Wolf', 95, 40),
 (6, 'Zombie', 54, 42);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `furnace_recipe`
---
 
 CREATE TABLE IF NOT EXISTS `furnace_recipe` (
   `itemId` int(11) NOT NULL,
@@ -1577,10 +1502,6 @@ CREATE TABLE IF NOT EXISTS `furnace_recipe` (
   `experience` float NOT NULL,
   PRIMARY KEY (`itemId`,`itemData`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
---
--- Dumping data for table `furnace_recipe`
---
 
 INSERT INTO `furnace_recipe` (`itemId`, `itemData`, `resultId`, `resultData`, `resultQuantity`, `experience`) VALUES
 (4, -1, 1, 0, 1, 0.1),
@@ -1603,12 +1524,6 @@ INSERT INTO `furnace_recipe` (`itemId`, `itemData`, `resultId`, `resultData`, `r
 (365, -1, 366, 0, 1, 0.35),
 (392, -1, 393, 0, 1, 0.35);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `items`
---
-
 CREATE TABLE IF NOT EXISTS `items` (
   `itemId` int(10) NOT NULL AUTO_INCREMENT,
   `name` text COLLATE utf8_bin NOT NULL,
@@ -1621,10 +1536,6 @@ CREATE TABLE IF NOT EXISTS `items` (
   PRIMARY KEY (`itemId`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=2268 ;
 
---
--- Dumping data for table `items`
---
-
 INSERT INTO `items` (`itemId`, `name`, `maxStackSize`, `maxDamage`, `hasSubType`, `containerId`, `burningTime`, `scriptId`) VALUES
 (5, 'item.planks', 64, 0, 1, 0, 300, 3),
 (17, 'item.log', 64, 0, 1, 0, 300, 3),
@@ -1635,7 +1546,7 @@ INSERT INTO `items` (`itemId`, `name`, `maxStackSize`, `maxDamage`, `hasSubType`
 (98, 'item.stonebricksmooth', 64, 0, 1, 0, 0, 3),
 (155, 'item.quartzBlock', 64, 0, 1, 0, 0, 3),
 (256, 'item.shovelIron', 1, 250, 0, 0, 0, 0),
-(257, 'item.pickaxeIron', 1, 250, 0, 0, 0, 0),
+(257, 'item.pickaxeIron', 1, 250, 0, 0, 0, 46),
 (258, 'item.hatchetIron', 1, 250, 0, 0, 0, 0),
 (259, 'item.flintAndSteel', 1, 64, 0, 0, 0, 0),
 (260, 'item.apple', 64, 0, 0, 0, 0, 0),
@@ -1648,22 +1559,22 @@ INSERT INTO `items` (`itemId`, `name`, `maxStackSize`, `maxDamage`, `hasSubType`
 (267, 'item.swordIron', 1, 250, 0, 0, 0, 0),
 (268, 'item.swordWood', 1, 59, 0, 0, 200, 0),
 (269, 'item.shovelWood', 1, 59, 0, 0, 200, 0),
-(270, 'item.pickaxeWood', 1, 59, 0, 0, 200, 0),
+(270, 'item.pickaxeWood', 1, 59, 0, 0, 200, 46),
 (271, 'item.hatchetWood', 1, 59, 0, 0, 200, 0),
 (272, 'item.swordStone', 1, 131, 0, 0, 0, 0),
 (273, 'item.shovelStone', 1, 131, 0, 0, 0, 0),
-(274, 'item.pickaxeStone', 1, 131, 0, 0, 0, 0),
+(274, 'item.pickaxeStone', 1, 131, 0, 0, 0, 46),
 (275, 'item.hatchetStone', 1, 131, 0, 0, 0, 0),
 (276, 'item.swordDiamond', 1, 1561, 0, 0, 0, 0),
 (277, 'item.shovelDiamond', 1, 1561, 0, 0, 0, 0),
-(278, 'item.pickaxeDiamond', 1, 1561, 0, 0, 0, 0),
+(278, 'item.pickaxeDiamond', 1, 1561, 0, 0, 0, 46),
 (279, 'item.hatchetDiamond', 1, 1561, 0, 0, 0, 0),
 (280, 'item.stick', 64, 0, 0, 0, 100, 0),
 (281, 'item.bowl', 64, 0, 0, 0, 0, 0),
 (282, 'item.mushroomStew', 1, 0, 0, 0, 0, 0),
 (283, 'item.swordGold', 1, 32, 0, 0, 0, 0),
 (284, 'item.shovelGold', 1, 32, 0, 0, 0, 0),
-(285, 'item.pickaxeGold', 1, 32, 0, 0, 0, 0),
+(285, 'item.pickaxeGold', 1, 32, 0, 0, 0, 46),
 (286, 'item.hatchetGold', 1, 32, 0, 0, 0, 0),
 (287, 'item.string', 64, 0, 0, 0, 0, 0),
 (288, 'item.feather', 64, 0, 0, 0, 0, 0),
@@ -1800,12 +1711,6 @@ INSERT INTO `items` (`itemId`, `name`, `maxStackSize`, `maxDamage`, `hasSubType`
 (2266, 'item.record', 1, 0, 0, 0, 0, 0),
 (2267, 'item.record', 1, 0, 0, 0, 0, 0);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `material`
---
-
 CREATE TABLE IF NOT EXISTS `material` (
   `materialId` int(11) NOT NULL,
   `name` varchar(64) COLLATE utf8_bin NOT NULL,
@@ -1815,171 +1720,41 @@ CREATE TABLE IF NOT EXISTS `material` (
   `requiresNoTool` tinyint(1) NOT NULL,
   `mobilityFlag` int(10) NOT NULL,
   `solid` tinyint(1) NOT NULL DEFAULT '1',
-  `liquid` tinyint(1) NOT NULL DEFAULT '0'
+  `liquid` tinyint(1) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`materialId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
---
--- Dumping data for table `material`
---
-
 INSERT INTO `material` (`materialId`, `name`, `canBurn`, `replacable`, `translucent`, `requiresNoTool`, `mobilityFlag`, `solid`, `liquid`) VALUES
-(1, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(1, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(2, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(3, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(4, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(5, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(6, 'UNKNOW', 0, 1, 1, 0, 1, 1, 0),
-(7, 'UNKNOW', 0, 1, 1, 0, 1, 1, 0),
-(8, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(9, 'UNKNOW', 1, 0, 1, 0, 1, 1, 0),
-(10, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(11, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(12, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(13, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(14, 'UNKNOW', 0, 0, 0, 0, 2, 1, 0),
-(15, 'UNKNOW', 0, 0, 1, 1, 1, 1, 0),
-(16, 'UNKNOW', 1, 1, 1, 0, 1, 1, 0),
-(17, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(18, 'UNKNOW', 1, 0, 1, 0, 0, 1, 0),
-(19, 'UNKNOW', 0, 1, 1, 0, 1, 1, 0),
-(20, 'UNKNOW', 0, 1, 1, 1, 1, 1, 0),
-(21, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(22, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(23, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(24, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(25, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(26, 'UNKNOW', 0, 0, 1, 0, 2, 1, 0),
-(27, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(28, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(29, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(30, 'UNKNOW', 0, 0, 0, 1, 2, 1, 0),
-(1, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(2, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(3, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(4, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(5, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(6, 'UNKNOW', 0, 1, 1, 0, 1, 1, 0),
-(7, 'UNKNOW', 0, 1, 1, 0, 1, 1, 0),
-(8, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(9, 'UNKNOW', 1, 0, 1, 0, 1, 1, 0),
-(10, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(11, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(12, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(13, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(14, 'UNKNOW', 0, 0, 0, 0, 2, 1, 0),
-(15, 'UNKNOW', 0, 0, 1, 1, 1, 1, 0),
-(16, 'UNKNOW', 1, 1, 1, 0, 1, 1, 0),
-(17, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(18, 'UNKNOW', 1, 0, 1, 0, 0, 1, 0),
-(19, 'UNKNOW', 0, 1, 1, 0, 1, 1, 0),
-(20, 'UNKNOW', 0, 1, 1, 1, 1, 1, 0),
-(21, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(22, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(23, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(24, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(25, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(26, 'UNKNOW', 0, 0, 1, 0, 2, 1, 0),
-(27, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(28, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(29, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(30, 'UNKNOW', 0, 0, 0, 1, 2, 1, 0),
-(1, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(2, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(3, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(4, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(5, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(6, 'UNKNOW', 0, 1, 1, 0, 1, 1, 0),
-(7, 'UNKNOW', 0, 1, 1, 0, 1, 1, 0),
-(8, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(9, 'UNKNOW', 1, 0, 1, 0, 1, 1, 0),
-(10, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(11, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(12, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(13, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(14, 'UNKNOW', 0, 0, 0, 0, 2, 1, 0),
-(15, 'UNKNOW', 0, 0, 1, 1, 1, 1, 0),
-(16, 'UNKNOW', 1, 1, 1, 0, 1, 1, 0),
-(17, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(18, 'UNKNOW', 1, 0, 1, 0, 0, 1, 0),
-(19, 'UNKNOW', 0, 1, 1, 0, 1, 1, 0),
-(20, 'UNKNOW', 0, 1, 1, 1, 1, 1, 0),
-(21, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(22, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(23, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(24, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(25, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(26, 'UNKNOW', 0, 0, 1, 0, 2, 1, 0),
-(27, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(28, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(29, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(30, 'UNKNOW', 0, 0, 0, 1, 2, 1, 0),
-(1, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(2, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(3, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(4, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(5, 'UNKNOW', 0, 0, 1, 0, 1, 0, 0),
-(6, 'UNKNOW', 0, 1, 1, 0, 1, 0, 1),
-(7, 'UNKNOW', 0, 1, 1, 0, 1, 0, 1),
-(8, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(9, 'UNKNOW', 1, 0, 1, 0, 1, 1, 0),
-(10, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(11, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(12, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(13, 'UNKNOW', 0, 0, 1, 0, 1, 0, 0),
-(14, 'UNKNOW', 0, 0, 0, 0, 2, 1, 0),
-(15, 'UNKNOW', 0, 0, 1, 1, 1, 1, 0),
-(16, 'UNKNOW', 1, 1, 1, 0, 1, 0, 0),
-(17, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(18, 'UNKNOW', 1, 0, 1, 0, 0, 1, 0),
-(19, 'UNKNOW', 0, 1, 1, 0, 1, 0, 0),
-(20, 'UNKNOW', 0, 1, 1, 1, 1, 0, 0),
-(21, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(22, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(23, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(24, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(25, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(26, 'UNKNOW', 0, 0, 1, 0, 2, 0, 0),
-(27, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(28, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(29, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(30, 'UNKNOW', 0, 0, 0, 1, 2, 1, 0),
-(1, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(2, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(3, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(4, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(5, 'UNKNOW', 0, 0, 1, 0, 1, 0, 0),
-(6, 'UNKNOW', 0, 1, 1, 0, 1, 0, 1),
-(7, 'UNKNOW', 0, 1, 1, 0, 1, 0, 1),
-(8, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(9, 'UNKNOW', 1, 0, 1, 0, 1, 1, 0),
-(10, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(11, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(12, 'UNKNOW', 1, 0, 0, 0, 0, 1, 0),
-(13, 'UNKNOW', 0, 0, 1, 0, 1, 0, 0),
-(14, 'UNKNOW', 0, 0, 0, 0, 2, 1, 0),
-(15, 'UNKNOW', 0, 0, 1, 1, 1, 1, 0),
-(16, 'UNKNOW', 1, 1, 1, 0, 1, 0, 0),
-(17, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(18, 'UNKNOW', 1, 0, 1, 0, 0, 1, 0),
-(19, 'UNKNOW', 0, 1, 1, 0, 1, 0, 0),
-(20, 'UNKNOW', 0, 1, 1, 1, 1, 0, 0),
-(21, 'UNKNOW', 0, 0, 1, 0, 0, 1, 0),
-(22, 'UNKNOW', 0, 0, 0, 1, 0, 1, 0),
-(23, 'UNKNOW', 0, 0, 1, 0, 1, 1, 0),
-(24, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(25, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(26, 'UNKNOW', 0, 0, 1, 0, 2, 0, 0),
-(27, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(28, 'UNKNOW', 0, 0, 0, 0, 1, 1, 0),
-(29, 'UNKNOW', 0, 0, 0, 0, 0, 1, 0),
-(30, 'UNKNOW', 0, 0, 0, 1, 2, 1, 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `message`
---
+(1, 'rock', 0, 0, 0, 0, 0, 1, 0),
+(2, 'grass', 0, 0, 0, 1, 0, 1, 0),
+(3, 'ground', 0, 0, 0, 1, 0, 1, 0),
+(4, 'wood', 1, 0, 0, 1, 0, 1, 0),
+(5, 'plants', 0, 0, 1, 1, 1, 0, 0),
+(6, 'water', 0, 1, 1, 1, 1, 0, 1),
+(7, 'lava', 0, 1, 1, 1, 1, 0, 1),
+(8, 'sand', 0, 0, 0, 1, 0, 1, 0),
+(9, 'leaves', 1, 0, 1, 1, 1, 1, 0),
+(10, 'sponge', 0, 0, 0, 1, 0, 1, 0),
+(11, 'glass', 0, 0, 1, 1, 0, 1, 0),
+(12, 'cloth', 1, 0, 0, 1, 0, 1, 0),
+(13, 'circuits', 0, 0, 1, 1, 1, 0, 0),
+(14, 'piston', 0, 0, 0, 1, 2, 1, 0),
+(15, 'web', 0, 0, 1, 0, 1, 1, 0),
+(16, 'vine', 1, 1, 1, 1, 1, 0, 0),
+(17, 'iron', 0, 0, 0, 0, 0, 1, 0),
+(18, 'tnt', 1, 0, 1, 1, 0, 1, 0),
+(19, 'fire', 0, 1, 1, 1, 1, 0, 0),
+(20, 'snow', 0, 1, 1, 0, 1, 0, 0),
+(21, 'ice', 0, 0, 1, 1, 0, 1, 0),
+(22, 'craftedSnow', 0, 0, 0, 0, 0, 1, 0),
+(23, 'cactus', 0, 0, 1, 1, 1, 1, 0),
+(24, 'clay', 0, 0, 0, 1, 0, 1, 0),
+(25, 'pumpkin', 0, 0, 0, 1, 1, 1, 0),
+(26, 'portal', 0, 0, 1, 1, 2, 0, 0),
+(27, 'cake', 0, 0, 0, 1, 1, 1, 0),
+(28, 'dragonEgg', 0, 0, 0, 1, 1, 1, 0),
+(29, 'redstoneLight', 0, 0, 0, 1, 0, 1, 0),
+(30, 'anvil', 0, 0, 0, 0, 2, 1, 0);
 
 CREATE TABLE IF NOT EXISTS `message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1988,10 +1763,6 @@ CREATE TABLE IF NOT EXISTS `message` (
   `text` varchar(255) COLLATE utf8_bin NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=9 ;
-
---
--- Dumping data for table `message`
---
 
 INSERT INTO `message` (`id`, `langId`, `key`, `text`) VALUES
 (1, 0, 'network.kick.badprotocol', 'Bad protocol version, use 1.5.2'),
@@ -2003,12 +1774,6 @@ INSERT INTO `message` (`id`, `langId`, `key`, `text`) VALUES
 (7, 1, 'network.kick.notinwhitelist', 'Vous n''êtes pas sur la whitelist du serveur'),
 (8, 1, 'network.kick.serverisfull', 'Le serveur est plein');
 
--- --------------------------------------------------------
-
---
--- Table structure for table `message_lang`
---
-
 CREATE TABLE IF NOT EXISTS `message_lang` (
   `id` int(11) NOT NULL,
   `lang` varchar(64) COLLATE utf8_bin NOT NULL,
@@ -2016,19 +1781,9 @@ CREATE TABLE IF NOT EXISTS `message_lang` (
   UNIQUE KEY `id` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
---
--- Dumping data for table `message_lang`
---
-
 INSERT INTO `message_lang` (`id`, `lang`, `description`) VALUES
 (0, 'English', 'Default language'),
 (1, 'French', 'Français (cocorico)');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `painting`
---
 
 CREATE TABLE IF NOT EXISTS `painting` (
   `name` varchar(13) COLLATE utf8_bin NOT NULL,
@@ -2038,10 +1793,6 @@ CREATE TABLE IF NOT EXISTS `painting` (
   `itemData` int(11) NOT NULL,
   PRIMARY KEY (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
---
--- Dumping data for table `painting`
---
 
 INSERT INTO `painting` (`name`, `sizeX`, `sizeY`, `itemId`, `itemData`) VALUES
 ('Alban', 16, 16, 321, 0),
@@ -2071,23 +1822,13 @@ INSERT INTO `painting` (`name`, `sizeX`, `sizeY`, `itemId`, `itemData`) VALUES
 ('Wasteland', 16, 16, 321, 0),
 ('Wither', 32, 32, 321, 0);
 
--- --------------------------------------------------------
-
---
--- Table structure for table `script`
---
-
 CREATE TABLE IF NOT EXISTS `script` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `scriptName` varchar(128) COLLATE utf8_bin NOT NULL,
   `paramCount` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=46 ;
-
---
--- Dumping data for table `script`
---
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=47 ;
 
 INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (2, 'block_stair', 0),
@@ -2131,13 +1872,8 @@ INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (42, 'entityliving_zombie', 0),
 (43, 'craft_shaped', 0),
 (44, 'craft_shapeless', 0),
-(45, 'window_main', 0);
-
--- --------------------------------------------------------
-
---
--- Table structure for table `script_data`
---
+(45, 'window_main', 0),
+(46, 'item_tool', 2);
 
 CREATE TABLE IF NOT EXISTS `script_data` (
   `scriptId` int(11) NOT NULL,
@@ -2148,10 +1884,6 @@ CREATE TABLE IF NOT EXISTS `script_data` (
   `valuestr` varchar(128) COLLATE utf8_bin NOT NULL,
   UNIQUE KEY `scriptId` (`scriptId`,`stuffId`,`param`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
---
--- Dumping data for table `script_data`
---
 
 INSERT INTO `script_data` (`scriptId`, `stuffId`, `param`, `valueint`, `valuefloat`, `valuestr`) VALUES
 (3, 5, 1, 5, 0, ''),
@@ -2206,13 +1938,17 @@ INSERT INTO `script_data` (`scriptId`, `stuffId`, `param`, `valueint`, `valueflo
 (27, 146, 1, 3, 0, ''),
 (27, 146, 2, 4, 0, ''),
 (32, 58, 1, 1, 0, ''),
-(34, 130, 1, 5, 0, '');
-
--- --------------------------------------------------------
-
---
--- Table structure for table `script_info`
---
+(34, 130, 1, 5, 0, ''),
+(46, 257, 1, 1, 0, ''),
+(46, 257, 2, 3, 0, ''),
+(46, 270, 1, 1, 0, ''),
+(46, 270, 2, 1, 0, ''),
+(46, 274, 1, 1, 0, ''),
+(46, 274, 2, 2, 0, ''),
+(46, 278, 1, 1, 0, ''),
+(46, 278, 2, 4, 0, ''),
+(46, 285, 1, 1, 0, ''),
+(46, 285, 2, 5, 0, '');
 
 CREATE TABLE IF NOT EXISTS `script_info` (
   `scriptId` int(11) NOT NULL,
@@ -2221,10 +1957,6 @@ CREATE TABLE IF NOT EXISTS `script_info` (
   `type` int(4) NOT NULL DEFAULT '0',
   UNIQUE KEY `scriptId` (`scriptId`,`paramId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
-
---
--- Dumping data for table `script_info`
---
 
 INSERT INTO `script_info` (`scriptId`, `name`, `paramId`, `type`) VALUES
 (3, 'blockid', 1, 1),
@@ -2248,13 +1980,77 @@ INSERT INTO `script_info` (`scriptId`, `name`, `paramId`, `type`) VALUES
 (27, 'windowChestDataId', 1, 1),
 (27, 'windowDoubleChestDataId', 2, 1),
 (32, 'windowId', 1, 1),
-(34, 'windowEnderChestChestDataId', 1, 1);
+(34, 'windowEnderChestChestDataId', 1, 1),
+(46, 'ToolType', 1, 1),
+(46, 'ToolMaterial', 2, 1);
 
--- --------------------------------------------------------
+CREATE TABLE IF NOT EXISTS `tool_efficiency` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `toolTypeId` int(11) NOT NULL,
+  `blockId` int(11) DEFAULT NULL,
+  `materialId` int(11) DEFAULT NULL,
+  `requiredHarvestLevel` int(11) NOT NULL DEFAULT '0',
+  PRIMARY KEY (`id`),
+  KEY `fk_toolTypeId` (`toolTypeId`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=30 ;
 
---
--- Table structure for table `windows`
---
+INSERT INTO `tool_efficiency` (`id`, `toolTypeId`, `blockId`, `materialId`, `requiredHarvestLevel`) VALUES
+(1, 1, NULL, 17, 0),
+(4, 1, NULL, 30, 0),
+(5, 1, NULL, 1, 0),
+(6, 1, 1, NULL, 0),
+(7, 1, 4, NULL, 0),
+(8, 1, 14, NULL, 0),
+(9, 1, 15, NULL, 0),
+(10, 1, 16, NULL, 0),
+(11, 1, 21, NULL, 0),
+(12, 1, 22, NULL, 0),
+(13, 1, 24, NULL, 0),
+(14, 1, 27, NULL, 0),
+(15, 1, 28, NULL, 0),
+(16, 1, 41, NULL, 0),
+(17, 1, 42, NULL, 0),
+(18, 1, 43, NULL, 0),
+(19, 1, 44, NULL, 0),
+(20, 1, 48, NULL, 0),
+(21, 1, 49, NULL, 3),
+(22, 1, 56, NULL, 0),
+(23, 1, 57, NULL, 0),
+(24, 1, 66, NULL, 0),
+(25, 1, 73, NULL, 0),
+(26, 1, 74, NULL, 0),
+(27, 1, 79, NULL, 0),
+(28, 1, 87, NULL, 0),
+(29, 1, 157, NULL, 0);
+
+CREATE TABLE IF NOT EXISTS `tool_material` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) COLLATE utf8_bin NOT NULL,
+  `harvestLevel` int(11) NOT NULL,
+  `maxUses` int(11) NOT NULL,
+  `efficiency` float NOT NULL,
+  `damageVsEntity` int(11) NOT NULL,
+  `enchantability` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6 ;
+
+INSERT INTO `tool_material` (`id`, `name`, `harvestLevel`, `maxUses`, `efficiency`, `damageVsEntity`, `enchantability`) VALUES
+(1, 'Wood', 0, 59, 2, 0, 15),
+(2, 'Stone', 1, 131, 4, 1, 5),
+(3, 'Iron', 2, 250, 6, 2, 14),
+(4, 'Diamond', 3, 1561, 8, 3, 10),
+(5, 'Gold', 0, 32, 12, 0, 12);
+
+CREATE TABLE IF NOT EXISTS `tool_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `name` varchar(32) COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=4 ;
+
+INSERT INTO `tool_type` (`id`, `name`) VALUES
+(1, 'pickaxe'),
+(2, 'axe'),
+(3, 'shovel');
 
 CREATE TABLE IF NOT EXISTS `windows` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -2266,10 +2062,6 @@ CREATE TABLE IF NOT EXISTS `windows` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=6 ;
 
---
--- Dumping data for table `windows`
---
-
 INSERT INTO `windows` (`id`, `name`, `maxSlot`, `networkMaxSlot`, `script`, `clientWindowId`) VALUES
 (0, 'Inventory', 45, 0, 45, 0),
 (1, 'Crafting', 46, 10, 31, 1),
@@ -2278,22 +2070,12 @@ INSERT INTO `windows` (`id`, `name`, `maxSlot`, `networkMaxSlot`, `script`, `cli
 (4, 'Large Chest', 90, 54, 30, 0),
 (5, 'EnderChest', 63, 27, 33, 0);
 
---
--- Constraints for dumped tables
---
 
---
--- Constraints for table `block`
---
 ALTER TABLE `block`
   ADD CONSTRAINT `block_ibfk_1` FOREIGN KEY (`soundId`) REFERENCES `blocksound` (`soundId`);
 
---
--- Constraints for table `craft_slot`
---
 ALTER TABLE `craft_slot`
   ADD CONSTRAINT `fk_craft` FOREIGN KEY (`craftId`) REFERENCES `craft` (`id`);
 
-/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
-/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
-/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
+ALTER TABLE `tool_efficiency`
+  ADD CONSTRAINT `fk_tool_type` FOREIGN KEY (`toolTypeId`) REFERENCES `tool_type` (`id`);

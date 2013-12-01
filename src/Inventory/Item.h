@@ -64,9 +64,9 @@ public:
     bool CanHarvestBlock(i_block blockId) const;
 
     /**
-     * Get
-     * @param blockId
-     * @return
+     * Get the strength of item against a block, default = 1.f
+     * @param blockId blockId to check
+     * @return the strength
      */
     float GetStrengthVsBlock(i_block blockId) const;
 
