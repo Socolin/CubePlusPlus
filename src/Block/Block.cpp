@@ -277,6 +277,11 @@ float Block::GetDamageDonePerTickByItem(const Inventory::Item* item) const
         if (material.isRequiresNoTool())
         {
             hasGoodToolForBlock = true;
+            if (item)
+            {
+                if (item->CanHarvestBlock(blockId))
+                    strVsBlock = item->GetStrengthVsBlock(blockId);
+            }
         }
         else
         {

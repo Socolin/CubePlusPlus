@@ -35,10 +35,6 @@ void ItemToolScript::InitParam(int paramId, int param)
     {
         toolType = param;
         Database::ToolEfficiency& toolEfficiencyManager = Database::ToolEfficiency::Instance();
-        for (int i : toolEfficiencyManager.GetEfficiencyAgainstBlock(toolType))
-        {
-            LOG_DEBUG << i << std::endl;
-        }
         efficiencyAgainstBlock = toolEfficiencyManager.GetEfficiencyAgainstBlock(toolType);
         efficiencyAgainstMaterial = toolEfficiencyManager.GetEfficiencyAgainstMaterial(toolType);
         requiredHarvestLevel = toolEfficiencyManager.GetRequiredHarvestLevel(toolType);

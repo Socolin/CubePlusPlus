@@ -118,7 +118,6 @@ void ItemList::Initialize()
                         break;
                     }
                 }
-
                 delete script_result;
 
             }

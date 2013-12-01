@@ -118,6 +118,7 @@ void BlockList::Initialize()
                                   "WHERE `script_info`.`scriptId` = " << scriptId << " AND `stuffId` = " << blockId;
 
                 sql::ResultSet* script_result = db->querry(request_construct.str());
+                //Load script data
                 while (script_result->next())
                 {
                     int type = script_result->getInt(TableScriptData_U_ScriptInfo::type);
@@ -149,7 +150,6 @@ void BlockList::Initialize()
                     }
                 }
                 delete script_result;
-                //Load script data
             }
             else
             {
