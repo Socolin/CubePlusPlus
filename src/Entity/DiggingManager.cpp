@@ -90,6 +90,7 @@ void DiggingManager::EndDigging()
             else
             {
                 playerFinishDigging = true;
+                player->ResetBlock(x, y, z);
                 return;
             }
         }
