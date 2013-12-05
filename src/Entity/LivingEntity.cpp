@@ -96,7 +96,30 @@ bool LivingEntity::Load(NBT::TagCompound* tagNbtData)
 
 bool LivingEntity::Save(NBT::TagCompound* tagNbtData)
 {
-    return parent_type::Save(tagNbtData);
+    using namespace NBT;
+    bool saveSucess = parent_type::Save(tagNbtData);
+
+    tagNbtData->AddTag(new TagShort("Health", health));
+
+    tagNbtData->AddTag(new TagShort("HurtTime", hurtTime));
+    tagNbtData->AddTag(new TagShort("DeathTime", deathTime));
+    tagNbtData->AddTag(new TagShort("AttackTime", attackTime));
+    tagNbtData->AddTag(new TagByte("CanPickUpLoot", canPickUpLoot));
+    tagNbtData->AddTag(new TagByte("PersistenceRequired", persistenceRequired));
+
+    //TODO: Custom name
+
+    TagList* tagEquipement = new TagList("Equipment", TagType::TAG_COMPOUND);
+    equipementInventory->Save(tagEquipement);
+    tagNbtData->AddTag(tagEquipement);
+
+    TagList* tagPotions = new TagList("ActiveEffects", TagType::TAG_COMPOUND);
+    //TODO: Potion effect
+    tagNbtData->AddTag(tagPotions);
+
+    // TODO: DropChances
+
+    return saveSucess;
 }
 
 short LivingEntity::GetMaxHealth()

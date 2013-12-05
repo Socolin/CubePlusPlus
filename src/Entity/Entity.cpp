@@ -382,8 +382,19 @@ bool Entity::Load(NBT::TagCompound* tagNbtData)
     return true;
 }
 
-bool Entity::Save(NBT::TagCompound* /*tagNbtData*/)
+bool Entity::Save(NBT::TagCompound* tagNbtData)
 {
+    using namespace NBT;
+    tagNbtData->AddTag(new TagList("Pos", {x, y, z}));
+    tagNbtData->AddTag(new TagList("Motion", {motionX, motionY, motionZ}));
+    tagNbtData->AddTag(new TagList("Rotation", {yaw, pitch}));
+    tagNbtData->AddTag(new TagFloat("FallDistance", fallDistance));
+    tagNbtData->AddTag(new TagShort("Fire", fire));
+    tagNbtData->AddTag(new TagShort("Air", air));
+    tagNbtData->AddTag(new TagByte("OnGround", onGround));
+    tagNbtData->AddTag(new TagInt("Dimension", dimension));
+    tagNbtData->AddTag(new TagByte("Invulnerable", invulnerable));
+    tagNbtData->AddTag(new TagInt("PortalCooldown", portalCooldown));
     return true;
 }
 

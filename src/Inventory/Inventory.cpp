@@ -396,4 +396,9 @@ void Inventory::Load(NBT::TagList* nbtData)
     }
 }
 
+void Inventory::Save(NBT::TagList* nbtData)
+{
+    //TODO:
+}
+
 } /* namespace Inventory */

@@ -145,6 +145,7 @@ public:
     const Position& GetSpawnPosition() const;
     Position GetValidSpawnPosition();
     NBT::TagCompound* LoadNbtDatasForPlayer(const std::string& playerName);
+    void SaveNbtDatasForPlayer(const std::string& playerName, NBT::TagCompound* tagData);
     long long GetAgeOfWorld() const;
     long long GetCurrentTime() const;
     bool isReadOnly() const;

@@ -1430,6 +1430,20 @@ NBT::TagCompound* World::LoadNbtDatasForPlayer(const std::string& playerName)
     return rootAsCompound;
 }
 
+void World::SaveNbtDatasForPlayer(const std::string& playerName, NBT::TagCompound* tagData)
+{
+    std::stringstream fileName;
+    fileName << worldName << "/players/" << playerName << ".dat";
+
+    NBT::File file(fileName.str(), tagData);
+    if (!file.Save())
+    {
+        LOG_ERROR << "Can't save player data: " << playerName
+                << " due to error:" << file.GetLastErrorMessage()
+                << " when writing: "  << file.GetFilename() << std::endl;
+    }
+}
+
 void World::loadGameMode(NBT::TagCompound* tagData)
 {
     NBT::TagByte* tagHardcore = tagData->GetTagAs<NBT::TagByte>("hardcore");

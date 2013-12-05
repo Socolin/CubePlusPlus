@@ -143,20 +143,6 @@ void EntityPlayer::Respawn(double x, double y, double z)
 void EntityPlayer::OnJoinWorld(World* world)
 {
     // TODO: get it from world
-    Network::NetworkPacket packetSpawnPosition(Network::OP_SPAWN_POSITION);
-    packetSpawnPosition << (int) x << (int) y << (int) z;
-    session->SendPacket(packetSpawnPosition);
-
-    if (isAdmin())
-    {
-        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
-        gameMode = GAMEMODE_CREATVE;
-        session->SendChangeGameState(3, 1);
-    }
-    else
-        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE);
-
-    session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
 
     for (unsigned int i = 0; i < Config::Config::GetChunkSentPerTick(); i++)
      {
@@ -172,7 +158,23 @@ void EntityPlayer::OnJoinWorld(World* world)
          }
      }
 
-    session->SendSetPositionAndLook(x, y, y + 1.62, z, 0.f, 0.f, false);
+
+    Network::NetworkPacket packetSpawnPosition(Network::OP_SPAWN_POSITION);
+    packetSpawnPosition << (int) x << (int) y << (int) z;
+    session->SendPacket(packetSpawnPosition);
+
+    if (isAdmin())
+    {
+        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
+        gameMode = GAMEMODE_CREATVE;
+        session->SendChangeGameState(3, 1);
+    }
+    else
+        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE);
+
+    session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
+
+    session->SendSetPositionAndLook(x, y + 1.62, y, z, 0.f, 0.f, false);
 
     session->SendUpdateHealth(20,20,5.f);
 

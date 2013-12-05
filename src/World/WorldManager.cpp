@@ -108,6 +108,15 @@ void WorldManager::RemovePlayer(EntityPlayer* player)
 {
     if (playerList.find(player) != playerList.end())
     {
+        NBT::TagCompound* playerData = new NBT::TagCompound();
+        if (player->Save(playerData))
+        {
+            std::string name;
+            Util::WStringToString(player->GetUsername(), name);
+            world->SaveNbtDatasForPlayer(name, playerData);
+        }
+        else
+            delete playerData;
         playerCount--;
         world->RemovePlayer(player);
         playerList.erase(player);
