@@ -134,4 +134,18 @@ NBT::TagCompound* ItemStack::GetSpecialData() const
     return specialData;
 }
 
+NBT::TagCompound* ItemStack::Save() const
+{
+    NBT::TagCompound* tag = new NBT::TagCompound();
+
+    tag->AddTag(new NBT::TagShort("id", itemId));
+    tag->AddTag(new NBT::TagShort("Damage", itemData));
+    tag->AddTag(new NBT::TagByte("Count", stackSize));
+    if (specialData)
+    {
+        tag->AddTag(specialData->Clone());
+    }
+    return tag;
+}
+
 } /* namespace Inventory */

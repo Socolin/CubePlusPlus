@@ -91,6 +91,8 @@ public:
 
     NBT::TagCompound* GetSpecialData() const;
 
+    NBT::TagCompound* Save() const;
+
 private:
     i_item itemId;
     i_damage itemData;

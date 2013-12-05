@@ -2,6 +2,8 @@
 
 #include <algorithm>
 
+#include <NBTField/NBTField.h>
+
 #include "Block/Block.h"
 #include "Block/BlockConstants.h"
 #include "Block/BlockList.h"
@@ -144,21 +146,6 @@ void EntityPlayer::OnJoinWorld(World* world)
 {
     // TODO: get it from world
 
-    for (unsigned int i = 0; i < Config::Config::GetChunkSentPerTick(); i++)
-     {
-         if (!chunkToSend.empty())
-         {
-             if (session == nullptr)
-                 return;
-             if (session->IsSendBufferHalfFull())
-                 break;
-             const ChunkToSendData& chunkToSendData =  chunkToSend.top();
-             world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
-             chunkToSend.pop();
-         }
-     }
-
-
     Network::NetworkPacket packetSpawnPosition(Network::OP_SPAWN_POSITION);
     packetSpawnPosition << (int) x << (int) y << (int) z;
     session->SendPacket(packetSpawnPosition);
@@ -173,6 +160,20 @@ void EntityPlayer::OnJoinWorld(World* world)
         session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE);
 
     session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
+
+    for (unsigned int i = 0; i < Config::Config::GetChunkSentPerTick(); i++)
+    {
+        if (!chunkToSend.empty())
+        {
+            if (session == nullptr)
+                return;
+            if (session->IsSendBufferHalfFull())
+                break;
+            const ChunkToSendData& chunkToSendData = chunkToSend.top();
+            world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
+            chunkToSend.pop();
+        }
+    }
 
     session->SendSetPositionAndLook(x, y + 1.62, y, z, 0.f, 0.f, false);
 
@@ -592,12 +593,39 @@ void EntityPlayer::DoAction(char action)
 
 bool EntityPlayer::Load(NBT::TagCompound* tagNbtData)
 {
-    return parent_type::Load(tagNbtData);
+    bool loadSucess = parent_type::Load(tagNbtData);
+
+    NBT::TagList* tagInventory = tagNbtData->GetTagAs<NBT::TagList>("Inventory");
+    if (tagInventory)
+    {
+        handsInventory->Load(tagInventory);
+        mainInventory->Load(tagInventory, 9);
+        armorInventory->Load(tagInventory, 100);
+    }
+
+    NBT::TagList* tagEnderChest = tagNbtData->GetTagAs<NBT::TagList>("EnderItems");
+    if (tagEnderChest)
+    {
+        enderChestInventory->Load(tagEnderChest);
+    }
+    return loadSucess;
 }
 
 bool EntityPlayer::Save(NBT::TagCompound* tagNbtData)
 {
-    return parent_type::Save(tagNbtData);
+    bool saveSucess = parent_type::Save(tagNbtData);
+
+    NBT::TagList* tagInventory = new NBT::TagList("Inventory", NBT::TagType::TAG_COMPOUND);
+    handsInventory->Save(tagInventory);
+    mainInventory->Save(tagInventory, 9);
+    armorInventory->Save(tagInventory, 100);
+    tagNbtData->AddTag(tagInventory);
+
+    NBT::TagList* tagEnderChest = new NBT::TagList("EnderItems", NBT::TagType::TAG_COMPOUND);
+    handsInventory->Save(tagEnderChest);
+    tagNbtData->AddTag(tagEnderChest);
+
+    return saveSucess;
 }
 
 bool EntityPlayer::isAdmin() const

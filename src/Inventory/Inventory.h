@@ -212,13 +212,13 @@ public:
      * Load inventory from data
      * @param nbtData
      */
-    virtual void Load(NBT::TagList* nbtData);
+    virtual void Load(NBT::TagList* nbtData, int startSlotId = 0);
 
     /**
      * Save inventory as nbt format
      * @param nbtData
      */
-    virtual void Save(NBT::TagList* nbtData);
+    virtual void Save(NBT::TagList* nbtData, int startSlotId = 0);
 protected:
     struct playerData
     {

@@ -375,7 +375,7 @@ int Inventory::GetPlayerCount() const
     return playerWithOffsetList.size();
 }
 
-void Inventory::Load(NBT::TagList* nbtData)
+void Inventory::Load(NBT::TagList* nbtData, int startSlotId)
 {
     const std::vector<NBT::Tag *>& itemList = nbtData->GetTagList();
     for (NBT::Tag* tag : itemList)
@@ -389,16 +389,25 @@ void Inventory::Load(NBT::TagList* nbtData)
             continue;
         int slotId = tagSlotId->GetValue();
 
-        if (slotId < 0 || slotId >= maxSlot)
+        if (slotId - startSlotId < 0 || slotId - startSlotId >= maxSlot)
             continue;
 
-        ClearAndSetSlot(slotId, new ItemStack(itemData));
+        ClearAndSetSlot(slotId - startSlotId, new ItemStack(itemData));
     }
 }
 
-void Inventory::Save(NBT::TagList* nbtData)
+void Inventory::Save(NBT::TagList* nbtData, int startSlotId)
 {
-    //TODO:
+    for (size_t slotId = 0; slotId < slot.size(); slotId++)
+    {
+        const ItemStack* item = slot[slotId];
+        if (item)
+        {
+            NBT::TagCompound* itemData = item->Save();
+            itemData->AddTag(new NBT::TagByte("Slot", slotId + startSlotId));
+            nbtData->AddTag(itemData);
+        }
+    }
 }
 
 } /* namespace Inventory */
