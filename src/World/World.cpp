@@ -592,6 +592,14 @@ NBT::TagCompound* World::GetChunkNbtData(int x, int z)
     return nullptr;
 }
 
+void World::SaveChunkNbtData(int x, int z, NBT::TagCompound* tag)
+{
+    Region* region = regionManager.GetRegion(x >> 5, z >> 5);
+    if (region)
+    {
+        return region->SaveNbtChunkData(x & 0x1f, z & 0x1f, tag);
+    }
+}
 
 VirtualChunk* World::CreateVirtualChunk(int x, int z)
 {

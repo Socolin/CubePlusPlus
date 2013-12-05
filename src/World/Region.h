@@ -26,6 +26,7 @@ public:
     virtual ~Region();
 
     NBT::TagCompound* GetNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ);
+    void SaveNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ, NBT::TagCompound* nbtChunkData);
 private:
     union offset
     {
