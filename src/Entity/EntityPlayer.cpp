@@ -106,7 +106,7 @@ void EntityPlayer::UpdateTick()
                     return;
                 if (session->IsSendBufferHalfFull())
                     break;
-                const ChunkToSendData& chunkToSendData =  chunkToSend.top();
+                const ChunkToSendData& chunkToSendData = chunkToSend.top();
                 world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
                 chunkToSend.pop();
             }
@@ -138,7 +138,7 @@ void EntityPlayer::Respawn(double x, double y, double z)
 
     // Move this to session
     Network::NetworkPacket packetInitialPosition(Network::OP_PLAYER_POSITION_AND_LOOK);
-    packetInitialPosition << x << y << z << (float) 0 << (float) 0 << (char) 0;
+    packetInitialPosition << x << y << z << (float)0 << (float)0 << (char)0;
     Send(packetInitialPosition);
 }
 
@@ -147,17 +147,17 @@ void EntityPlayer::OnJoinWorld(World* world)
     // TODO: get it from world
 
     Network::NetworkPacket packetSpawnPosition(Network::OP_SPAWN_POSITION);
-    packetSpawnPosition << (int) x << (int) y << (int) z;
+    packetSpawnPosition << (int)x << (int)y << (int)z;
     session->SendPacket(packetSpawnPosition);
 
     if (isAdmin())
     {
-        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
+        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED, DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
         gameMode = GAMEMODE_CREATVE;
         session->SendChangeGameState(3, 1);
     }
     else
-        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED,  DAMAGE_DISABLE);
+        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED, DAMAGE_DISABLE);
 
     session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
 
@@ -177,7 +177,7 @@ void EntityPlayer::OnJoinWorld(World* world)
 
     session->SendSetPositionAndLook(x, y + 1.62, y, z, 0.f, 0.f, false);
 
-    session->SendUpdateHealth(20,20,5.f);
+    session->SendUpdateHealth(20, 20, 5.f);
 
     session->SendSetExperience(0, 0.f, 0);
 
@@ -191,9 +191,9 @@ void EntityPlayer::OnJoinWorld(World* world)
 
 void EntityPlayer::GetCreatePacket(Network::NetworkPacket& packet)
 {
-    packet << (unsigned char) Network::OP_SPAWN_NAMED_ENTITY << entityId << name << networkX << networkY << networkZ << (char)  (yaw * 256.f / 360.f) << (char)  (pitch * 256.f / 360.f) << (unsigned short) 0 /* Current item*/;    // Metadata
+    packet << (unsigned char)Network::OP_SPAWN_NAMED_ENTITY << entityId << name << networkX << networkY << networkZ << (char)(yaw * 256.f / 360.f) << (char)(pitch * 256.f / 360.f) << (unsigned short)0 /* Current item*/;    // Metadata
     packet << char(0) << char(0) << (unsigned char)127; // TODO: classe metadata
-    packet << (unsigned char)Network::OP_ENTITY_HEAD_LOOK << entityId << ((char) (yaw * 256.f / 360.f));
+    packet << (unsigned char)Network::OP_ENTITY_HEAD_LOOK << entityId << ((char)(yaw * 256.f / 360.f));
 
     const Inventory::ItemStack* itemInHand = handsInventory->LookSlot(handsInventory->getHandSlotId());
     if (itemInHand != nullptr)
@@ -222,7 +222,7 @@ void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
 
     while (!chunkToSend.empty())
     {
-        const ChunkToSendData& chunkToSendData =  chunkToSend.top();
+        const ChunkToSendData& chunkToSendData = chunkToSend.top();
         if (abs(newChunkX - chunkToSendData.x) <= viewDistance && abs(newChunkZ - chunkToSendData.z) <= viewDistance)
         {
             sortChunkToSend.push_back({chunkToSendData.x, chunkToSendData.z, abs(newChunkX - chunkToSendData.x) + abs(newChunkZ - chunkToSendData.z)});
@@ -288,7 +288,6 @@ EntityPlayer::eGameMode EntityPlayer::GetGameMode() const
     return gameMode;
 }
 
-
 const std::wstring& EntityPlayer::GetUsername()
 {
     return name;
@@ -302,12 +301,12 @@ void EntityPlayer::DropItem(Inventory::ItemStack* itemToDrop)
     if (item != nullptr)
     {
         const double speed = 0.3F;
-        double motionX = -sin(yaw/ 180.0F * M_PI) * cos(pitch / 180.0F * M_PI) * speed;
+        double motionX = -sin(yaw / 180.0F * M_PI) * cos(pitch / 180.0F * M_PI) * speed;
         double motionZ = cos(yaw / 180.0F * M_PI) * cos(pitch / 180.0F * M_PI) * speed;
         double motionY = -sin(pitch / 180.0F * M_PI) * speed + 0.1F;
 
         double modifier = 0.02F;
-        float randomModifier =  Util::randFloat() * M_PI * 2.0F;
+        float randomModifier = Util::randFloat() * M_PI * 2.0F;
         modifier *= Util::randFloat();
         motionX += cos(randomModifier) * modifier;
         motionY += (Util::randFloat() - Util::randFloat()) * 0.1f;
@@ -351,7 +350,6 @@ void EntityPlayer::DigBlock(int state, int x, i_height y, int z, char /*face*/)
         Kick(L"Error");
         break;
     }
-
 
 }
 void EntityPlayer::PlaceBlock(int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ)
@@ -423,11 +421,11 @@ void EntityPlayer::GetSpecificUpdatePacket(Network::NetworkPacket& packet)
     if (hasChangeItemInHand)
     {
         hasChangeItemInHand = false;
-        packet << (unsigned char) Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << handsInventory->LookSlot(handsInventory->getHandSlotId());
+        packet << (unsigned char)Network::OP_ENTITY_EQUIPEMENT << entityId << (short)0 << handsInventory->LookSlot(handsInventory->getHandSlotId());
     }
     if (animationId >= 0)
     {
-        packet << (unsigned char) Network::OP_ANIMATION << entityId << animationId;
+        packet << (unsigned char)Network::OP_ANIMATION << entityId << animationId;
         animationId = -1;
     }
 
@@ -638,7 +636,6 @@ void EntityPlayer::SetAdmin(bool admin)
     this->admin = admin;
 }
 
-
 Window::Window* EntityPlayer::GetInventoryWindow() const
 {
     return inventoryWindow;
@@ -730,7 +727,5 @@ void EntityPlayer::useItemInHand(ItemUseResult result)
         }
     }
 }
-
-
 
 } /* namespace World */
