@@ -2,7 +2,9 @@
 #include "Entity/Scripts/LivingEntityScript.h"
 #include "Entity/Scripts/ScriptedLivingEntity.h"
 
-namespace Scripting{
+namespace Scripting
+{
+
 LivingEntityTameable::LivingEntityTameable()
     : scriptedEntity(nullptr)
     , baseScript(nullptr)

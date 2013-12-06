@@ -55,4 +55,4 @@ void AIDropItem::dropItemUpdate(World::LivingEntity* baseEntity)
         dropItemTimer--;
 }
 
-} /* namespace World */
+} /* namespace Scripting */
