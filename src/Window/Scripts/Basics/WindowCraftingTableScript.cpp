@@ -102,7 +102,7 @@ bool WindowCraftingTableScript::OnClickOnWindow(World::EntityPlayer* player, sho
                             // Two pass, first filling all non empty slot, second fill empty slot
                             for (int i = 0; i < 2; i++)
                             {
-                                for (size_t invId = start; invId >= 0 && invId < inventoryListByPriority.size(); invId += step)
+                                for (size_t invId = start; invId < inventoryListByPriority.size(); invId += step)
                                 {
                                     Inventory::Inventory* inv = inventoryListByPriority[invId];
 

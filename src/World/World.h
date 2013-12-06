@@ -156,7 +156,7 @@ private:
     VirtualSmallChunk* CreateVirtualSmallChunk(int x, int z);
     Chunk* LoadChunk(int x, int z);
     NBT::TagCompound* GetChunkNbtData(int x, int z);
-    void World::SaveChunkNbtData(int x, int z, NBT::TagCompound* tag);
+    void SaveChunkNbtData(int x, int z, NBT::TagCompound* tag);
     void MarkEntityForDelete(Entity* entity);
     void MarkPlayerForRemove(EntityPlayer* entity);
 

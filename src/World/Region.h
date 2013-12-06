@@ -32,8 +32,8 @@ private:
     {
         int value;
         struct __attribute__((__packed__)) {
-            int size : 8;
-            int offsetBlock : 24;
+            unsigned int size : 8;
+            unsigned int offsetBlock : 24;
         } data;
     };
 private:

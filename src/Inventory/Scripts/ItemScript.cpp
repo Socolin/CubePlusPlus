@@ -36,12 +36,12 @@ ItemUseResult ItemScript::OnUseOnBlock(World::EntityPlayer* /*user*/, int /*x*/,
     return ItemUseResult{false, false, 0};
 }
 
-bool ItemScript::CanHarvestBlock(i_block blockId) const
+bool ItemScript::CanHarvestBlock(i_block /*blockId*/) const
 {
     return false;
 }
 
-float ItemScript::GetStrengthVsBlock(i_block blockId) const
+float ItemScript::GetStrengthVsBlock(i_block /*blockId*/) const
 {
     return 1.f;
 }

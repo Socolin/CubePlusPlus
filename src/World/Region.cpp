@@ -174,7 +174,7 @@ void Region::SaveNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ, NBT::T
         if (offset.value == 0)
         {
             int countFreeBlock = 0;
-            for (int i = 2; i < freeBlock.size(); i++)
+            for (size_t i = 2; i < freeBlock.size(); i++)
             {
                 if (freeBlock[i])
                 {
@@ -253,7 +253,7 @@ void Region::SaveNbtChunkData(i_small_coord chunkX, i_small_coord chunkZ, NBT::T
         offset.data.size = neededBlock;
         offset.data.offsetBlock = startBlock;
         locationsTable[chunkZ][chunkX] = offset;
-        lastAccessTimeTable[chunkZ][chunkX] = time(0);
+        lastAccessTimeTable[chunkZ][chunkX] = time(nullptr);
         file.seekg(0, file.beg);
         // Writing header
         file.write(reinterpret_cast<char*>(locationsTable), REGION_CHUNK_COUNT * sizeof(int));
