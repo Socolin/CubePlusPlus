@@ -63,12 +63,12 @@ void Chunk::Load()
     {
         if (nbtData)
         {
-            LOG_ERROR << "Data found but error occure while loading chunk" << posX << " " << posZ;
+            LOG_ERROR << "Data found but error occure while loading chunk: " << posX << " " << posZ << std::endl;
         }
         // Clear all
         {
             unsigned char* data = biomeData;
-            unsigned char* heightdata = heightMap;
+            unsigned int* heightdata = heightMap;
             for (int i = 0; i < CHUNK_SURFACE; i++)
             {
                 *data = 0;
@@ -170,7 +170,7 @@ void Chunk::Load()
 void Chunk::Save() const
 {
     NBT::TagCompound* tag = saveToNbtData();
-    world->SaveChunkNbtData(posXx16, posZx16, tag);
+    world->SaveChunkNbtData(posX, posZ, tag);
 }
 
 void Chunk::UpdateTick()
@@ -944,10 +944,10 @@ bool Chunk::loadFromNbtData(NBT::TagCompound* nbtData)
 NBT::TagCompound* Chunk::saveToNbtData() const
 {
     using namespace NBT;
-    TagCompound* tagData = new TagCompound("level");
+    TagCompound* tagLevel = new TagCompound("Level");
 
-    tagData->AddByteArray("Biomes", reinterpret_cast<const char*>(biomeData), CHUNK_SURFACE);
-    tagData->AddByteArray("HeightMap", reinterpret_cast<const char*>(heightMap), CHUNK_SURFACE);
+    tagLevel->AddByteArray("Biomes", reinterpret_cast<const char*>(biomeData), CHUNK_SURFACE);
+    tagLevel->AddIntArray("HeightMap", reinterpret_cast<const int*>(heightMap), CHUNK_SURFACE);
 
     // Saving all sub chunk data (16x16x16)
     {
@@ -972,7 +972,7 @@ NBT::TagCompound* Chunk::saveToNbtData() const
             }
         }
 
-        tagData->AddTag(tagSections);
+        tagLevel->AddTag(tagSections);
     }
 
     // Saving tile entities
@@ -991,7 +991,7 @@ NBT::TagCompound* Chunk::saveToNbtData() const
 
         tagTileEntities->AddTag(tagTileEntity);
     }
-    tagData->AddTag(tagTileEntities);
+    tagLevel->AddTag(tagTileEntities);
 
     TagList* tagUpdateBlockList = new TagList("TileEntities", TagType::TAG_COMPOUND);
     for (auto updateBlockItr : toUpdateBlockList)
@@ -1008,9 +1008,11 @@ NBT::TagCompound* Chunk::saveToNbtData() const
 
         tagUpdateBlockList->AddTag(tagUpdateData);
     }
-    tagData->AddTag(tagUpdateBlockList);
+    tagLevel->AddTag(tagUpdateBlockList);
 
-    return tagData;
+    TagCompound* tagLData = new TagCompound();
+    tagLData->AddTag(tagLevel);
+    return tagLData;
 }
 
 } /* namespace World */

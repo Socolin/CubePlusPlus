@@ -120,6 +120,7 @@ void World::Save() const
         return;
     }
 
+    LOG_DEBUG << "Saving: " << chunkMap.size() << " chunks";
     for (auto chunkItr : chunkMap)
     {
         Chunk* chunk = chunkItr.second;

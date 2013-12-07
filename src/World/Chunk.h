@@ -228,7 +228,7 @@ private:
     unsigned short flagSectionExists;
     unsigned short flagSectionUseAdd;
     unsigned char biomeData[CHUNK_SURFACE];
-    unsigned char heightMap[CHUNK_SURFACE];
+    unsigned int heightMap[CHUNK_SURFACE];
     bool inCache;
     std::vector<unsigned int> changedBlock;
     short countChange;

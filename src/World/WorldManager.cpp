@@ -171,6 +171,7 @@ void WorldManager::Stop()
         itrPlr++;
         toKick->Kick(kickReason);
     }
+    world->Save();
 }
 void WorldManager::SendToAllPlayer(const Network::NetworkPacket& packet) const
 {
