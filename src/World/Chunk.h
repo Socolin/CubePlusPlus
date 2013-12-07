@@ -110,7 +110,8 @@ private:
 
     i_lightopacity getBlockLightOpacity(i_small_coord x, i_height y, i_small_coord z);
 
-    bool loadFromFile(NBT::TagCompound* nbtData);
+    bool loadFromNbtData(NBT::TagCompound* nbtData);
+    NBT::TagCompound* saveToNbtData();
 private:
     // 16 x 16 x 16
     typedef struct

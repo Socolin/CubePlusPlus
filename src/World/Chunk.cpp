@@ -59,7 +59,7 @@ void Chunk::Load()
     flagSectionUseAdd = 0;
 
     NBT::TagCompound* nbtData = world->GetChunkNbtData(posX, posZ);
-    if (!loadFromFile(nbtData))
+    if (!loadFromNbtData(nbtData))
     {
         if (nbtData)
         {
@@ -761,7 +761,7 @@ i_height Chunk::getMinHeight() const
     return minHeight;
 }
 
-bool Chunk::loadFromFile(NBT::TagCompound* nbtData)
+bool Chunk::loadFromNbtData(NBT::TagCompound* nbtData)
 {
     if (nbtData)
     {
@@ -933,6 +933,78 @@ bool Chunk::loadFromFile(NBT::TagCompound* nbtData)
         }
     }
     return false;
+}
+
+NBT::TagCompound* Chunk::saveToNbtData()
+{
+    using namespace NBT;
+    TagCompound* tagData = new TagCompound("level");
+
+    tagData->AddByteArray("Biomes", reinterpret_cast<char*>(biomeData), CHUNK_SURFACE);
+    tagData->AddByteArray("HeightMap", reinterpret_cast<char*>(heightMap), CHUNK_SURFACE);
+
+    // Saving all sub chunk data (16x16x16)
+    {
+        TagList* tagSections = new TagList("Sections", TagType::TAG_COMPOUND);
+
+        for (int chunkSectionId = 0; chunkSectionId < CHUNK_DATA_COUNT; chunkSectionId++)
+        {
+            ChunkData* chunkData =  datas[chunkSectionId];
+            if (chunkData != NULL)
+            {
+                TagCompound* sectionData = new TagCompound();
+
+                sectionData->AddByte("Y", chunkSectionId);
+                sectionData->AddByteArray("Data", reinterpret_cast<char*>(chunkData->metadata), CHUNK_BLOCK_NIBBLE_SIZE);
+                sectionData->AddByteArray("SkyLight", reinterpret_cast<char*>(chunkData->skyLight), CHUNK_BLOCK_NIBBLE_SIZE);
+                sectionData->AddByteArray("BlockLight", reinterpret_cast<char*>(chunkData->blocklight), CHUNK_BLOCK_NIBBLE_SIZE);
+                sectionData->AddByteArray("Blocks", reinterpret_cast<char*>(chunkData->blocks), CHUNK_BLOCK_COUNT);
+                if (chunkData->addData)
+                    sectionData->AddByteArray("Add", reinterpret_cast<char*>(chunkData->addData), CHUNK_BLOCK_NIBBLE_SIZE);
+
+                tagSections->AddTag(sectionData);
+            }
+        }
+
+        tagData->AddTag(tagSections);
+    }
+
+    // Saving tile entities
+    TagList* tagTileEntities = new TagList("TileEntities", TagType::TAG_COMPOUND);
+    for(auto tileEntityItr : tileEntities)
+    {
+        const Block::TileEntity* tileEntity = tileEntityItr.second;
+        TagCompound* tagTileEntity = new TagCompound();
+
+        tagTileEntity->AddString("id", tileEntity->GetName());
+        tagTileEntity->AddInt("x", tileEntity->GetBlockX());
+        tagTileEntity->AddInt("y", tileEntity->GetBlockY());
+        tagTileEntity->AddInt("z", tileEntity->GetBlockZ());
+
+        tileEntity->Save(tagTileEntity);
+
+        tagTileEntities->AddTag(tagTileEntity);
+    }
+    tagData->AddTag(tagTileEntities);
+
+    TagList* tagUpdateBlockList = new TagList("TileEntities", TagType::TAG_COMPOUND);
+    for (auto updateBlockItr : toUpdateBlockList)
+    {
+        UpdateBlockData updateData = updateBlockItr;
+
+        TagCompound* tagUpdateData = new TagCompound();
+
+        tagUpdateData->AddInt("x", updateData.coord.coord.x + posXx16);
+        tagUpdateData->AddInt("y", updateData.coord.coord.y + updateData.coord.coord.chunkDataY * 16);
+        tagUpdateData->AddInt("z", updateData.coord.coord.z + posZx16);
+        tagUpdateData->AddInt("i", updateData.blockId);
+        tagUpdateData->AddInt("t", updateData.updateTick - selfTickCounter);
+
+        tagUpdateBlockList->AddTag(tagUpdateData);
+    }
+    tagData->AddTag(tagUpdateBlockList);
+
+    return tagData;
 }
 
 } /* namespace World */
