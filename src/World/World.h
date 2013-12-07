@@ -45,6 +45,7 @@ public:
     virtual ~World();
 
     void UpdateTick();
+    void Save() const;
 
     void AddEntity(Entity* entity);
     void AddPlayer(EntityPlayer* entity);
@@ -141,6 +142,7 @@ public:
     bool isBlockIndirectlyGettingPowered(int x, i_height y, int z);
     i_powerlevel getMaxPowerFromBlockArround(int x, i_height y, int z);
 
+
     Scripting::BlockRedstoneTorchBurnoutMgr* GetRedstoneTorchBurnoutMgr() const;
     const Position& GetSpawnPosition() const;
     Position GetValidSpawnPosition();
@@ -205,6 +207,10 @@ private:
      * @param tagData data to load
      */
     void loadGameMode(NBT::TagCompound* tagData);
+
+    void saveSpawn(NBT::TagCompound* tagData) const;
+    void saveTimeAndWeather(NBT::TagCompound* tagData) const;
+    void saveGameMode(NBT::TagCompound* tagData) const;
 private:
     /// Name of the world
     std::string worldName;

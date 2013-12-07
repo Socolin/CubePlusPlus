@@ -101,6 +101,26 @@ void World::UpdateTick()
     UpdateTime();
 }
 
+void World::Save() const
+{
+    NBT::TagCompound* tagData = new NBT::TagCompound();
+
+    saveSpawn(tagData);
+    saveTimeAndWeather(tagData);
+    saveGameMode(tagData);
+
+    std::stringstream fileName;
+    fileName << worldPath << "/level.dat";
+
+    NBT::File nbtFile = NBT::File(fileName.str(), tagData);
+    if (!nbtFile.Save())
+    {
+        LOG_ERROR << "Error while saving world data: " << nbtFile.GetFilename() << " : "
+                << nbtFile.GetLastErrorMessage() << std::endl;
+        return;
+    }
+}
+
 void World::AddEntity(Entity* entity)
 {
     entity->SetWorld(this, currentEntityId++);
@@ -1387,29 +1407,48 @@ void World::loadTimeAndWeather(NBT::TagCompound* tagData)
 
 }
 
-Position World::GetValidSpawnPosition()
+void World::loadGameMode(NBT::TagCompound* tagData)
 {
-    int spawnPosX = spawnPosition.x;
-    int spawnPosY = spawnPosition.y;
-    int spawnPosZ = spawnPosition.z;
-    spawnPosX += (rand() % 16) - 8;
-    spawnPosZ += (rand() % 16) - 8;
-
-    Chunk* chunk = GetChunk(spawnPosX >> 4, spawnPosZ >> 4);
-    i_block previousBlockId = chunk->getBlockAt(spawnPosX & 0xf, spawnPosY, spawnPosZ & 0xf);
-    Position validPosition(spawnPosX, spawnPosY, spawnPosZ);
-    for (int y = spawnPosY + 1; y < 260; y++)
+    NBT::TagByte* tagHardcore = tagData->GetTagAs<NBT::TagByte>("hardcore");
+    if (tagHardcore)
     {
-        i_block blockId = chunk->getBlockAt(spawnPosX & 0xf, y, spawnPosZ & 0xf);
-        if (blockId == 0 && previousBlockId == 0)
-        {
-            break;
-        }
-        previousBlockId = blockId;
-        validPosition.y++;
+        hardcore = tagHardcore->GetValue() == 1;
     }
-    validPosition.y++;
-    return validPosition;
+
+    NBT::TagLong* tagRandoSeed = tagData->GetTagAs<NBT::TagLong>("RandomSeed");
+    if (tagRandoSeed)
+    {
+        seed = tagRandoSeed->GetValue();
+    }
+
+    NBT::TagInt* tagGameType = tagData->GetTagAs<NBT::TagInt>("GameType");
+    if (tagGameType)
+    {
+        gameType = tagGameType->GetValue();
+    }
+}
+
+void World::saveSpawn(NBT::TagCompound* tagData) const
+{
+    tagData->AddInt("SpawnX", std::floor(spawnPosition.x));
+    tagData->AddInt("SpawnY", std::floor(spawnPosition.y));
+    tagData->AddInt("SpawnZ", std::floor(spawnPosition.z));
+}
+
+void World::saveTimeAndWeather(NBT::TagCompound* tagData) const
+{
+    tagData->AddLong("Time", ageOfWorld);
+    tagData->AddInt("rainTime", rainTime);
+    tagData->AddByte("raining", raining ? 1 : 0);
+    tagData->AddInt("thunderTime", thunderTime);
+    tagData->AddByte("thundering", thundering ? 1 : 0);
+}
+
+void World::saveGameMode(NBT::TagCompound* tagData) const
+{
+    tagData->AddByte("hardcore", hardcore ? 1 : 0);
+    tagData->AddLong("RandomSeed", seed);
+    tagData->AddInt("GameType", gameType);
 }
 
 NBT::TagCompound* World::LoadNbtDatasForPlayer(const std::string& playerName)
@@ -1438,6 +1477,31 @@ NBT::TagCompound* World::LoadNbtDatasForPlayer(const std::string& playerName)
     return rootAsCompound;
 }
 
+Position World::GetValidSpawnPosition()
+{
+    int spawnPosX = spawnPosition.x;
+    int spawnPosY = spawnPosition.y;
+    int spawnPosZ = spawnPosition.z;
+    spawnPosX += (rand() % 16) - 8;
+    spawnPosZ += (rand() % 16) - 8;
+
+    Chunk* chunk = GetChunk(spawnPosX >> 4, spawnPosZ >> 4);
+    i_block previousBlockId = chunk->getBlockAt(spawnPosX & 0xf, spawnPosY, spawnPosZ & 0xf);
+    Position validPosition(spawnPosX, spawnPosY, spawnPosZ);
+    for (int y = spawnPosY + 1; y < 260; y++)
+    {
+        i_block blockId = chunk->getBlockAt(spawnPosX & 0xf, y, spawnPosZ & 0xf);
+        if (blockId == 0 && previousBlockId == 0)
+        {
+            break;
+        }
+        previousBlockId = blockId;
+        validPosition.y++;
+    }
+    validPosition.y++;
+    return validPosition;
+}
+
 void World::SaveNbtDatasForPlayer(const std::string& playerName, NBT::TagCompound* tagData)
 {
     std::stringstream fileName;
@@ -1449,27 +1513,6 @@ void World::SaveNbtDatasForPlayer(const std::string& playerName, NBT::TagCompoun
         LOG_ERROR << "Can't save player data: " << playerName
                 << " due to error:" << file.GetLastErrorMessage()
                 << " when writing: "  << file.GetFilename() << std::endl;
-    }
-}
-
-void World::loadGameMode(NBT::TagCompound* tagData)
-{
-    NBT::TagByte* tagHardcore = tagData->GetTagAs<NBT::TagByte>("hardcore");
-    if (tagHardcore)
-    {
-        hardcore = tagHardcore->GetValue() == 1;
-    }
-
-    NBT::TagLong* tagRandoSeed = tagData->GetTagAs<NBT::TagLong>("RandomSeed");
-    if (tagRandoSeed)
-    {
-        seed = tagRandoSeed->GetValue();
-    }
-
-    NBT::TagInt* tagGameType = tagData->GetTagAs<NBT::TagInt>("GameType");
-    if (tagGameType)
-    {
-        gameType = tagGameType->GetValue();
     }
 }
 
