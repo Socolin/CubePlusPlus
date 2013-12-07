@@ -46,9 +46,9 @@ void TileEntityNote::Load(NBT::TagCompound* nbtData)
     }
 }
 
-void TileEntityNote::Save(NBT::TagCompound* /*nbtData*/) const
+void TileEntityNote::Save(NBT::TagCompound* nbtData) const
 {
-    /*FIXME*/
+    nbtData->AddByte("note", noteLevel);
 }
 
 const char* TileEntityNote::GetName() const

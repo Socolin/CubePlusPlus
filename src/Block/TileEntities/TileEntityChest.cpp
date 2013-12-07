@@ -121,9 +121,11 @@ void TileEntityChest::Load(NBT::TagCompound* nbtData)
     }
 }
 
-void TileEntityChest::Save(NBT::TagCompound* /*nbtData*/) const
+void TileEntityChest::Save(NBT::TagCompound* nbtData) const
 {
-    /*FIXME*/
+    NBT::TagList* tagItemList = new NBT::TagList("Items", NBT::TagType::TAG_COMPOUND);
+    inventory->Save(tagItemList);
+    nbtData->AddTag(tagItemList);
 }
 
 const char* TileEntityChest::GetName() const

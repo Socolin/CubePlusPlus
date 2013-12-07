@@ -993,7 +993,7 @@ NBT::TagCompound* Chunk::saveToNbtData() const
     }
     tagLevel->AddTag(tagTileEntities);
 
-    TagList* tagUpdateBlockList = new TagList("TileEntities", TagType::TAG_COMPOUND);
+    TagList* tagUpdateBlockList = new TagList("TileTicks", TagType::TAG_COMPOUND);
     for (auto updateBlockItr : toUpdateBlockList)
     {
         UpdateBlockData updateData = updateBlockItr;

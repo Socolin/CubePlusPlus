@@ -76,8 +76,17 @@ void TileEntitySign::Load(NBT::TagCompound* nbtData)
         Util::StringToWString(lines[3], tagText4->GetValue());
     }}
 
-void TileEntitySign::Save(NBT::TagCompound* /*nbtData*/) const
+void TileEntitySign::Save(NBT::TagCompound* nbtData) const
 {
+    std::string line;
+    Util::WStringToString(lines[0], line);
+    nbtData->AddString("Text1", line);
+    Util::WStringToString(lines[1], line);
+    nbtData->AddString("Text2", line);
+    Util::WStringToString(lines[2], line);
+    nbtData->AddString("Text3", line);
+    Util::WStringToString(lines[3], line);
+    nbtData->AddString("Text4", line);
 }
 
 const char* TileEntitySign::GetName() const

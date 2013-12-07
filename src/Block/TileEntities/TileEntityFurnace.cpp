@@ -163,9 +163,14 @@ void TileEntityFurnace::Load(NBT::TagCompound* nbtData)
     }
 }
 
-void TileEntityFurnace::Save(NBT::TagCompound* /*nbtData*/) const
+void TileEntityFurnace::Save(NBT::TagCompound* nbtData) const
 {
-    /*FIXME*/
+    NBT::TagList* tagItemList = new NBT::TagList("Items", NBT::TagType::TAG_COMPOUND);
+    inventory->Save(tagItemList);
+    nbtData->AddTag(tagItemList);
+
+    nbtData->AddShort("BurnTime", fuel);
+    nbtData->AddShort("CookTime", progress);
 }
 
 const char* TileEntityFurnace::GetName() const
