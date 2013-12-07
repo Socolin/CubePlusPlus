@@ -167,6 +167,12 @@ void Chunk::Load()
     delete nbtData;
 }
 
+void Chunk::Save() const
+{
+    NBT::TagCompound* tag = saveToNbtData();
+    world->SaveChunkNbtData(posXx16, posZx16, tag);
+}
+
 void Chunk::UpdateTick()
 {
     if (playerList.empty())
@@ -935,13 +941,13 @@ bool Chunk::loadFromNbtData(NBT::TagCompound* nbtData)
     return false;
 }
 
-NBT::TagCompound* Chunk::saveToNbtData()
+NBT::TagCompound* Chunk::saveToNbtData() const
 {
     using namespace NBT;
     TagCompound* tagData = new TagCompound("level");
 
-    tagData->AddByteArray("Biomes", reinterpret_cast<char*>(biomeData), CHUNK_SURFACE);
-    tagData->AddByteArray("HeightMap", reinterpret_cast<char*>(heightMap), CHUNK_SURFACE);
+    tagData->AddByteArray("Biomes", reinterpret_cast<const char*>(biomeData), CHUNK_SURFACE);
+    tagData->AddByteArray("HeightMap", reinterpret_cast<const char*>(heightMap), CHUNK_SURFACE);
 
     // Saving all sub chunk data (16x16x16)
     {

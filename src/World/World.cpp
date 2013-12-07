@@ -119,6 +119,12 @@ void World::Save() const
                 << nbtFile.GetLastErrorMessage() << std::endl;
         return;
     }
+
+    for (auto chunkItr : chunkMap)
+    {
+        Chunk* chunk = chunkItr.second;
+        chunk->Save();
+    }
 }
 
 void World::AddEntity(Entity* entity)

@@ -47,6 +47,8 @@ public:
 
     // Load chunk from file
     void Load();
+    // Save chunk to file
+    void Save() const;
     // Unload the chunk, save and free data
     void Unload();
 
@@ -111,7 +113,7 @@ private:
     i_lightopacity getBlockLightOpacity(i_small_coord x, i_height y, i_small_coord z);
 
     bool loadFromNbtData(NBT::TagCompound* nbtData);
-    NBT::TagCompound* saveToNbtData();
+    NBT::TagCompound* saveToNbtData() const;
 private:
     // 16 x 16 x 16
     typedef struct
