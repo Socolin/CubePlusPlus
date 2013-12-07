@@ -27,8 +27,8 @@ public:
 
     virtual TileEntity* Create(World::World* world, int blockX, i_height blockY, int blockZ) override;
     virtual void Load(NBT::TagCompound* nbtData) override;
-    virtual void Save(NBT::TagCompound* nbtData) override;
-    virtual const char* GetName() override;
+    virtual void Save(NBT::TagCompound* nbtData) const override;
+    virtual const char* GetName() const override;
 private:
     int countUser;
 

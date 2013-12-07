@@ -42,12 +42,12 @@ void TileEntityRecordPlayer::Load(NBT::TagCompound* /*nbtData*/)
     /*FIXME*/
 }
 
-void TileEntityRecordPlayer::Save(NBT::TagCompound* /*nbtData*/)
+void TileEntityRecordPlayer::Save(NBT::TagCompound* /*nbtData*/) const
 {
     /*FIXME*/
 }
 
-const char* TileEntityRecordPlayer::GetName()
+const char* TileEntityRecordPlayer::GetName() const
 {
     return "RecordPlayer";
 }

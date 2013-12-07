@@ -46,12 +46,12 @@ void TileEntityNote::Load(NBT::TagCompound* nbtData)
     }
 }
 
-void TileEntityNote::Save(NBT::TagCompound* /*nbtData*/)
+void TileEntityNote::Save(NBT::TagCompound* /*nbtData*/) const
 {
     /*FIXME*/
 }
 
-const char* TileEntityNote::GetName()
+const char* TileEntityNote::GetName() const
 {
     return "Music";
 }

@@ -49,9 +49,13 @@ public:
 
     virtual TileEntity* Create(World::World* world, int blockX, i_height blockY, int blockZ) = 0;
     virtual void Load(NBT::TagCompound* nbtData) = 0;
-    virtual void Save(NBT::TagCompound* nbtData) = 0;
+    virtual void Save(NBT::TagCompound* nbtData) const = 0;
 
-    virtual const char* GetName() = 0;
+    virtual const char* GetName() const = 0;
+    int GetBlockX() const;
+    i_height GetBlockY() const;
+    int GetBlockZ() const;
+
     // Add tickFrequence ?
 protected:
     eTileEntityType type;

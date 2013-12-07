@@ -121,12 +121,12 @@ void TileEntityChest::Load(NBT::TagCompound* nbtData)
     }
 }
 
-void TileEntityChest::Save(NBT::TagCompound* /*nbtData*/)
+void TileEntityChest::Save(NBT::TagCompound* /*nbtData*/) const
 {
     /*FIXME*/
 }
 
-const char* TileEntityChest::GetName()
+const char* TileEntityChest::GetName() const
 {
     return "Chest";
 }

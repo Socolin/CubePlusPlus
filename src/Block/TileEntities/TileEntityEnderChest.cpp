@@ -70,11 +70,11 @@ void TileEntityEnderChest::Load(NBT::TagCompound* /*nbtData*/)
 {
 }
 
-void TileEntityEnderChest::Save(NBT::TagCompound* /*nbtData*/)
+void TileEntityEnderChest::Save(NBT::TagCompound* /*nbtData*/) const
 {
 }
 
-const char* TileEntityEnderChest::GetName()
+const char* TileEntityEnderChest::GetName() const
 {
     return "EnderChest";
 }

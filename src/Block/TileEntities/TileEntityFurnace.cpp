@@ -163,12 +163,12 @@ void TileEntityFurnace::Load(NBT::TagCompound* nbtData)
     }
 }
 
-void TileEntityFurnace::Save(NBT::TagCompound* /*nbtData*/)
+void TileEntityFurnace::Save(NBT::TagCompound* /*nbtData*/) const
 {
     /*FIXME*/
 }
 
-const char* TileEntityFurnace::GetName()
+const char* TileEntityFurnace::GetName() const
 {
     return "Furnace";
 }

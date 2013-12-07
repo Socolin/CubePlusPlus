@@ -76,11 +76,11 @@ void TileEntitySign::Load(NBT::TagCompound* nbtData)
         Util::StringToWString(lines[3], tagText4->GetValue());
     }}
 
-void TileEntitySign::Save(NBT::TagCompound* /*nbtData*/)
+void TileEntitySign::Save(NBT::TagCompound* /*nbtData*/) const
 {
 }
 
-const char* TileEntitySign::GetName()
+const char* TileEntitySign::GetName() const
 {
     return "Sign";
 }

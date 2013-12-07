@@ -26,4 +26,20 @@ eTileEntityType TileEntity::getType() const
     return type;
 }
 
+int TileEntity::GetBlockX() const
+{
+    return blockX;
+}
+
+i_height TileEntity::GetBlockY() const
+{
+    return blockY;
+}
+
+int TileEntity::GetBlockZ() const
+{
+    return blockZ;
+}
+
 } /* namespace Block */
+
