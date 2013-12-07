@@ -169,6 +169,15 @@ void WorldManager::Stop()
     {
         EntityPlayer* toKick = *itrPlr;
         itrPlr++;
+        NBT::TagCompound* playerData = new NBT::TagCompound();
+        if (toKick->Save(playerData))
+        {
+            std::string name;
+            Util::WStringToString(toKick->GetUsername(), name);
+            world->SaveNbtDatasForPlayer(name, playerData);
+        }
+        else
+            delete playerData;
         toKick->Kick(kickReason);
     }
     world->Save();
