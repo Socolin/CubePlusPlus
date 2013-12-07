@@ -71,7 +71,7 @@ void Window::OpenWindow(bool sendOpenPacket)
     if (sendOpenPacket)
     {
         Network::NetworkPacket openWindowPacket(Network::OP_OPEN_WINDOW);
-        openWindowPacket << id << windowData->GetClientWindowId() << windowData->getName() << char(maxSlot) << true;
+        openWindowPacket << id << windowData->GetClientWindowId() << windowData->getName() << windowData->getNetworkMaxSlot() << true;
         player->Send(openWindowPacket);
     }
 
