@@ -67,6 +67,7 @@ enum eDatabaseField
     mobilityFlag,
     solid,
     liquid,
+    blocksMovement,
 };
 }
 namespace TableCraft

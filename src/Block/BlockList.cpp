@@ -294,6 +294,7 @@ void BlockList::LoadMaterials()
         int mobilityFlag = result->getInt(TableBlockMaterial::mobilityFlag);
         bool solid = result->getBoolean(TableBlockMaterial::solid);
         bool liquid = result->getBoolean(TableBlockMaterial::liquid);
+        bool blocksMovement = result->getBoolean(TableBlockMaterial::blocksMovement);
 
         LOG_DEBUG
                 << materialId << "\t"
@@ -307,7 +308,7 @@ void BlockList::LoadMaterials()
                 << name << "\t"
                 << std::endl;
 
-        materialList[materialId] = BlockMaterial(materialId, canBurn, replacable, translucent, requiresNoTool, mobilityFlag, true, false);//TODO; load in db true and flase
+        materialList[materialId] = BlockMaterial(materialId, canBurn, replacable, translucent, requiresNoTool, mobilityFlag, solid, liquid, blocksMovement);//TODO; load in db true and flase
     }
 
     delete result;
