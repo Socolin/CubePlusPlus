@@ -139,7 +139,7 @@ INSERT INTO `block` (`blockId`, `name`, `lightOpacity`, `lightValue`, `blockResi
 (103, 'tile.melon', 255, 0, 5, 1, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 25, 0, 4, 0, 0, 0, 103, 0, 1, 1),
 (104, 'tile.pumpkinStem', 0, 0, 0, 0, 1, 0.6, 1, 0, 0, 0.375, 0, 0.375, 0.625, 0.25, 0.625, 5, 0, 4, 0, 1, 0, 104, 0, 1, 1),
 (105, 'tile.pumpkinStem', 0, 0, 0, 0, 1, 0.6, 1, 0, 0, 0.375, 0, 0.375, 0.625, 0.25, 0.625, 5, 0, 4, 0, 1, 0, 105, 0, 1, 1),
-(106, 'tile.vine', 0, 0, 1, 0.2, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 16, 0, 2, 0, 1, 0, 106, 0, 1, 1),
+(106, 'tile.vine', 0, 0, 1, 0.2, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 16, 47, 2, 0, 1, 0, 106, 0, 1, 1),
 (107, 'tile.fenceGate', 0, 0, 15, 2, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 4, 0, 4, 300, 1, 0, 107, 0, 1, 1),
 (108, 'tile.stairsBrick', 255, 0, 30, 2, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 1, 0, 1, 0, 108, 0, 1, 1),
 (109, 'tile.stairsStoneBrickSmooth', 255, 0, 30, 1.5, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 1, 0, 1, 0, 109, 0, 1, 1),
@@ -1721,40 +1721,41 @@ CREATE TABLE IF NOT EXISTS `material` (
   `mobilityFlag` int(10) NOT NULL,
   `solid` tinyint(1) NOT NULL DEFAULT '1',
   `liquid` tinyint(1) NOT NULL DEFAULT '0',
+  `blocksMovement` tinyint(1) NOT NULL DEFAULT '1',
   PRIMARY KEY (`materialId`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin;
 
-INSERT INTO `material` (`materialId`, `name`, `canBurn`, `replacable`, `translucent`, `requiresNoTool`, `mobilityFlag`, `solid`, `liquid`) VALUES
-(1, 'rock', 0, 0, 0, 0, 0, 1, 0),
-(2, 'grass', 0, 0, 0, 1, 0, 1, 0),
-(3, 'ground', 0, 0, 0, 1, 0, 1, 0),
-(4, 'wood', 1, 0, 0, 1, 0, 1, 0),
-(5, 'plants', 0, 0, 1, 1, 1, 0, 0),
-(6, 'water', 0, 1, 1, 1, 1, 0, 1),
-(7, 'lava', 0, 1, 1, 1, 1, 0, 1),
-(8, 'sand', 0, 0, 0, 1, 0, 1, 0),
-(9, 'leaves', 1, 0, 1, 1, 1, 1, 0),
-(10, 'sponge', 0, 0, 0, 1, 0, 1, 0),
-(11, 'glass', 0, 0, 1, 1, 0, 1, 0),
-(12, 'cloth', 1, 0, 0, 1, 0, 1, 0),
-(13, 'circuits', 0, 0, 1, 1, 1, 0, 0),
-(14, 'piston', 0, 0, 0, 1, 2, 1, 0),
-(15, 'web', 0, 0, 1, 0, 1, 1, 0),
-(16, 'vine', 1, 1, 1, 1, 1, 0, 0),
-(17, 'iron', 0, 0, 0, 0, 0, 1, 0),
-(18, 'tnt', 1, 0, 1, 1, 0, 1, 0),
-(19, 'fire', 0, 1, 1, 1, 1, 0, 0),
-(20, 'snow', 0, 1, 1, 0, 1, 0, 0),
-(21, 'ice', 0, 0, 1, 1, 0, 1, 0),
-(22, 'craftedSnow', 0, 0, 0, 0, 0, 1, 0),
-(23, 'cactus', 0, 0, 1, 1, 1, 1, 0),
-(24, 'clay', 0, 0, 0, 1, 0, 1, 0),
-(25, 'pumpkin', 0, 0, 0, 1, 1, 1, 0),
-(26, 'portal', 0, 0, 1, 1, 2, 0, 0),
-(27, 'cake', 0, 0, 0, 1, 1, 1, 0),
-(28, 'dragonEgg', 0, 0, 0, 1, 1, 1, 0),
-(29, 'redstoneLight', 0, 0, 0, 1, 0, 1, 0),
-(30, 'anvil', 0, 0, 0, 0, 2, 1, 0);
+INSERT INTO `material` (`materialId`, `name`, `canBurn`, `replacable`, `translucent`, `requiresNoTool`, `mobilityFlag`, `solid`, `liquid`, `blocksMovement`) VALUES
+(1, 'rock', 0, 0, 0, 0, 0, 1, 0, 1),
+(2, 'grass', 0, 0, 0, 1, 0, 1, 0, 1),
+(3, 'ground', 0, 0, 0, 1, 0, 1, 0, 1),
+(4, 'wood', 1, 0, 0, 1, 0, 1, 0, 1),
+(5, 'plants', 0, 0, 1, 1, 1, 0, 0, 0),
+(6, 'water', 0, 1, 1, 1, 1, 0, 1, 0),
+(7, 'lava', 0, 1, 1, 1, 1, 0, 1, 0),
+(8, 'sand', 0, 0, 0, 1, 0, 1, 0, 1),
+(9, 'leaves', 1, 0, 1, 1, 1, 1, 0, 1),
+(10, 'sponge', 0, 0, 0, 1, 0, 1, 0, 1),
+(11, 'glass', 0, 0, 1, 1, 0, 1, 0, 1),
+(12, 'cloth', 1, 0, 0, 1, 0, 1, 0, 1),
+(13, 'circuits', 0, 0, 1, 1, 1, 0, 0, 0),
+(14, 'piston', 0, 0, 0, 1, 2, 1, 0, 1),
+(15, 'web', 0, 0, 1, 0, 1, 1, 0, 0),
+(16, 'vine', 1, 1, 1, 1, 1, 0, 0, 0),
+(17, 'iron', 0, 0, 0, 0, 0, 1, 0, 1),
+(18, 'tnt', 1, 0, 1, 1, 0, 1, 0, 1),
+(19, 'fire', 0, 1, 1, 1, 1, 0, 0, 0),
+(20, 'snow', 0, 1, 1, 0, 1, 0, 0, 0),
+(21, 'ice', 0, 0, 1, 1, 0, 1, 0, 1),
+(22, 'craftedSnow', 0, 0, 0, 0, 0, 1, 0, 1),
+(23, 'cactus', 0, 0, 1, 1, 1, 1, 0, 1),
+(24, 'clay', 0, 0, 0, 1, 0, 1, 0, 1),
+(25, 'pumpkin', 0, 0, 0, 1, 1, 1, 0, 1),
+(26, 'portal', 0, 0, 1, 1, 2, 0, 0, 0),
+(27, 'cake', 0, 0, 0, 1, 1, 1, 0, 1),
+(28, 'dragonEgg', 0, 0, 0, 1, 1, 1, 0, 1),
+(29, 'redstoneLight', 0, 0, 0, 1, 0, 1, 0, 1),
+(30, 'anvil', 0, 0, 0, 0, 2, 1, 0, 1);
 
 CREATE TABLE IF NOT EXISTS `message` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -1828,7 +1829,7 @@ CREATE TABLE IF NOT EXISTS `script` (
   `paramCount` int(11) NOT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `scriptName` (`scriptName`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=47 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=48 ;
 
 INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (2, 'block_stair', 0),
@@ -1873,7 +1874,8 @@ INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (43, 'craft_shaped', 0),
 (44, 'craft_shapeless', 0),
 (45, 'window_main', 0),
-(46, 'item_tool', 2);
+(46, 'item_tool', 2),
+(47, 'block_vine', 0);
 
 CREATE TABLE IF NOT EXISTS `script_data` (
   `scriptId` int(11) NOT NULL,

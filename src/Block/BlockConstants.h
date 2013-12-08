@@ -60,6 +60,15 @@ const int zOffsetsForSidesXZ[4] = {0, 0, -1, 1};
             int VarName##X = BlocX + xOffsetsForSidesXZ[side];      \
             int VarName##Z = BlocZ + zOffsetsForSidesXZ[side];      \
 
+const int xOffsetsForSidesZXZX[4] = {0, -1, 0, 1};
+const int zOffsetsForSidesZXZX[4] = {1, 0, -1, 0};
+
+#define FOR_EACH_SIDE_ZXZX(BlocX, BlocZ, VarName)                   \
+        for (int side = 0; side < 4; side++)                        \
+        {                                                           \
+            int VarName##X = BlocX + xOffsetsForSidesZXZX[side];    \
+            int VarName##Z = BlocZ + zOffsetsForSidesZXZX[side];    \
+
 #define END_FOR_EACH_SIDE }
 
 #define BLOCK_COUNT 256

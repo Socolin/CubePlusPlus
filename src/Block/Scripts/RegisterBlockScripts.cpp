@@ -22,6 +22,7 @@
 #include "Basics/BlockSignWallScript.h"
 #include "Basics/BlockStairScript.h"
 #include "Basics/BlockTorchScript.h"
+#include "Basics/BlockVineScript.h"
 #include "Basics/BlockWoodScript.h"
 
 namespace Scripting
@@ -50,6 +51,7 @@ void RegisterBlockScript()
     new BlockSignWallScript();
     new BlockStairScript();
     new BlockTorchScript();
+    new BlockVineScript();
     new BlockWoodScript();
 }
 
