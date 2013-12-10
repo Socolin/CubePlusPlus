@@ -108,13 +108,10 @@ inline s_block_data World::GetBlockIdAndData(int x, i_height y, int z) const
 bool World::IsFullBlock(int x, i_height y, int z)
 {
     i_block blockId = GetBlockId(x, y, z);
-    if (blockId < BLOCK_COUNT)
+    const Block::Block* block = Block::BlockList::getBlock(blockId);
+    if (block)
     {
-        const Block::Block* block = Block::BlockList::getBlock(blockId);
-        if (block)
-        {
-            return block->IsFullBlock();
-        }
+        return block->IsFullBlock();
     }
     return false;
 }

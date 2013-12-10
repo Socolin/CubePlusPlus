@@ -97,9 +97,11 @@ public:
     void Respawn(double x, double y, double z);
 
     /**
-     * Called when player join a world, it send all initialization packets
+     * Called when an entity had join the world, after all operation to add entity in world are finish.
+     * It send all initialization packets, spawn position, gamemode, life, world time...
+     * @param world world joined by the entity
      */
-    void OnJoinWorld(World* world);
+    virtual void OnJoinWorld(World* world) override;
 
     /**
      * Called each world's tick to update entity

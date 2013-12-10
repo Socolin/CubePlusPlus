@@ -1,6 +1,7 @@
 #include "EntityPlayer.h"
 
 #include <algorithm>
+#include <cmath>
 
 #include <NBTField/NBTField.h>
 
@@ -144,12 +145,15 @@ void EntityPlayer::Respawn(double x, double y, double z)
 
 void EntityPlayer::OnJoinWorld(World* world)
 {
-    // TODO: get it from world
-
+    // Send spawn position to player
+    const Position& spawnPosition = world->GetSpawnPosition();
     Network::NetworkPacket packetSpawnPosition(Network::OP_SPAWN_POSITION);
-    packetSpawnPosition << (int)x << (int)y << (int)z;
+    packetSpawnPosition << static_cast<int>(floor(spawnPosition.x))
+            << static_cast<int>(floor(spawnPosition.y))
+            << static_cast<int>(floor(spawnPosition.z));
     session->SendPacket(packetSpawnPosition);
 
+    // Gamemode
     if (isAdmin())
     {
         session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED, DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
@@ -159,8 +163,10 @@ void EntityPlayer::OnJoinWorld(World* world)
     else
         session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED, DAMAGE_DISABLE);
 
+    // Send world time
     session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
 
+    // Send some chunk before spawning player to avoid that he fall under the map
     for (unsigned int i = 0; i < Config::Config::GetChunkSentPerTick(); i++)
     {
         if (!chunkToSend.empty())
@@ -175,14 +181,20 @@ void EntityPlayer::OnJoinWorld(World* world)
         }
     }
 
+    // Place player in world
     session->SendSetPositionAndLook(x, y + 1.62, y, z, 0.f, 0.f, false);
 
-    session->SendUpdateHealth(20, 20, 5.f);
+    // Update player health
+    // TODO: food
+    session->SendUpdateHealth(health, 20, 5.f);
 
+    // Send experience and level to player, // TODO
     session->SendSetExperience(0, 0.f, 0);
 
+    // Send inventory to player
     inventoryWindow->OpenWindow(false);
 
+    // Initialize all module associated to player (plugins)
     for (auto moduleItr : moduleList)
     {
         moduleItr.second->OnPlayerJoinWorld(this);

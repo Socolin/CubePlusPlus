@@ -49,7 +49,7 @@ ItemUseResult ItemBlockScript::OnUseOnBlock(World::EntityPlayer* user, int x, i_
             return ItemUseResult{false, false, 0};
     }
 
-    if (world->isReadOnly())
+    if (world->IsReadOnly())
     {
         user->ResetBlock(x, y, z);
         return ItemUseResult{false, false, 0};

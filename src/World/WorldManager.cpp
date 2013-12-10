@@ -108,17 +108,8 @@ void WorldManager::RemovePlayer(EntityPlayer* player)
 {
     if (playerList.find(player) != playerList.end())
     {
-        NBT::TagCompound* playerData = new NBT::TagCompound();
-        if (player->Save(playerData))
-        {
-            std::string name;
-            Util::WStringToString(player->GetUsername(), name);
-            world->SaveNbtDatasForPlayer(name, playerData);
-        }
-        else
-            delete playerData;
         playerCount--;
-        world->RemovePlayer(player);
+        world->MarkPlayerForRemove(player);
         playerList.erase(player);
         playerByNameList.erase(player->GetUsername());
     }
@@ -147,7 +138,6 @@ World* WorldManager::GetWorld() const
 
 WorldManager::~WorldManager()
 {
-    world->Unload();
     delete world;
     world = nullptr;
 }
@@ -169,15 +159,6 @@ void WorldManager::Stop()
     {
         EntityPlayer* toKick = *itrPlr;
         itrPlr++;
-        NBT::TagCompound* playerData = new NBT::TagCompound();
-        if (toKick->Save(playerData))
-        {
-            std::string name;
-            Util::WStringToString(toKick->GetUsername(), name);
-            world->SaveNbtDatasForPlayer(name, playerData);
-        }
-        else
-            delete playerData;
         toKick->Kick(kickReason);
     }
     world->Save();

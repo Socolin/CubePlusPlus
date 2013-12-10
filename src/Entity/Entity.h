@@ -57,6 +57,12 @@ public:
     void SetWorld(World* world, int entityId);
 
     /**
+     * Called when an entity had join the world, after all operation to add entity in world are finish.
+     * @param world world joined by the entity
+     */
+    virtual void OnJoinWorld(World* world);
+
+    /**
      * Rotate entity, and mark here to send update rotation to player around it
      * @param yaw the yaw rotation (around axes y)
      * @param pitch the pitch rotation ("up/down" rotation for head)

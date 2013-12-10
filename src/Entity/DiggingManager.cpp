@@ -41,7 +41,7 @@ void DiggingManager::Update()
 void DiggingManager::StartDigging(int x, i_height y, int z)
 {
     playerFinishDigging = false;
-    if (player->GetWorld()->isReadOnly())
+    if (player->GetWorld()->IsReadOnly())
     {
         player->ResetBlock(x, y, z);
     }
@@ -87,7 +87,7 @@ void DiggingManager::StartDigging(int x, i_height y, int z)
 
 void DiggingManager::EndDigging()
 {
-    if (player->GetWorld()->isReadOnly() || player->GetGameMode() == EntityPlayer::GAMEMODE_ADVENTURE)
+    if (player->GetWorld()->IsReadOnly() || player->GetGameMode() == EntityPlayer::GAMEMODE_ADVENTURE)
     {
         player->ResetBlock(x, y, z);
     }

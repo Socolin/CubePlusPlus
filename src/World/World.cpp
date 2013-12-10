@@ -31,17 +31,17 @@ World::World(const std::string& worldName)
     , worldPath(worldName + "/")
     , updateInProgress(false)
     , currentEntityId(10)
-    , sunReduceValue(0)
     , ageOfWorld(0)
     , currentTime(0)
     , rainTime(0)
     , raining(false)
     , thunderTime(false)
     , thundering(false)
+    , weatherActivated(false)
     , hardcore(false)
     , seed(0)
     , gameType(0)
-    , weatherActivated(false)
+    , sunReduceValue(0)
 {
     redstoneTorchBurnoutMgr = new Scripting::BlockRedstoneTorchBurnoutMgr();
     Config::Config::GetConfig().lookupValue("server.world.read-only", readOnly);
@@ -62,6 +62,21 @@ World::World(const std::string& worldName)
 
 World::~World()
 {
+    for (std::pair<long long, Chunk*> chunk : chunkMap)
+    {
+        chunk.second->Unload();
+        delete chunk.second;
+    }
+    for (std::pair<long long, VirtualChunk*> chunk : virtualChunkMap)
+    {
+        chunk.second->Unload();
+        delete chunk.second;
+    }
+    for (std::pair<long long, VirtualSmallChunk*> chunk : virtualSmallChunkMap)
+    {
+        delete chunk.second;
+    }
+
     delete redstoneTorchBurnoutMgr;
 
     for (auto playerItr : playerList)
@@ -73,7 +88,6 @@ World::~World()
         delete entityToDelete[i];
     }
 }
-
 
 // Called each tick
 void World::UpdateTick()
@@ -98,11 +112,16 @@ void World::UpdateTick()
 
     redstoneTorchBurnoutMgr->UpdateTick();
     updateInProgress = false;
-    UpdateTime();
+    updateTime();
+
+    updateEntities();
 }
 
 void World::Save() const
 {
+    if (IsReadOnly())
+        return;
+
     NBT::TagCompound* tagData = new NBT::TagCompound();
 
     saveSpawn(tagData);
@@ -120,6 +139,19 @@ void World::Save() const
         return;
     }
 
+    for (EntityPlayer* player : playerList)
+    {
+        NBT::TagCompound* playerData = new NBT::TagCompound();
+        if (player->Save(playerData))
+        {
+            std::string name;
+            Util::WStringToString(player->GetUsername(), name);
+            SaveNbtDatasForPlayer(name, playerData);
+        }
+        else
+            delete playerData;
+    }
+
     LOG_DEBUG << "Saving: " << chunkMap.size() << " chunks";
     for (auto chunkItr : chunkMap)
     {
@@ -131,11 +163,20 @@ void World::Save() const
 void World::AddEntity(Entity* entity)
 {
     entity->SetWorld(this, currentEntityId++);
+
+    // Add entity to virtual chunk, so all player in sight range will be notified that new entity spawn
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 7, ((int) entity->z) >> 7);
     virtualChunk->AddEntity(entity);
+
+    // Add entity to chunk to be find
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
     vChunk->AddEntity(entity);
+
+    // Add entity to be find by id search
     entityById[entity->GetEntityId()] = entity;
+
+    // Notify entity that it join world
+    entity->OnJoinWorld(this);
 }
 
 void World::AddPlayer(EntityPlayer* player)
@@ -145,9 +186,12 @@ void World::AddPlayer(EntityPlayer* player)
     int chunkX = ((int) player->x) >> 4;
     int chunkZ = ((int) player->z) >> 4;
 
+    // Add player to a virtual small chunk, that are used to find entity in world, in specific area.
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(chunkX, chunkZ);
     vChunk->AddPlayer(player);
 
+    // Add player in chunk, so he will be notified of all change that would happen
+    // on them.
     int maxChunkX = chunkX + viewDistance;
     int maxChunkZ = chunkZ + viewDistance;
 
@@ -159,29 +203,47 @@ void World::AddPlayer(EntityPlayer* player)
             player->AddChunkToSend(x, z);
         }
 
+    // Add player to virtual chunk, then he will receive other entity data,
+    // and other player will receive that the player appear
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->AddPlayer(player);
-    player->OnJoinWorld(this);
+
+    // Register player in world to be find by id
     entityById[player->GetEntityId()] = player;
+
+    // Notify player that he join world
+    player->OnJoinWorld(this);
 }
 
-void World::RemoveEntity(Entity* entity)
+void World::removeEntity(Entity* entity, bool deleteEntity)
 {
+    // Remove entity and notify player that can see it
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) entity->x) >> 7, ((int) entity->z) >> 7);
     virtualChunk->RemoveEntity(entity);
+
     VirtualSmallChunk *vChunk = GetVirtualSmallChunk(((int) entity->x) >> 4, ((int) entity->z) >> 4);
     vChunk->RemoveEntity(entity);
+
     entityById[entity->GetEntityId()] = nullptr;
+
     entity->SetWorld(nullptr, 0);
+
+    if (deleteEntity)
+        delete entity;
 }
 
-void World::RemovePlayer(EntityPlayer* player)
+void World::removePlayer(EntityPlayer* player)
 {
-    if (updateInProgress)
+    NBT::TagCompound* playerData = new NBT::TagCompound();
+    if (player->Save(playerData))
     {
-        MarkPlayerForRemove(player);
-        return;
+        std::string name;
+        Util::WStringToString(player->GetUsername(), name);
+        SaveNbtDatasForPlayer(name, playerData);
     }
+    else
+        delete playerData;
+
     playerList.erase(player);
     int chunkX = ((int) player->x) >> 4;
     int chunkZ = ((int) player->z) >> 4;
@@ -223,9 +285,7 @@ void World::ChangeDataNotify(int x, i_height y, int z, i_data blockData)
     chunk->ChangeData(x & 0xf, y, z & 0xf, blockData);
 
     i_block blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
-    FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
-        NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, blockId);
-    END_FOR_EACH_SIDE
+    NotifyNeighborsForBlockChange(x, y, z, blockId);
 }
 
 
@@ -234,11 +294,12 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
     chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, blockData);
 
-    const Block::Block* block = Block::BlockList::getBlock(blockId);
-    if (block)
+    if (playSound)
     {
-        if (playSound)
+        const Block::Block* block = Block::BlockList::getBlock(blockId);
+        if (block)
         {
+            //TODO: change, use world method to play sound
             const Block::SoundBlock& sound = block->GetSound();
             Network::NetworkPacket soundPacket(Network::OP_NAMED_SOUND_EFFECT);
             soundPacket << sound.GetPlaceSound() << (x * 8) << (y * 8) << (z * 8)
@@ -248,9 +309,7 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
         }
     }
 
-    FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
-        NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, blockId);
-    END_FOR_EACH_SIDE
+    NotifyNeighborsForBlockChange(x, y, z, blockId);
 
     updateAllLightTypes(x, y, z);
 }
@@ -272,9 +331,7 @@ void World::BreakBlock(int x, i_height y, int z)
             chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
         }
 
-        FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
-            NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, 0);
-        END_FOR_EACH_SIDE
+        NotifyNeighborsForBlockChange(x, y, z, 0);
     }
     updateAllLightTypes(x, y, z);
 }
@@ -294,9 +351,7 @@ void World::RemoveBlock(int x, i_height y, int z)
             chunk->ChangeBlock(x & 0xf, y, z & 0xf, 0, 0);
         }
 
-        FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
-            NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, 0);
-        END_FOR_EACH_SIDE
+        NotifyNeighborsForBlockChange(x, y, z, 0);
     }
     updateAllLightTypes(x, y, z);
 }
@@ -648,27 +703,6 @@ void World::SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) cons
     }
 }
 
-void World::Unload()
-{
-    for (std::pair<long long, Chunk*> chunk : chunkMap)
-    {
-        chunk.second->Unload();
-        delete chunk.second;
-    }
-    chunkMap.clear();
-    for (std::pair<long long, VirtualChunk*> chunk : virtualChunkMap)
-    {
-        chunk.second->Unload();
-        delete chunk.second;
-    }
-    virtualChunkMap.clear();
-    for (std::pair<long long, VirtualSmallChunk*> chunk : virtualSmallChunkMap)
-    {
-        delete chunk.second;
-    }
-    virtualSmallChunkMap.clear();
-}
-
 void World::RequestChunk(EntityPlayer* player, int x, int z)
 {
     Chunk* chunk = GetChunk(x, z);
@@ -692,7 +726,7 @@ int World::GetGameType()
     return gameType;
 }
 
-void World::UpdateTime()
+void World::updateTime()
 {
     ageOfWorld++;
     currentTime++;
@@ -708,35 +742,6 @@ void World::UpdateTime()
 
         //TODO : In 1.6, if negative the time will stop moving on client
     }
-
-    for (int deadEntityId : deadEntity)
-    {
-        Entity* entity = entityById[deadEntityId];
-        if (entity)
-        {
-            if (entity->GetEntityType() == ENTITY_TYPE_PLAYER)
-            {
-                EntityPlayer* player = dynamic_cast<EntityPlayer*>(entity);
-                if (player)
-                {
-                    RemovePlayer(player);
-                    continue;
-                }
-            }
-            RemoveEntity(entity);
-            MarkEntityForDelete(entity);
-        }
-    }
-    deadEntity.clear();
-    for (size_t i = 0; i < entityToDelete.size(); i++)
-    {
-        delete entityToDelete[i];
-    }
-    entityToDelete.clear();
-
-    for (EntityPlayer* player: playerToRemove)
-        RemovePlayer(player);
-    playerToRemove.clear();
 
     if (weatherActivated)
     {
@@ -758,25 +763,55 @@ void World::UpdateTime()
     }
 }
 
+void World::updateEntities()
+{
+    for (int deadEntityId : deadEntity)
+    {
+        Entity* entity = entityById[deadEntityId];
+        if (entity)
+        {
+            if (entity->GetEntityType() == ENTITY_TYPE_PLAYER)
+            {
+                EntityPlayer* player = dynamic_cast<EntityPlayer*>(entity);
+                if (player)
+                {
+                    removePlayer(player);
+                    continue;
+                }
+            }
+            removeEntity(entity, true);
+        }
+    }
+    deadEntity.clear();
+    for (size_t i = 0; i < entityToDelete.size(); i++)
+    {
+        delete entityToDelete[i];
+    }
+    entityToDelete.clear();
+    for (EntityPlayer* player : playerToRemove)
+        removePlayer(player);
+    playerToRemove.clear();
+}
+
 void World::MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick)
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
     chunk->MarkForUpdate(x & 0xf, y, z & 0xf, blockId, waitTick);
 }
 
-Entity* World::GetEntityById(int target)
+Entity* World::GetEntityById(int entityId)
 {
-    return entityById[target];
+    auto entityItr = entityById.find(entityId);
+    if (entityItr == entityById.end())
+        return nullptr;
+    return entityItr->second;
 }
 
-void World::MarkEntityForDelete(Entity* entity)
+void World::markEntityForDelete(Entity* entity)
 {
     entityToDelete.push_back(entity);
 }
 
-/*
- *
- */
 bool World::isChunksExistInRange(int x, i_height y, int z, int range)
 {
     return isChunksExist(x - range, (i_height) std::max(0, y - range), z - range, x + range, (i_height) std::min(255, y + range), z + range);
@@ -1173,39 +1208,6 @@ void World::SetTime(long long time)
     currentTime = time;
 }
 
-
-
-
-/*
-    *
-   public int getBlockPower(int x, int y, int z, int direction)
-
-
-   public int computePowerLevelFromAroundBlock(int x, int y, int z)
-   {
-
-   }
-
-   public boolean isBlockIndirectlyProvidingPowerTo(int x, int y, int z, int direction)
-   {
-
-   }
-
-   public int getIndirectPowerLevel(int x, int y, int z, int direction)
-   {
-
-   }
-
-   public boolean isBlockIndirectlyGettingPowered(int x, int y, int z) {
-
-   }
-
-   public int getMaxPowerFromBlockArround(int x, int y, int z)
-   {
-
-   }
- *
- */
 i_powerlevel World::getBlockPower(int x, i_height y, int z, int direction)
 {
     s_block_data blockData = GetBlockIdAndData(x, y, z);
@@ -1509,7 +1511,7 @@ Position World::GetValidSpawnPosition()
     return validPosition;
 }
 
-void World::SaveNbtDatasForPlayer(const std::string& playerName, NBT::TagCompound* tagData)
+void World::SaveNbtDatasForPlayer(const std::string& playerName, NBT::TagCompound* tagData) const
 {
     std::stringstream fileName;
     fileName << worldName << "/players/" << playerName << ".dat";
@@ -1540,7 +1542,7 @@ long long World::GetCurrentTime() const
     //TODO : In 1.6, if negative the time will stop moving on client.
 }
 
-bool World::isReadOnly() const
+bool World::IsReadOnly() const
 {
     return readOnly;
 }

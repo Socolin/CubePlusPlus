@@ -57,6 +57,10 @@ void Entity::SetWorld(World* world, int entityId)
     hasRotate = false;
 }
 
+void Entity::OnJoinWorld(World* /*world*/)
+{
+}
+
 void Entity::Rotate(float yaw, float pitch)
 {
     this->yaw = yaw;
