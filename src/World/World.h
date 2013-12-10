@@ -435,9 +435,32 @@ public:
      * Sound management
      *************************************************************************/
 
+    /**
+     * Send packet for playing sound to all player in range
+     * @param x sound source coordinate
+     * @param y sound source coordinate
+     * @param z sound source coordinate
+     * @param soundName name of sound
+     * @param volume volume of sound
+     * @param modifier modifier (pitch), default : 1.0f
+     * @param distanceChunk distance in chunk where player cand listen sound
+     */
     void PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, float modifier, unsigned char distanceChunk);
+
+    /**
+     * Send packet for playing sound to all player in range
+     * @param x sound source coordinate
+     * @param y sound source coordinate
+     * @param z sound source coordinate
+     * @param soundName name of sound
+     * @param volume volume of sound
+     * @param modifier modifier (pitch), default : 63
+     * @param distanceChunk distance in chunk where player cand listen sound
+     */
     void PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, char modifier, unsigned char distanceChunk);
+
     void PlaySoundOrParticleEffect(double x, i_height y, double z, int effectId, int data, bool disableRelativeVolume, unsigned char distanceChunk);
+
     void PlayBlockAction(int x, short y, int z, char type, char modifier, i_block blockId, char distanceChunk);
 
 
@@ -467,8 +490,30 @@ public:
      * Item management
      *************************************************************************/
 
+    /**
+     * Create new EntityItem and spawn it in world with random speed
+     * containing itemstack
+     * @param x spawn position
+     * @param y spawn position
+     * @param z spawn position
+     * @param itemstack itemstack to drop, will be deleted when entity will be remove
+     */
     void DropItemstackWithRandomDirection(double x, double y, double z, Inventory::ItemStack* itemstack);
+
+    /**
+     * Create new EntityItem and spawn it in world.
+     * @param x spawn position
+     * @param y spawn position
+     * @param z spawn position
+     * @param itemstack itemstack to drop, will be deleted when entity will be remove
+     */
     void DropItemstack(double x, double y, double z, Inventory::ItemStack* itemstack);
+
+    /**
+     * Create new EntityItem and spawn it in world
+     * @param pos position to spawn
+     * @param itemstack itemstack to drop, will be deleted when entity will be remove
+     */
     void DropItemstack(const Position& pos, Inventory::ItemStack* itemstack);
 
 
