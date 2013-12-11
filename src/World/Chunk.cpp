@@ -18,9 +18,18 @@ namespace World
 
 Chunk::Chunk(int x, int z, World* world) :
     posX(x), posZ(z), loaded(false)
-    , cachePacket(Network::OP_CHUNK_DATA), blockChangePacket(Network::OP_MULTI_BLOCK_CHANGE)
-    , flagSectionExists(0), flagSectionUseAdd(0), inCache(false), countChange(0), world(world), selfTickCounter(0)
-    , minHeight(0), skylightNeedUpdate(false), skylightColumnsToUpdate{false}
+    , cachePacket(Network::OP_CHUNK_DATA)
+    , blockChangePacket(Network::OP_MULTI_BLOCK_CHANGE)
+    , flagSectionExists(0)
+    , flagSectionUseAdd(0)
+    , inCache(false)
+    , needSave(false)
+    , countChange(0)
+    , world(world)
+    , selfTickCounter(0)
+    , minHeight(0)
+    , skylightNeedUpdate(false)
+    , skylightColumnsToUpdate{false}
 {
     posXx16 = x * 16;
     posZx16 = z * 16;
@@ -58,7 +67,7 @@ void Chunk::Load()
     flagSectionExists = 0;
     flagSectionUseAdd = 0;
 
-    NBT::TagCompound* nbtData = world->GetChunkNbtData(posX, posZ);
+    NBT::TagCompound* nbtData = world->getChunkNbtData(posX, posZ);
     if (!loadFromNbtData(nbtData))
     {
         if (nbtData)
@@ -170,7 +179,7 @@ void Chunk::Load()
 void Chunk::Save() const
 {
     NBT::TagCompound* tag = saveToNbtData();
-    world->SaveChunkNbtData(posX, posZ, tag);
+    world->saveChunkNbtData(posX, posZ, tag);
 }
 
 void Chunk::UpdateTick()
@@ -275,7 +284,7 @@ const Network::NetworkPacket& Chunk::GetPacket()
     return cachePacket;
 }
 
-void Chunk::GetTileEntityPacket(Network::NetworkPacket& packet)
+void Chunk::GetTileEntityPacket(Network::NetworkPacket& packet) const
 {
     for (auto tileEntityItr : tileEntities)
     {
@@ -288,6 +297,7 @@ void Chunk::GetTileEntityPacket(Network::NetworkPacket& packet)
 void Chunk::ChangeBlockNoEventNoTileEntityChange_DoNotUseExceptIfYouKnowWhatYouDo(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData)
 {
     inCache = false;
+    needSave = true;
 
     SetBlockAt(x, y, z, blockID);
     SetDataAt(x, y, z, blockData);
@@ -305,6 +315,8 @@ void Chunk::ChangeBlockNoEventNoTileEntityChange_DoNotUseExceptIfYouKnowWhatYouD
 void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData)
 {
     inCache = false;
+    needSave = true;
+
     i_block previousBlockId = getBlockAt(x, y, z);
     i_data previousBlockkData = getDataAt(x, y, z);
 
@@ -352,6 +364,8 @@ void Chunk::ChangeBlock(i_small_coord x, i_height y, i_small_coord z, i_block bl
 void Chunk::ChangeData(i_small_coord x, i_height y, i_small_coord z, i_data blockData)
 {
     inCache = false;
+    needSave = true;
+
     i_block blockID = getBlockAt(x, y, z);
     SetDataAt(x, y, z, blockData);
     unsigned int dataChange = 0;
@@ -464,7 +478,7 @@ void Chunk::MarkForNetworkUpdateTileEntity(i_small_coord x, i_height y, i_small_
 }
 
 
-Block::TileEntity* Chunk::GetTileEntity(i_small_coord x, i_height y, i_small_coord z)
+Block::TileEntity* Chunk::GetTileEntity(i_small_coord x, i_height y, i_small_coord z) const
 {
     auto it = tileEntities.find(TILEENTITY_KEY(x, y, z));
     if (it == tileEntities.end())
@@ -610,7 +624,7 @@ void Chunk::UpdateSkyLightIFN()
     if (!skylightNeedUpdate)
         return;
 
-    if (!world->isChunksExistInRange(posXx16 + 8, 0,  posZx16 + 8, 16))
+    if (!world->isChunksExistInRange(posXx16 + 8, posZx16 + 8, 16))
         return;
 
     for (int xInChunk = 0; xInChunk < 16; ++xInChunk)
@@ -724,6 +738,7 @@ void Chunk::GenerateSkyLight()
     }
 
     inCache = false;
+    needSave = true;
 
     for (i_small_coord x = 0; x < 16; ++x)
     {
@@ -742,7 +757,7 @@ i_height Chunk::getFirstAvaibleChunkDataPositionFromTop()
     return i_height(i * 16);
 }
 
-i_lightvalue Chunk::getRealBlockLightValue(i_small_coord x, i_height y, i_small_coord z, i_lightvalue sunReduceValue)
+i_lightvalue Chunk::getRealBlockLightValue(i_small_coord x, i_height y, i_small_coord z, i_lightvalue sunReduceValue) const
 {
     i_lightvalue skyLight = getSkyLightAt(x, y, z);
     skyLight = std::max(0, skyLight - sunReduceValue);
@@ -940,6 +955,7 @@ bool Chunk::loadFromNbtData(NBT::TagCompound* nbtData)
     }
     return false;
 }
+
 
 NBT::TagCompound* Chunk::saveToNbtData() const
 {

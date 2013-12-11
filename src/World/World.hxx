@@ -13,7 +13,7 @@ inline Chunk* World::GetChunk(int x, int z)
     auto it = chunkMap.find(CHUNK_KEY(x,z));
     if (it == chunkMap.end())
     {
-        Chunk* chunk = LoadChunk(x, z);
+        Chunk* chunk = loadChunk(x, z);
         chunkMap[CHUNK_KEY(x,z)] = chunk;
         return chunk;
     }
@@ -35,7 +35,7 @@ inline VirtualChunk* World::GetVirtualChunk(int x, int z)
     auto it = virtualChunkMap.find(CHUNK_KEY(x,z));
     if (it == virtualChunkMap.end())
     {
-        VirtualChunk* vChunk = CreateVirtualChunk(x, z);
+        VirtualChunk* vChunk = createVirtualChunk(x, z);
         virtualChunkMap[CHUNK_KEY(x,z)] = vChunk;
         return vChunk;
     }
@@ -57,7 +57,7 @@ inline VirtualSmallChunk* World::GetVirtualSmallChunk(int x, int z)
     auto it = virtualSmallChunkMap.find(CHUNK_KEY(x,z));
     if (it == virtualSmallChunkMap.end())
     {
-        VirtualSmallChunk* vChunk = CreateVirtualSmallChunk(x, z);
+        VirtualSmallChunk* vChunk = createVirtualSmallChunk(x, z);
         virtualSmallChunkMap[CHUNK_KEY(x,z)] = vChunk;
         return vChunk;
     }

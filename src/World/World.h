@@ -235,13 +235,13 @@ public:
      *     2             2
      * @return distance in chunk, that can see player
      */
-    int GetViewDistance();
+    int GetViewDistance() const;
 
     /**
      * Return the game mode loaded from level.dat.
      * @return world gamemode
      */
-    int GetGameType();
+    int GetGameType() const;
 
     /**
      * Return if the world is in read only mode, or not.
@@ -372,23 +372,6 @@ public:
      */
     void MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick = 1);
 
-    /**
-     * Get the associated tile entity of block at given coordinate.
-     * If there is no tile entity, then return nullptr
-     * @param x coordinate of block
-     * @param y coordinate of block 0 <= y < 256
-     * @param z coordinate of block
-     * @return return tile entity or nullptr
-     */
-    Block::TileEntity* GetTileEntity(int x, i_height y, int z);
-
-    /**
-     * Mark tile entity as updated, so player will be notified of the change
-     * @param x coordinate of block
-     * @param y coordinate of block 0 <= y < 256
-     * @param z coordinate of block
-     */
-    void MarkForNetworkUpdateTileEntity(int x, i_height y, int z);
 
     /**
      * Call Block::NeighborChange on each block on give block's sides
@@ -409,6 +392,16 @@ public:
     void NotifyNeighborBlockChange(int x, i_height y, int z, i_block neighborBlockId);
 
     /**
+     * Get the associated tile entity of block at given coordinate.
+     * If there is no tile entity, then return nullptr
+     * @param x coordinate of block
+     * @param y coordinate of block 0 <= y < 256
+     * @param z coordinate of block
+     * @return return tile entity or nullptr
+     */
+    Block::TileEntity* GetTileEntity(int x, i_height y, int z);
+
+    /**
      * Notify block that something change in it's associated tileEntity
      * finally call BlockScript::OnNotifyTileEntityStateChange
      * @param x coordinate of block
@@ -418,6 +411,13 @@ public:
      */
     void NotifyTileEntityStateChange(int x, i_height y, int z, int action);
 
+    /**
+     * Mark tile entity as updated, so player will be notified of the change
+     * @param x coordinate of block
+     * @param y coordinate of block 0 <= y < 256
+     * @param z coordinate of block
+     */
+    void MarkForNetworkUpdateTileEntity(int x, i_height y, int z);
 
 
 
@@ -581,9 +581,9 @@ private:
 
     void updateEntities();
 
-    VirtualChunk* CreateVirtualChunk(int x, int z);
+    VirtualChunk* createVirtualChunk(int x, int z);
 
-    VirtualSmallChunk* CreateVirtualSmallChunk(int x, int z);
+    VirtualSmallChunk* createVirtualSmallChunk(int x, int z);
 
 
     /**
@@ -612,21 +612,21 @@ private:
      * Chunks managmenet
      *************************************************************************/
 
-    Chunk* LoadChunk(int x, int z);
+    Chunk* loadChunk(int x, int z);
 
-    NBT::TagCompound* GetChunkNbtData(int x, int z);
+    NBT::TagCompound* getChunkNbtData(int x, int z);
 
-    void SaveChunkNbtData(int x, int z, NBT::TagCompound* tag);
+    void saveChunkNbtData(int x, int z, NBT::TagCompound* tag);
 
-    bool isChunksExistInRange(int x, i_height y, int z, int range);
+    bool isChunksExistInRange(int x, int z, int range) const;
 
-    bool isChunksExist(int xmin, i_height ymin, int zmin, int xmax, i_height ymax, int zmax);
+    bool isChunksExist(int xmin, int zmin, int xmax, int zmax) const;
 
-    bool isChunkExist(int chunkX, int chunkZ);
+    bool isChunkExist(int chunkX, int chunkZ) const;
 
-    i_height getMinHeightAndHeightMapAt(int x, int z, i_height& heightMap);
+    i_height getMinHeightAndHeightMapAt(int x, int z, i_height& heightMap) const;
 
-    i_height getMinHeightMapAt(int x, int z);
+    i_height getMinHeightMapAt(int x, int z) const;
 
 
 
@@ -637,20 +637,6 @@ private:
 
     void updateTime();
 
-
-
-
-    /*************************************************************************
-     * World parameters
-     *************************************************************************/
-
-
-    /**
-     * Load spawn data from nbt in level.dat
-     * @param tagData data to load
-     */
-    void loadSpawn(NBT::TagCompound* tagData);
-
     /**
      * Load time and weather data from nbt in level.dat
      * Time of day...
@@ -659,6 +645,21 @@ private:
      * @param tagData data to load
      */
     void loadTimeAndWeather(NBT::TagCompound* tagData);
+
+    void saveTimeAndWeather(NBT::TagCompound* tagData) const;
+
+
+
+
+    /*************************************************************************
+     * World parameters
+     *************************************************************************/
+
+    /**
+     * Load spawn data from nbt in level.dat
+     * @param tagData data to load
+     */
+    void loadSpawn(NBT::TagCompound* tagData);
 
     /**
      * Load gamemode and some data from world nbt data in level.dat
@@ -670,8 +671,6 @@ private:
     void loadGameMode(NBT::TagCompound* tagData);
 
     void saveSpawn(NBT::TagCompound* tagData) const;
-
-    void saveTimeAndWeather(NBT::TagCompound* tagData) const;
 
     void saveGameMode(NBT::TagCompound* tagData) const;
 

@@ -149,6 +149,7 @@ void WorldManager::UpdateTick() const
 
 void WorldManager::Init()
 {
+    //TODO: remove name, load from config
     world = new World("world");
 }
 void WorldManager::Stop()

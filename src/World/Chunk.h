@@ -49,6 +49,8 @@ public:
     void Load();
     // Save chunk to file
     void Save() const;
+
+    inline bool NeedSave() const;
     // Unload the chunk, save and free data
     void Unload();
 
@@ -64,7 +66,7 @@ public:
     const Network::NetworkPacket& GetPacket();
 
     // Get data from tile entities
-    void GetTileEntityPacket(Network::NetworkPacket& packet);
+    void GetTileEntityPacket(Network::NetworkPacket& packet) const;
 
     // Send all change done with ChangeBlock or ChangeData to client
     void SendUpdate();
@@ -76,15 +78,15 @@ public:
     // Delete a tileentity
     void RemoveTileEntity(i_small_coord x, i_height y, i_small_coord z);
     // Retrive tile entity in block
-    Block::TileEntity* GetTileEntity(i_small_coord x, i_height y, i_small_coord z);
+    Block::TileEntity* GetTileEntity(i_small_coord x, i_height y, i_small_coord z) const;
     i_height getMinHeight() const;
 
     void ChangeBlockNoEventNoTileEntityChange_DoNotUseExceptIfYouKnowWhatYouDo(i_small_coord x, i_height y, i_small_coord z, i_block blockID, i_data blockData);
 private:
 
-    inline i_lightvalue getBlockLightAt(i_small_coord x, i_height y, i_small_coord z);
-    inline i_lightvalue getSkyLightAt(i_small_coord x, i_height y, i_small_coord z);
-    i_lightvalue getRealBlockLightValue(i_small_coord x, i_height y, i_small_coord z, i_lightvalue sunReduceValue);
+    inline i_lightvalue getBlockLightAt(i_small_coord x, i_height y, i_small_coord z) const;
+    inline i_lightvalue getSkyLightAt(i_small_coord x, i_height y, i_small_coord z) const;
+    i_lightvalue getRealBlockLightValue(i_small_coord x, i_height y, i_small_coord z, i_lightvalue sunReduceValue) const;
     inline void setBlockLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value);
     inline void setSkyLightAt(i_small_coord x, i_height y, i_small_coord z, i_lightvalue value);
 
@@ -230,6 +232,7 @@ private:
     unsigned char biomeData[CHUNK_SURFACE];
     unsigned int heightMap[CHUNK_SURFACE];
     bool inCache;
+    bool needSave;
     std::vector<unsigned int> changedBlock;
     short countChange;
     std::set<EntityPlayer*> playerList;

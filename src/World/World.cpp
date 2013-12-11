@@ -89,7 +89,10 @@ World::~World()
     }
 }
 
-// Called each tick
+/*************************************************************************
+ * General world managmenet
+ *************************************************************************/
+
 void World::UpdateTick()
 {
     updateInProgress = true;
@@ -109,13 +112,13 @@ void World::UpdateTick()
     {
         chunk.second->SendUpdate();
     }
-
     redstoneTorchBurnoutMgr->UpdateTick();
     updateInProgress = false;
-    updateTime();
 
+    updateTime();
     updateEntities();
 }
+
 
 void World::Save() const
 {
@@ -152,13 +155,62 @@ void World::Save() const
             delete playerData;
     }
 
-    LOG_DEBUG << "Saving: " << chunkMap.size() << " chunks";
+    LOG_DEBUG << "Saving: " << chunkMap.size() << " active chunks" << std::endl;
+    size_t saveCount = 0;
     for (auto chunkItr : chunkMap)
     {
         Chunk* chunk = chunkItr.second;
-        chunk->Save();
+        if (chunk->NeedSave())
+        {
+            saveCount++;
+            chunk->Save();
+        }
     }
+    LOG_DEBUG << saveCount << " chunks saved" << std::endl;
 }
+
+void World::load()
+{
+    std::stringstream fileName;
+    fileName << worldPath << "/level.dat";
+
+    NBT::File nbtFile = NBT::File(fileName.str());
+    if (!nbtFile.Load())
+    {
+        LOG_ERROR << "Error while loading world data: " << nbtFile.GetFilename() << " : "
+                << nbtFile.GetLastErrorMessage() << std::endl;
+        return;
+    }
+
+    NBT::Tag* root = nbtFile.GetRoot();
+    if (!root)
+    {
+        return;
+    }
+
+    NBT::TagCompound* rootCompound = root->GetTagAs<NBT::TagCompound>();
+    if (!rootCompound)
+    {
+        return;
+    }
+
+    NBT::TagCompound* dataCompound = rootCompound->GetTagAs<NBT::TagCompound>("Data");
+    if (!dataCompound)
+    {
+        return;
+    }
+
+    loadSpawn(dataCompound);
+    loadTimeAndWeather(dataCompound);
+    loadGameMode(dataCompound);
+}
+
+
+
+
+/*************************************************************************
+ * Entities managmenet
+ *************************************************************************/
 
 void World::AddEntity(Entity* entity)
 {
@@ -215,6 +267,108 @@ void World::AddPlayer(EntityPlayer* player)
     player->OnJoinWorld(this);
 }
 
+void World::MarkPlayerForRemove(EntityPlayer* entity)
+{
+    playerToRemove.insert(entity);
+}
+
+void World::MarkEntityAsDead(int entityId)
+{
+    deadEntity.insert(entityId);
+}
+
+Entity* World::GetEntityById(int entityId)
+{
+    auto entityItr = entityById.find(entityId);
+    if (entityItr == entityById.end())
+        return nullptr;
+    return entityItr->second;
+}
+
+NBT::TagCompound* World::LoadNbtDatasForPlayer(const std::string& playerName)
+{
+    std::stringstream fileName;
+    fileName << worldName << "/players/" << playerName << ".dat";
+
+    NBT::File file(fileName.str());
+    if (!file.Load())
+    {
+        // No file found or corrupted file
+        // TODO: maybe add check on error, to know if it's first
+        // connection of player, or an error while loading nbt
+        return nullptr;
+    }
+
+    NBT::Tag* root = file.TakeRoot();
+    NBT::TagCompound* rootAsCompound = nullptr;
+    if (root)
+    {
+        rootAsCompound = root->GetTagAs<NBT::TagCompound>();
+        if (rootAsCompound == nullptr)
+        {
+            delete root;
+        }
+    }
+    return rootAsCompound;
+}
+
+
+void World::SaveNbtDatasForPlayer(const std::string& playerName, NBT::TagCompound* tagData) const
+{
+    std::stringstream fileName;
+    fileName << worldName << "/players/" << playerName << ".dat";
+
+    NBT::File file(fileName.str(), tagData);
+    if (!file.Save())
+    {
+        LOG_ERROR << "Can't save player data: " << playerName
+                << " due to error:" << file.GetLastErrorMessage()
+                << " when writing: "  << file.GetFilename() << std::endl;
+    }
+}
+
+void World::updateEntities()
+{
+    for (int deadEntityId : deadEntity)
+    {
+        Entity* entity = entityById[deadEntityId];
+        if (entity)
+        {
+            if (entity->GetEntityType() == ENTITY_TYPE_PLAYER)
+            {
+                EntityPlayer* player = dynamic_cast<EntityPlayer*>(entity);
+                if (player)
+                {
+                    removePlayer(player);
+                    continue;
+                }
+            }
+            removeEntity(entity, true);
+        }
+    }
+    deadEntity.clear();
+    for (size_t i = 0; i < entityToDelete.size(); i++)
+    {
+        delete entityToDelete[i];
+    }
+    entityToDelete.clear();
+    for (EntityPlayer* player : playerToRemove)
+        removePlayer(player);
+    playerToRemove.clear();
+}
+
+VirtualChunk* World::createVirtualChunk(int x, int z)
+{
+    VirtualChunk* vChunk = new VirtualChunk(x, z, this);
+    return vChunk;
+}
+
+VirtualSmallChunk* World::createVirtualSmallChunk(int x, int z)
+{
+    VirtualSmallChunk* vChunk = new VirtualSmallChunk(x, z, this);
+    return vChunk;
+}
+
 void World::removeEntity(Entity* entity, bool deleteEntity)
 {
     // Remove entity and notify player that can see it
@@ -266,28 +420,327 @@ void World::removePlayer(EntityPlayer* player)
     entityById[player->GetEntityId()] = nullptr;
 }
 
-void World::ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData)
+void World::markEntityForDelete(Entity* entity)
 {
-    Chunk* chunk = GetChunk(x >> 4, z >> 4);
-    chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, blockData);
-    updateAllLightTypes(x, y, z);
+    entityToDelete.push_back(entity);
 }
 
-void World::ChangeDataNoEvent(int x, i_height y, int z, i_data blockData)
+
+
+
+/*************************************************************************
+ * Chunks managmenet
+ *************************************************************************/
+
+void World::RequestChunk(EntityPlayer* player, int x, int z)
 {
-    Chunk* chunk = GetChunk(x >> 4, z >> 4);
-    chunk->ChangeData(x & 0xf, y, z & 0xf, blockData);
+    Chunk* chunk = GetChunk(x, z);
+    const Network::NetworkPacket& packet = chunk->GetPacket();
+
+    //packet.dump();
+    player->Send(packet);
+
+    Network::NetworkPacket tileEntitiesPacket;
+    chunk->GetTileEntityPacket(tileEntitiesPacket);
+    player->Send(tileEntitiesPacket);
 }
 
-void World::ChangeDataNotify(int x, i_height y, int z, i_data blockData)
+Chunk* World::loadChunk(int x, int z)
 {
-    Chunk* chunk = GetChunk(x >> 4, z >> 4);
-    chunk->ChangeData(x & 0xf, y, z & 0xf, blockData);
-
-    i_block blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
-    NotifyNeighborsForBlockChange(x, y, z, blockId);
+    Chunk* chunk = new Chunk(x, z, this);
+    chunk->Load();
+    chunkMap[CHUNK_KEY(x,z)] = chunk;
+    return chunk;
 }
 
+NBT::TagCompound* World::getChunkNbtData(int x, int z)
+{
+    Region* region = regionManager.GetRegion(x >> 5, z >> 5);
+    if (region)
+    {
+        return region->GetNbtChunkData(x & 0x1f, z & 0x1f);
+    }
+    return nullptr;
+}
+
+void World::saveChunkNbtData(int x, int z, NBT::TagCompound* tag)
+{
+    Region* region = regionManager.GetRegion(x >> 5, z >> 5);
+    if (region)
+    {
+        return region->SaveNbtChunkData(x & 0x1f, z & 0x1f, tag);
+    }
+}
+
+bool World::isChunksExistInRange(int x, int z, int range) const
+{
+    return isChunksExist(x - range, z - range, x + range, z + range);
+}
+
+bool World::isChunksExist(int xmin, int zmin, int xmax, int zmax) const
+{
+    xmin >>= 4;
+    zmin >>= 4;
+    xmax >>= 4;
+    zmax >>= 4;
+
+    for (int chunkX = xmin; chunkX <= xmax; ++chunkX)
+    {
+        for (int chunkZ = zmin; chunkZ <= zmax; ++chunkZ)
+        {
+            if (!isChunkExist(chunkX, chunkZ))
+            {
+                return false;
+            }
+        }
+    }
+
+    return true;
+}
+
+bool World::isChunkExist(int chunkX, int chunkZ) const
+{
+    Chunk* chunk = GetChunkIfLoaded(chunkX, chunkZ);
+    return chunk != nullptr;
+}
+
+i_height World::getMinHeightMapAt(int x, int z) const
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        return chunk->getMinHeight();
+    }
+    return 0;
+}
+
+i_height World::getMinHeightAndHeightMapAt(int x, int z, i_height& heightMap) const
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        heightMap = chunk->getHeightMapAt(x & 0xf, z & 0xf);
+        return chunk->getMinHeight();
+    }
+    heightMap = 0;
+    return 0;
+}
+
+
+
+
+/*************************************************************************
+ * Weather and time managmenet
+ *************************************************************************/
+
+void World::SetTime(long long time)
+{
+    currentTime = time;
+}
+
+long long World::GetAgeOfWorld() const
+{
+    return ageOfWorld;
+}
+
+long long World::GetCurrentTime() const
+{
+    return currentTime;
+
+    //TODO : In 1.6, if negative the time will stop moving on client.
+}
+
+void World::updateTime()
+{
+    ageOfWorld++;
+    currentTime++;
+    if (currentTime % 20 == 0)
+    {
+        if (lockedTime)
+        {
+            currentTime = lockedTimeValue;
+        }
+        Network::NetworkPacket updateTimePacket(Network::OP_TIME_UPDATE);
+        updateTimePacket << ageOfWorld << currentTime;
+        SendPacketToPlayerInWorld(updateTimePacket);
+
+        //TODO : In 1.6, if negative the time will stop moving on client
+    }
+
+    if (weatherActivated)
+    {
+        rainTime--;
+        if (rainTime <= 0)
+        {
+            raining = !raining;
+            UpdateGameState(raining ? 1 : 2, 0);
+
+            if (raining)
+            {
+                rainTime = (rand() % 12000) + 12000;
+            }
+            else
+            {
+                rainTime = (rand() % 168000) + 12000;
+            }
+        }
+    }
+}
+
+void World::loadTimeAndWeather(NBT::TagCompound* tagData)
+{
+    NBT::TagLong* tagTime = tagData->GetTagAs<NBT::TagLong>("Time");
+    if (tagTime)
+    {
+        ageOfWorld = tagTime->GetValue();
+        currentTime = tagTime->GetValue();
+    }
+
+    NBT::TagInt* tagRainTime = tagData->GetTagAs<NBT::TagInt>("rainTime");
+    if (tagRainTime)
+    {
+        rainTime = tagRainTime->GetValue();
+    }
+
+    NBT::TagByte* tagRaining = tagData->GetTagAs<NBT::TagByte>("raining");
+    if (tagRaining)
+    {
+        raining = tagRaining->GetValue() == 1;
+    }
+
+    NBT::TagInt* tagThunderTime = tagData->GetTagAs<NBT::TagInt>("thunderTime");
+    if (tagThunderTime)
+    {
+        thunderTime = tagThunderTime->GetValue();
+    }
+
+    NBT::TagByte* tagThundering = tagData->GetTagAs<NBT::TagByte>("thundering");
+    if (tagThundering)
+    {
+        thundering = tagThundering->GetValue() == 1;
+    }
+}
+
+void World::saveTimeAndWeather(NBT::TagCompound* tagData) const
+{
+    tagData->AddLong("Time", ageOfWorld);
+    tagData->AddInt("rainTime", rainTime);
+    tagData->AddByte("raining", raining ? 1 : 0);
+    tagData->AddInt("thunderTime", thunderTime);
+    tagData->AddByte("thundering", thundering ? 1 : 0);
+}
+
+
+
+
+/*************************************************************************
+ * World parameters
+ *************************************************************************/
+
+int World::GetViewDistance() const
+{
+    return viewDistance;
+}
+
+int World::GetGameType() const
+{
+    return gameType;
+}
+
+bool World::IsReadOnly() const
+{
+    return readOnly;
+}
+
+const Position& World::GetSpawnPosition() const
+{
+    return spawnPosition;
+}
+
+Position World::GetValidSpawnPosition()
+{
+    int spawnPosX = spawnPosition.x;
+    int spawnPosY = spawnPosition.y;
+    int spawnPosZ = spawnPosition.z;
+    spawnPosX += (rand() % 16) - 8;
+    spawnPosZ += (rand() % 16) - 8;
+
+    Chunk* chunk = GetChunk(spawnPosX >> 4, spawnPosZ >> 4);
+    i_block previousBlockId = chunk->getBlockAt(spawnPosX & 0xf, spawnPosY, spawnPosZ & 0xf);
+    Position validPosition(spawnPosX, spawnPosY, spawnPosZ);
+    for (int y = spawnPosY + 1; y < 260; y++)
+    {
+        i_block blockId = chunk->getBlockAt(spawnPosX & 0xf, y, spawnPosZ & 0xf);
+        if (blockId == 0 && previousBlockId == 0)
+        {
+            break;
+        }
+        previousBlockId = blockId;
+        validPosition.y++;
+    }
+    return validPosition;
+}
+
+void World::loadSpawn(NBT::TagCompound* tagData)
+{
+    NBT::TagInt* tagSpawnX = tagData->GetTagAs<NBT::TagInt>("SpawnX");
+    NBT::TagInt* tagSpawnY = tagData->GetTagAs<NBT::TagInt>("SpawnY");
+    NBT::TagInt* tagSpawnZ = tagData->GetTagAs<NBT::TagInt>("SpawnZ");
+    if (tagSpawnX && tagSpawnY && tagSpawnZ)
+    {
+        int spawnX = tagSpawnX->GetValue();
+        int spawnY = tagSpawnY->GetValue();
+        int spawnZ = tagSpawnZ->GetValue();
+        spawnPosition.Relocate(spawnX, spawnY, spawnZ);
+    }
+    else
+    {
+        spawnPosition.Relocate(0, 80, 0);
+        LOG_ERROR << "Error while loading spawn data" << std::endl;
+    }
+}
+
+void World::loadGameMode(NBT::TagCompound* tagData)
+{
+    NBT::TagByte* tagHardcore = tagData->GetTagAs<NBT::TagByte>("hardcore");
+    if (tagHardcore)
+    {
+        hardcore = tagHardcore->GetValue() == 1;
+    }
+
+    NBT::TagLong* tagRandoSeed = tagData->GetTagAs<NBT::TagLong>("RandomSeed");
+    if (tagRandoSeed)
+    {
+        seed = tagRandoSeed->GetValue();
+    }
+
+    NBT::TagInt* tagGameType = tagData->GetTagAs<NBT::TagInt>("GameType");
+    if (tagGameType)
+    {
+        gameType = tagGameType->GetValue();
+    }
+}
+
+void World::saveSpawn(NBT::TagCompound* tagData) const
+{
+    tagData->AddInt("SpawnX", std::floor(spawnPosition.x));
+    tagData->AddInt("SpawnY", std::floor(spawnPosition.y));
+    tagData->AddInt("SpawnZ", std::floor(spawnPosition.z));
+}
+
+void World::saveGameMode(NBT::TagCompound* tagData) const
+{
+    tagData->AddByte("hardcore", hardcore ? 1 : 0);
+    tagData->AddLong("RandomSeed", seed);
+    tagData->AddInt("GameType", gameType);
+}
+
+
+
+
+/*************************************************************************
+ * Block management
+ *************************************************************************/
 
 void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockData, bool playSound)
 {
@@ -314,6 +767,28 @@ void World::ChangeBlock(int x, i_height y, int z, i_block blockId, i_data blockD
     updateAllLightTypes(x, y, z);
 }
 
+void World::ChangeBlockNoEvent(int x, i_height y, int z, i_block blockId, i_data blockData)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    chunk->ChangeBlock(x & 0xf, y, z & 0xf, blockId, blockData);
+    updateAllLightTypes(x, y, z);
+}
+
+void World::ChangeDataNotify(int x, i_height y, int z, i_data blockData)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    chunk->ChangeData(x & 0xf, y, z & 0xf, blockData);
+
+    i_block blockId = chunk->getBlockAt(x & 0xf, y, z & 0xf);
+    NotifyNeighborsForBlockChange(x, y, z, blockId);
+}
+
+void World::ChangeDataNoEvent(int x, i_height y, int z, i_data blockData)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    chunk->ChangeData(x & 0xf, y, z & 0xf, blockData);
+}
+
 void World::BreakBlock(int x, i_height y, int z)
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
@@ -335,6 +810,7 @@ void World::BreakBlock(int x, i_height y, int z)
     }
     updateAllLightTypes(x, y, z);
 }
+
 void World::RemoveBlock(int x, i_height y, int z)
 {
     Chunk* chunk = GetChunk(x >> 4, z >> 4);
@@ -356,6 +832,19 @@ void World::RemoveBlock(int x, i_height y, int z)
     updateAllLightTypes(x, y, z);
 }
 
+void World::MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick)
+{
+    Chunk* chunk = GetChunk(x >> 4, z >> 4);
+    chunk->MarkForUpdate(x & 0xf, y, z & 0xf, blockId, waitTick);
+}
+
+void World::NotifyNeighborsForBlockChange(int x, i_height y, int z, i_block neighborBlockId)
+{
+    FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
+        NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, neighborBlockId);
+    END_FOR_EACH_SIDE
+}
+
 void World::NotifyNeighborBlockChange(int x, i_height y, int z, i_block neighborBlockId)
 {
     i_block blockId = GetBlockId(x, y, z);
@@ -364,6 +853,16 @@ void World::NotifyNeighborBlockChange(int x, i_height y, int z, i_block neighbor
     {
         block->NeighborChange(this, x, y, z, neighborBlockId);
     }
+}
+
+Block::TileEntity* World::GetTileEntity(int x, i_height y, int z)
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        return chunk->GetTileEntity(x & 0xf, y, z & 0xf);
+    }
+    return nullptr;
 }
 
 void World::NotifyTileEntityStateChange(int x, i_height y, int z, int action)
@@ -376,10 +875,41 @@ void World::NotifyTileEntityStateChange(int x, i_height y, int z, int action)
     }
 }
 
+void World::MarkForNetworkUpdateTileEntity(int x, i_height y, int z)
+{
+    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
+    if (chunk)
+    {
+        return chunk->MarkForNetworkUpdateTileEntity(x & 0xf, y, z & 0xf);
+    }
+}
+
+
+
+
+/*************************************************************************
+ * Blocks helper
+ *************************************************************************/
+
+bool World::IsNormalCube(int x, i_height y, int z)
+{
+    i_block blockId = GetBlockId(x , y, z);
+    const Block::Block* block = Block::BlockList::getBlock(blockId);
+    return block && block->IsNormalCube();
+}
+
+
+
+
+/*************************************************************************
+ * Sound management
+ *************************************************************************/
+
 void World::PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, float modifier, unsigned char distanceChunk)
 {
     PlaySound(x, y, z, soundName, volume, char(63 * modifier), distanceChunk);
 }
+
 void World::PlaySound(double x, double y, double z, const std::wstring& soundName, float volume, char modifier, unsigned char distanceChunk)
 {
     VirtualSmallChunk* vSmallChunk = GetVirtualSmallChunk(((int)x) >> 4, ((int)z) >> 4);
@@ -404,11 +934,94 @@ void World::PlayBlockAction(int x, short y, int z, char type, char modifier, i_b
     vSmallChunk->SendPacketToAllNearPlayer(particlePacket, distanceChunk);
 }
 
+
+
+
+/*************************************************************************
+ * Network management
+ *************************************************************************/
+
 void World::UpdateGameState(char reason, char gameMode)
 {
     Network::NetworkPacket packet(Network::OP_CHANGE_GAME_STATE);
     packet << reason << gameMode;
     SendPacketToPlayerInWorld(packet);
+}
+
+void World::SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const
+{
+    for (EntityPlayer* plr : playerList)
+    {
+        plr->Send(packet);
+    }
+}
+
+
+
+
+/*************************************************************************
+ * Item management
+ *************************************************************************/
+
+void World::DropItemstackWithRandomDirection(double x, double y, double z, Inventory::ItemStack* itemstack)
+{
+    if (itemstack == nullptr)
+        return;
+    const Inventory::Item* item = itemstack->getItem();
+    if (item != nullptr)
+    {
+        float randomDistance = Util::randFloat() * 0.1;
+        float randomAngle = Util::randFloat() * M_PI * 2.0;
+
+        double motionX = -sin(randomAngle) * randomDistance;
+        double motionZ = cos(randomAngle) * randomDistance;
+        double motionY = 0.20000000298023224;
+
+        EntityItem* item = new EntityItem(x, y, z, itemstack, motionX, motionY, motionZ);
+        AddEntity(item);
+    }
+}
+
+void World::DropItemstack(double x, double y, double z, Inventory::ItemStack* itemstack)
+{
+    if (itemstack == nullptr)
+        return;
+    const Inventory::Item* item = itemstack->getItem();
+    if (item != nullptr)
+    {
+        EntityItem* item = new EntityItem(x, y, z, itemstack, 0, 0, 0);
+        AddEntity(item);
+    }
+}
+
+void World::DropItemstack(const Position& pos, Inventory::ItemStack* itemstack)
+{
+    DropItemstack(pos.x, pos.y, pos.z, itemstack);
+}
+
+
+
+
+/*************************************************************************
+ * Collision management
+ *************************************************************************/
+
+void World::GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::AABB>& bbList)
+{
+    for (int blockX = x - 1; blockX <= x + 1; blockX++)
+        for (int blockZ = z - 1; blockZ <= z + 1; blockZ++)
+            for (int blockY = y - 1; blockY <= y + 1; blockY++)
+            {
+                s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
+                if (blockData.blockId > 0)
+                {
+                    const Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
+                    if (block)
+                    {
+                        block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
+                    }
+                }
+            }
 }
 
 void World::GetBlockBoundingBoxInRange(int x, int y, int z, int range, int rangeHeight, std::vector<Util::AABB>& bbList)
@@ -453,60 +1066,6 @@ void World::GetBlockBoundingBoxInAABB(const Util::AABB& box, std::vector<Util::A
             }
 }
 
-
-void World::GetBlockBoundingBoxInRange1(int x, int y, int z, std::vector<Util::AABB>& bbList)
-{
-    for (int blockX = x - 1; blockX <= x + 1; blockX++)
-        for (int blockZ = z - 1; blockZ <= z + 1; blockZ++)
-            for (int blockY = y - 1; blockY <= y + 1; blockY++)
-            {
-                s_block_data blockData = GetBlockIdAndData(blockX, blockY, blockZ);
-                if (blockData.blockId > 0)
-                {
-                    const Block::Block* block = Block::BlockList::getBlock(blockData.blockId);
-                    if (block)
-                    {
-                        block->GetBoundingBoxes(blockX, blockY, blockZ, blockData.blockData, bbList);
-                    }
-                }
-            }
-}
-
-void World::DropItemstackWithRandomDirection(double x, double y, double z, Inventory::ItemStack* itemstack)
-{
-    if (itemstack == nullptr)
-        return;
-    const Inventory::Item* item = itemstack->getItem();
-    if (item != nullptr)
-    {
-        float randomDistance = Util::randFloat() * 0.1;
-        float randomAngle = Util::randFloat() * M_PI * 2.0;
-
-        double motionX = -sin(randomAngle) * randomDistance;
-        double motionZ = cos(randomAngle) * randomDistance;
-        double motionY = 0.20000000298023224;
-
-        EntityItem* item = new EntityItem(x, y, z, itemstack, motionX, motionY, motionZ);
-        AddEntity(item);
-    }
-}
-
-void World::DropItemstack(double x, double y, double z, Inventory::ItemStack* itemstack)
-{
-    if (itemstack == nullptr)
-        return;
-    const Inventory::Item* item = itemstack->getItem();
-    if (item != nullptr)
-    {
-        EntityItem* item = new EntityItem(x, y, z, itemstack, 0, 0, 0);
-        AddEntity(item);
-    }
-}
-
-void World::DropItemstack(const Position& pos, Inventory::ItemStack* itemstack)
-{
-    DropItemstack(pos.x, pos.y, pos.z, itemstack);
-}
 
 void World::GetEntitiesBoundingBoxInAABB(int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
@@ -562,6 +1121,7 @@ void World::GetEntitiesBoundingBoxInAABBByEntityType(eEntityType type, int ignor
                 vSmallChunk->GetEntitiesBoundingBoxInAABBByEntityType(type, ignoreEntityId, box, bbList);
             }
 }
+
 void World::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId, const Util::AABB& box, std::vector<std::pair<int, Util::AABB>>& bbList)
 {
     int minX = floor(box.getX()) - 2;
@@ -579,6 +1139,7 @@ void World::GetEntitiesBoundingBoxInAABBByEntityFlag(int entityTypeFlag, int ign
                 vSmallChunk->GetEntitiesBoundingBoxInAABBByEntityFlag(entityTypeFlag, ignoreEntityId, box, bbList);
             }
 }
+
 void World::GetEntitiesInRangeByEntityType(eEntityType type, int ignoreEntityId, const Position& center, int range, std::vector<Entity*>& outEntityList)
 {
     int minX = floor(center.x - range);
@@ -652,203 +1213,13 @@ void World::GetEntitiesInAABBByEntityFlag(int entityTypeFlag, int ignoreEntityId
             }
 }
 
-void World::MarkEntityAsDead(int entityId)
-{
-    deadEntity.insert(entityId);
-}
 
-Chunk* World::LoadChunk(int x, int z)
-{
-    Chunk* chunk = new Chunk(x, z, this);
-    chunk->Load();
-    chunkMap[CHUNK_KEY(x,z)] = chunk;
-    return chunk;
-}
-NBT::TagCompound* World::GetChunkNbtData(int x, int z)
-{
-    Region* region = regionManager.GetRegion(x >> 5, z >> 5);
-    if (region)
-    {
-        return region->GetNbtChunkData(x & 0x1f, z & 0x1f);
-    }
-    return nullptr;
-}
 
-void World::SaveChunkNbtData(int x, int z, NBT::TagCompound* tag)
-{
-    Region* region = regionManager.GetRegion(x >> 5, z >> 5);
-    if (region)
-    {
-        return region->SaveNbtChunkData(x & 0x1f, z & 0x1f, tag);
-    }
-}
 
-VirtualChunk* World::CreateVirtualChunk(int x, int z)
-{
-    VirtualChunk* vChunk = new VirtualChunk(x, z, this);
-    return vChunk;
-}
+/*************************************************************************
+ * Light management
+ *************************************************************************/
 
-VirtualSmallChunk* World::CreateVirtualSmallChunk(int x, int z)
-{
-    VirtualSmallChunk* vChunk = new VirtualSmallChunk(x, z, this);
-    return vChunk;
-}
-
-void World::SendPacketToPlayerInWorld(const Network::NetworkPacket& packet) const
-{
-    for (EntityPlayer* plr : playerList)
-    {
-        plr->Send(packet);
-    }
-}
-
-void World::RequestChunk(EntityPlayer* player, int x, int z)
-{
-    Chunk* chunk = GetChunk(x, z);
-    const Network::NetworkPacket& packet = chunk->GetPacket();
-
-    //packet.dump();
-    player->Send(packet);
-
-    Network::NetworkPacket tileEntitiesPacket;
-    chunk->GetTileEntityPacket(tileEntitiesPacket);
-    player->Send(tileEntitiesPacket);
-}
-
-int World::GetViewDistance()
-{
-    return viewDistance;
-}
-
-int World::GetGameType()
-{
-    return gameType;
-}
-
-void World::updateTime()
-{
-    ageOfWorld++;
-    currentTime++;
-    if (currentTime % 20 == 0)
-    {
-        if (lockedTime)
-        {
-            currentTime = lockedTimeValue;
-        }
-        Network::NetworkPacket updateTimePacket(Network::OP_TIME_UPDATE);
-        updateTimePacket << ageOfWorld << currentTime;
-        SendPacketToPlayerInWorld(updateTimePacket);
-
-        //TODO : In 1.6, if negative the time will stop moving on client
-    }
-
-    if (weatherActivated)
-    {
-        rainTime--;
-        if (rainTime <= 0)
-        {
-            raining = !raining;
-            UpdateGameState(raining ? 1 : 2, 0);
-
-            if (raining)
-            {
-                rainTime = (rand() % 12000) + 12000;
-            }
-            else
-            {
-                rainTime = (rand() % 168000) + 12000;
-            }
-        }
-    }
-}
-
-void World::updateEntities()
-{
-    for (int deadEntityId : deadEntity)
-    {
-        Entity* entity = entityById[deadEntityId];
-        if (entity)
-        {
-            if (entity->GetEntityType() == ENTITY_TYPE_PLAYER)
-            {
-                EntityPlayer* player = dynamic_cast<EntityPlayer*>(entity);
-                if (player)
-                {
-                    removePlayer(player);
-                    continue;
-                }
-            }
-            removeEntity(entity, true);
-        }
-    }
-    deadEntity.clear();
-    for (size_t i = 0; i < entityToDelete.size(); i++)
-    {
-        delete entityToDelete[i];
-    }
-    entityToDelete.clear();
-    for (EntityPlayer* player : playerToRemove)
-        removePlayer(player);
-    playerToRemove.clear();
-}
-
-void World::MarkBlockForUpdate(int x, i_height y, int z, i_block blockId, unsigned int waitTick)
-{
-    Chunk* chunk = GetChunk(x >> 4, z >> 4);
-    chunk->MarkForUpdate(x & 0xf, y, z & 0xf, blockId, waitTick);
-}
-
-Entity* World::GetEntityById(int entityId)
-{
-    auto entityItr = entityById.find(entityId);
-    if (entityItr == entityById.end())
-        return nullptr;
-    return entityItr->second;
-}
-
-void World::markEntityForDelete(Entity* entity)
-{
-    entityToDelete.push_back(entity);
-}
-
-bool World::isChunksExistInRange(int x, i_height y, int z, int range)
-{
-    return isChunksExist(x - range, (i_height) std::max(0, y - range), z - range, x + range, (i_height) std::min(255, y + range), z + range);
-
-}
-
-bool World::isChunksExist(int xmin, i_height /*ymin*/, int zmin, int xmax, i_height /*ymax*/, int zmax)
-{
-    xmin >>= 4;
-    zmin >>= 4;
-    xmax >>= 4;
-    zmax >>= 4;
-
-    for (int chunkX = xmin; chunkX <= xmax; ++chunkX)
-    {
-        for (int chunkZ = zmin; chunkZ <= zmax; ++chunkZ)
-        {
-            if (!isChunkExist(chunkX, chunkZ))
-            {
-                return false;
-            }
-        }
-    }
-
-    return true;
-}
-
-bool World::isChunkExist(int chunkX, int chunkZ)
-{
-    Chunk* chunk = GetChunkIfLoaded(chunkX, chunkZ);
-    return chunk != nullptr;
-}
-
-/* **************************************************************************
- *  Light relative's functions
- *  *************************************************************************
- */
 void World::updateAllLightTypes(int x, i_height y, int z)
 {
     updateLightByType(LIGHTTYPE_SKY, x, y, z);
@@ -857,7 +1228,7 @@ void World::updateAllLightTypes(int x, i_height y, int z)
 
 void World::updateLightByType(eLightType lightType, int x, i_height y, int z)
 {
-    if (!isChunksExistInRange(x, y, z, 17))
+    if (!isChunksExistInRange(x, z, 17))
         return;
 
     updateLightQueue.reset();
@@ -1062,7 +1433,7 @@ void World::setLightValueAt(eLightType lightType, int x, i_height y, int z, i_li
 
 void World::updateSkylightOnColumnt(int x, int z, i_height y1, i_height y2)
 {
-    if (!isChunksExistInRange(x, 0, z, 16))
+    if (!isChunksExistInRange(x, z, 16))
         return;
     i_height ymin = std::min(y1, y2);
     i_height ymax = std::max(y1, y2);
@@ -1070,28 +1441,6 @@ void World::updateSkylightOnColumnt(int x, int z, i_height y1, i_height y2)
     {
         updateLightByType(LIGHTTYPE_SKY, x, y, z);
     }
-}
-
-i_height World::getMinHeightMapAt(int x, int z)
-{
-    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
-    if (chunk)
-    {
-        return chunk->getMinHeight();
-    }
-    return 0;
-}
-
-i_height World::getMinHeightAndHeightMapAt(int x, int z, i_height& heightMap)
-{
-    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
-    if (chunk)
-    {
-        heightMap = chunk->getHeightMapAt(x & 0xf, z & 0xf);
-        return chunk->getMinHeight();
-    }
-    heightMap = 0;
-    return 0;
 }
 
 i_lightopacity World::GetBlockLightOpacity(int x, i_height y, int z)
@@ -1107,44 +1456,6 @@ i_lightopacity World::GetBlockLightOpacity(int x, i_height y, int z)
 i_lightvalue World::GetRealLightValueAt(int x, i_height y, int z)
 {
     return recursiveGetRealLightValueAt(x, y, z, true);
-}
-
-void World::MarkForNetworkUpdateTileEntity(int x, i_height y, int z)
-{
-    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
-    if (chunk)
-    {
-        return chunk->MarkForNetworkUpdateTileEntity(x & 0xf, y, z & 0xf);
-    }
-}
-
-Block::TileEntity* World::GetTileEntity(int x, i_height y, int z)
-{
-    Chunk* chunk = GetChunkIfLoaded(x >> 4, z >> 4);
-    if (chunk)
-    {
-        return chunk->GetTileEntity(x & 0xf, y, z & 0xf);
-    }
-    return nullptr;
-}
-
-bool World::IsNormalCube(int x, i_height y, int z)
-{
-    i_block blockId = GetBlockId(x , y, z);
-    const Block::Block* block = Block::BlockList::getBlock(blockId);
-    return block && block->IsNormalCube();
-}
-
-void World::NotifyNeighborsForBlockChange(int x, i_height y, int z, i_block neighborBlockId)
-{
-    FOR_EACH_SIDE_XYZ(x, y, z, blockSide)
-        NotifyNeighborBlockChange(blockSideX, blockSideY, blockSideZ, neighborBlockId);
-    END_FOR_EACH_SIDE
-}
-
-void World::MarkPlayerForRemove(EntityPlayer* entity)
-{
-    playerToRemove.insert(entity);
 }
 
 i_lightvalue World::recursiveGetRealLightValueAt(int x, i_height y, int z, bool firstCall)
@@ -1203,10 +1514,12 @@ bool World::isBlockDirectlyLightedFromSky(int x, i_height y, int z)
     return false;
 }
 
-void World::SetTime(long long time)
-{
-    currentTime = time;
-}
+
+
+
+/*************************************************************************
+ * Redstone management
+ *************************************************************************/
 
 i_powerlevel World::getBlockPower(int x, i_height y, int z, int direction)
 {
@@ -1322,229 +1635,6 @@ i_powerlevel World::getMaxPowerFromBlockArround(int x, i_height y, int z)
 Scripting::BlockRedstoneTorchBurnoutMgr* World::GetRedstoneTorchBurnoutMgr() const
 {
     return redstoneTorchBurnoutMgr;
-}
-
-
-void World::load()
-{
-    std::stringstream fileName;
-    fileName << worldPath << "/level.dat";
-
-    NBT::File nbtFile = NBT::File(fileName.str());
-    if (!nbtFile.Load())
-    {
-        LOG_ERROR << "Error while loading world data: " << nbtFile.GetFilename() << " : "
-                << nbtFile.GetLastErrorMessage() << std::endl;
-        return;
-    }
-
-
-    NBT::Tag* root = nbtFile.GetRoot();
-    if (!root)
-    {
-        return;
-    }
-
-    NBT::TagCompound* rootCompound = root->GetTagAs<NBT::TagCompound>();
-    if (!rootCompound)
-    {
-        return;
-    }
-
-    NBT::TagCompound* dataCompound = rootCompound->GetTagAs<NBT::TagCompound>("Data");
-    if (!dataCompound)
-    {
-        return;
-    }
-
-    loadSpawn(dataCompound);
-    loadTimeAndWeather(dataCompound);
-    loadGameMode(dataCompound);
-}
-
-void World::loadSpawn(NBT::TagCompound* tagData)
-{
-    NBT::TagInt* tagSpawnX = tagData->GetTagAs<NBT::TagInt>("SpawnX");
-    NBT::TagInt* tagSpawnY = tagData->GetTagAs<NBT::TagInt>("SpawnY");
-    NBT::TagInt* tagSpawnZ = tagData->GetTagAs<NBT::TagInt>("SpawnZ");
-    if (tagSpawnX && tagSpawnY && tagSpawnZ)
-    {
-        int spawnX = tagSpawnX->GetValue();
-        int spawnY = tagSpawnY->GetValue();
-        int spawnZ = tagSpawnZ->GetValue();
-        spawnPosition.Relocate(spawnX, spawnY, spawnZ);
-    }
-    else
-    {
-        spawnPosition.Relocate(0, 80, 0);
-        LOG_ERROR << "Error while loading spawn data" << std::endl;
-    }
-}
-
-void World::loadTimeAndWeather(NBT::TagCompound* tagData)
-{
-    NBT::TagLong* tagTime = tagData->GetTagAs<NBT::TagLong>("Time");
-    if (tagTime)
-    {
-        ageOfWorld = tagTime->GetValue();
-        currentTime = tagTime->GetValue();
-    }
-
-    NBT::TagInt* tagRainTime = tagData->GetTagAs<NBT::TagInt>("rainTime");
-    if (tagRainTime)
-    {
-        rainTime = tagRainTime->GetValue();
-    }
-
-    NBT::TagByte* tagRaining = tagData->GetTagAs<NBT::TagByte>("raining");
-    if (tagRaining)
-    {
-        raining = tagRaining->GetValue() == 1;
-    }
-
-    NBT::TagInt* tagThunderTime = tagData->GetTagAs<NBT::TagInt>("thunderTime");
-    if (tagThunderTime)
-    {
-        thunderTime = tagThunderTime->GetValue();
-    }
-
-    NBT::TagByte* tagThundering = tagData->GetTagAs<NBT::TagByte>("thundering");
-    if (tagThundering)
-    {
-        thundering = tagThundering->GetValue() == 1;
-    }
-
-}
-
-void World::loadGameMode(NBT::TagCompound* tagData)
-{
-    NBT::TagByte* tagHardcore = tagData->GetTagAs<NBT::TagByte>("hardcore");
-    if (tagHardcore)
-    {
-        hardcore = tagHardcore->GetValue() == 1;
-    }
-
-    NBT::TagLong* tagRandoSeed = tagData->GetTagAs<NBT::TagLong>("RandomSeed");
-    if (tagRandoSeed)
-    {
-        seed = tagRandoSeed->GetValue();
-    }
-
-    NBT::TagInt* tagGameType = tagData->GetTagAs<NBT::TagInt>("GameType");
-    if (tagGameType)
-    {
-        gameType = tagGameType->GetValue();
-    }
-}
-
-void World::saveSpawn(NBT::TagCompound* tagData) const
-{
-    tagData->AddInt("SpawnX", std::floor(spawnPosition.x));
-    tagData->AddInt("SpawnY", std::floor(spawnPosition.y));
-    tagData->AddInt("SpawnZ", std::floor(spawnPosition.z));
-}
-
-void World::saveTimeAndWeather(NBT::TagCompound* tagData) const
-{
-    tagData->AddLong("Time", ageOfWorld);
-    tagData->AddInt("rainTime", rainTime);
-    tagData->AddByte("raining", raining ? 1 : 0);
-    tagData->AddInt("thunderTime", thunderTime);
-    tagData->AddByte("thundering", thundering ? 1 : 0);
-}
-
-void World::saveGameMode(NBT::TagCompound* tagData) const
-{
-    tagData->AddByte("hardcore", hardcore ? 1 : 0);
-    tagData->AddLong("RandomSeed", seed);
-    tagData->AddInt("GameType", gameType);
-}
-
-NBT::TagCompound* World::LoadNbtDatasForPlayer(const std::string& playerName)
-{
-    std::stringstream fileName;
-    fileName << worldName << "/players/" << playerName << ".dat";
-
-    NBT::File file(fileName.str());
-    if (!file.Load())
-    {
-        // No file found or corrupted file
-        // TODO: maybe add check on error, to know if it's first
-        // connection of player, or an error while loading nbt
-        return nullptr;
-    }
-    NBT::Tag* root = file.TakeRoot();
-    NBT::TagCompound* rootAsCompound = nullptr;
-    if (root)
-    {
-        rootAsCompound = root->GetTagAs<NBT::TagCompound>();
-        if (rootAsCompound == nullptr)
-        {
-            delete root;
-        }
-    }
-    return rootAsCompound;
-}
-
-Position World::GetValidSpawnPosition()
-{
-    int spawnPosX = spawnPosition.x;
-    int spawnPosY = spawnPosition.y;
-    int spawnPosZ = spawnPosition.z;
-    spawnPosX += (rand() % 16) - 8;
-    spawnPosZ += (rand() % 16) - 8;
-
-    Chunk* chunk = GetChunk(spawnPosX >> 4, spawnPosZ >> 4);
-    i_block previousBlockId = chunk->getBlockAt(spawnPosX & 0xf, spawnPosY, spawnPosZ & 0xf);
-    Position validPosition(spawnPosX, spawnPosY, spawnPosZ);
-    for (int y = spawnPosY + 1; y < 260; y++)
-    {
-        i_block blockId = chunk->getBlockAt(spawnPosX & 0xf, y, spawnPosZ & 0xf);
-        if (blockId == 0 && previousBlockId == 0)
-        {
-            break;
-        }
-        previousBlockId = blockId;
-        validPosition.y++;
-    }
-    validPosition.y++;
-    return validPosition;
-}
-
-void World::SaveNbtDatasForPlayer(const std::string& playerName, NBT::TagCompound* tagData) const
-{
-    std::stringstream fileName;
-    fileName << worldName << "/players/" << playerName << ".dat";
-
-    NBT::File file(fileName.str(), tagData);
-    if (!file.Save())
-    {
-        LOG_ERROR << "Can't save player data: " << playerName
-                << " due to error:" << file.GetLastErrorMessage()
-                << " when writing: "  << file.GetFilename() << std::endl;
-    }
-}
-
-const Position& World::GetSpawnPosition() const
-{
-    return spawnPosition;
-}
-
-long long World::GetAgeOfWorld() const
-{
-    return ageOfWorld;
-}
-
-long long World::GetCurrentTime() const
-{
-    return currentTime;
-
-    //TODO : In 1.6, if negative the time will stop moving on client.
-}
-
-bool World::IsReadOnly() const
-{
-    return readOnly;
 }
 
 } /* namespace World */

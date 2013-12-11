@@ -137,7 +137,7 @@ void Chunk::SetDataAt(i_small_coord x, i_height y, i_small_coord z, i_data newDa
     }
 }
 
-i_lightvalue Chunk::getBlockLightAt(i_small_coord x, i_height y, i_small_coord z)
+i_lightvalue Chunk::getBlockLightAt(i_small_coord x, i_height y, i_small_coord z) const
 {
     ChunkData* data = datas[y >> 4];
     if (data != NULL)
@@ -155,7 +155,7 @@ i_lightvalue Chunk::getBlockLightAt(i_small_coord x, i_height y, i_small_coord z
     return LIGHTTYPE_BLOCK;
 }
 
-i_lightvalue Chunk::getSkyLightAt(i_small_coord x, i_height y, i_small_coord z)
+i_lightvalue Chunk::getSkyLightAt(i_small_coord x, i_height y, i_small_coord z) const
 {
     ChunkData* data = datas[y >> 4];
     if (data != NULL)
@@ -213,6 +213,10 @@ int Chunk::getHeightMapAt(i_small_coord x, i_small_coord z)
     return heightMap[x | z << 4];
 }
 
+bool Chunk::NeedSave() const
+{
+    return needSave;
+}
 }
 
 #endif
