@@ -41,7 +41,7 @@ void EntityItem::UpdateTick()
     motionY -= 0.03999999910593033;
 
     // opti : if !noclip check every 5 tick ?
-    noclip = PushOutOfBlock(x, y + (boundingBox.getHeight() / 2), z);
+    noclip = pushOutOfBlock(x, y + (boundingBox.getHeight() / 2), z);
 
     Move(motionX, motionY, motionZ);
 

@@ -426,7 +426,7 @@ void Entity::Push(double dx, double dy, double dz)
     motionZ = dz;
 }
 
-bool Entity::PushOutOfBlock(double x, double y, double z)
+bool Entity::pushOutOfBlock(double x, double y, double z)
 {
     int blockX = floor(x);
     int blockY = floor(y);
@@ -576,7 +576,7 @@ double Entity::GetMotionZ() const
     return motionZ;
 }
 
-bool Entity::isOnGround() const
+bool Entity::IsOnGround() const
 {
     return onGround;
 }

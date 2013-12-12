@@ -134,7 +134,7 @@ float DiggingManager::getDamageDonePerTickAgainstBlock(const Block::Block* block
     float damageDone = block->GetDamageDonePerTickByItem(player->LookItemInHand());
 
     //TODO, enchantement (aqua afinity, efficiency...) , potion (digSlowdown, digSpeed), and water reduction
-    if (!player->isOnGround())
+    if (!player->IsOnGround())
         damageDone /= 5.f;
 
     return damageDone;

@@ -197,9 +197,17 @@ public:
      */
     float GetYaw() const;
 
-
+    /**
+     * Get type of entity, see enum eEntityType
+     * @return type of entity
+     */
     eEntityType GetEntityType() const;
 
+    /**
+     * Get flags of entity, see eEntityFlagType
+     * This is used to find different units of same type
+     * @return
+     */
     int GetEntityTypeFlag() const;
 
     /**
@@ -207,27 +215,70 @@ public:
      * @return
      */
     bool IsDead() const;
+
     /**
      * Kill an entity
      */
     virtual void Kill();
 
+    /**
+     * Do some damage to entity
+     * @param damage damage done
+     */
     virtual void DealDamage(int damage);
 
+    /**
+     * Get flags of entity, see eEntityFlags
+     * @return flag of entity
+     */
     char GetFlag();
+
+    /**
+     * Set flags of entity, see eEntityFlags
+     * @param flag flag
+     */
     void SetFlag(char flag);
+
+    /**
+     * Check if entity is in sneak
+     * @return
+     */
     bool IsSneak();
+
+    /**
+     * Set entity in sneak or not
+     * @param sneak true if entity is sneaking
+     */
     void SetSneak(bool sneak);
+
+    /**
+     * Check if entity is sprinting
+     * @return true if entity is spriting
+     */
     bool IsSprinting();
+
+    /**
+     * Set entity in sprint mode or not
+     * @param sprinting true it entity is spriting
+     */
     void SetSprinting(bool sprinting);
+
+
     double GetMotionX() const;
     double GetMotionY() const;
     double GetMotionZ() const;
 
+    /**
+     * Do jump the entity
+     */
     void Jump();
-    bool isOnGround() const;
+
+    bool IsOnGround() const;
+
     double GetFallingSpeedFactor() const;
+
     void SetFallingSpeedFactor(double fallingSpeed);
+
     EntityMetadataManager* GetMetadataManager();
 
     void Push(double dx, double dy, double dz);
@@ -247,7 +298,17 @@ protected:
      */
     virtual void moveToChunk(int newChunkX, int newChunkZ);
 
-    bool PushOutOfBlock(double x, double y, double z);
+    /**
+     * If entity is inside a block, then add speed to entity to go out
+     * of block.
+     * @param x x position of entity
+     * @param y y position of entity
+     * @param z z position of entity
+     * @return
+     */
+    bool pushOutOfBlock(double x, double y, double z);
+
+protected:
 
     const eEntityType entityType;
     const int entityTypeFlag;
