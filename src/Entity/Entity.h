@@ -1,10 +1,3 @@
-/*
- * Entity.h
- *
- *  Created on: 24 déc. 2012
- *      Author: bertrand
- */
-
 #ifndef ENTITY_H_
 #define ENTITY_H_
 

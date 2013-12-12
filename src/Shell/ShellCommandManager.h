@@ -1,10 +1,3 @@
-/*
- * ShellCommandManager.h
- *
- *  Created on: Oct 14, 2013
- *      Author: yann291
- */
-
 #ifndef SHELLCOMMANDMANAGER_H_
 #define SHELLCOMMANDMANAGER_H_
 

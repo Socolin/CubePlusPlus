@@ -1,10 +1,3 @@
-/*
- * AIBeg.cpp
- *
- *  Created on: Aug 13, 2013
- *      Author: yann291
- */
-
 #include "AIBeg.h"
 #include "Entity/Scripts/ScriptedLivingEntity.h"
 #include "Entity/Scripts/Living/AnimalWolfScript.h"

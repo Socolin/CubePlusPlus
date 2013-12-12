@@ -1,10 +1,3 @@
-/*
- * AIProtectOwner.cpp
- *
- *  Created on: Aug 6, 2013
- *      Author: yann291
- */
-
 #include "AIProtectOwner.h"
 
 namespace Scripting

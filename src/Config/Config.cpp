@@ -1,10 +1,3 @@
-/*
- * Config.cpp
- *
- *  Created on: 28 nov. 2012
- *      Author: poogly
- */
-
 #include "Config.h"
 #include "Logging/Logger.h"
 
