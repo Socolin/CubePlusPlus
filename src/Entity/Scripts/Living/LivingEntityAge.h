@@ -1,10 +1,3 @@
-/*
- * LivingEntityAge.h
- *
- *  Created on: Jul 30, 2013
- *      Author: yann291
- */
-
 #ifndef LIVINGENTITYAGE_H_
 #define LIVINGENTITYAGE_H_
 

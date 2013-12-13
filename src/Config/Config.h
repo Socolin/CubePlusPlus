@@ -1,10 +1,3 @@
-/*
- * Config.h
- *
- *  Created on: 28 nov. 2012
- *      Author: poogly
- */
-
 #ifndef CONFIG_H_
 #define CONFIG_H_
 

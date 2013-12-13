@@ -1,10 +1,3 @@
-/*
- * Position.cpp
- *
- *  Created on: 24 déc. 2012
- *      Author: bertrand
- */
-
 #include "Position.h"
 
 namespace World

@@ -1,10 +1,3 @@
-/*
- * AIProtectOwner.h
- *
- *  Created on: Aug 6, 2013
- *      Author: yann291
- */
-
 #ifndef AIPROTECTOWNER_H_
 #define AIPROTECTOWNER_H_
 

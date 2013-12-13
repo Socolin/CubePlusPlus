@@ -36,29 +36,96 @@ class WorldManager : public Util::Singleton<WorldManager>
 public:
     virtual ~WorldManager();
 
+    /**
+     * Initialize worlds
+     */
     void Init();
+
+    /**
+     * Kick all player
+     * Save world
+     * Stop server
+     */
     void Stop();
+
+    /**
+     * Check if server is running, return true until WorldManager::Stop is call
+     * @return
+     */
     bool IsRunning();
 
+    /**
+     * Update world
+     */
     void UpdateTick() const;
+
 
     EntityPlayer* LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session);
     void RemovePlayer(EntityPlayer* player);
 
     void SendToAllPlayer(const Network::NetworkPacket& packet) const;
+
+    /**
+     * Handle a chat message sended by player
+     * @param player playet who send message
+     * @param message message sended
+     */
     void HandleChatMessage(EntityPlayer* player, std::wstring& message);
 
     World* GetWorld() const;
 
+    /**
+     * Check if server is full
+     * @return true if there is MaxPlayer online
+     */
     bool IsFull() const;
-    int GetPlayerCount() const;
+
+    /**
+     * Get name of server, defined in config,
+     * not used in minecraft code, can be used to manage multiple servers
+     * @return
+     */
     const std::string& GetName() const;
+
+    /**
+     * Get description of server (sended in ping)
+     * @return
+     */
     const std::string& GetDescription() const;
+
+    /**
+     * Return number of player online
+     * @return
+     */
+    int GetPlayerCount() const;
+
+    /**
+     * Get number of avaible slot
+     * @return
+     */
     int GetMaxPlayerCount() const;
+
+    /**
+     * Change number of max player IG, if new max < oldMax, player will not be kicked
+     * @param maxPlayerCount
+     */
     void SetMaxPlayerCount(int maxPlayerCount);
+
+    /**
+     * Return true if server use authentification from mojang server or not.
+     * @return
+     */
     bool IsOnlineMode() const;
+
+    /**
+     * Reload admin ban and whitelist file
+     */
+    void Reload();
+
+
     int GetLateness() const;
     void SetLateness(int lateness);
+
     void Kick(const std::wstring& playerName);
     bool Ban(const std::wstring& playerName);
     bool UnBan(const std::wstring& playerName);
@@ -66,7 +133,6 @@ public:
     bool UnAdmin(const std::wstring& playerName);
     bool AddToWhitelist(const std::wstring& playerName);
     bool UnWhitelist(const std::wstring& playerName);
-    void Reload();
     bool IsBan(const std::wstring& playerName);
     bool IsAdmin(const std::wstring& playerName);
     bool IsWhitelisted(const std::wstring& playerName);

@@ -1,10 +1,3 @@
-/*
- * AIFollowOwner.h
- *
- *  Created on: Aug 6, 2013
- *      Author: yann291
- */
-
 #ifndef AIFOLLOWOWNER_H_
 #define AIFOLLOWOWNER_H_
 

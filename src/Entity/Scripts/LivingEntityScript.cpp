@@ -77,7 +77,7 @@ void LivingEntityScript::MoveToDestination(float speed)
         double motZ = std::cos((baseEntity->GetYaw() * (2 * M_PI)) / 360) * speed;
         baseEntity->MoveLiving(motX, motZ);
 
-        if (((fabs(baseEntity->GetMotionX()) < 0.0001 && fabs(dx) > 0.0001)|| (fabs(baseEntity->GetMotionZ()) == 0.0001 && fabs(dz) > 0.0001)) && baseEntity->isOnGround())
+        if (((fabs(baseEntity->GetMotionX()) < 0.0001 && fabs(dx) > 0.0001)|| (fabs(baseEntity->GetMotionZ()) == 0.0001 && fabs(dz) > 0.0001)) && baseEntity->IsOnGround())
         {
             baseEntity->Jump();
         }

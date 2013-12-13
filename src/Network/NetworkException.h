@@ -1,10 +1,3 @@
-/*
- * NetworkException.h
- *
- *  Created on: 21 nov. 2012
- *      Author: bertrand
- */
-
 #ifndef NETWORKEXCEPTION_H_
 #define NETWORKEXCEPTION_H_
 

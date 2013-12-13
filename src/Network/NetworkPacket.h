@@ -1,10 +1,3 @@
-/*
- * NetworkPacket.h
- *
- *  Created on: 22 nov. 2012
- *      Author: bertrand
- */
-
 #ifndef NETWORKPACKET_H_
 #define NETWORKPACKET_H_
 

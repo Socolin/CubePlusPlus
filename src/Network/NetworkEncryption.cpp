@@ -1,10 +1,3 @@
-/*
- * NetworkEncryption.cpp
- *
- *  Created on: 26 nov. 2012
- *      Author: bertrand
- */
-
 #include "NetworkEncryption.h"
 #include <cryptopp/files.h>
 #include <cryptopp/integer.h>

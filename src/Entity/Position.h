@@ -1,10 +1,3 @@
-/*
- * Position.h
- *
- *  Created on: 24 déc. 2012
- *      Author: bertrand
- */
-
 #ifndef POSITION_H_
 #define POSITION_H_
 

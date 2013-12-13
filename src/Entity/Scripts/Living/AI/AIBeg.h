@@ -1,10 +1,3 @@
-/*
- * AIBeg.h
- *
- *  Created on: Aug 13, 2013
- *      Author: yann291
- */
-
 #ifndef AIBEG_H_
 #define AIBEG_H_
 
