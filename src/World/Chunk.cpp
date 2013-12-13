@@ -176,8 +176,9 @@ void Chunk::Load()
     delete nbtData;
 }
 
-void Chunk::Save() const
+void Chunk::Save()
 {
+    needSave = false;
     NBT::TagCompound* tag = saveToNbtData();
     world->saveChunkNbtData(posX, posZ, tag);
 }

@@ -76,6 +76,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         player->SendChatMessage(L"§aReloading Ban list, Admin list and Whitelist");
         World::WorldManager::Instance().Reload();
     }
+    else if (message == L"/save")
+    {
+        player->SendChatMessage(L"§aSaving world");
+        player->GetWorld()->Save();
+    }
     else if (message == L"/night")
     {
         player->SendChatMessage(L"§aYou switch time to night");

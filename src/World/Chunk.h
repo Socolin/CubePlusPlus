@@ -48,7 +48,7 @@ public:
     // Load chunk from file
     void Load();
     // Save chunk to file
-    void Save() const;
+    void Save();
 
     inline bool NeedSave() const;
     // Unload the chunk, save and free data
