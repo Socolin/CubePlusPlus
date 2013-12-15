@@ -202,8 +202,6 @@ void BlockList::Initialize()
     delete result;
 }
 
-
-
 void BlockList::LoadSounds()
 {
     Database::DatabaseManager* db = Database::DatabaseManager::Instance();

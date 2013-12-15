@@ -1250,7 +1250,7 @@ void World::updateLightByType(eLightType lightType, int x, i_height y, int z)
             int blockToUpdateY = blockToUpdate.y + y;
             int blockToUpdateZ = blockToUpdate.z + z;
 
-            i_lightvalue blockToUpdateLightValue = blockToUpdate.l;
+            i_lightvalue blockToUpdateLightValue = blockToUpdate.level;
             i_lightvalue blockToUpdateOldLightValue = getLightValueAt(lightType, blockToUpdateX, blockToUpdateY, blockToUpdateZ);
 
             if (blockToUpdateOldLightValue == blockToUpdateLightValue)
@@ -1626,7 +1626,7 @@ i_powerlevel World::getMaxPowerFromBlockArround(int x, i_height y, int z)
         {
             maxValue = power;
         }
-    }
+    END_FOR_EACH_SIDE
 
     return maxValue;
 }

@@ -15,7 +15,7 @@
 
 #include "Block/Scripts/Basics/BlockRedstoneTorchBurnoutMgr.h"
 
-#define CHUNK_KEY(X,Z) (((((long long)X) << 32) & 0xffffffff00000000)| (((long long)Z) & 0x00000000ffffffff))
+#define CHUNK_KEY(X, Z) (((((long long)X) << 32) & 0xffffffff00000000)| (((long long)Z) & 0x00000000ffffffff))
 
 namespace Network
 {
@@ -865,7 +865,7 @@ private:
         int x:6;
         int y:6;
         int z:6;
-        unsigned l:4;
+        unsigned level:4;
     };
 
     Util::BufferedRewindableQueue<struct LightUpdateData, 32768> updateLightQueue;
