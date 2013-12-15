@@ -112,6 +112,29 @@ public:
     virtual void moveToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ) override;
     virtual void moveToChunk(int newChunkX, int newChunkZ) override;
 
+    /**
+     * Called when entity teleport to new VirtualChunk (128x128)
+     * @param newVirtualChunkX
+     * @param newVirtualChunkZ
+     */
+    virtual void teleportToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ) override;
+
+    /**
+     * Called when entity teleport to new chunk (16x16)
+     * @param newChunkX
+     * @param newChunkZ
+     */
+    virtual void teleportToChunk(int newChunkX, int newChunkZ) override;
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param yaw
+     * @param pitch
+     */
+    virtual void onTeleport(double x, double y, double z, float yaw, float pitch) override;
 
     virtual bool Load(NBT::TagCompound* tagNbtData) override;
     virtual bool Save(NBT::TagCompound* tagNbtData) override;

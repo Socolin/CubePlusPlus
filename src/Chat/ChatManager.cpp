@@ -91,6 +91,17 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         player->SendChatMessage(L"§aYou switch time to day");
         World::WorldManager::Instance().GetWorld()->SetTime(1000);
     }
+    else if (message.substr(0, 4) == L"/tp ")
+    {
+        std::wstringstream ss(message.substr(4));
+        double x;
+        double y;
+        double z;
+        if (ss >> x >> y >> z)
+        {
+            player->Teleport(x, y, z, player->GetYaw(), player->GetPitch());
+        }
+    }
     else if (message.substr(0, 6) == L"/kick ")
     {
         std::wstring playerName = message.substr(6, message.size() - 6);

@@ -283,9 +283,88 @@ void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
     }
 }
 
+void EntityPlayer::teleportToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
+{
+    VirtualChunk *oldVChunk = world->GetVirtualChunk(virtualChunkX, virtualChunkZ);
+    oldVChunk->RemovePlayer(this);
+    VirtualChunk *vChunk = world->GetVirtualChunk(newVirtualChunkX, newVirtualChunkZ);
+    vChunk->AddPlayer(this);
+}
+
+void EntityPlayer::teleportToChunk(int newChunkX, int newChunkZ)
+{
+    int viewDistance = world->GetViewDistance();
+
+    while (!chunkToSend.empty())
+    {
+        const ChunkToSendData& chunkToSendData = chunkToSend.top();
+        if (abs(newChunkX - chunkToSendData.x) <= viewDistance && abs(newChunkZ - chunkToSendData.z) <= viewDistance)
+        {
+            sortChunkToSend.push_back({chunkToSendData.x, chunkToSendData.z, abs(newChunkX - chunkToSendData.x) + abs(newChunkZ - chunkToSendData.z)});
+        }
+        chunkToSend.pop();
+    }
+
+    for (const ChunkToSendData& chunkToSendData : sortChunkToSend)
+    {
+        chunkToSend.push(chunkToSendData);
+    }
+    sortChunkToSend.clear();
+
+    VirtualSmallChunk*oldVChunk = world->GetVirtualSmallChunk(chunkX, chunkZ);
+    oldVChunk->RemovePlayer(this);
+    VirtualSmallChunk *vChunk = world->GetVirtualSmallChunk(newChunkX, newChunkZ);
+    vChunk->AddPlayer(this);
+
+    int dx = newChunkX - chunkX;
+    int dz = newChunkZ - chunkZ;
+
+    int startX = chunkX - viewDistance;
+    int endX = chunkX + viewDistance;
+    int startZ = chunkZ - viewDistance;
+    int endZ = chunkZ + viewDistance;
+    int newStartX = startX + dx;
+    int newEndX = endX + dx;
+    int newStartZ = startZ + dz;
+    int newEndZ = endZ + dz;
+
+    for (int xAdd = newStartX; xAdd <= newEndX; xAdd++)
+    {
+        for (int zAdd = newStartZ; zAdd <= newEndZ; zAdd++)
+        {
+            if (xAdd > endX || xAdd < startX || zAdd > endZ || zAdd < startZ)
+            {
+                Chunk* chunk = world->GetChunk(xAdd, zAdd);
+                chunk->AddPlayer(this);
+                AddChunkToSend(xAdd, zAdd);
+            }
+        }
+    }
+
+    for (int xRemove = startX; xRemove <= endX; xRemove++)
+    {
+        for (int zRemove = startZ; zRemove <= endZ; zRemove++)
+        {
+            if (xRemove > newEndX || xRemove < newStartX || zRemove > newEndZ || zRemove < newStartZ)
+            {
+                Chunk* chunk = world->GetChunk(xRemove, zRemove);
+                chunk->RemovePlayer(this);
+            }
+        }
+    }
+}
+
+void EntityPlayer::onTeleport(double x, double y, double z, float yaw, float pitch)
+{
+    if (session != nullptr)
+    {
+        session->SendSetPositionAndLook(x, y + 1.62, y, z, yaw, pitch, false);
+    }
+}
+
 void EntityPlayer::Kick(const std::wstring message)
 {
-    if (session != NULL)
+    if (session != nullptr)
         session->kick(message);
     session = nullptr;
 }

@@ -73,8 +73,11 @@ void Entity::MoveTo(double x, double y, double z)
     int newChunkX = ((int) x) >> 4;
     int newChunkZ = ((int) z) >> 4;
     Chunk* chunk = world->GetChunkIfLoaded(newChunkX, newChunkZ);
+
+    int chunkDx = newChunkX - chunkX;
+    int chunkDz = newChunkZ - chunkZ;
     // TODO: if movedistance > 1 chunk tpback
-    if (chunk == NULL)
+    if (chunk == NULL || abs(chunkDx) > 1 || abs(chunkDz) > 1)
     {
         Teleport(this->x, this->y, this->z, this->yaw, this->pitch);
         return;
@@ -161,10 +164,33 @@ void Entity::Move(double dx, double dy, double dz)
     motionZ = dz;
 }
 
-void Entity::Teleport(double x, double y, double z, float /*yaw*/, float /*pitch*/)
+void Entity::Teleport(double x, double y, double z, float yaw, float pitch)
 {
     Relocate(x, y, z);
-    // TODO
+
+    int newChunkX = ((int) x) >> 4;
+    int newChunkZ = ((int) z) >> 4;
+    int newVirtualChunkX = ((int) x) >> 7;
+    int newVirtualChunkZ = ((int) z) >> 7;
+
+    if (newVirtualChunkX != virtualChunkX || newVirtualChunkZ != virtualChunkZ)
+    {
+        teleportToVirtualChunk(newVirtualChunkX, newVirtualChunkZ);
+    }
+
+    if (newChunkX != chunkX || newChunkZ != chunkZ)
+    {
+        teleportToChunk(newChunkX, newChunkZ);
+    }
+
+    virtualChunkX = newVirtualChunkX;
+    virtualChunkZ = newVirtualChunkZ;
+    chunkX = newChunkX;
+    chunkZ = newChunkZ;
+    if (entityType == ENTITY_TYPE_PLAYER)
+        boundingBox.SetPositionCenteredXZ(x, y, z);
+
+    onTeleport(x, y, z, yaw, pitch);
 }
 
 void Entity::GetUpdatePositionAndRotationPacket(Network::NetworkPacket& packet)
@@ -424,6 +450,26 @@ void Entity::Push(double dx, double dy, double dz)
     motionX = dx;
     motionY = dy;
     motionZ = dz;
+}
+
+void Entity::teleportToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ)
+{
+    VirtualChunk *oldVChunk = world->GetVirtualChunk(virtualChunkX, virtualChunkZ);
+    oldVChunk->RemoveEntity(this);
+    VirtualChunk *vChunk = world->GetVirtualChunk(newVirtualChunkX, newVirtualChunkZ);
+    vChunk->AddEntity(this);
+}
+
+void Entity::teleportToChunk(int newChunkX, int newChunkZ)
+{
+    VirtualSmallChunk*oldVChunk = world->GetVirtualSmallChunk(chunkX, chunkZ);
+    oldVChunk->RemoveEntity(this);
+    VirtualSmallChunk *vChunk = world->GetVirtualSmallChunk(newChunkX, newChunkZ);
+    vChunk->AddEntity(this);
+}
+
+void Entity::onTeleport(double /*x*/, double /*y*/, double /*z*/, float /*yaw*/, float /*pitch*/)
+{
 }
 
 bool Entity::pushOutOfBlock(double x, double y, double z)

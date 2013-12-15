@@ -86,7 +86,6 @@ public:
     void StopMoving();
 
     /**
-     * No implemented yet
      * Teleport the entity
      * @param x
      * @param y
@@ -292,6 +291,20 @@ protected:
     virtual void moveToChunk(int newChunkX, int newChunkZ);
 
     /**
+     * Called when entity teleport to new VirtualChunk (128x128)
+     * @param newVirtualChunkX
+     * @param newVirtualChunkZ
+     */
+    virtual void teleportToVirtualChunk(int newVirtualChunkX, int newVirtualChunkZ);
+
+    /**
+     * Called when entity teleport to new chunk (16x16)
+     * @param newChunkX
+     * @param newChunkZ
+     */
+    virtual void teleportToChunk(int newChunkX, int newChunkZ);
+
+    /**
      * If entity is inside a block, then add speed to entity to go out
      * of block.
      * @param x x position of entity
@@ -300,6 +313,17 @@ protected:
      * @return
      */
     bool pushOutOfBlock(double x, double y, double z);
+
+    /**
+     *
+     * @param x
+     * @param y
+     * @param z
+     * @param yaw
+     * @param pitch
+     */
+    virtual void onTeleport(double x, double y, double z, float yaw, float pitch);
+
 
 protected:
 
