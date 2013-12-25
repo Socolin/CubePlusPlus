@@ -7,6 +7,7 @@
 #include "Basics/BlockDoorScript.h"
 #include "Basics/BlockEnderChestScript.h"
 #include "Basics/BlockFallingScript.h"
+#include "Basics/BlockFireScript.h"
 #include "Basics/BlockFurnaceScript.h"
 #include "Basics/BlockGrassScript.h"
 #include "Basics/BlockJackOLanternScript.h"
@@ -36,6 +37,7 @@ void RegisterBlockScript()
     new BlockDoorScript();
     new BlockEnderChestScript();
     new BlockFallingScript();
+    new BlockFireScript();
     new BlockFurnaceScript();
     new BlockGrassScript();
     new BlockJackOLanternScript();

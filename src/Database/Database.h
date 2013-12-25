@@ -39,6 +39,8 @@ enum eDatabaseField
     dropDataMask,
     dropCountMin,
     dropCountMax,
+    chanceToEncourageFire,
+    abilityToCatchFire,
 };
 }
 namespace TableBlockSound

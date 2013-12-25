@@ -23,7 +23,8 @@ Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpaci
              bool useNeighborBrightness, int burningTime,
              Scripting::BlockScript* script,
              i_block replaceBlockId,
-             short dropId, char dropDataMask, short dropCountMin, short dropCountMax)
+             short dropId, char dropDataMask, short dropCountMin, short dropCountMax,
+             int chanceToEncourageFire, int abilityToCatchFire)
     : blockId(blockId)
     , sound(sound)
     , lightOpacity(lightOpacity)
@@ -50,6 +51,8 @@ Block::Block(i_block blockId, const SoundBlock& sound, i_lightopacity lightOpaci
     , dropDataMask(dropDataMask)
     , dropCountMin(dropCountMin)
     , dropCountMax(dropCountMax)
+	, chanceToEncourageFire(chanceToEncourageFire)
+	, abilityToCatchFire(abilityToCatchFire)
 {
     edgeAverageMoreThanOne = ((maxX - minX) + (maxY - minY) + (maxZ - minZ)) >= 3;
 }

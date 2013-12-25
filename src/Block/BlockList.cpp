@@ -101,6 +101,8 @@ void BlockList::Initialize()
         char dropDataMask = result->getInt(TableBlock::dropDataMask);
         short dropCountMin = result->getInt(TableBlock::dropCountMin);
         short dropCountMax = result->getInt(TableBlock::dropCountMax);
+        int chanceToEncourageFire = result->getInt(TableBlock::chanceToEncourageFire);
+        int abilityToCatchFire = result->getInt(TableBlock::abilityToCatchFire);
         int scriptId = result->getInt(TableBlock::scriptId);
 
         Scripting::BlockScript* script = nullptr;
@@ -165,7 +167,8 @@ void BlockList::Initialize()
                                  useNeighborBrightness, burningTime,
                                  script,
                                  replaceBlockId,
-                                 dropId, dropDataMask, dropCountMin, dropCountMax);
+                                 dropId, dropDataMask, dropCountMin, dropCountMax,
+                                 chanceToEncourageFire, abilityToCatchFire);
         LOG_DEBUG << blockId << "\t"
                   << (int)lightOpacity << "\t"
                   << (int)lightValue << "\t"

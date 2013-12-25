@@ -47,7 +47,8 @@ public:
           bool useNeighborBrightness, int burningTime,
           Scripting::BlockScript* script,
           i_block replaceBlockId,
-          short dropId, char dropDataMask, short dropCountMin, short dropCountMax);
+          short dropId, char dropDataMask, short dropCountMin, short dropCountMax,
+          int chanceToEncourageFire, int abilityToCatchFire);
     virtual ~Block();
 
     void InitScript();
@@ -251,6 +252,8 @@ private:
     char dropDataMask;
     short dropCountMin;
     short dropCountMax;
+    int chanceToEncourageFire;
+    int abilityToCatchFire;
 
     // Calculated data
     bool edgeAverageMoreThanOne;
