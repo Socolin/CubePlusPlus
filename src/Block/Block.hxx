@@ -69,6 +69,16 @@ i_block Block::GetReplaceBlockId() const
     return replaceBlockId;
 }
 
+int Block::GetChanceToEncourageFire() const
+{
+    return chanceToEncourageFire;
+}
+
+int Block::GetAbilityToCatchFire() const
+{
+    return abilityToCatchFire;
+}
+
 } /* namespace Block */
 
 #endif /* BLOCK_HXX_ */

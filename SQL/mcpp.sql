@@ -88,7 +88,7 @@ INSERT INTO `block` (`blockId`, `name`, `lightOpacity`, `lightValue`, `blockResi
 (48, 'tile.stoneMoss', 255, 0, 30, 2, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, NULL, 1, 0, 0, 0, 48, 0, 1, 1, 0, 0),
 (49, 'tile.obsidian', 255, 0, 6000, 50, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, NULL, 1, 0, 0, 0, 49, 0, 1, 1, 0, 0),
 (50, 'tile.torch', 0, 14, 0, 0, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 13, 7, 4, 0, 1, 0, 50, 0, 1, 1, 0, 0),
-(51, 'tile.fire', 0, 15, 0, 0, 1, 0.6, 0, 0, 0, 0, 0, 0, 1, 1, 1, 19, NULL, 4, 0, 1, 0, 51, 0, 1, 1, 0, 0),
+(51, 'tile.fire', 0, 15, 0, 0, 1, 0.6, 0, 0, 0, 0, 0, 0, 1, 1, 1, 19, 48, 4, 0, 1, 0, 51, 0, 1, 1, 0, 0),
 (52, 'tile.mobSpawner', 0, 0, 25, 5, 0, 0.6, 1, 0, 1, 0, 0, 0, 1, 1, 1, 1, NULL, 8, 0, 1, 0, 52, 0, 1, 1, 0, 0),
 (53, 'tile.stairsWood', 255, 0, 15, 2, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 4, 2, 4, 300, 1, 0, 53, 0, 1, 1, 5, 20),
 (54, 'tile.chest', 0, 0, 12.5, 2.5, 0, 0.6, 1, 0, 0, 0.0625, 0, 0.0625, 0.9375, 0.875, 0.9375, 4, 27, 4, 300, 1, 0, 54, 0, 1, 1, 0, 0),
@@ -1555,7 +1555,7 @@ INSERT INTO `items` (`itemId`, `name`, `maxStackSize`, `maxDamage`, `hasSubType`
 (256, 'item.shovelIron', 1, 250, 0, 0, 0, 46),
 (257, 'item.pickaxeIron', 1, 250, 0, 0, 0, 46),
 (258, 'item.hatchetIron', 1, 250, 0, 0, 0, 46),
-(259, 'item.flintAndSteel', 1, 64, 0, 0, 0, 0),
+(259, 'item.flintAndSteel', 1, 64, 0, 0, 0, 49),
 (260, 'item.apple', 64, 0, 0, 0, 0, 0),
 (261, 'item.bow', 1, 384, 0, 0, 0, 0),
 (262, 'item.arrow', 64, 0, 0, 0, 0, 0),
@@ -1884,6 +1884,8 @@ INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (45, 'window_main', 0),
 (46, 'item_tool', 2),
 (47, 'block_vine', 0);
+(48, 'block_fire', 0);
+(49, 'item_flint_and_steel', 0);
 
 CREATE TABLE IF NOT EXISTS `script_data` (
   `scriptId` int(11) NOT NULL,

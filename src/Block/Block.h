@@ -79,6 +79,16 @@ public:
     void OnBlockAddedInWorld(World::World* world, int x, i_height y, int z, i_data blockData) const;
 
     /**
+     * Called when a block has been destroyed by fire
+     * @param world the world
+     * @param x Position X of block
+     * @param y Position Y of block
+     * @param z Position Z of block
+     */
+
+    void OnBlockDestroyedByFire(World::World* world, int x, i_height y, int z) const;
+
+    /**
      * Called when a player right click on a block, it call the script's method associated.
      * @param user The player which do the right click
      * @param x Position X of block
@@ -90,6 +100,7 @@ public:
      * @param cursorPositionZ Position of player cursor when he place block
      * @return see ItemUseResult definition
      */
+
     ItemUseResult UseBlock(World::EntityPlayer* user, int x, i_height y, int z, char face, char cursorPositionX, char cursorPositionY, char cursorPositionZ) const;
 
     /**
@@ -221,6 +232,8 @@ public:
     inline bool UseNeighborBrightness() const;
     inline int GetBurningTime() const;
     inline i_block GetReplaceBlockId() const;
+    inline int GetChanceToEncourageFire() const;
+    inline int GetAbilityToCatchFire() const;
 
 private:
     /// The id of block.

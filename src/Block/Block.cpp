@@ -79,6 +79,11 @@ void Block::OnBlockAddedInWorld(World::World* world, int x, i_height y, int z, i
     }
 }
 
+void Block::OnBlockDestroyedByFire(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/) const
+{
+    //TODO : Light up TNT in fire
+}
+
 
 void Block::UpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
 {
