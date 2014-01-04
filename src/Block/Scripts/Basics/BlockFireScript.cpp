@@ -2,15 +2,17 @@
 
 #include "Block/Block.h"
 #include "Block/BlockList.h"
+#include "Util/AssertUtil.h"
 #include "World/World.h"
 
 
 namespace Scripting
 {
 
-BlockFireScript::BlockFireScript() :
-    BlockScript("block_fire"),
-    doFireTick(true)
+BlockFireScript::BlockFireScript()
+    : BlockScript("block_fire")
+    , doFireTick(true)
+    , tickRate(0)
 {
 }
 
@@ -21,6 +23,19 @@ BlockFireScript::~BlockFireScript()
 BlockScript* BlockFireScript::Copy()
 {
     return new BlockFireScript(*this);
+}
+
+void BlockFireScript::InitParam(int paramId, int param)
+{
+    switch(paramId)
+    {
+    case SCRIPTINGPARAM_BLOCK_FIRE_TICK_RATE:
+        tickRate = param;
+        break;
+    default:
+        AssertSwitchBadDefault(paramId);
+        break;
+    }
 }
 
 bool BlockFireScript::CanPlace(World::World* world, int x, i_height y, int z, char /*face*/) const
@@ -34,9 +49,22 @@ bool BlockFireScript::CanPlace(World::World* world, int x, i_height y, int z, ch
     return false;
 }
 
-void BlockFireScript::OnBlockAdded(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, i_data /*data*/) const
+void BlockFireScript::OnBlockAdded(World::World* world, int x, i_height y, int z, i_data /*data*/) const
 {
     //TODO : manage nether portal
+    s_block_data bottomBlockData = world->GetBlockIdAndData(x, y - 1, z);
+    const Block::Block* bottomBlock = Block::BlockList::getBlock(bottomBlockData.blockId);
+    if(bottomBlock != nullptr)
+    {
+        if(!bottomBlock->HasSolidTopSurface(bottomBlockData.blockData) || !canNeighborBurn(world, x, y, z))
+        {
+            world->ChangeBlock(x, y, z, 0, 0, false);
+        }
+        else
+        {
+            world->MarkBlockForUpdate(x, y, z, baseBlock->GetBlockId(), tickRate + (rand() % 10));
+        }
+    }
 }
 
 void BlockFireScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
@@ -62,7 +90,7 @@ void BlockFireScript::OnUpdateTick(World::World* world, int x, i_height y, int z
                 world->ChangeDataNotify(x, y, z, data + (rand() % 3) / 2); // 1 in 3 chance to add 1 to block data
             }
 
-            world->ChangeBlockNoEvent(x, y, z, baseBlock->GetBlockId(), 30 + (rand() % 10));
+            world->MarkBlockForUpdate(x, y, z, baseBlock->GetBlockId(), tickRate + (rand() % 10));
             if(!isBottomBlockFlammable && !canNeighborBurn(world, x, y, z))
             {
                 s_block_data bottomBlockData = world->GetBlockIdAndData(x, y - 1, z);

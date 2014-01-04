@@ -48,7 +48,7 @@ INSERT INTO `block` (`blockId`, `name`, `lightOpacity`, `lightValue`, `blockResi
 (8, 'tile.water', 3, 0, 500, 100, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 6, 51, 5, 0, 0, 0, 8, 0, 1, 1, 0, 0),
 (9, 'tile.water', 3, 0, 500, 100, 0, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 6, 52, 5, 0, 0, 0, 9, 0, 1, 1, 0, 0),
 (10, 'tile.lava', 0, 15, 0, 0, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 7, 51, 5, 0, 1, 0, 10, 0, 1, 1, 0, 0),
-(11, 'tile.lava', 0, 15, 500, 100, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 7, 52, 5, 0, 1, 0, 11, 0, 1, 1, 0, 0),
+(11, 'tile.lava', 0, 15, 500, 100, 1, 0.6, 1, 0, 0, 0, 0, 0, 1, 1, 1, 7, 53, 5, 0, 1, 0, 11, 0, 1, 1, 0, 0),
 (12, 'tile.sand', 255, 0, 2.5, 0.5, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 8, 13, 6, 0, 0, 0, 12, 0, 1, 1, 0, 0),
 (13, 'tile.gravel', 255, 0, 3, 0.6, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 8, 13, 3, 0, 0, 0, 13, 0, 1, 1, 0, 0),
 (14, 'tile.oreGold', 255, 0, 15, 3, 0, 0.6, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, NULL, 1, 0, 0, 0, 14, 0, 1, 1, 0, 0),
@@ -1884,11 +1884,12 @@ INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (45, 'window_main', 0),
 (46, 'item_tool', 2),
 (47, 'block_vine', 0),
-(48, 'block_fire', 0),
+(48, 'block_fire', 1),
 (49, 'item_flint_and_steel', 0),
 (50, 'block_fluid', 0),
 (51, 'block_flowing', 0),
-(52, 'block_stationary', 0);
+(52, 'block_stationary', 1),
+(53, 'block_stationary_lava', 1);
 
 CREATE TABLE IF NOT EXISTS `script_data` (
   `scriptId` int(11) NOT NULL,
@@ -1984,7 +1985,12 @@ INSERT INTO `script_data` (`scriptId`, `stuffId`, `param`, `valueint`, `valueflo
 (46, 285, 1, 1, 0, ''),
 (46, 285, 2, 5, 0, ''),
 (46, 286, 1, 2, 0, ''),
-(46, 286, 2, 5, 0, '');
+(46, 286, 2, 5, 0, ''),
+(48, 51, 1, 30, 0, ''),
+(51, 8, 1, 5, 0, ''),
+(51, 10, 1, 30, 0, ''),
+(52, 9, 1, 5, 0, ''),
+(52, 11, 1, 30, 0, '');
 
 CREATE TABLE IF NOT EXISTS `script_info` (
   `scriptId` int(11) NOT NULL,
@@ -2018,7 +2024,10 @@ INSERT INTO `script_info` (`scriptId`, `name`, `paramId`, `type`) VALUES
 (32, 'windowId', 1, 1),
 (34, 'windowEnderChestChestDataId', 1, 1),
 (46, 'ToolType', 1, 1),
-(46, 'ToolMaterial', 2, 1);
+(46, 'ToolMaterial', 2, 1),
+(48, 'tickRate', 1, 1),
+(51, 'tickRate', 1, 1),
+(52, 'tickRate', 1, 1);
 
 CREATE TABLE IF NOT EXISTS `tool_efficiency` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
