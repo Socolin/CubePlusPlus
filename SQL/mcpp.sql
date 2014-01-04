@@ -1883,8 +1883,8 @@ INSERT INTO `script` (`id`, `scriptName`, `paramCount`) VALUES
 (44, 'craft_shapeless', 0),
 (45, 'window_main', 0),
 (46, 'item_tool', 2),
-(47, 'block_vine', 0);
-(48, 'block_fire', 0);
+(47, 'block_vine', 0),
+(48, 'block_fire', 0),
 (49, 'item_flint_and_steel', 0);
 
 CREATE TABLE IF NOT EXISTS `script_data` (
