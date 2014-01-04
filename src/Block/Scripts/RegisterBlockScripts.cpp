@@ -8,6 +8,8 @@
 #include "Basics/BlockEnderChestScript.h"
 #include "Basics/BlockFallingScript.h"
 #include "Basics/BlockFireScript.h"
+#include "Basics/BlockFlowingScript.h"
+#include "Basics/BlockFluidScript.h"
 #include "Basics/BlockFurnaceScript.h"
 #include "Basics/BlockGrassScript.h"
 #include "Basics/BlockJackOLanternScript.h"
@@ -22,6 +24,7 @@
 #include "Basics/BlockSignGroundScript.h"
 #include "Basics/BlockSignWallScript.h"
 #include "Basics/BlockStairScript.h"
+#include "Basics/BlockStationaryScript.h"
 #include "Basics/BlockTorchScript.h"
 #include "Basics/BlockVineScript.h"
 #include "Basics/BlockWoodScript.h"
@@ -38,6 +41,8 @@ void RegisterBlockScript()
     new BlockEnderChestScript();
     new BlockFallingScript();
     new BlockFireScript();
+    new BlockFlowingScript();
+    new BlockFluidScript();
     new BlockFurnaceScript();
     new BlockGrassScript();
     new BlockJackOLanternScript();
@@ -52,6 +57,7 @@ void RegisterBlockScript()
     new BlockSignGroundScript();
     new BlockSignWallScript();
     new BlockStairScript();
+    new BlockStationaryScript();
     new BlockTorchScript();
     new BlockVineScript();
     new BlockWoodScript();
