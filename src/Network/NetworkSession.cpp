@@ -13,6 +13,7 @@
 #include "World/WorldManager.h"
 #include "Entity/EntityPlayer.h"
 #include "Util/StringUtil.h"
+#include "Config/Config.h"
 
 namespace Network
 {
@@ -28,8 +29,11 @@ NetworkSession::NetworkSession(int socket, const std::string& ip) :
     , lastSendKeepAliveTick(0)
     , lastKeepAliveId(0)
     , waitLoginId(0)
+    , current_version_protocol(0)
+    , current_version_protocol_str("")
 {
-
+    Config::Config::GetConfig().lookupValue("server.general.protocol-version", current_version_protocol);
+    Config::Config::GetConfig().lookupValue("server.general.protocol-version-str", current_version_protocol_str);
 }
 
 NetworkSession::~NetworkSession()
@@ -344,6 +348,18 @@ void NetworkSession::SendData()
             disconnect(L"Error while sending data");
         }
     } while (res > 0);
+}
+
+int NetworkSession::GetProtocolVersion()
+{
+    return current_version_protocol;
+}
+
+std::wstring NetworkSession::GetProtocolVersionWstr()
+{
+    std::wstring result = L"";
+    Util::StringToWString(result, current_version_protocol_str);
+    return result;
 }
 
 }

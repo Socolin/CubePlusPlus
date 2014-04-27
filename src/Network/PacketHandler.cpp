@@ -63,7 +63,7 @@ void NetworkSession::handleHandShake() throw (NetworkException)
 
     unsigned char protocolVersion = readByte();
 
-    if (protocolVersion != CURRENT_VERSION_PROTOCOL)
+    if (protocolVersion != NetworkSession::GetProtocolVersion())
     {
         kick(Message::MessageList::GetMessage("network.kick.badprotocol"));
         return;
@@ -566,7 +566,7 @@ void NetworkSession::handlePing() throw (NetworkException)
     std::string str_currentPlayers = currentPlayerStream.str();
 
     std::wstring answer(L"\u00a7\u0031\u0001");
-    answer += CURRENT_VERSION_PROTOCOL_WSTR;
+    answer += NetworkSession::GetProtocolVersionWstr();
     answer += L"\u00011.5.2\u0001";
     std::copy(desc.begin(), desc.end(), std::back_inserter(answer));
     answer += L"\u0001";

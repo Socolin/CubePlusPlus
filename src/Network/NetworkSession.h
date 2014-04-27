@@ -24,8 +24,6 @@ namespace Network
 #define INITIAL_BUFFER_SIZE 512
 #define MAX_TICK_FOR_KEEPALIVE 1200
 #define INTERVAL_SEND_KEEPALIVE 20
-#define CURRENT_VERSION_PROTOCOL 61
-#define CURRENT_VERSION_PROTOCOL_WSTR L"61"
 #define MAX_STRING_SIZE 256
 
 enum eSessionState
@@ -124,6 +122,9 @@ public:
     bool IsSendBufferHalfFull();
     int GetSocket() const;
     void SendData();
+    
+    int GetProtocolVersion();
+    std::wstring GetProtocolVersionWstr();
 
 private:
     void readData(int length, char* data) throw (NetworkException);
@@ -169,6 +170,9 @@ private:
     int waitLoginId;
     std::string decryptedSecretKey;
     std::string serverIdStr;
+        
+    int current_version_protocol;
+    std::string current_version_protocol_str;
 };
 }
 
