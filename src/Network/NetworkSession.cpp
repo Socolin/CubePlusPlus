@@ -31,9 +31,11 @@ NetworkSession::NetworkSession(int socket, const std::string& ip) :
     , waitLoginId(0)
     , current_version_protocol(0)
     , current_version_protocol_str("")
+    , minecraft_server_version("")
 {
     Config::Config::GetConfig().lookupValue("server.general.protocol-version", current_version_protocol);
     Config::Config::GetConfig().lookupValue("server.general.protocol-version-str", current_version_protocol_str);
+    Config::Config::GetConfig().lookupValue("server.general.minecraft-server-version", minecraft_server_version);
 }
 
 NetworkSession::~NetworkSession()
@@ -359,6 +361,13 @@ std::wstring NetworkSession::GetProtocolVersionWstr()
 {
     std::wstring result = L"";
     Util::StringToWString(result, current_version_protocol_str);
+    return result;
+}
+
+std::wstring NetworkSession::GetMinecraftServerVersion()
+{
+    std::wstring result = L"";
+    Util::StringToWString(result, minecraft_server_version);
     return result;
 }
 

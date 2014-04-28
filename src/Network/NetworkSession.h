@@ -125,6 +125,7 @@ public:
     
     int GetProtocolVersion();
     std::wstring GetProtocolVersionWstr();
+    std::wstring GetMinecraftServerVersion();
 
 private:
     void readData(int length, char* data) throw (NetworkException);
@@ -173,6 +174,7 @@ private:
         
     int current_version_protocol;
     std::string current_version_protocol_str;
+    std::string minecraft_server_version;
 };
 }
 
