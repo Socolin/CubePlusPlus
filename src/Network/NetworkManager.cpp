@@ -289,7 +289,11 @@ void NetworkManager::OnDisconnectClient(NetworkSession* session)
     if (!session->isDisconnected())
     {
         session->disconnect(L"OnDisconnectClient");
-        closedSocket.push_back(session->GetSocket());
+        closedSocket.insert(session->GetSocket());
+    } else {
+        if (session->GetSocket() > 0) {
+            closedSocket.insert(session->GetSocket());
+        }
     }
 }
 
