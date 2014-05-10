@@ -8,6 +8,7 @@
 #include "Entity/Scripts/Database/ScriptedEntityList.h"
 #include "Entity/Scripts/ScriptedLivingEntity.h"
 #include "Logging/Logger.h"
+#include "Util/StringUtil.h"
 #include "World/WorldManager.h"
 #include "World/World.h"
 
@@ -101,6 +102,53 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             player->Teleport(x, y, z, player->GetYaw(), player->GetPitch());
         }
+        else
+        {
+            std::wstring playerNameSrc;
+            std::wstring playerNameDest;
+            std::vector<std::wstring> tpPlayers = Util::split(message.substr(4), ' ');
+            if(1 == tpPlayers.size())
+            {
+                playerNameDest = tpPlayers[0];
+                World::EntityPlayer* destPlayer = World::WorldManager::Instance().GetPlayerByName(playerNameDest);
+                if (nullptr != destPlayer)
+                {
+                    player->Teleport(destPlayer->x, destPlayer->y, destPlayer->z, destPlayer->GetYaw(), destPlayer->GetPitch());
+                    player->GetChat() << Chat::GREEN << L"Teleported to " << playerNameDest << std::endl;
+                }
+                else
+                {
+                    player->GetChat() << Chat::RED << L"Can't teleport to " << playerNameDest << L", player not found in current map" << std::endl;
+                    displayMatchingPrefix(player, playerNameDest);
+                }
+            }
+            else if(2 == tpPlayers.size())
+            {
+                playerNameSrc = tpPlayers[0];
+                playerNameDest = tpPlayers[1];
+                World::EntityPlayer* srcPlayer = World::WorldManager::Instance().GetPlayerByName(playerNameSrc);
+                World::EntityPlayer* destPlayer = World::WorldManager::Instance().GetPlayerByName(playerNameDest);
+                if (nullptr != srcPlayer && nullptr != destPlayer)
+                {
+                    srcPlayer->Teleport(destPlayer->x, destPlayer->y, destPlayer->z, destPlayer->GetYaw(), destPlayer->GetPitch());
+                    player->GetChat() << Chat::GREEN << playerNameSrc << L" teleported to " << playerNameDest << std::endl;
+                }
+                else if (nullptr == srcPlayer)
+                {
+                    player->GetChat() << Chat::RED << L"Can't find player " << playerNameSrc << L" in current map" << std::endl;
+                    displayMatchingPrefix(player, playerNameSrc);
+                }
+                else if (nullptr == destPlayer)
+                {
+                    player->GetChat() << Chat::RED << L"Can't find player " << playerNameDest << L" in current map" << std::endl;
+                    displayMatchingPrefix(player, playerNameDest);
+                }
+            }
+            else
+            {
+                player->GetChat() << Chat::RED << L"Invalid arguments" << std::endl;
+            }
+        }
     }
     else if (message.substr(0, 6) == L"/kick ")
     {
@@ -109,8 +157,7 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             World::WorldManager::Instance().Kick(playerName);
             std::wostringstream confirmMessage;
-            confirmMessage << Chat::GREEN << playerName << L" kicked";
-            player->SendChatMessage(confirmMessage.str());
+            player->GetChat() << Chat::GREEN << playerName << L" kicked";
         }
     }
     else if (message.substr(0, 5) == L"/ban ")
@@ -120,11 +167,11 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if(World::WorldManager::Instance().Ban(playerName))
             {
-                player->GetChat() << Chat::GREEN << playerName << L" banned" << std::endl;;
+                player->GetChat() << Chat::GREEN << playerName << L" banned" << std::endl;
             }
             else
             {
-                player->GetChat() << Chat::RED << playerName << L" is already banned" << std::endl;;
+                player->GetChat() << Chat::RED << L"Can't ban " << playerName << std::endl;
             }
         }
     }
@@ -335,6 +382,19 @@ bool ChatManager::RemoveForbiddenWord(const std::wstring& word)
 bool ChatManager::IsForbiddenWord(const std::wstring& word)
 {
     return (forbiddenWords.find(word) != forbiddenWords.end());
+}
+
+void ChatManager::displayMatchingPrefix(World::EntityPlayer* player, const std::wstring& prefix)
+{
+    std::map<std::wstring, World::EntityPlayer*>* playerList = World::WorldManager::Instance().GetPlayerByNameList();
+    player->GetChat() << Chat::BLUE << L"Connected players with a similar name : " << std::endl;
+    for(auto playerItr = playerList->begin(); playerItr != playerList->end(); playerItr++)
+    {
+        if (prefix == (playerItr->first).substr(0, prefix.size()))
+        {
+            player->GetChat() << Chat::BLUE << L"   - " << playerItr->first << std::endl;
+        }
+    }
 }
 
 

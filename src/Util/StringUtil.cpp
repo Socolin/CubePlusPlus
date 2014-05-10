@@ -137,7 +137,16 @@ void DumpBuffer(char* buffer, size_t size, std::ostream& stream, const char* lab
         }
     }
     stream << std::dec << std::endl;
+}
 
+std::vector<std::wstring> split(const std::wstring &ws, wchar_t delim) {
+    std::vector<std::wstring> elems;
+    std::wstringstream ss(ws);
+    std::wstring item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+    return elems;
 }
 
 } /* namespace Util */

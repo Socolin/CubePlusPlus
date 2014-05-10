@@ -25,6 +25,7 @@ public:
 private:
     bool handleAdminCommand(World::EntityPlayer* player, std::wstring& message);
     void loadForbiddenWordsList();
+    void displayMatchingPrefix(World::EntityPlayer* player, const std::wstring& prefix);
     std::string fwFileName;
     std::set<std::wstring> forbiddenWords;
 };
