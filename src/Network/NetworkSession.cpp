@@ -176,7 +176,10 @@ void NetworkSession::CloseForDelete()
         worldManager.RemovePlayer(player);
         player = nullptr;
     }
-    close(socket);
+    if (socket > 0) {
+        close(socket);
+        socket = SOCKET_CLOSED;
+    }
 }
 
 void NetworkSession::SendKickMessage(const std::wstring& message)

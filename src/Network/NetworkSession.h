@@ -25,6 +25,7 @@ namespace Network
 #define MAX_TICK_FOR_KEEPALIVE 1200
 #define INTERVAL_SEND_KEEPALIVE 20
 #define MAX_STRING_SIZE 256
+#define SOCKET_CLOSED -1
 
 enum eSessionState
 {

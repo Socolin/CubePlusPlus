@@ -3,7 +3,7 @@
 
 #include <unordered_map>
 #include <sys/epoll.h>
-#include <vector>
+#include <set>
 
 namespace Network
 {
@@ -21,12 +21,13 @@ public:
     bool StartServer(unsigned short port);
     void ReceiveData();
     void StopServer();
+    void OnClientAskDisconnect(int socket);
 private:
     NetworkSession* OnNewClient(int socket, const std::string& ip);
     void OnDisconnectClient(NetworkSession* session);
 private:
     std::unordered_map<int, NetworkSession*> sessionList;
-    std::vector<int> closedSocket;
+    std::set<int> closedSocket;
     int sfd, s;
     int efd;
     struct epoll_event event;
