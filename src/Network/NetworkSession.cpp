@@ -219,6 +219,8 @@ void NetworkSession::kick(std::wstring message)
     if (player != nullptr)
     {
         LOG_INFO << "Kick " << username << ": " << message << std::endl;
+        SendKickMessage(message);
+        SendData();
         player->Disconnect();
     }
     else
@@ -226,7 +228,6 @@ void NetworkSession::kick(std::wstring message)
         LOG_INFO << "Kick sessions : " << message << std::endl;
     }
 
-    SendKickMessage(message);
     state = STATE_KICKED;
     shutdown(socket, SHUT_RDWR);
 }
