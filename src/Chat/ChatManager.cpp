@@ -19,9 +19,12 @@ namespace Chat
 
 ChatManager::ChatManager()
     : fwFileName("forbiddenWords")
+    , mutedPlayersFileName("mutedPlayers")
 {
     Config::Config::GetConfig().lookupValue("server.general.forbidden-words-file", fwFileName);
+    Config::Config::GetConfig().lookupValue("server.general.muted-players-file", mutedPlayersFileName);
     loadForbiddenWordsList();
+    loadMutedPlayersList();
 }
 
 ChatManager::~ChatManager()
@@ -38,8 +41,15 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
 
         if (!commandHandled)
         {
-            player->GetChat() << Chat::RED << "Not a valid command" << std::endl;;
+            player->GetChat() << Chat::RED << L"Not a valid command" << std::endl;
         }
+        return true;
+    }
+    
+    if (IsMutedPlayer(player->GetUsername()))
+    {
+        player->GetChat() << Chat::RED << L"You have been muted by an admin, your message will not be send" << std::endl;
+        LOG_INFO << "Muted player " << player->GetUsername() << " try to send message : " << message << std::endl;
         return true;
     }
 
@@ -50,7 +60,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     {
         if(messageLow.find(*it) != messageLow.npos)
         {
-            player->GetChat() << Chat::RED << "Your message include forbidden words and will not be send";
+            player->GetChat() << Chat::RED << L"Your message include forbidden words and will not be send" << std::endl;
             LOG_INFO << "Invalid message send by player " << player->GetUsername() << " : " << message << std::endl;
             return true;
         }
@@ -280,6 +290,36 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
             }
         }
     }
+    else if (message.substr(0, 6) == L"/mute ")
+    {
+        std::wstring playerName = message.substr(6, message.size() - 6);
+        if (playerName.size() > 0)
+        {
+            if (AddMutedPlayer(playerName))
+            {
+                player->GetChat() << Chat::GREEN << playerName << L" muted" << std::endl;
+            }
+            else
+            {
+                player->GetChat() << Chat::RED << playerName << L" is already muted" << std::endl;
+            }
+        }
+    }
+    else if (message.substr(0, 8) == L"/unmute ")
+    {
+        std::wstring playerName = message.substr(8, message.size() - 8);
+        if (playerName.size() > 0)
+        {
+            if (RemoveMutedPlayer(playerName))
+            {
+                player->GetChat() << Chat::GREEN << playerName << L" no longer muted" << std::endl;
+            }
+            else
+            {
+                player->GetChat() << Chat::RED << playerName << L" is not muted" << std::endl;
+            }
+        }
+    }
     else if (message == L"/spawn chicken")
     {
         World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(1, player->x, player->y, player->z);
@@ -339,6 +379,20 @@ void ChatManager::loadForbiddenWordsList()
     forbiddenWordsList.close();
 }
 
+void ChatManager::loadMutedPlayersList()
+{
+    mutedPlayers.clear();
+    std::ifstream mutedPlayersFile(mutedPlayersFileName.c_str());
+    std::string line;
+    while (std::getline(mutedPlayersFile,line))
+    {
+        std::wstring playerName;
+        Util::StringToWString(playerName, line);
+        mutedPlayers.insert(playerName);
+    }
+    mutedPlayersFile.close();
+}
+
 bool ChatManager::AddForbiddenWord(const std::wstring& word)
 {
     std::wstring forbiddenWord = word;
@@ -355,7 +409,6 @@ bool ChatManager::AddForbiddenWord(const std::wstring& word)
         return true;
     }
     return false;
-
 }
 
 bool ChatManager::RemoveForbiddenWord(const std::wstring& word)
@@ -382,6 +435,46 @@ bool ChatManager::RemoveForbiddenWord(const std::wstring& word)
 bool ChatManager::IsForbiddenWord(const std::wstring& word)
 {
     return (forbiddenWords.find(word) != forbiddenWords.end());
+}
+
+bool ChatManager::AddMutedPlayer(const std::wstring& playerName)
+{
+    if (!IsMutedPlayer(playerName))
+    {
+        mutedPlayers.insert(playerName);
+        std::ofstream mutedPlayersFile;
+        std::string stringPlayerName;
+        Util::WStringToString(playerName, stringPlayerName);
+        mutedPlayersFile.open(mutedPlayersFileName.c_str(), std::fstream::out | std::fstream::app);
+        mutedPlayersFile << stringPlayerName << std::endl;
+        mutedPlayersFile.close();
+        return true;
+    }
+    return false;
+}
+
+bool ChatManager::RemoveMutedPlayer(const std::wstring& playerName)
+{
+    if (IsMutedPlayer(playerName))
+    {
+        mutedPlayers.erase(playerName);
+        std::ofstream mutedPlayersFile;
+        std::string stringPlayerName;
+        mutedPlayersFile.open(mutedPlayersFileName.c_str(), std::fstream::out | std::fstream::trunc);
+        for (auto itrPlr = mutedPlayers.begin(); itrPlr != mutedPlayers.end(); itrPlr++)
+        {
+            Util::WStringToString(*itrPlr, stringPlayerName);
+            mutedPlayersFile << stringPlayerName << std::endl;
+        }
+        mutedPlayersFile.close();
+        return true;
+    }
+    return false;
+}
+
+bool ChatManager::IsMutedPlayer(const std::wstring& playerName)
+{
+    return (mutedPlayers.find(playerName) != mutedPlayers.end());
 }
 
 void ChatManager::displayMatchingPrefix(World::EntityPlayer* player, const std::wstring& prefix)
