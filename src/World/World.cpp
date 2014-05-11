@@ -388,16 +388,20 @@ void World::removeEntity(Entity* entity, bool deleteEntity)
 
 void World::removePlayer(EntityPlayer* player)
 {
-    NBT::TagCompound* playerData = new NBT::TagCompound();
-    if (player->Save(playerData))
+    if (!IsReadOnly())
     {
-        std::string name;
-        Util::WStringToString(player->GetUsername(), name);
-        SaveNbtDatasForPlayer(name, playerData);
+        NBT::TagCompound* playerData = new NBT::TagCompound();
+        if (player->Save(playerData))
+        {
+            std::string name;
+            Util::WStringToString(player->GetUsername(), name);
+            SaveNbtDatasForPlayer(name, playerData);
+        }
+        else
+        {
+            delete playerData;
+        }
     }
-    else
-        delete playerData;
-
     playerList.erase(player);
     int chunkX = ((int) player->x) >> 4;
     int chunkZ = ((int) player->z) >> 4;
