@@ -379,6 +379,12 @@ bool WorldManager::Mute(const std::wstring& playerName)
         mutedPlayersFile.open(mutedPlayersFileName.c_str(), std::fstream::out | std::fstream::app);
         mutedPlayersFile << stringPlayerName << std::endl;
         mutedPlayersFile.close();
+        
+        EntityPlayer* player = GetPlayerByName(playerName);
+        if (player != nullptr)
+        {
+            player->GetChat().Mute(true);
+        }
         return true;
     }
     return false;
@@ -398,6 +404,12 @@ bool WorldManager::UnMute(const std::wstring& playerName)
             mutedPlayersFile << stringPlayerName << std::endl;
         }
         mutedPlayersFile.close();
+        
+        EntityPlayer* player = GetPlayerByName(playerName);
+        if (player != nullptr)
+        {
+            player->GetChat().Mute(false);
+        }
         return true;
     }
     return false;

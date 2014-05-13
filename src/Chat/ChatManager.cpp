@@ -292,7 +292,6 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if (World::WorldManager::Instance().Mute(playerName))
             {
-                player->GetChat().Mute(true);
                 player->GetChat() << Chat::GREEN << playerName << L" muted" << std::endl;
             }
             else
@@ -308,7 +307,6 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
         {
             if (World::WorldManager::Instance().UnMute(playerName))
             {
-                player->GetChat().Mute(false);
                 player->GetChat() << Chat::GREEN << playerName << L" no longer muted" << std::endl;
             }
             else
