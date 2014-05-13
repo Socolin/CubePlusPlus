@@ -9,6 +9,7 @@ namespace Chat
 
 PlayerChat::PlayerChat(World::EntityPlayer* player)
     : player(player)
+    , isMuted(false)
 {
 
 }
@@ -30,6 +31,16 @@ void PlayerChat::Send()
         player->Send(packet);
     }
     message.str(std::wstring());
+}
+
+void PlayerChat::Mute(bool mute)
+{
+    isMuted = mute;
+}
+
+bool PlayerChat::IsMuted()
+{
+    return isMuted;
 }
 
 } /* namespace Chat */

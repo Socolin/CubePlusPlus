@@ -93,8 +93,11 @@ public:
     }
 
     virtual void Send() override;
+    void Mute(bool mute);
+    bool IsMuted();
 private:
     World::EntityPlayer* player;
+    bool isMuted;
 };
 
 } /* namespace Chat */

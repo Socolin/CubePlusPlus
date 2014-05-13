@@ -24,6 +24,7 @@ WorldManager::WorldManager()
     , banFileName("ban")
     , adminFileName("admin")
     , whitelistFileName("whitelist")
+    , mutedPlayersFileName("mutedPlayers")
     , useWhitelist(false)
     , motdArraySize(0)
     , lateness(0)
@@ -41,6 +42,7 @@ WorldManager::WorldManager()
     Config::Config::GetConfig().lookupValue("server.general.ban-file", banFileName);
     Config::Config::GetConfig().lookupValue("server.general.admin-file", adminFileName);
     Config::Config::GetConfig().lookupValue("server.general.whitelist", useWhitelist);
+    Config::Config::GetConfig().lookupValue("server.general.muted-players-file", mutedPlayersFileName);
     if(useWhitelist)
     {
         Config::Config::GetConfig().lookupValue("server.general.whitelist-file", whitelistFileName);
@@ -49,6 +51,7 @@ WorldManager::WorldManager()
     loadMotd();
     loadBanList();
     loadAdminList();
+    loadMutedPlayersList();
 }
 
 EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::NetworkSession* session)
@@ -65,9 +68,13 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
     }
     EntityPlayer* player = new EntityPlayer(world->GetValidSpawnPosition(), name, session);
 
-    if (adminList.find(name) != adminList.end())
+    if (IsAdmin(name))
     {
         player->SetAdmin(true);
+    }
+    if (IsMuted(name))
+    {
+        player->GetChat().Mute(true);
     }
 
     Network::NetworkPacket packet(Network::OP_LOGIN_REQUEST);
@@ -361,6 +368,41 @@ bool WorldManager::UnWhitelist(const std::wstring& playerName)
     return false;
 }
 
+bool WorldManager::Mute(const std::wstring& playerName)
+{
+    if (!IsMuted(playerName))
+    {
+        mutedPlayers.insert(playerName);
+        std::ofstream mutedPlayersFile;
+        std::string stringPlayerName;
+        Util::WStringToString(playerName, stringPlayerName);
+        mutedPlayersFile.open(mutedPlayersFileName.c_str(), std::fstream::out | std::fstream::app);
+        mutedPlayersFile << stringPlayerName << std::endl;
+        mutedPlayersFile.close();
+        return true;
+    }
+    return false;
+}
+
+bool WorldManager::UnMute(const std::wstring& playerName)
+{
+    if (IsMuted(playerName))
+    {
+        mutedPlayers.erase(playerName);
+        std::ofstream mutedPlayersFile;
+        std::string stringPlayerName;
+        mutedPlayersFile.open(mutedPlayersFileName.c_str(), std::fstream::out | std::fstream::trunc);
+        for (auto itrPlr = mutedPlayers.begin(); itrPlr != mutedPlayers.end(); itrPlr++)
+        {
+            Util::WStringToString(*itrPlr, stringPlayerName);
+            mutedPlayersFile << stringPlayerName << std::endl;
+        }
+        mutedPlayersFile.close();
+        return true;
+    }
+    return false;
+}
+
 void WorldManager::Reload()
 {
     loadBanList();
@@ -427,6 +469,20 @@ void WorldManager::loadWhitelist()
     whitelistFile.close();
 }
 
+void WorldManager::loadMutedPlayersList()
+{
+    mutedPlayers.clear();
+    std::ifstream mutedPlayersFile(mutedPlayersFileName.c_str());
+    std::string line;
+    while (std::getline(mutedPlayersFile,line))
+    {
+        std::wstring playerName;
+        Util::StringToWString(playerName, line);
+        mutedPlayers.insert(playerName);
+    }
+    mutedPlayersFile.close();
+}
+
 bool WorldManager::IsAdmin(const std::wstring& playerName)
 {
     return (adminList.find(playerName) != adminList.end());
@@ -444,6 +500,11 @@ bool WorldManager::IsWhitelisted(const std::wstring& playerName)
         return true;
     }
     return (whitelist.find(playerName) != whitelist.end());
+}
+
+bool WorldManager::IsMuted(const std::wstring& playerName)
+{
+    return (mutedPlayers.find(playerName) != mutedPlayers.end());
 }
 
 int WorldManager::GetLateness() const

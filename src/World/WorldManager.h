@@ -133,9 +133,12 @@ public:
     bool UnAdmin(const std::wstring& playerName);
     bool AddToWhitelist(const std::wstring& playerName);
     bool UnWhitelist(const std::wstring& playerName);
+    bool Mute(const std::wstring& playerName);
+    bool UnMute(const std::wstring& playerName);
     bool IsBan(const std::wstring& playerName);
     bool IsAdmin(const std::wstring& playerName);
     bool IsWhitelisted(const std::wstring& playerName);
+    bool IsMuted(const std::wstring& playerName);
 
     EntityPlayer* GetPlayerByName(const std::wstring& playerName);
     std::map<std::wstring, EntityPlayer*>* GetPlayerByNameList();
@@ -145,12 +148,14 @@ private:
     void loadAdminList();
     void loadMotd();
     void loadWhitelist();
+    void loadMutedPlayersList();
     Chat::ChatManager chatManager;
     std::set<EntityPlayer*> playerList;
     std::map<std::wstring, EntityPlayer*> playerByNameList;
     std::set<std::wstring> adminList;
     std::set<std::wstring> banList;
     std::set<std::wstring> whitelist;
+    std::set<std::wstring> mutedPlayers;
     static WorldManager* instance;
     World* world;
     bool isRunning;
@@ -162,6 +167,7 @@ private:
     std::string banFileName;
     std::string adminFileName;
     std::string whitelistFileName;
+    std::string mutedPlayersFileName;
     bool useWhitelist;
     int motdArraySize;
     bool onlineMode;
