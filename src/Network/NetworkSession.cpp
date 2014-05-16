@@ -216,11 +216,12 @@ void NetworkSession::kick(std::wstring message)
 {
     if (isDisconnected())
         return;
+        
+    SendKickMessage(message);
+    SendData();
     if (player != nullptr)
     {
         LOG_INFO << "Kick " << username << ": " << message << std::endl;
-        SendKickMessage(message);
-        SendData();
         player->Disconnect();
     }
     else
