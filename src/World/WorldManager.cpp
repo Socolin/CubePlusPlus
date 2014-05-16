@@ -241,12 +241,15 @@ bool WorldManager::Ban(const std::wstring& playerName)
     if(!IsBan(playerName))
     {
         banList.insert(playerName);
-        std::ofstream banFileList;
-        std::string stringPlayerName;
-        Util::WStringToString(playerName, stringPlayerName);
-        banFileList.open(banFileName.c_str(), std::fstream::out | std::fstream::app);
-        banFileList << stringPlayerName << std::endl;
-        banFileList.close();
+        if (banFileName != "NOFILE")
+        {
+            std::ofstream banFileList;
+            std::string stringPlayerName;
+            Util::WStringToString(playerName, stringPlayerName);
+            banFileList.open(banFileName.c_str(), std::fstream::out | std::fstream::app);
+            banFileList << stringPlayerName << std::endl;
+            banFileList.close();
+        }
         return true;
     }
     return false;
@@ -257,15 +260,18 @@ bool WorldManager::UnBan(const std::wstring& playerName)
     if(IsBan(playerName))
     {
         banList.erase(playerName);
-        std::ofstream banFileList;
-        std::string stringPlayerName;
-        banFileList.open(banFileName.c_str(), std::fstream::out | std::fstream::trunc);
-        for (auto itrPlr = banList.begin(); itrPlr != banList.end(); itrPlr++)
+        if (banFileName != "NOFILE")
         {
-            Util::WStringToString(*itrPlr, stringPlayerName);
-            banFileList << stringPlayerName << std::endl;
+            std::ofstream banFileList;
+            std::string stringPlayerName;
+            banFileList.open(banFileName.c_str(), std::fstream::out | std::fstream::trunc);
+            for (auto itrPlr = banList.begin(); itrPlr != banList.end(); itrPlr++)
+            {
+                Util::WStringToString(*itrPlr, stringPlayerName);
+                banFileList << stringPlayerName << std::endl;
+            }
+            banFileList.close();
         }
-        banFileList.close();
         return true;
     }
     return false;
@@ -285,12 +291,15 @@ bool WorldManager::SetAdmin(const std::wstring& playerName)
     if(!IsAdmin(playerName))
     {
         adminList.insert(playerName);
-        std::ofstream adminFileList;
-        std::string stringPlayerName;
-        Util::WStringToString(playerName, stringPlayerName);
-        adminFileList.open(adminFileName.c_str(), std::fstream::out | std::fstream::app);
-        adminFileList << stringPlayerName << std::endl;
-        adminFileList.close();
+        if (adminFileName != "NOFILE")
+        {
+            std::ofstream adminFileList;
+            std::string stringPlayerName;
+            Util::WStringToString(playerName, stringPlayerName);
+            adminFileList.open(adminFileName.c_str(), std::fstream::out | std::fstream::app);
+            adminFileList << stringPlayerName << std::endl;
+            adminFileList.close();
+        }
         return true;
     }
     return false;
@@ -310,15 +319,18 @@ bool WorldManager::UnAdmin(const std::wstring& playerName)
     if(IsAdmin(playerName))
     {
         adminList.erase(playerName);
-        std::ofstream adminFileList;
-        std::string stringPlayerName;
-        adminFileList.open(adminFileName.c_str(), std::fstream::out | std::fstream::trunc);
-        for (auto itrPlr = adminList.begin(); itrPlr != adminList.end(); itrPlr++)
+        if (adminFileName != "NOFILE")
         {
-            Util::WStringToString(*itrPlr, stringPlayerName);
-            adminFileList << stringPlayerName << std::endl;
+            std::ofstream adminFileList;
+            std::string stringPlayerName;
+            adminFileList.open(adminFileName.c_str(), std::fstream::out | std::fstream::trunc);
+            for (auto itrPlr = adminList.begin(); itrPlr != adminList.end(); itrPlr++)
+            {
+                Util::WStringToString(*itrPlr, stringPlayerName);
+                adminFileList << stringPlayerName << std::endl;
+            }
+            adminFileList.close();
         }
-        adminFileList.close();
         return true;
     }
     return false;
@@ -329,12 +341,15 @@ bool WorldManager::AddToWhitelist(const std::wstring& playerName)
     if(!IsWhitelisted(playerName))
     {
         whitelist.insert(playerName);
-        std::ofstream whitelistFile;
-        std::string stringPlayerName;
-        Util::WStringToString(playerName, stringPlayerName);
-        whitelistFile.open(whitelistFileName.c_str(), std::fstream::out | std::fstream::app);
-        whitelistFile << stringPlayerName << std::endl;
-        whitelistFile.close();
+        if (whitelistFileName != "NOFILE")
+        {
+            std::ofstream whitelistFile;
+            std::string stringPlayerName;
+            Util::WStringToString(playerName, stringPlayerName);
+            whitelistFile.open(whitelistFileName.c_str(), std::fstream::out | std::fstream::app);
+            whitelistFile << stringPlayerName << std::endl;
+            whitelistFile.close();
+        }
         return true;
     }
     return false;
@@ -354,15 +369,18 @@ bool WorldManager::UnWhitelist(const std::wstring& playerName)
     if(IsWhitelisted(playerName))
     {
         whitelist.erase(playerName);
-        std::ofstream whitelistFile;
-        std::string stringPlayerName;
-        whitelistFile.open(whitelistFileName.c_str(), std::fstream::out | std::fstream::trunc);
-        for (auto itrPlr = whitelist.begin(); itrPlr != whitelist.end(); itrPlr++)
+        if (whitelistFileName != "NOFILE")
         {
-            Util::WStringToString(*itrPlr, stringPlayerName);
-            whitelistFile << stringPlayerName << std::endl;
+            std::ofstream whitelistFile;
+            std::string stringPlayerName;
+            whitelistFile.open(whitelistFileName.c_str(), std::fstream::out | std::fstream::trunc);
+            for (auto itrPlr = whitelist.begin(); itrPlr != whitelist.end(); itrPlr++)
+            {
+                Util::WStringToString(*itrPlr, stringPlayerName);
+                whitelistFile << stringPlayerName << std::endl;
+            }
+            whitelistFile.close();
         }
-        whitelistFile.close();
         return true;
     }
     return false;
@@ -373,12 +391,15 @@ bool WorldManager::Mute(const std::wstring& playerName)
     if (!IsMuted(playerName))
     {
         mutedPlayers.insert(playerName);
-        std::ofstream mutedPlayersFile;
-        std::string stringPlayerName;
-        Util::WStringToString(playerName, stringPlayerName);
-        mutedPlayersFile.open(mutedPlayersFileName.c_str(), std::fstream::out | std::fstream::app);
-        mutedPlayersFile << stringPlayerName << std::endl;
-        mutedPlayersFile.close();
+        if (mutedPlayersFileName != "NOFILE")
+        {
+            std::ofstream mutedPlayersFile;
+            std::string stringPlayerName;
+            Util::WStringToString(playerName, stringPlayerName);
+            mutedPlayersFile.open(mutedPlayersFileName.c_str(), std::fstream::out | std::fstream::app);
+            mutedPlayersFile << stringPlayerName << std::endl;
+            mutedPlayersFile.close();
+        }
         
         EntityPlayer* player = GetPlayerByName(playerName);
         if (player != nullptr)
@@ -395,15 +416,18 @@ bool WorldManager::UnMute(const std::wstring& playerName)
     if (IsMuted(playerName))
     {
         mutedPlayers.erase(playerName);
-        std::ofstream mutedPlayersFile;
-        std::string stringPlayerName;
-        mutedPlayersFile.open(mutedPlayersFileName.c_str(), std::fstream::out | std::fstream::trunc);
-        for (auto itrPlr = mutedPlayers.begin(); itrPlr != mutedPlayers.end(); itrPlr++)
+        if (mutedPlayersFileName != "NOFILE")
         {
-            Util::WStringToString(*itrPlr, stringPlayerName);
-            mutedPlayersFile << stringPlayerName << std::endl;
+            std::ofstream mutedPlayersFile;
+            std::string stringPlayerName;
+            mutedPlayersFile.open(mutedPlayersFileName.c_str(), std::fstream::out | std::fstream::trunc);
+            for (auto itrPlr = mutedPlayers.begin(); itrPlr != mutedPlayers.end(); itrPlr++)
+            {
+                Util::WStringToString(*itrPlr, stringPlayerName);
+                mutedPlayersFile << stringPlayerName << std::endl;
+            }
+            mutedPlayersFile.close();
         }
-        mutedPlayersFile.close();
         
         EntityPlayer* player = GetPlayerByName(playerName);
         if (player != nullptr)
@@ -427,30 +451,36 @@ void WorldManager::Reload()
 
 void WorldManager::loadBanList()
 {
-    banList.clear();
-    std::ifstream banFileList(banFileName.c_str());
-    std::string line;
-    while (std::getline(banFileList,line))
+    if (adminFileName != "NOFILE")
     {
-        std::wstring playerName;
-        Util::StringToWString(playerName, line);
-        banList.insert(playerName);
+        banList.clear();
+        std::ifstream banFileList(banFileName.c_str());
+        std::string line;
+        while (std::getline(banFileList,line))
+        {
+            std::wstring playerName;
+            Util::StringToWString(playerName, line);
+            banList.insert(playerName);
+        }
+        banFileList.close();
     }
-    banFileList.close();
 }
 
 void WorldManager::loadAdminList()
 {
-    adminList.clear();
-    std::ifstream adminFileList(adminFileName.c_str());
-    std::string line;
-    while (std::getline(adminFileList,line))
+    if (adminFileName != "NOFILE")
     {
-        std::wstring playerName;
-        Util::StringToWString(playerName, line);
-        adminList.insert(playerName);
+        adminList.clear();
+        std::ifstream adminFileList(adminFileName.c_str());
+        std::string line;
+        while (std::getline(adminFileList,line))
+        {
+            std::wstring playerName;
+            Util::StringToWString(playerName, line);
+            adminList.insert(playerName);
+        }
+        adminFileList.close();
     }
-    adminFileList.close();
 }
 
 void WorldManager::loadMotd()
@@ -469,30 +499,36 @@ void WorldManager::loadMotd()
 
 void WorldManager::loadWhitelist()
 {
-    whitelist.clear();
-    std::ifstream whitelistFile(whitelistFileName.c_str());
-    std::string line;
-    while (std::getline(whitelistFile,line))
+    if (whitelistFileName != "NOFILE")
     {
-        std::wstring playerName;
-        Util::StringToWString(playerName, line);
-        whitelist.insert(playerName);
+        whitelist.clear();
+        std::ifstream whitelistFile(whitelistFileName.c_str());
+        std::string line;
+        while (std::getline(whitelistFile,line))
+        {
+            std::wstring playerName;
+            Util::StringToWString(playerName, line);
+            whitelist.insert(playerName);
+        }
+        whitelistFile.close();
     }
-    whitelistFile.close();
 }
 
 void WorldManager::loadMutedPlayersList()
 {
-    mutedPlayers.clear();
-    std::ifstream mutedPlayersFile(mutedPlayersFileName.c_str());
-    std::string line;
-    while (std::getline(mutedPlayersFile,line))
+    if (mutedPlayersFileName != "NOFILE")
     {
-        std::wstring playerName;
-        Util::StringToWString(playerName, line);
-        mutedPlayers.insert(playerName);
+        mutedPlayers.clear();
+        std::ifstream mutedPlayersFile(mutedPlayersFileName.c_str());
+        std::string line;
+        while (std::getline(mutedPlayersFile,line))
+        {
+            std::wstring playerName;
+            Util::StringToWString(playerName, line);
+            mutedPlayers.insert(playerName);
+        }
+        mutedPlayersFile.close();
     }
-    mutedPlayersFile.close();
 }
 
 bool WorldManager::IsAdmin(const std::wstring& playerName)

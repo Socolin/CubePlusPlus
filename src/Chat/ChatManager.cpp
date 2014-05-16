@@ -361,17 +361,20 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
 
 void ChatManager::loadForbiddenWordsList()
 {
-    forbiddenWords.clear();
-    std::ifstream forbiddenWordsList(fwFileName.c_str());
-    std::string line;
-    while (std::getline(forbiddenWordsList, line))
+    if (fwFileName != "NOFILE")
     {
-        std::wstring forbiddenWord;
-        Util::StringToWString(forbiddenWord, line);
-        boost::algorithm::to_lower(forbiddenWord);
-        forbiddenWords.insert(forbiddenWord);
+        forbiddenWords.clear();
+        std::ifstream forbiddenWordsList(fwFileName.c_str());
+        std::string line;
+        while (std::getline(forbiddenWordsList, line))
+        {
+            std::wstring forbiddenWord;
+            Util::StringToWString(forbiddenWord, line);
+            boost::algorithm::to_lower(forbiddenWord);
+            forbiddenWords.insert(forbiddenWord);
+        }
+        forbiddenWordsList.close();
     }
-    forbiddenWordsList.close();
 }
 
 bool ChatManager::AddForbiddenWord(const std::wstring& word)
@@ -381,12 +384,15 @@ bool ChatManager::AddForbiddenWord(const std::wstring& word)
     if (!IsForbiddenWord(forbiddenWord))
     {
         forbiddenWords.insert(forbiddenWord);
-        std::ofstream forbiddenWordsList;
-        std::string stringWord;
-        Util::WStringToString(forbiddenWord, stringWord);
-        forbiddenWordsList.open(fwFileName.c_str(), std::fstream::out | std::fstream::app);
-        forbiddenWordsList << stringWord << std::endl;
-        forbiddenWordsList.close();
+        if (fwFileName != "NOFILE")
+        {
+            std::ofstream forbiddenWordsList;
+            std::string stringWord;
+            Util::WStringToString(forbiddenWord, stringWord);
+            forbiddenWordsList.open(fwFileName.c_str(), std::fstream::out | std::fstream::app);
+            forbiddenWordsList << stringWord << std::endl;
+            forbiddenWordsList.close();
+        }
         return true;
     }
     return false;
@@ -399,15 +405,18 @@ bool ChatManager::RemoveForbiddenWord(const std::wstring& word)
     if (IsForbiddenWord(forbiddenWord))
     {
         forbiddenWords.erase(forbiddenWord);
-        std::ofstream forbiddenWordsListFile;
-        std::string stringWord;
-        forbiddenWordsListFile.open(fwFileName.c_str(), std::fstream::out | std::fstream::trunc);
-        for (auto itrPlr = forbiddenWords.begin(); itrPlr != forbiddenWords.end(); itrPlr++)
+        if (fwFileName != "NOFILE")
         {
-            Util::WStringToString(*itrPlr, stringWord);
-            forbiddenWordsListFile << stringWord << std::endl;
+            std::ofstream forbiddenWordsListFile;
+            std::string stringWord;
+            forbiddenWordsListFile.open(fwFileName.c_str(), std::fstream::out | std::fstream::trunc);
+            for (auto itrPlr = forbiddenWords.begin(); itrPlr != forbiddenWords.end(); itrPlr++)
+            {
+                Util::WStringToString(*itrPlr, stringWord);
+                forbiddenWordsListFile << stringWord << std::endl;
+            }
+            forbiddenWordsListFile.close();
         }
-        forbiddenWordsListFile.close();
         return true;
     }
     return false;
