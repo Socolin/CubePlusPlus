@@ -128,7 +128,6 @@ int main(int argc, char* argv[])
     }
 
     manager.SendData();
-    manager.StopServer();
     Network::LoginManager::Instance().Stop();
     return 0;
 }

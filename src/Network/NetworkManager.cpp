@@ -33,6 +33,9 @@ NetworkManager::~NetworkManager()
     {
         delete sessionItr.second;
     }
+    sessionList.clear();
+    close(sfd);
+    close(efd);
 }
 
 static int create_and_bind(unsigned short port)
@@ -275,17 +278,6 @@ void NetworkManager::SendData()
             session->SendData();
         }
     }
-}
-void NetworkManager::StopServer()
-{
-    for (auto session : sessionList)
-    {
-        delete session.second;
-    }
-    sessionList.clear();
-    free(events);
-    close(sfd);
-    close(efd);
 }
 
 NetworkSession* NetworkManager::OnNewClient(int socket, const std::string& ip)
