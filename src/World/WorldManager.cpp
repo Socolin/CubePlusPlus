@@ -451,7 +451,7 @@ void WorldManager::Reload()
 
 void WorldManager::loadBanList()
 {
-    if (adminFileName != "NOFILE")
+    if (banFileName != "NOFILE")
     {
         banList.clear();
         std::ifstream banFileList(banFileName.c_str());
