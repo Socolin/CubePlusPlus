@@ -265,11 +265,22 @@ void NetworkManager::ReceiveData()
     }
 }
 
+void NetworkManager::SendData()
+{
+    for (auto sessionItr : sessionList)
+    {
+        Network::NetworkSession* session = sessionItr.second;
+        if (session != nullptr)
+        {
+            session->SendData();
+        }
+    }
+}
 void NetworkManager::StopServer()
 {
     for (auto session : sessionList)
     {
-        OnDisconnectClient(session.second);
+        delete session.second;
     }
     sessionList.clear();
     free(events);

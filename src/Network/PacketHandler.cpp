@@ -639,7 +639,6 @@ bool NetworkSession::UpdateTick()
         }
         return true;
     }
-    SendData();
     if (state != STATE_INGAME)
         return true;
     if (lastKeepAliveId != 0)
