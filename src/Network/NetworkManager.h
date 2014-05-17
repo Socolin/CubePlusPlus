@@ -20,7 +20,7 @@ public:
 
     bool StartServer(unsigned short port);
     void ReceiveData();
-    void StopServer();
+    void SendData();
     void OnClientAskDisconnect(int socket);
 private:
     NetworkSession* OnNewClient(int socket, const std::string& ip);

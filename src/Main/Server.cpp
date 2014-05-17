@@ -105,6 +105,7 @@ int main(int argc, char* argv[])
     {
         manager.ReceiveData();
         worldManager.UpdateTick();
+        manager.SendData();
         clock_t diff = std::clock() - time;
         time = std::clock();
 
@@ -126,6 +127,7 @@ int main(int argc, char* argv[])
         Shell::ShellCommandManager::Instance().HandleShellInput();
     }
 
+    manager.SendData();
     Network::LoginManager::Instance().Stop();
     return 0;
 }
