@@ -129,12 +129,12 @@ public:
     void Kick(const std::wstring& playerName);
     bool Ban(const std::wstring& playerName);
     bool UnBan(const std::wstring& playerName);
-    bool SetAdmin(const std::wstring& playerName);
-    bool UnAdmin(const std::wstring& playerName);
+    bool SetAdmin(const std::wstring& playerName, EntityPlayer*& player);
+    bool UnAdmin(const std::wstring& playerName, EntityPlayer*& player);
     bool AddToWhitelist(const std::wstring& playerName);
     bool UnWhitelist(const std::wstring& playerName);
-    bool Mute(const std::wstring& playerName);
-    bool UnMute(const std::wstring& playerName);
+    bool Mute(const std::wstring& playerName, EntityPlayer*& player);
+    bool UnMute(const std::wstring& playerName, EntityPlayer*& player);
     bool IsBan(const std::wstring& playerName);
     bool IsAdmin(const std::wstring& playerName);
     bool IsWhitelisted(const std::wstring& playerName);

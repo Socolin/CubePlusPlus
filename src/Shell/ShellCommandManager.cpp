@@ -129,14 +129,19 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
             LOG_ERROR << "Not a valid player name" << std::endl;
         }
     }
-    else if (message.substr(0, 9) == L"addadmin ")
+    else if (message.substr(0, 9) == L"setadmin ")
     {
         std::wstring playerName = message.substr(9, message.size() - 10);
         if (playerName.size() > 0)
         {
-            if(World::WorldManager::Instance().SetAdmin(playerName))
+            World::EntityPlayer* destPlayer = nullptr;
+            if(World::WorldManager::Instance().SetAdmin(playerName, destPlayer))
             {
                 LOG_INFO << "Player "<< playerName.c_str() << " is now admin" << std::endl;
+                if (destPlayer)
+                {
+                    destPlayer->GetChat() << Chat::GREEN << L"You are now admin" << std::endl;
+                }
             }
             else
             {
@@ -153,9 +158,14 @@ void ShellCommandManager::HandleShellCommand(std::wstring message)
         std::wstring playerName = message.substr(8, message.size() - 9);
         if (playerName.size() > 0)
         {
-            if(World::WorldManager::Instance().UnAdmin(playerName))
+            World::EntityPlayer* destPlayer = nullptr;
+            if(World::WorldManager::Instance().UnAdmin(playerName, destPlayer))
             {
                 LOG_INFO << "Player "<< playerName.c_str() << " is no longer admin" << std::endl;
+                if (destPlayer)
+                {
+                    destPlayer->GetChat() << Chat::RED << L"You are no longer admin" << std::endl;
+                }
             }
             else
             {

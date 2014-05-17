@@ -277,15 +277,15 @@ bool WorldManager::UnBan(const std::wstring& playerName)
     return false;
 }
 
-bool WorldManager::SetAdmin(const std::wstring& playerName)
+bool WorldManager::SetAdmin(const std::wstring& playerName, EntityPlayer*& player)
 {
     auto playerItr = playerByNameList.find(playerName);
     if (playerItr != playerByNameList.end())
     {
-        EntityPlayer* oldPlr = playerItr->second;
-        if (oldPlr)
+        player = playerItr->second;
+        if (player)
         {
-            oldPlr->SetAdmin(true);
+            player->SetAdmin(true);
         }
     }
     if(!IsAdmin(playerName))
@@ -305,15 +305,15 @@ bool WorldManager::SetAdmin(const std::wstring& playerName)
     return false;
 }
 
-bool WorldManager::UnAdmin(const std::wstring& playerName)
+bool WorldManager::UnAdmin(const std::wstring& playerName, EntityPlayer*& player)
 {
     auto playerItr = playerByNameList.find(playerName);
     if (playerItr != playerByNameList.end())
     {
-        EntityPlayer* oldPlr = playerItr->second;
-        if (oldPlr)
+        player = playerItr->second;
+        if (player)
         {
-            oldPlr->SetAdmin(false);
+            player->SetAdmin(false);
         }
     }
     if(IsAdmin(playerName))
@@ -386,7 +386,7 @@ bool WorldManager::UnWhitelist(const std::wstring& playerName)
     return false;
 }
 
-bool WorldManager::Mute(const std::wstring& playerName)
+bool WorldManager::Mute(const std::wstring& playerName, EntityPlayer*& player)
 {
     if (!IsMuted(playerName))
     {
@@ -401,7 +401,7 @@ bool WorldManager::Mute(const std::wstring& playerName)
             mutedPlayersFile.close();
         }
         
-        EntityPlayer* player = GetPlayerByName(playerName);
+        player = GetPlayerByName(playerName);
         if (player != nullptr)
         {
             player->GetChat().Mute(true);
@@ -411,7 +411,7 @@ bool WorldManager::Mute(const std::wstring& playerName)
     return false;
 }
 
-bool WorldManager::UnMute(const std::wstring& playerName)
+bool WorldManager::UnMute(const std::wstring& playerName, EntityPlayer*& player)
 {
     if (IsMuted(playerName))
     {
@@ -429,7 +429,7 @@ bool WorldManager::UnMute(const std::wstring& playerName)
             mutedPlayersFile.close();
         }
         
-        EntityPlayer* player = GetPlayerByName(playerName);
+        player = GetPlayerByName(playerName);
         if (player != nullptr)
         {
             player->GetChat().Mute(false);
