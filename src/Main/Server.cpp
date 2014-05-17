@@ -2,6 +2,7 @@
 #include <Network/Opcode.h>
 
 #include "Shell/ShellCommandManager.h"
+#include "Chat/Commands/RegisterCommands.h"
 #include "Config/Config.h"
 #include "Craft/CraftManager.h"
 #include "Block/BlockList.h"
@@ -93,6 +94,7 @@ int main(int argc, char* argv[])
     Network::LoginManager::Instance().Start();
 
     Shell::ShellCommandManager::Instance();
+    Chat::RegisterCoreCommands();
 
     // Tick time management
     clock_t time = std::clock();

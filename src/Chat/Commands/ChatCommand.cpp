@@ -1,4 +1,4 @@
-#include <Chat/Commands/ChatCommand.h>
+#include "ChatCommand.h"
 
 #include "Chat/ChatStream.h"
 #include "Entity/EntityPlayer.h"
@@ -15,14 +15,14 @@ ChatCommand::~ChatCommand()
 {
 }
 
-bool ChatCommand::CheckSyntax() const
+bool ChatCommand::CheckSyntax(const std::vector<std::string>& /*splitedCommand*/) const
 {
     return true;
 }
 
 void ChatCommand::BadSyntaxMessage(const CommandSender& sender) const
 {
-    (*sender.chatStream) << Chat::RED << "Invalid command" << std::endl;
+    (*sender.chatStream) << Chat::RED << "Bad syntax" << std::endl;
 }
 
 void ChatCommand::ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const
@@ -133,6 +133,10 @@ bool ChatCommand::checkSyntaxtWith(const std::string& pattern, std::vector<std::
 
         }
         pos++;
+    }
+    if (pos < splitedCommand.size())
+    {
+        return false;
     }
     return true;
 }

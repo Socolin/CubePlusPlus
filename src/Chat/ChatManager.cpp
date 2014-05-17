@@ -3,6 +3,7 @@
 #include <iostream>
 #include <sstream>
 
+#include "Commands/ChatCommandManager.h"
 #include "Config/Config.h"
 #include "Entity/EntityPlayer.h"
 #include "Entity/Scripts/Database/ScriptedEntityList.h"
@@ -32,6 +33,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
 {
     if (message.substr(0, 1) == L"/")
     {
+        ChatCommandManager::Instance().HandlePlayerChatCommand(player, message);
         bool commandHandled = false;
         if (player->isAdmin())
             commandHandled |= handleAdminCommand(player, message);
@@ -167,18 +169,6 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
     }
     else if (message.substr(0, 5) == L"/ban ")
     {
-        std::wstring playerName = message.substr(5, message.size() - 5);
-        if (playerName.size() > 0)
-        {
-            if(World::WorldManager::Instance().Ban(playerName))
-            {
-                player->GetChat() << Chat::GREEN << L"Player " << Chat::GRAY << playerName << Chat::GREEN << L" banned" << std::endl;
-            }
-            else
-            {
-                player->GetChat() << Chat::RED << L"Can't ban player " << Chat::GRAY << playerName << std::endl;
-            }
-        }
     }
     else if (message.substr(0, 7) == L"/unban ")
     {

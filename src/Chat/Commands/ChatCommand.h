@@ -31,7 +31,7 @@ class ChatCommand
 public:
     ChatCommand();
     virtual ~ChatCommand();
-    virtual bool CheckSyntax() const;
+    virtual bool CheckSyntax(const std::vector<std::string>& splitedCommand) const;
     virtual void BadSyntaxMessage(const CommandSender& sender) const;
     virtual void ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const;
 protected:

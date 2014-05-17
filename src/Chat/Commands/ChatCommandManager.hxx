@@ -23,7 +23,7 @@ bool ChatCommandManager::parseMessage(std::vector<std::string>& outSplitedComman
 {
     size_t messageLen = message.size();
     std::basic_string<CharType> splitElement;
-    bool inQuote;
+    bool inQuote = false;
     const CharType SPACE = ' ';
     const CharType DOUBLE_QUOTE = '"';
     const CharType BACKSLASH = '\\';
@@ -71,6 +71,8 @@ bool ChatCommandManager::parseMessage(std::vector<std::string>& outSplitedComman
     {
         return false;
     }
+    addInSplitedCommand(splitElement, outSplitedCommand);
+    splitElement.clear();
     return true;
 }
 

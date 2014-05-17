@@ -1,4 +1,4 @@
-#include <Chat/Commands/ChatCommandManager.h>
+#include "ChatCommandManager.h"
 
 #include "Util/StringUtil.h"
 #include "Entity/EntityPlayer.h"
@@ -53,7 +53,7 @@ void ChatCommandManager::HandleChatCommand(const CommandSender& sender, const st
         if (mappingItr != chatCommandMapping.end())
         {
             ChatCommand* command = mappingItr->second;
-            if (command->CheckSyntax())
+            if (command->CheckSyntax(splitedCommand))
             {
                 command->ExecuteCommand(sender, splitedCommand);
             }
@@ -62,8 +62,12 @@ void ChatCommandManager::HandleChatCommand(const CommandSender& sender, const st
                 command->BadSyntaxMessage(sender);
             }
         }
+        else
+        {
+            (*sender.chatStream) << Chat::RED << L"Not a valid command" << std::endl;
+       }
     }
 }
 
-
 } /* namespace Chat */
+
