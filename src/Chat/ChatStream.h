@@ -49,6 +49,7 @@ public:
 
     ChatStream &operator<<(std::ostream & (*/*manip*/)(std::ostream &))
     {
+        message << RESET;
         Send();
         return (*this);
     }

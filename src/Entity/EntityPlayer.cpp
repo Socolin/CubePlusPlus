@@ -795,6 +795,11 @@ Chat::PlayerChat& EntityPlayer::GetChat()
     return chat;
 }
 
+Chat::PlayerChat* EntityPlayer::GetChatPtr()
+{
+    return &chat;
+}
+
 void EntityPlayer::registerModules()
 {
     Plugin::PlayerModuleMgr& moduleMgr = Plugin::PlayerModuleMgr::Instance();

@@ -316,6 +316,7 @@ public:
     const Inventory::Item* LookItemInHand() const;
 
     Chat::PlayerChat& GetChat();
+    Chat::PlayerChat* GetChatPtr();
 
 private:
     void registerModules();
