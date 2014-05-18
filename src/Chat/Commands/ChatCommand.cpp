@@ -8,7 +8,9 @@
 namespace Chat
 {
 
-ChatCommand::ChatCommand()
+ChatCommand::ChatCommand(const CommandSender& sender, const std::vector<std::string>& splitedCommand)
+    : sender(sender)
+    , splitedCommand(splitedCommand)
 {
 }
 
@@ -16,27 +18,27 @@ ChatCommand::~ChatCommand()
 {
 }
 
-bool ChatCommand::CheckSyntax(const std::vector<std::string>& /*splitedCommand*/) const
+bool ChatCommand::CheckSyntax()
 {
     return true;
 }
 
-void ChatCommand::BadSyntaxMessage(const CommandSender& sender) const
+void ChatCommand::BadSyntaxMessage() const
 {
     sender.chatStream << RED << "Bad syntax" << std::endl;
 }
 
-void ChatCommand::ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const
+void ChatCommand::ExecuteCommand()
 {
     switch (sender.type)
     {
     case PLAYER:
-        ExecuteCommandPlayer(sender.senderPtr.plr, sender.chatStream, splitedCommand);
+        ExecuteCommandPlayer(sender.senderPtr.plr);
         break;
     case COMMAND_BLOCK:
         break;
     case CONSOLE:
-        ExecuteCommandConsole(sender.chatStream, splitedCommand);
+        ExecuteCommandConsole();
         break;
     default:
         AssertSwitchBadDefault(sender.type);
@@ -44,16 +46,16 @@ void ChatCommand::ExecuteCommand(const CommandSender& sender, std::vector<std::s
     }
 }
 
-void ChatCommand::ExecuteCommandPlayer(World::EntityPlayer* /*plr*/, ChatStream& /*ChatStream*/, std::vector<std::string> /*splitedCommand*/) const
+void ChatCommand::ExecuteCommandPlayer(World::EntityPlayer* /*plr*/)
 {
 }
 
-void ChatCommand::ExecuteCommandConsole(ChatStream& /*ChatStream*/, std::vector<std::string> /*splitedCommand*/) const
+void ChatCommand::ExecuteCommandConsole()
 {
 }
 
 // "s:i:u:s"
-bool ChatCommand::checkSyntaxtWith(const std::string& pattern, std::vector<std::string> splitedCommand) const
+bool ChatCommand::checkSyntaxtWith(const std::string& pattern) const
 {
     std::istringstream patternStream(pattern);
     std::string type;
@@ -149,7 +151,7 @@ bool ChatCommand::checkSyntaxtWith(const std::string& pattern, std::vector<std::
     return true;
 }
 
-World::World* ChatCommand::getWorldFromSender(const CommandSender& sender) const
+World::World* ChatCommand::getWorldFromSender() const
 {
     World::World* world = nullptr;
 

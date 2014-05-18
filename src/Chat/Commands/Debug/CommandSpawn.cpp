@@ -3,13 +3,18 @@
 namespace Chat
 {
 
-bool CommandSpawn::CheckSyntax(const std::vector<std::string>& splitedCommand) const
+CommandSpawn::CommandSpawn(const CommandSender& sender, const std::vector<std::string>& splitedCommand)
+    : ChatCommand(sender, splitedCommand)
+{
+}
+
+bool CommandSpawn::CheckSyntax()
 {
     //FIXME
     return false;
 }
 
-void CommandSpawn::ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const
+void CommandSpawn::ExecuteCommand()
 {
     //FIXME
 }

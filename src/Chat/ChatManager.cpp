@@ -34,6 +34,8 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
     if (message.substr(0, 1) == L"/")
     {
         ChatCommandManager::Instance().HandlePlayerChatCommand(player, message);
+        /*
+
         bool commandHandled = false;
         if (player->isAdmin())
             commandHandled |= handleAdminCommand(player, message);
@@ -41,7 +43,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
         if (!commandHandled)
         {
             player->GetChat() << Chat::RED << L"Not a valid command" << std::endl;
-        }
+        }*/
         return true;
     }
     
@@ -74,50 +76,7 @@ bool ChatManager::HandleChatMessage(World::EntityPlayer* player, std::wstring& m
 
 bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& message)
 {
-    if (message == L"/stop")
-    {
-    }
-    else if (message == L"/reload")
-    {
-
-    }
-    else if (message == L"/save")
-    {
-    }
-    else if (message == L"/night")
-    {
-    }
-    else if (message == L"/day")
-    {
-    }
-    else if (message.substr(0, 4) == L"/tp ")
-    {
-    }
-    else if (message.substr(0, 6) == L"/kick ")
-    {
-    }
-    else if (message.substr(0, 5) == L"/ban ")
-    {
-    }
-    else if (message.substr(0, 7) == L"/unban ")
-    {
-
-    }
-    else if (message.substr(0, 10) == L"/setadmin ")
-    {
-
-    }
-    else if (message.substr(0, 9) == L"/unadmin ")
-    {
-
-    }
-    else if (message.substr(0, 11) == L"/whitelist ")
-    {
-    }
-    else if (message.substr(0, 13) == L"/unwhitelist ")
-    {
-    }
-    else if (message.substr(0, 9) == L"/addword ")
+    if (message.substr(0, 9) == L"/addword ")
     {
         std::wstring word = message.substr(9, message.size() - 9);
         if (word.size() > 0)
@@ -146,13 +105,6 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
                 player->GetChat() << Chat::RED << L"Word " << Chat::GRAY << word << Chat::RED << L" is not in forbidden word list" << std::endl;
             }
         }
-    }
-    else if (message.substr(0, 6) == L"/mute ")
-    {
-
-    }
-    else if (message.substr(0, 8) == L"/unmute ")
-    {
     }
     else if (message == L"/spawn chicken")
     {

@@ -6,11 +6,12 @@
 namespace Chat
 {
 
-class CommandBan : public ChatCommand
+class CommandBan: public ChatCommand
 {
 public:
-    virtual bool CheckSyntax(const std::vector<std::string>& splitedCommand) const override;
-    virtual void ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const override;
+    CommandBan(const CommandSender& sender, const std::vector<std::string>& splitedCommand);
+    virtual bool CheckSyntax() override;
+    virtual void ExecuteCommand() override;
 };
 
 } /* namespace Chat */

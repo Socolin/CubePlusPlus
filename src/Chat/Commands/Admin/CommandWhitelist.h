@@ -8,9 +8,18 @@ namespace Chat
 
 class CommandWhitelist: public ChatCommand
 {
+    enum eSyntax
+    {
+        SYNTAX_SUB,
+        SYNTAX_SUB_PLR,
+        SYNTAX_ERROR,
+    };
 public:
-    virtual bool CheckSyntax(const std::vector<std::string>& splitedCommand) const override;
-    virtual void ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const override;
+    CommandWhitelist(const CommandSender& sender, const std::vector<std::string>& splitedCommand);
+    virtual bool CheckSyntax() override;
+    virtual void ExecuteCommand() override;
+private:
+    eSyntax syntax;
 };
 
 } /* namespace Chat */

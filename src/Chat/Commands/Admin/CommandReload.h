@@ -9,7 +9,8 @@ namespace Chat
 class CommandReload: public ChatCommand
 {
 public:
-    virtual void ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const override;
+    CommandReload(const CommandSender& sender, const std::vector<std::string>& splitedCommand);
+    virtual void ExecuteCommand() override;
 };
 
 } /* namespace Chat */

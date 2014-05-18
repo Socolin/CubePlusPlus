@@ -5,7 +5,12 @@
 namespace Chat
 {
 
-void Chat::CommandStop::ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const
+CommandStop::CommandStop(const CommandSender& sender, const std::vector<std::string>& splitedCommand)
+    : ChatCommand(sender, splitedCommand)
+{
+}
+
+void CommandStop::ExecuteCommand()
 {
     sender.chatStream << COLOR_SYSTEM << "Stopping the server" << std::endl;
     World::WorldManager::Instance().Stop();

@@ -7,12 +7,17 @@
 namespace Chat
 {
 
-bool CommandBan::CheckSyntax(const std::vector<std::string>& splitedCommand) const
+CommandBan::CommandBan(const CommandSender& sender, const std::vector<std::string>& splitedCommand)
+    : ChatCommand(sender, splitedCommand)
 {
-    return checkSyntaxtWith("p", splitedCommand);
 }
 
-void CommandBan::ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const
+bool CommandBan::CheckSyntax()
+{
+    return checkSyntaxtWith("p");
+}
+
+void CommandBan::ExecuteCommand()
 {
     std::wstring playerName;
     Util::StringToWString(playerName, splitedCommand[1]);

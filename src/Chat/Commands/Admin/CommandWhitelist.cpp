@@ -6,14 +6,28 @@
 namespace Chat
 {
 
-bool CommandWhitelist::CheckSyntax(const std::vector<std::string>& splitedCommand) const
+CommandWhitelist::CommandWhitelist(const CommandSender& sender, const std::vector<std::string>& splitedCommand)
+    : ChatCommand(sender, splitedCommand)
+    , syntax(SYNTAX_ERROR)
 {
-    return checkSyntaxtWith("s", splitedCommand) || checkSyntaxtWith("s:p", splitedCommand);
 }
 
-void CommandWhitelist::ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const
+bool CommandWhitelist::CheckSyntax()
 {
-    if (checkSyntaxtWith("s", splitedCommand))
+    if (checkSyntaxtWith("s"))
+    {
+        syntax = SYNTAX_SUB;
+    }
+    else if (checkSyntaxtWith("s:p"))
+    {
+        syntax = SYNTAX_SUB_PLR;
+    }
+    return syntax != SYNTAX_ERROR;
+}
+
+void CommandWhitelist::ExecuteCommand()
+{
+    if (syntax == SYNTAX_SUB)
     {
         if (splitedCommand[1] == "on")
         {
@@ -27,10 +41,10 @@ void CommandWhitelist::ExecuteCommand(const CommandSender& sender, std::vector<s
         }
         else
         {
-            BadSyntaxMessage(sender);
+            BadSyntaxMessage();
         }
     }
-    else if (checkSyntaxtWith("s:p", splitedCommand))
+    else if (syntax == SYNTAX_SUB_PLR)
     {
         std::wstring playerName;
         Util::StringToWString(playerName, splitedCommand[1]);
@@ -58,7 +72,7 @@ void CommandWhitelist::ExecuteCommand(const CommandSender& sender, std::vector<s
         }
         else
         {
-            BadSyntaxMessage(sender);
+            BadSyntaxMessage();
         }
     }
 }

@@ -16,6 +16,12 @@ class EntityPlayer;
 
 namespace Chat
 {
+typedef ChatCommand* (*CreateChatCommandPrototype)(const CommandSender& sender, const std::vector<std::string>& splitedCommand);
+struct RegisteredCommand
+{
+    size_t senderMask;
+    CreateChatCommandPrototype commandClass;
+};
 class ChatCommand;
 class ChatCommandManager : public Util::Singleton<ChatCommandManager>
 {
@@ -23,7 +29,7 @@ class ChatCommandManager : public Util::Singleton<ChatCommandManager>
     ChatCommandManager();
 public:
     virtual ~ChatCommandManager();
-    void RegisterChatCommand(const std::string& command, ChatCommand* ChatCommand);
+    void RegisterChatCommand(const std::string& command, CreateChatCommandPrototype commandClass, size_t senderMask);
     void HandlePlayerChatCommand(World::EntityPlayer* plr, const std::wstring& message);
     void HandleConsoleChatCommand(const std::string& message);
 private:
@@ -31,8 +37,7 @@ private:
     template<typename CharType>
     bool parseMessage(std::vector<std::string> &outSplitedCommand, const std::basic_string<CharType>& message) const;
 private:
-    std::set<ChatCommand*> chatCommandList;
-    std::map<std::string, ChatCommand*> chatCommandMapping;
+    std::map<std::string, RegisteredCommand> chatCommandMapping;
 };
 
 } /* namespace Chat */

@@ -23,21 +23,21 @@ void RegisterCoreCommands()
 {
     ChatCommandManager& manager = ChatCommandManager::Instance();
 
-    manager.RegisterChatCommand("ban", new CommandBan());
-    manager.RegisterChatCommand("unban", new CommandUnban());
-    manager.RegisterChatCommand("op", new CommandOp());
-    manager.RegisterChatCommand("deop", new CommandDeOp());
-    manager.RegisterChatCommand("admin", new CommandOp());
-    manager.RegisterChatCommand("unadmin", new CommandDeOp());
-    manager.RegisterChatCommand("kick", new CommandKick());
-    manager.RegisterChatCommand("mute", new CommandMute());
-    manager.RegisterChatCommand("unmute", new CommandUnmute());
-    manager.RegisterChatCommand("reload", new CommandReload());
-    manager.RegisterChatCommand("save", new CommandSave());
-    manager.RegisterChatCommand("stop", new CommandStop());
-    manager.RegisterChatCommand("tp", new CommandTeleport());
-    manager.RegisterChatCommand("time", new CommandTime());
-    manager.RegisterChatCommand("whitelist", new CommandWhitelist());
+    manager.RegisterChatCommand("ban",          &createChatCommand<CommandBan>,         ALL_SENDER);
+    manager.RegisterChatCommand("unban",        &createChatCommand<CommandUnban>,       ALL_SENDER);
+    manager.RegisterChatCommand("op",           &createChatCommand<CommandOp>,          ALL_SENDER);
+    manager.RegisterChatCommand("deop",         &createChatCommand<CommandDeOp>,        ALL_SENDER);
+    manager.RegisterChatCommand("admin",        &createChatCommand<CommandOp>,          ALL_SENDER);
+    manager.RegisterChatCommand("unadmin",      &createChatCommand<CommandDeOp>,        ALL_SENDER);
+    manager.RegisterChatCommand("kick",         &createChatCommand<CommandKick>,        ALL_SENDER);
+    manager.RegisterChatCommand("mute",         &createChatCommand<CommandMute>,        ALL_SENDER);
+    manager.RegisterChatCommand("unmute",       &createChatCommand<CommandUnmute>,      ALL_SENDER);
+    manager.RegisterChatCommand("reload",       &createChatCommand<CommandReload>,      PLAYER | CONSOLE);
+    manager.RegisterChatCommand("save",         &createChatCommand<CommandSave>,        ALL_SENDER);
+    manager.RegisterChatCommand("stop",         &createChatCommand<CommandStop>,        PLAYER | CONSOLE);
+    manager.RegisterChatCommand("tp",           &createChatCommand<CommandTeleport>,    ALL_SENDER);
+    manager.RegisterChatCommand("time",         &createChatCommand<CommandTime>,        ALL_SENDER);
+    manager.RegisterChatCommand("whitelist",    &createChatCommand<CommandWhitelist>,   ALL_SENDER);
 }
 
 } /* namespace Chat */

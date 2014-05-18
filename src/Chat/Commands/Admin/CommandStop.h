@@ -8,7 +8,8 @@ namespace Chat
 class CommandStop: public ChatCommand
 {
 public:
-    virtual void ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const override;
+    CommandStop(const CommandSender& sender, const std::vector<std::string>& splitedCommand);
+    virtual void ExecuteCommand() override;
 };
 
 } /* namespace Chat */

@@ -1,13 +1,20 @@
 #include "CommandSave.h"
 
+#include "World/World.h"
 #include "World/WorldManager.h"
 
 namespace Chat
 {
 
-void CommandSave::ExecuteCommand(const CommandSender& sender, std::vector<std::string> /*splitedCommand*/) const
+CommandSave::CommandSave(const CommandSender& sender, const std::vector<std::string>& splitedCommand)
+    : ChatCommand(sender, splitedCommand)
 {
-    World::World* world = getWorldFromSender(sender);
+}
+
+void CommandSave::ExecuteCommand()
+{
+    World::World* world = getWorldFromSender();
+    world->Save();
     sender.chatStream << COLOR_SYSTEM << "Saving world" << std::endl;
 }
 

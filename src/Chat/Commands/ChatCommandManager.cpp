@@ -14,9 +14,12 @@ ChatCommandManager::~ChatCommandManager()
 {
 }
 
-void ChatCommandManager::RegisterChatCommand(const std::string& command, ChatCommand* ChatCommand)
+void ChatCommandManager::RegisterChatCommand(const std::string& command, CreateChatCommandPrototype commandClass, size_t senderNask)
 {
-    chatCommandMapping[command] = ChatCommand;
+    RegisteredCommand registeredCommand;
+    registeredCommand.commandClass = commandClass;
+    registeredCommand.senderMask = senderNask;
+    chatCommandMapping[command] = registeredCommand;
 }
 
 void ChatCommandManager::HandlePlayerChatCommand(World::EntityPlayer* plr, const std::wstring& message)
@@ -51,14 +54,23 @@ void ChatCommandManager::HandleChatCommand(const CommandSender& sender, const st
         auto mappingItr = chatCommandMapping.find(command);
         if (mappingItr != chatCommandMapping.end())
         {
-            ChatCommand* command = mappingItr->second;
-            if (command->CheckSyntax(splitedCommand))
+            RegisteredCommand registeredCommand = mappingItr->second;
+            if ((sender.type & registeredCommand.senderMask) != 0)
             {
-                command->ExecuteCommand(sender, splitedCommand);
+                ChatCommand* command = registeredCommand.commandClass(sender, splitedCommand);
+                if (command->CheckSyntax())
+                {
+                    command->ExecuteCommand();
+                }
+                else
+                {
+                    command->BadSyntaxMessage();
+                }
+                delete command;
             }
             else
             {
-                command->BadSyntaxMessage(sender);
+                sender.chatStream << RED << L"Not a valid command for this sender" << std::endl;
             }
         }
         else

@@ -6,10 +6,20 @@
 namespace Chat
 {
 
-class CommandTime : public ChatCommand
+class CommandTime: public ChatCommand
 {
+    enum eSyntax
+    {
+        SYNTAX_SUB_TIME,
+        SYNTAX_DAYNIGHT,
+        SYNTAX_ERROR
+    };
 public:
-    virtual void ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const override;
+    CommandTime(const CommandSender& sender, const std::vector<std::string>& splitedCommand);
+    virtual bool CheckSyntax() override;
+    virtual void ExecuteCommand() override;
+private:
+    eSyntax syntax;
 };
 
 } /* namespace Chat */

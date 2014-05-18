@@ -6,14 +6,36 @@
 namespace Chat
 {
 
-bool Chat::CommandTeleport::CheckSyntax(const std::vector<std::string>& splitedCommand) const
+CommandTeleport::CommandTeleport(const CommandSender& sender, const std::vector<std::string>& splitedCommand)
+    : ChatCommand(sender, splitedCommand)
+    , syntax(SYNTAX_ERROR)
 {
-    return checkSyntaxtWith("p", splitedCommand) || checkSyntaxtWith("p:p", splitedCommand) || checkSyntaxtWith("f:f:f:f:f", splitedCommand) || checkSyntaxtWith("f:f:f", splitedCommand);
 }
 
-void Chat::CommandTeleport::ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const
+bool CommandTeleport::CheckSyntax()
 {
-    if (checkSyntaxtWith("p", splitedCommand))
+    if (checkSyntaxtWith("p"))
+    {
+        syntax = SYNTAX_PLR;
+    }
+    else if (checkSyntaxtWith("p:p"))
+    {
+        syntax = SYNTAX_PLR_PLR;
+    }
+    else if (checkSyntaxtWith("f:f:f"))
+    {
+        syntax = SYNTAX_X_Y_Z;
+    }
+    else if (checkSyntaxtWith("f:f:f:f:f"))
+    {
+        syntax = SYNTAX_X_Y_Z_YAW_PITCH;
+    }
+    return syntax != SYNTAX_ERROR;
+}
+
+void Chat::CommandTeleport::ExecuteCommand()
+{
+    if (syntax == SYNTAX_PLR)
     {
         if (sender.type == PLAYER)
         {
@@ -40,10 +62,10 @@ void Chat::CommandTeleport::ExecuteCommand(const CommandSender& sender, std::vec
         }
         else
         {
-            BadSyntaxMessage(sender);
+            BadSyntaxMessage();
         }
     }
-    else if (checkSyntaxtWith("p:p", splitedCommand))
+    else if (syntax == SYNTAX_PLR_PLR)
     {
         std::wstring playerName1;
         std::wstring playerName2;
@@ -81,7 +103,7 @@ void Chat::CommandTeleport::ExecuteCommand(const CommandSender& sender, std::vec
             sender.chatStream << COLOR_KO << "Player not found: " << COLOR_KO_PARAM << playerName1 << std::endl;
         }
     }
-    else if (checkSyntaxtWith("f:f:f", splitedCommand))
+    else if (syntax == SYNTAX_X_Y_Z)
     {
         if (sender.type == PLAYER)
         {
@@ -93,10 +115,10 @@ void Chat::CommandTeleport::ExecuteCommand(const CommandSender& sender, std::vec
         }
         else
         {
-            BadSyntaxMessage(sender);
+            BadSyntaxMessage();
         }
     }
-    else if (checkSyntaxtWith("f:f:f:f:f", splitedCommand))
+    else if (syntax == SYNTAX_X_Y_Z_YAW_PITCH)
     {
         if (sender.type == PLAYER)
         {
@@ -110,7 +132,7 @@ void Chat::CommandTeleport::ExecuteCommand(const CommandSender& sender, std::vec
         }
         else
         {
-            BadSyntaxMessage(sender);
+            BadSyntaxMessage();
         }
     }
 }

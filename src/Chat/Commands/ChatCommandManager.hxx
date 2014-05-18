@@ -6,6 +6,12 @@
 namespace Chat
 {
 
+template<typename T>
+ChatCommand* createChatCommand(const CommandSender& sender, const std::vector<std::string>& splitedCommand)
+{
+    return new T(sender, splitedCommand);
+}
+
 inline static void addInSplitedCommand(const std::string& str, std::vector<std::string>& outSplitedCommand)
 {
     outSplitedCommand.push_back(str);
