@@ -54,6 +54,24 @@ void ChatCommand::ExecuteCommandConsole()
 {
 }
 
+bool ChatCommand::CanUse()
+{
+    switch (sender.type)
+    {
+    case COMMAND_BLOCK:
+        return true;
+    case CONSOLE:
+        return true;
+    case PLAYER:
+        // FIXME need permission and group system
+        return sender.senderPtr.plr->isAdmin();
+    default:
+        AssertSwitchBadDefault(sender.type);
+        break;
+    }
+    return false;
+}
+
 // "s:i:u:s"
 bool ChatCommand::checkSyntaxtWith(const std::string& pattern) const
 {
@@ -174,4 +192,3 @@ World::World* ChatCommand::getWorldFromSender() const
 }
 
 } /* namespace Database */
-

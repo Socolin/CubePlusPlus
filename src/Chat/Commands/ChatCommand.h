@@ -51,6 +51,7 @@ public:
     virtual bool CheckSyntax();
     virtual void BadSyntaxMessage() const;
     virtual void ExecuteCommand();
+    virtual bool CanUse();
 protected:
     virtual void ExecuteCommandPlayer(World::EntityPlayer* plr);
     virtual void ExecuteCommandConsole();

@@ -58,13 +58,20 @@ void ChatCommandManager::HandleChatCommand(const CommandSender& sender, const st
             if ((sender.type & registeredCommand.senderMask) != 0)
             {
                 ChatCommand* command = registeredCommand.commandClass(sender, splitedCommand);
-                if (command->CheckSyntax())
+                if (command->CanUse())
                 {
-                    command->ExecuteCommand();
+                    if (command->CheckSyntax())
+                    {
+                        command->ExecuteCommand();
+                    }
+                    else
+                    {
+                        command->BadSyntaxMessage();
+                    }
                 }
                 else
                 {
-                    command->BadSyntaxMessage();
+                    sender.chatStream << RED << L"You can t use this command" << std::endl;
                 }
                 delete command;
             }
