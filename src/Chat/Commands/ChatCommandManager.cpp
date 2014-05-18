@@ -21,10 +21,8 @@ void ChatCommandManager::RegisterChatCommand(const std::string& command, ChatCom
 
 void ChatCommandManager::HandlePlayerChatCommand(World::EntityPlayer* plr, const std::wstring& message)
 {
-    CommandSender sender;
+    CommandSender sender(PLAYER, plr->GetChat());
     sender.senderPtr.plr = plr;
-    sender.type = PLAYER;
-    sender.chatStream = plr->GetChatPtr();
 
     std::vector<std::string> splitedCommand;
     parseMessage<wchar_t>(splitedCommand, message);
@@ -32,16 +30,17 @@ void ChatCommandManager::HandlePlayerChatCommand(World::EntityPlayer* plr, const
     HandleChatCommand(sender, splitedCommand);
 }
 
-void ChatCommandManager::HandleConsoleChatCommand(const std::string& message)
+void ChatCommandManager::HandleConsoleChatCommand(const std::string& /*message*/)
 {
+    /*
     CommandSender sender;
     sender.type = CONSOLE;
-    sender.chatStream = nullptr;//FIXME
+//    sender.chatStream = nullptr;//FIXME
 
     std::vector<std::string> splitedCommand;
     parseMessage<char>(splitedCommand, message);
 
-    HandleChatCommand(sender, splitedCommand);
+    HandleChatCommand(sender, splitedCommand);*/
 }
 
 void ChatCommandManager::HandleChatCommand(const CommandSender& sender, const std::vector<std::string>& splitedCommand)
@@ -64,7 +63,7 @@ void ChatCommandManager::HandleChatCommand(const CommandSender& sender, const st
         }
         else
         {
-            (*sender.chatStream) << Chat::RED << L"Not a valid command" << std::endl;
+            sender.chatStream << RED << L"Not a valid command" << std::endl;
        }
     }
 }

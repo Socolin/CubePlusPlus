@@ -214,7 +214,22 @@ bool WorldManager::IsOnlineMode() const
     return onlineMode;
 }
 
-void WorldManager::Kick(const std::wstring& playerName)
+
+void WorldManager::SetUseWhitelist(bool useWhitelist)
+{
+    this->useWhitelist = useWhitelist;
+    if (useWhitelist)
+    {
+        loadWhitelist();
+    }
+}
+
+bool WorldManager::UseWhitelist() const
+{
+    return useWhitelist;
+}
+
+bool WorldManager::Kick(const std::wstring& playerName)
 {
     auto playerItr = playerByNameList.find(playerName);
     if (playerItr != playerByNameList.end())
@@ -223,8 +238,10 @@ void WorldManager::Kick(const std::wstring& playerName)
         if (oldPlr)
         {
             oldPlr->Kick(L"Kicked");
+            return true;
         }
     }
+    return false;
 }
 
 bool WorldManager::Ban(const std::wstring& playerName)

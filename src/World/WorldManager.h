@@ -118,6 +118,18 @@ public:
     bool IsOnlineMode() const;
 
     /**
+     *
+     * @param useWhitelist
+     */
+    void SetUseWhitelist(bool useWhitelist);
+
+    /**
+     *
+     * @return
+     */
+    bool UseWhitelist() const;
+
+    /**
      * Reload admin ban and whitelist file
      */
     void Reload();
@@ -126,7 +138,7 @@ public:
     int GetLateness() const;
     void SetLateness(int lateness);
 
-    void Kick(const std::wstring& playerName);
+    bool Kick(const std::wstring& playerName);
     bool Ban(const std::wstring& playerName);
     bool UnBan(const std::wstring& playerName);
     bool SetAdmin(const std::wstring& playerName, EntityPlayer*& player);

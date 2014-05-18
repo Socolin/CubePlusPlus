@@ -7,17 +7,9 @@
 namespace Chat
 {
 
-CommandBan::CommandBan()
-{
-}
-
-CommandBan::~CommandBan()
-{
-}
-
 bool CommandBan::CheckSyntax(const std::vector<std::string>& splitedCommand) const
 {
-    return checkSyntaxtWith("s",splitedCommand);
+    return checkSyntaxtWith("p", splitedCommand);
 }
 
 void CommandBan::ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const
@@ -27,11 +19,11 @@ void CommandBan::ExecuteCommand(const CommandSender& sender, std::vector<std::st
 
     if (World::WorldManager::Instance().Ban(playerName))
     {
-        (*sender.chatStream) << Chat::BLUE << L"Player " << Chat::GRAY << playerName << Chat::BLUE << L" banned" << std::endl;
+        sender.chatStream << COLOR_OK << L"Player " << COLOR_OK_PARAM << playerName << COLOR_OK << L" banned" << std::endl;
     }
     else
     {
-        (*sender.chatStream) << Chat::RED << L"The player " << Chat::GRAY << playerName << Chat::RED  << " is already banned" << std::endl;
+        sender.chatStream << COLOR_KO << L"The player " << COLOR_KO_PARAM << playerName << COLOR_KO << L" is already banned" << std::endl;
     }
 }
 

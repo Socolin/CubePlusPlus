@@ -3,6 +3,7 @@
 #include "Chat/ChatStream.h"
 #include "Entity/EntityPlayer.h"
 #include "Util/AssertUtil.h"
+#include "World/WorldManager.h"
 
 namespace Chat
 {
@@ -22,7 +23,7 @@ bool ChatCommand::CheckSyntax(const std::vector<std::string>& /*splitedCommand*/
 
 void ChatCommand::BadSyntaxMessage(const CommandSender& sender) const
 {
-    (*sender.chatStream) << Chat::RED << "Bad syntax" << std::endl;
+    sender.chatStream << RED << "Bad syntax" << std::endl;
 }
 
 void ChatCommand::ExecuteCommand(const CommandSender& sender, std::vector<std::string> splitedCommand) const
@@ -43,11 +44,11 @@ void ChatCommand::ExecuteCommand(const CommandSender& sender, std::vector<std::s
     }
 }
 
-void ChatCommand::ExecuteCommandPlayer(World::EntityPlayer* /*plr*/, ChatStream* /*chatStream*/, std::vector<std::string> /*splitedCommand*/) const
+void ChatCommand::ExecuteCommandPlayer(World::EntityPlayer* /*plr*/, ChatStream& /*ChatStream*/, std::vector<std::string> /*splitedCommand*/) const
 {
 }
 
-void ChatCommand::ExecuteCommandConsole(ChatStream* /*chatStream*/, std::vector<std::string> /*splitedCommand*/) const
+void ChatCommand::ExecuteCommandConsole(ChatStream& /*ChatStream*/, std::vector<std::string> /*splitedCommand*/) const
 {
 }
 
@@ -60,6 +61,10 @@ bool ChatCommand::checkSyntaxtWith(const std::string& pattern, std::vector<std::
     while (std::getline(patternStream, type, ':'))
     {
         if (pos >= splitedCommand.size()) {
+            return false;
+        }
+
+        if (type.empty()) {
             return false;
         }
 
@@ -129,7 +134,10 @@ bool ChatCommand::checkSyntaxtWith(const std::string& pattern, std::vector<std::
                     }
                 }
             }
-        } else if (type == "s") { // string
+        } else if (type[0] == 's') { // string
+
+        } else if (type[0] == 'p') { // playername
+            //FIXME regex ?
 
         }
         pos++;
@@ -141,4 +149,27 @@ bool ChatCommand::checkSyntaxtWith(const std::string& pattern, std::vector<std::
     return true;
 }
 
+World::World* ChatCommand::getWorldFromSender(const CommandSender& sender) const
+{
+    World::World* world = nullptr;
+
+    switch (sender.type)
+    {
+    case COMMAND_BLOCK:
+        break;
+    case CONSOLE:
+        world = World::WorldManager::Instance().GetWorld();
+        break;
+    case PLAYER:
+        world = sender.senderPtr.plr->GetWorld();
+        break;
+    default:
+        AssertSwitchBadDefault(sender.type);
+        break;
+    }
+
+    return world;
+}
+
 } /* namespace Database */
+

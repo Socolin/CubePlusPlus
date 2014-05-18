@@ -1,12 +1,12 @@
-#ifndef COMMANDBAN_H_
-#define COMMANDBAN_H_
+#ifndef COMMANDWHITELIST_H_
+#define COMMANDWHITELIST_H_
 
 #include "Chat/Commands/ChatCommand.h"
 
 namespace Chat
 {
 
-class CommandBan : public ChatCommand
+class CommandWhitelist: public ChatCommand
 {
 public:
     virtual bool CheckSyntax(const std::vector<std::string>& splitedCommand) const override;
@@ -14,4 +14,4 @@ public:
 };
 
 } /* namespace Chat */
-#endif /* COMMANDBAN_H_ */
+#endif /* COMMANDWHITELIST_H_ */
