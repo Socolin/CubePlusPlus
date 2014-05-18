@@ -40,7 +40,7 @@ void Chat::CommandTeleport::ExecuteCommand()
         if (sender.type == PLAYER)
         {
             std::wstring playerDestinationName;
-            Util::WStringToString(playerDestinationName, splitedCommand[1]);
+            Util::StringToWString(playerDestinationName, splitedCommand[1]);
 
             World::EntityPlayer* destination = World::WorldManager::Instance().GetPlayerByName(playerDestinationName);
             if (destination)
@@ -69,8 +69,8 @@ void Chat::CommandTeleport::ExecuteCommand()
     {
         std::wstring playerName1;
         std::wstring playerName2;
-        Util::WStringToString(playerName1, splitedCommand[1]);
-        Util::WStringToString(playerName2, splitedCommand[2]);
+        Util::StringToWString(playerName1, splitedCommand[1]);
+        Util::StringToWString(playerName2, splitedCommand[2]);
 
         World::EntityPlayer* player1 = World::WorldManager::Instance().GetPlayerByName(playerName1);
         if (player1)

@@ -18,7 +18,7 @@ bool CommandKick::CheckSyntax()
 void CommandKick::ExecuteCommand()
 {
     std::wstring playerName;
-    Util::StringToWString(playerName, splitedCommand[0]);
+    Util::StringToWString(playerName, splitedCommand[1]);
 
     if (World::WorldManager::Instance().Kick(playerName))
     {

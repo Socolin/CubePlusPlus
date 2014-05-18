@@ -21,7 +21,7 @@ void CommandUnmute::ExecuteCommand()
     std::wstring playerName;
     Util::StringToWString(playerName, splitedCommand[1]);
     World::EntityPlayer* destPlayer = nullptr;
-    if (World::WorldManager::Instance().Mute(playerName, destPlayer))
+    if (World::WorldManager::Instance().UnMute(playerName, destPlayer))
     {
         sender.chatStream << COLOR_OK << "Player " << COLOR_OK_PARAM << playerName << COLOR_OK << " is no longer muted" << std::endl;
         if (destPlayer != nullptr)
