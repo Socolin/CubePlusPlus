@@ -77,20 +77,19 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
         player->GetChat().Mute(true);
     }
 
-    Network::NetworkPacket packet(Network::OP_LOGIN_REQUEST);
-    std::wstring levelType(L"flat");
-    packet  << int(-1) << levelType << (char)player->GetGameMode() << (char)0 << (char)difficulty << (char)0 << (maxPlayerCount > 120 ? char(120) : char(maxPlayerCount));
-    session->SendPacket(packet);
-
     std::string stringName;
     Util::WStringToString(name, stringName);
-
     NBT::TagCompound* playerNbtData = world->LoadNbtDatasForPlayer(stringName);
     if (playerNbtData)
     {
         player->Load(playerNbtData);
         delete playerNbtData;
     }
+
+    Network::NetworkPacket packet(Network::OP_LOGIN_REQUEST);
+    std::wstring levelType(L"flat");
+    packet  << int(-1) << levelType << (char)player->GetGameMode() << (char)0 << (char)difficulty << (char)0 << (maxPlayerCount > 120 ? char(120) : char(maxPlayerCount));
+    session->SendPacket(packet);
 
     world->AddPlayer(player);
 

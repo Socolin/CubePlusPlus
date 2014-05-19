@@ -325,7 +325,18 @@ void NetworkSession::handlePlayerAbilities() throw (NetworkException)
     readByte();
 
     DEBUG_CHAR(flag);
-    //bool flying = flag & 0x2;
+    if (player->GetAbilities().hasAbility(World::PlayerAbilities::CAN_FLY))
+    {
+        bool flying = flag & 0x2;
+        if (flying)
+        {
+            player->GetAbilities().AddAbilities(World::PlayerAbilities::FLYING);
+        }
+        else
+        {
+            player->GetAbilities().RemoveAbilities(World::PlayerAbilities::FLYING);
+        }
+    }
 }
 void NetworkSession::handleTabComplete() throw (NetworkException)
 {

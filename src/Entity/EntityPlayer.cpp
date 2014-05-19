@@ -40,6 +40,7 @@ EntityPlayer::EntityPlayer(const Position& spawnPosition, const std::wstring& na
     , currentWindow(nullptr)
     , admin(false)
     , diggingManager(this)
+    , abilities(this)
 {
     mainInventory = new Inventory::Inventory(27, Inventory::INVENTORY_TYPE_PLAYER_MAIN);
     handsInventory = new Inventory::InventoryPlayer();
@@ -153,15 +154,9 @@ void EntityPlayer::OnJoinWorld(World* world)
             << static_cast<int>(floor(spawnPosition.z));
     session->SendPacket(packetSpawnPosition);
 
-    // Gamemode
-    if (isAdmin())
-    {
-        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED, DAMAGE_DISABLE | FLYING | CAN_FLY | CREATIVE_MODE);
-        gameMode = GAMEMODE_CREATVE;
-        session->SendChangeGameState(3, 1);
-    }
-    else
-        session->SendSetAbilities(DEFAULT_FLYING_SPEED, DEFAULT_WALKING_SPEED, DAMAGE_DISABLE);
+    Network::NetworkPacket packetAbilities;
+    abilities.GetPacket(packetAbilities);
+    session->SendPacket(packetAbilities);
 
     // Send world time
     session->SendUpdateTime(world->GetCurrentTime(), world->GetAgeOfWorld());
@@ -377,6 +372,37 @@ void EntityPlayer::Disconnect()
 EntityPlayer::eGameMode EntityPlayer::GetGameMode() const
 {
     return gameMode;
+}
+
+bool EntityPlayer::SetGameMode(eGameMode gameMode)
+{
+    switch (gameMode)
+    {
+    case GAMEMODE_SURVIVAL:
+        abilities.RemoveAbilities(PlayerAbilities::DAMAGE_DISABLE
+                | PlayerAbilities::FLYING
+                | PlayerAbilities::CAN_FLY
+                | PlayerAbilities::CREATIVE_MODE);
+        break;
+    case GAMEMODE_CREATVE:
+        abilities.AddAbilities(PlayerAbilities::DAMAGE_DISABLE
+                | PlayerAbilities::CAN_FLY
+                | PlayerAbilities::CREATIVE_MODE);
+        break;
+    case GAMEMODE_ADVENTURE:
+        abilities.RemoveAbilities(PlayerAbilities::DAMAGE_DISABLE
+                | PlayerAbilities::FLYING
+                | PlayerAbilities::CAN_FLY
+                | PlayerAbilities::CREATIVE_MODE);
+        break;
+    default:
+        return false;
+    }
+
+    abilities.Update();
+    this->gameMode = gameMode;
+    session->SendChangeGameState(3, gameMode);
+    return true;
 }
 
 const std::wstring& EntityPlayer::GetUsername()
@@ -697,6 +723,14 @@ bool EntityPlayer::Load(NBT::TagCompound* tagNbtData)
     {
         enderChestInventory->Load(tagEnderChest);
     }
+
+    NBT::TagCompound* tagAbilities = tagNbtData->GetTagAs<NBT::TagCompound>("abilities");
+    if (tagAbilities)
+    {
+        abilities.Load(tagAbilities);
+    }
+
+    gameMode = static_cast<eGameMode>(tagNbtData->GetInt("playerGameType", 0));
     return loadSucess;
 }
 
@@ -713,6 +747,12 @@ bool EntityPlayer::Save(NBT::TagCompound* tagNbtData)
     NBT::TagList* tagEnderChest = new NBT::TagList("EnderItems", NBT::TagType::TAG_COMPOUND);
     handsInventory->Save(tagEnderChest);
     tagNbtData->AddTag(tagEnderChest);
+
+    NBT::TagCompound* tagAbilities = new NBT::TagCompound("abilities");
+    abilities.Save(tagAbilities);
+    tagNbtData->AddTag(tagAbilities);
+
+    tagNbtData->AddInt("playerGameType", gameMode);
 
     return saveSucess;
 }
@@ -795,9 +835,9 @@ Chat::PlayerChat& EntityPlayer::GetChat()
     return chat;
 }
 
-Chat::PlayerChat* EntityPlayer::GetChatPtr()
+PlayerAbilities& EntityPlayer::GetAbilities()
 {
-    return &chat;
+    return abilities;
 }
 
 void EntityPlayer::registerModules()

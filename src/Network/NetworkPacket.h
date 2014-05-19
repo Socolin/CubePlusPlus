@@ -5,6 +5,7 @@
 #include <sstream>
 #include <vector>
 #include <boost/iostreams/filtering_streambuf.hpp>
+#include "OpcodeList.h"
 
 namespace Inventory
 {
@@ -39,6 +40,7 @@ public:
     NetworkPacket& operator <<(bool value);
     NetworkPacket& operator <<(char value);
     NetworkPacket& operator <<(unsigned char value);
+    NetworkPacket& operator <<(eOpcode value);
     NetworkPacket& operator <<(short value);
     NetworkPacket& operator <<(unsigned short value);
     NetworkPacket& operator <<(int value);

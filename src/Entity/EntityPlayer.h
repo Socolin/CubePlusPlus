@@ -7,6 +7,7 @@
 #include "Chat/PlayerChat.h"
 
 #include "DiggingManager.h"
+#include "PlayerAbilities.h"
 
 #include <boost/heap/binomial_heap.hpp>
 #include <string>
@@ -30,22 +31,12 @@ class Window;
 }
 namespace World
 {
-#define DEFAULT_WALKING_SPEED 24
-#define DEFAULT_FLYING_SPEED 12
 
 class EntityPlayer: public LivingEntity
 {
     typedef LivingEntity parent_type;
     friend class DiggingManager;
 public:
-    enum PlayerAbilities
-    {
-        DAMAGE_DISABLE = 0X1,
-        FLYING = 0X2,
-        CAN_FLY = 0X4,
-        CREATIVE_MODE = 0X8
-    };
-
     enum eGameMode
     {
         GAMEMODE_SURVIVAL,
@@ -187,6 +178,8 @@ public:
      */
     eGameMode GetGameMode() const;
 
+    bool SetGameMode(eGameMode gameMode);
+
     /**
      * Get player name
      * @return player's username
@@ -316,7 +309,8 @@ public:
     const Inventory::Item* LookItemInHand() const;
 
     Chat::PlayerChat& GetChat();
-    Chat::PlayerChat* GetChatPtr();
+
+    PlayerAbilities& GetAbilities();
 
 private:
     void registerModules();
@@ -356,6 +350,8 @@ private:
     Window::Window* inventoryWindow;
     bool admin;
     DiggingManager diggingManager;
+    PlayerAbilities abilities;
+
     // Plugins
     std::map<int, Plugin::PlayerModule*> moduleList;
 };

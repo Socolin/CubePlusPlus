@@ -56,6 +56,12 @@ NetworkPacket& NetworkPacket::operator <<(unsigned char value)
     return *this;
 }
 
+NetworkPacket& NetworkPacket::operator <<(eOpcode value)
+{
+    append(&value, 1);
+    return *this;
+}
+
 NetworkPacket& NetworkPacket::operator <<(short value)
 {
     value = htobe16(value);

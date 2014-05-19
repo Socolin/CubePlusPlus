@@ -111,7 +111,6 @@ public:
     inline void SendSetExperience(short level, short totalXP, float pct);
     inline void SendUpdateHealth(short health, short food, float foodSaturation);
     inline void SendSetPositionAndLook(double x, double y, double stance, double z, float yaw, float pitch, bool onGround);
-    inline void SendSetAbilities(char walkingSpeed, char flyingSpeed, char abilityFlag);
     inline void SendChangeGameState(char reason, char gameMode);
 
     bool UpdateTick();

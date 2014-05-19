@@ -28,12 +28,6 @@ inline void NetworkSession::SendSetPositionAndLook(double x, double y, double st
     packetPositionAndLook << x << y << stance << z << yaw << pitch << onGround;
     SendPacket(packetPositionAndLook);
 }
-inline void NetworkSession::SendSetAbilities(char walkingSpeed, char flyingSpeed, char abilityFlag)
-{
-    Network::NetworkPacket packetAbilities(Network::OP_PLAYER_ABILITIES);
-    packetAbilities << abilityFlag << walkingSpeed << flyingSpeed;
-    SendPacket(packetAbilities);
-}
 inline void NetworkSession::SendChangeGameState(char reason, char gameMode)
 {
     Network::NetworkPacket packetAbilities(Network::OP_CHANGE_GAME_STATE);
