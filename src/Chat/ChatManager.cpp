@@ -6,8 +6,6 @@
 #include "Commands/ChatCommandManager.h"
 #include "Config/Config.h"
 #include "Entity/EntityPlayer.h"
-#include "Entity/Scripts/Database/ScriptedEntityList.h"
-#include "Entity/Scripts/ScriptedLivingEntity.h"
 #include "Logging/Logger.h"
 #include "Util/StringUtil.h"
 #include "World/WorldManager.h"
@@ -105,42 +103,6 @@ bool ChatManager::handleAdminCommand(World::EntityPlayer* player, std::wstring& 
                 player->GetChat() << Chat::RED << L"Word " << Chat::GRAY << word << Chat::RED << L" is not in forbidden word list" << std::endl;
             }
         }
-    }
-    else if (message == L"/spawn chicken")
-    {
-        World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(1, player->x, player->y, player->z);
-        entity->Rotate(player->GetYaw(), player->GetPitch());
-        player->GetWorld()->AddEntity(entity);
-    }
-    else if (message == L"/spawn cow")
-    {
-        World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(2, player->x, player->y, player->z);
-        entity->Rotate(player->GetYaw(), player->GetPitch());
-        player->GetWorld()->AddEntity(entity);
-    }
-    else if (message == L"/spawn pig")
-    {
-        World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(3, player->x, player->y, player->z);
-        entity->Rotate(player->GetYaw(), player->GetPitch());
-        player->GetWorld()->AddEntity(entity);
-    }
-    else if (message == L"/spawn sheep")
-    {
-        World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(4, player->x, player->y, player->z);
-        entity->Rotate(player->GetYaw(), player->GetPitch());
-        player->GetWorld()->AddEntity(entity);
-    }
-    else if (message == L"/spawn wolf")
-    {
-        World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(5, player->x, player->y, player->z);
-        entity->Rotate(player->GetYaw(), player->GetPitch());
-        player->GetWorld()->AddEntity(entity);
-    }
-    else if (message == L"/spawn zombie")
-    {
-        World::ScriptedLivingEntity* entity = World::ScriptedEntityList::Instance().CreateNewEntity(6, player->x, player->y, player->z);
-        entity->Rotate(player->GetYaw(), player->GetPitch());
-        player->GetWorld()->AddEntity(entity);
     }
     else
     {

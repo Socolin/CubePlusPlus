@@ -19,6 +19,7 @@
 #include "Admin/CommandWhitelist.h"
 
 #include "Debug/CommandSpeed.h"
+#include "Debug/CommandSpawn.h"
 
 namespace Chat
 {
@@ -44,6 +45,7 @@ void RegisterCoreCommands()
     manager.RegisterChatCommand("gamemode",     &createChatCommand<CommandGamemode>,    ALL_SENDER);
 
     manager.RegisterChatCommand("speed",        &createChatCommand<CommandSpeed>,       PLAYER);
+    manager.RegisterChatCommand("spawn",        &createChatCommand<CommandSpawn>,       PLAYER);
 }
 
 } /* namespace Chat */

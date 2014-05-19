@@ -6,7 +6,7 @@
 namespace Chat
 {
 
-class CommandGamemode : public ChatCommand
+class CommandGamemode: public ChatCommand
 {
     enum eSyntax
     {
