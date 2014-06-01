@@ -17,7 +17,7 @@ ENDIF (ZLIB_FOUND)
 set(CMAKE_CXX_FLAGS                "-Wall -std=c++0x")
 set(CMAKE_CXX_FLAGS_DEBUG          "-O0 -g -fvar-tracking -pg -Wall -Wextra -Wpedantic  -Wswitch-default -Wzero-as-null-pointer-constant -Wswitch-default -Wunsafe-loop-optimizations")
 set(CMAKE_CXX_FLAGS_MINSIZEREL     "-Os -DNDEBUG")
-set(CMAKE_CXX_FLAGS_RELEASE        "-O4 -DNDEBUG")
+set(CMAKE_CXX_FLAGS_RELEASE        "-O4 -march=native -DNDEBUG")
 set(CMAKE_CXX_FLAGS_RELWITHDEBINFO "-O2 -g")
 
 # Compiler-specific C++11 activation.
