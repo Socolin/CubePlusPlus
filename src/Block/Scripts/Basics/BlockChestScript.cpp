@@ -62,8 +62,8 @@ bool BlockChestScript::CanPlace(World::World* world, int x, i_height y, int z, c
         if (blockId == baseBlockId)
         {
             countChest++;
-            FOR_EACH_SIDE_XZ(blockSideX, blockSideZ, blockSide)
-                i_block blockId = world->GetBlockId(blockSideX, y, blockSideZ);
+            FOR_EACH_SIDE_XZ(blockSideX, blockSideZ, nextBlockSide)
+                i_block blockId = world->GetBlockId(nextBlockSideX, y, nextBlockSideZ);
                 if (blockId == baseBlockId)
                 {
                     countChest--;
