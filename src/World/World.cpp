@@ -288,7 +288,7 @@ Entity* World::GetEntityById(int entityId)
 NBT::TagCompound* World::LoadNbtDatasForPlayer(const std::string& playerName)
 {
     std::stringstream fileName;
-    fileName << worldName << "/players/" << playerName << ".dat";
+    fileName << worldPath << "/players/" << playerName << ".dat";
 
     NBT::File file(fileName.str());
     if (!file.Load())
@@ -316,7 +316,7 @@ NBT::TagCompound* World::LoadNbtDatasForPlayer(const std::string& playerName)
 void World::SaveNbtDatasForPlayer(const std::string& playerName, NBT::TagCompound* tagData) const
 {
     std::stringstream fileName;
-    fileName << worldName << "/players/" << playerName << ".dat";
+    fileName << worldPath << "/players/" << playerName << ".dat";
 
     NBT::File file(fileName.str(), tagData);
     if (!file.Save())
