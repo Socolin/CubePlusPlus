@@ -11,7 +11,9 @@ class CommandSpawn: public ChatCommand
     enum eSyntax
     {
         SYNTAX_ENTITY_STR,
+        SYNTAX_ENTITY_STR_COUNT,
         SYNTAX_ENTITY_ID,
+        SYNTAX_ENTITY_ID_COUNT,
         SYNTAX_ERROR
     };
 public:
