@@ -47,7 +47,7 @@ void CommandWhitelist::ExecuteCommand()
     else if (syntax == SYNTAX_SUB_PLR)
     {
         std::wstring playerName;
-        Util::StringToWString(playerName, splitedCommand[1]);
+        Util::StringToWString(playerName, splitedCommand[2]);
         if (splitedCommand[1] == "add")
         {
             if (World::WorldManager::Instance().AddToWhitelist(playerName))
