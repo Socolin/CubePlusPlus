@@ -4,8 +4,6 @@
 #include <array>
 #include <sys/socket.h>
 
-#define SEND_BUFFER_SIZE 1024
-
 namespace Util
 {
 
@@ -122,7 +120,6 @@ inline int Util::RingBuffer<BufferSizeNPow>::Send(int socket)
     do
     {
         size_t toRead = std::min(size - (readPos & mask), avaible);
-        toRead = std::min(toRead, size_t(SEND_BUFFER_SIZE));
         res = send(socket, &(buffer[readPos & mask]), toRead, MSG_NOSIGNAL);
         if (res == -1)
         {
@@ -134,7 +131,7 @@ inline int Util::RingBuffer<BufferSizeNPow>::Send(int socket)
         avaible -= res;
         readPos += res;
         count += res;
-    } while (avaible > 0 && res > 0);
+    } while (avaible > 0);
 
     return count;
 }
