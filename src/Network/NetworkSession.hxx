@@ -22,10 +22,15 @@ inline void NetworkSession::SendUpdateHealth(short health, short food, float foo
     packetUpdateHealth << health << food << foodSaturation;
     SendPacket(packetUpdateHealth);
 }
-inline void NetworkSession::SendSetPositionAndLook(double x, double y, double stance, double z, float yaw, float pitch, bool onGround)
+inline void NetworkSession::SendSetPositionAndLook(double x, double y, double z, float yaw, float pitch, bool onGround)
 {
+    double eyesPosition = y + 1.6200000047683716;
+
+    teleportPosition = World::Position(x, y, z);
+    teleported = true;
+
     Network::NetworkPacket packetPositionAndLook(Network::OP_PLAYER_POSITION_AND_LOOK);
-    packetPositionAndLook << x << y << stance << z << yaw << pitch << onGround;
+    packetPositionAndLook << x << eyesPosition << y << z << yaw << pitch << onGround;
     SendPacket(packetPositionAndLook);
 }
 inline void NetworkSession::SendChangeGameState(char reason, char gameMode)

@@ -40,7 +40,7 @@ LivingEntity::~LivingEntity()
 
 float LivingEntity::getEyeHeight()
 {
-    return 1.62f;
+    return 1.6200000047683716f;
 }
 
 bool LivingEntity::Load(NBT::TagCompound* tagNbtData)

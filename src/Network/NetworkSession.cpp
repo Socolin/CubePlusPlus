@@ -32,6 +32,7 @@ NetworkSession::NetworkSession(int socket, const std::string& ip) :
     , current_version_protocol(0)
     , current_version_protocol_str("")
     , minecraft_server_version("")
+    , teleported(false)
 {
     Config::Config::GetConfig().lookupValue("server.general.protocol-version", current_version_protocol);
     Config::Config::GetConfig().lookupValue("server.general.protocol-version-str", current_version_protocol_str);

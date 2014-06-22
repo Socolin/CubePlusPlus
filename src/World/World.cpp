@@ -680,7 +680,6 @@ Position World::GetValidSpawnPosition()
             break;
         }
         previousBlockId = blockId;
-        validPosition.y++;
     }
     return validPosition;
 }

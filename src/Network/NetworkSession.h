@@ -9,6 +9,7 @@
 #include <cryptopp/socketft.h>
 
 #include "Util/RingBuffer.h"
+#include "Entity/Position.h"
 
 namespace World
 {
@@ -110,7 +111,7 @@ public:
     inline void SendUpdateTime(long long currentTick, long long ageOfWorld);
     inline void SendSetExperience(short level, short totalXP, float pct);
     inline void SendUpdateHealth(short health, short food, float foodSaturation);
-    inline void SendSetPositionAndLook(double x, double y, double stance, double z, float yaw, float pitch, bool onGround);
+    inline void SendSetPositionAndLook(double x, double y, double z, float yaw, float pitch, bool onGround);
     inline void SendChangeGameState(char reason, char gameMode);
 
     bool UpdateTick();
@@ -175,6 +176,9 @@ private:
     int current_version_protocol;
     std::string current_version_protocol_str;
     std::string minecraft_server_version;
+
+    bool teleported;
+    World::Position teleportPosition;
 };
 }
 

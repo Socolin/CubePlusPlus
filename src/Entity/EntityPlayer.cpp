@@ -177,7 +177,7 @@ void EntityPlayer::OnJoinWorld(World* world)
     }
 
     // Place player in world
-    session->SendSetPositionAndLook(x, y + 1.62, y, z, 0.f, 0.f, false);
+    session->SendSetPositionAndLook(x, y, z, 0.f, 0.f, false);
 
     // Update player health
     // TODO: food
@@ -353,7 +353,7 @@ void EntityPlayer::onTeleport(double x, double y, double z, float yaw, float pit
 {
     if (session != nullptr)
     {
-        session->SendSetPositionAndLook(x, y + 1.62, y, z, yaw, pitch, false);
+        session->SendSetPositionAndLook(x, y, z, yaw, pitch, false);
     }
 }
 

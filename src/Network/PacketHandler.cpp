@@ -26,12 +26,14 @@
 # define DEBUG_STR(value)        LOG_DEBUG << "\t" << #value << "String: size: "<< value.length() << " value:\"" << value << "\"" << std::endl;
 # define DEBUG_SHORT(value)      LOG_DEBUG << "\t" << #value << "\tShort: " << value << std::endl;
 # define DEBUG_BOOL(value)       LOG_DEBUG << "\t" << #value << "\tBool: " << value << std::endl;
+# define DEBUG_DOUBLE(value)     LOG_DEBUG << "\t" << #value << "\tDouble: " << value << std::endl;
 # define DEBUG_INT(value)        LOG_DEBUG << "\t" << #value << "\tInt: " << value << std::endl;
 # define DEBUG_CHAR(value)       LOG_DEBUG << "\t" << #value << "\tChar: " << (int)value << std::endl;
 #else
 # define DEBUG_STR(value)
 # define DEBUG_SHORT(value)
 # define DEBUG_BOOL(value)
+# define DEBUG_DOUBLE(value)
 # define DEBUG_INT(value)
 # define DEBUG_CHAR(value)
 #endif
@@ -139,11 +141,24 @@ void NetworkSession::handlePlayer() throw (NetworkException)
 void NetworkSession::handlePlayerPosition() throw (NetworkException)
 {
     double newX = readDouble();
+    double newEyesY = readDouble();
     double newY = readDouble();
-    /*double Stance = */
-    readDouble();
     double newZ = readDouble();
     readByte();
+
+    if (teleported)
+    {
+        if (teleportPosition.x != newX || teleportPosition.z != newZ || abs(teleportPosition.y - newY) > 0.1)
+        {
+            player->Teleport(teleportPosition.x
+                    , teleportPosition.y
+                    , teleportPosition.z
+                    , player->GetYaw()
+                    , player->GetPitch());
+            return;
+        }
+        teleported = false;
+    }
     player->MoveTo(newX, newY, newZ);
 }
 void NetworkSession::handlePlayerLook() throw (NetworkException)
@@ -157,12 +172,25 @@ void NetworkSession::handlePlayerPositionAndLook() throw (NetworkException)
 {
     double newX = readDouble();
     double newY = readDouble();
-    /*double Stance = */
-    readDouble();
+    double newEyesY = readDouble();
     double newZ = readDouble();
     double newYaw = readFloat();
     double newPitch = readFloat();
     readByte();
+
+    if (teleported)
+    {
+        if (teleportPosition.x != newX || teleportPosition.z != newZ || abs(teleportPosition.y - newY) > 0.1)
+        {
+            player->Teleport(teleportPosition.x
+                    , teleportPosition.y
+                    , teleportPosition.z
+                    , newYaw
+                    , newPitch);
+            return;
+        }
+        teleported = false;
+    }
     player->Rotate(newYaw, newPitch);
     player->MoveTo(newX, newY, newZ);
 }
