@@ -134,14 +134,8 @@ void EntityPlayer::UpdateTick()
 
 void EntityPlayer::Respawn(double x, double y, double z)
 {
-    //TODO: override relocate to handle well movement etc...
-    Relocate(x, y, z);
-    Network::NetworkPacket packet;
-
-    // Move this to session
-    Network::NetworkPacket packetInitialPosition(Network::OP_PLAYER_POSITION_AND_LOOK);
-    packetInitialPosition << x << y << z << (float)0 << (float)0 << (char)0;
-    Send(packetInitialPosition);
+    Teleport(x, y, z, yaw, pitch);
+    // FIXME: update health ...
 }
 
 void EntityPlayer::OnJoinWorld(World* world)
