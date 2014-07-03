@@ -59,8 +59,6 @@ target_link_libraries(
 	config++
 	mysqlcppconn
     nbtfield
-    sfml-network
-    sfml-system
 )
 
 execute_process(COMMAND ${CMAKE_COMMAND} -E make_directory bin/log)
