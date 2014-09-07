@@ -118,13 +118,13 @@ public:
     bool IsOnlineMode() const;
 
     /**
-     *
+     * Set use of server whitelist. If enabled, any player not inclued in whitelist will be be kicked on join
      * @param useWhitelist
      */
     void SetUseWhitelist(bool useWhitelist);
 
     /**
-     *
+     * Return true if server whitelist is enabled
      * @return
      */
     bool UseWhitelist() const;
@@ -132,6 +132,13 @@ public:
     /**
      * Reload admin ban and whitelist file
      */
+    
+    /**
+     * Return server whitelist content, else nullptr if list is empty or if whitelist is disabled
+     * @return 
+     */
+    std::set<std::wstring>* GetWhitelist();
+     
     void Reload();
 
 

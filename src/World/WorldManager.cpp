@@ -228,6 +228,15 @@ bool WorldManager::UseWhitelist() const
     return useWhitelist;
 }
 
+std::set<std::wstring>* WorldManager::GetWhitelist()
+{
+    if (useWhitelist)
+    {
+        return &whitelist;
+    }
+    return nullptr;
+}
+
 bool WorldManager::Kick(const std::wstring& playerName)
 {
     auto playerItr = playerByNameList.find(playerName);
@@ -522,9 +531,12 @@ void WorldManager::loadWhitelist()
         std::string line;
         while (std::getline(whitelistFile,line))
         {
-            std::wstring playerName;
-            Util::StringToWString(playerName, line);
-            whitelist.insert(playerName);
+            if (line.size() > 0)
+            {
+                std::wstring playerName;
+                Util::StringToWString(playerName, line);
+                whitelist.insert(playerName);
+            }
         }
         whitelistFile.close();
     }

@@ -39,6 +39,28 @@ void CommandWhitelist::ExecuteCommand()
             World::WorldManager::Instance().SetUseWhitelist(false);
             sender.chatStream << COLOR_SYSTEM << "Whitelist disabled" << std::endl;
         }
+        else if (splitedCommand[1] == "show")
+        {
+            if (World::WorldManager::Instance().UseWhitelist())
+            {
+                std::set<std::wstring>* whitelist = World::WorldManager::Instance().GetWhitelist();
+                if (whitelist != nullptr)
+                {
+                    for (auto itrPlr = whitelist->begin(); itrPlr != whitelist->end(); itrPlr++)
+                    {
+                        sender.chatStream << BLUE << " - " << *itrPlr << std::endl;
+                    }
+                }
+                else
+                {
+                    sender.chatStream << COLOR_KO << "Whitelist is empty" << std::endl;    
+                }
+            }
+            else
+            {
+                sender.chatStream << COLOR_KO << "Whitelist is not enabled" << std::endl;
+            }
+        }
         else
         {
             BadSyntaxMessage();
