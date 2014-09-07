@@ -64,5 +64,12 @@ void CommandTime::ExecuteCommand()
     }
 }
 
+void CommandTime::BadSyntaxMessage() const
+{
+    sender.chatStream << COLOR_KO << "Bad syntax, available arguments are :" << std::endl;
+    sender.chatStream << COLOR_KO_PARAM << " - set <value> : Set current time to requested value" << std::endl;
+    sender.chatStream << COLOR_KO_PARAM << " - day / night : Set current time to day (sunrise) or night (sunset)" << std::endl;
+}
+
 } /* namespace Chat */
 

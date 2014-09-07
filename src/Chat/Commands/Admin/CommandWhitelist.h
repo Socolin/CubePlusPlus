@@ -18,6 +18,7 @@ public:
     CommandWhitelist(const CommandSender& sender, const std::vector<std::string>& splitedCommand);
     virtual bool CheckSyntax() override;
     virtual void ExecuteCommand() override;
+    virtual void BadSyntaxMessage() const override;
 private:
     eSyntax syntax;
 };
