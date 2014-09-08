@@ -65,8 +65,8 @@ void CommandGamemode::ExecuteCommand()
 void CommandGamemode::BadSyntaxMessage() const
 {
     sender.chatStream << COLOR_KO << "Bad syntax, available arguments are :" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - <playername> <gamemode> : Set gamemode of requested player" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - <gamemode> : Set your gamemode (0: Peaceful, 1: Easy, 2: Normal, 3: Hard)" << std::endl;
+    sender.chatStream << COLOR_KO << " - <playername> <gamemode> : " << COLOR_KO_PARAM << "Set gamemode of requested player" << std::endl;
+    sender.chatStream << COLOR_KO << " - <gamemode> : " << COLOR_KO_PARAM << "Set your gamemode (0: Peaceful, 1: Easy, 2: Normal, 3: Hard)" << std::endl;
 }
 
 } /* namespace Chat */

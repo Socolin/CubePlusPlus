@@ -140,10 +140,10 @@ void Chat::CommandTeleport::ExecuteCommand()
 void CommandTeleport::BadSyntaxMessage() const
 {
     sender.chatStream << COLOR_KO << "Bad syntax, available arguments are :" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - <playername> : Teleport you to requested player" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - <playername> <playername> : Teleport first player to second player location" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - <x> <y> <z> : Teleport you to requested coordinates" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - <x> <y> <z> <yaw> <pitch> : Teleport you to requested coordinates and set yaw and pitch" << std::endl;
+    sender.chatStream << COLOR_KO << " - <playername> : " << COLOR_KO_PARAM << "Teleport you to requested player" << std::endl;
+    sender.chatStream << COLOR_KO << " - <playername> <playername> : " << COLOR_KO_PARAM << "Teleport first player to second player location" << std::endl;
+    sender.chatStream << COLOR_KO << " - <x> <y> <z> : " << COLOR_KO_PARAM << "Teleport you to requested coordinates" << std::endl;
+    sender.chatStream << COLOR_KO << " - <x> <y> <z> <yaw> <pitch> : " << COLOR_KO_PARAM << "Teleport you to requested coordinates and set yaw and pitch" << std::endl;
 }
 
 } /* namespace Chat */

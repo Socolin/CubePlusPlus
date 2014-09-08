@@ -102,10 +102,10 @@ void CommandWhitelist::ExecuteCommand()
 void CommandWhitelist::BadSyntaxMessage() const
 {
     sender.chatStream << COLOR_KO << "Bad syntax, available arguments are :" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - on / off : Enable or disable whitelist" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - show : Display whitelist content" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - add <playername> : Add a new player to whitelist" << std::endl;
-    sender.chatStream << COLOR_KO_PARAM << " - remove <playername> : Remove a player from whitelist" << std::endl;
+    sender.chatStream << COLOR_KO << " - on / off : " << COLOR_KO_PARAM << "Enable or disable whitelist" << std::endl;
+    sender.chatStream << COLOR_KO << " - show : " << COLOR_KO_PARAM << "Display whitelist content" << std::endl;
+    sender.chatStream << COLOR_KO << " - add <playername> : " << COLOR_KO_PARAM << "Add a new player to whitelist" << std::endl;
+    sender.chatStream << COLOR_KO << " - remove <playername> : " << COLOR_KO_PARAM << "Remove a player from whitelist" << std::endl;
 }
 
 } /* namespace Chat */
