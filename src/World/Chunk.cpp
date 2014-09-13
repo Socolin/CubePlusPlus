@@ -443,19 +443,22 @@ void Chunk::SendUpdate()
         ResetBlockChangePacket();
     }
 
-    tileEntityUpdatePacket.Clear();
-    for (Block::TileEntity* tileEntity: updatedTileEntities)
+    if (!updatedTileEntities.empty())
     {
-        tileEntity->GetDataPacket(tileEntityUpdatePacket);
-    }
-    if (tileEntityUpdatePacket.getPacketSize() > 0)
-    {
-        for (EntityPlayer* plr : playerList)
+        tileEntityUpdatePacket.Clear();
+        for (Block::TileEntity* tileEntity: updatedTileEntities)
         {
-            plr->Send(tileEntityUpdatePacket);
+            tileEntity->GetDataPacket(tileEntityUpdatePacket);
         }
+        if (tileEntityUpdatePacket.getPacketSize() > 0)
+        {
+            for (EntityPlayer* plr : playerList)
+            {
+                plr->Send(tileEntityUpdatePacket);
+            }
+        }
+        updatedTileEntities.clear();
     }
-    updatedTileEntities.clear();
 }
 
 
