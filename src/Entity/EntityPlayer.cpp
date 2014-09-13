@@ -100,17 +100,32 @@ void EntityPlayer::UpdateTick()
         return;
     if (world != nullptr)
     {
-        for (unsigned int i = 0; i < Config::Config::GetChunkSentPerTick(); i++)
+        int viewDistance = world->GetViewDistance();
+        if (!chunkToSend.empty())
         {
-            if (!chunkToSend.empty())
+            for (unsigned int i = 0; i < Config::Config::GetChunkSentPerTick(); i++)
             {
                 if (session == nullptr)
                     return;
                 if (session->IsSendBufferHalfFull())
                     break;
+
                 const ChunkToSendData& chunkToSendData = chunkToSend.top();
-                world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
+                if (abs(chunkX - chunkToSendData.x) <= viewDistance
+                        && abs(chunkZ - chunkToSendData.z) <= viewDistance)
+                {
+                    world->RequestChunk(this, chunkToSendData.x, chunkToSendData.z);
+                }
+                else
+                {
+                    i--;
+                }
+
                 chunkToSend.pop();
+                if (chunkToSend.empty())
+                {
+                    break;
+                }
             }
         }
 
@@ -221,22 +236,6 @@ void EntityPlayer::moveToChunk(int newChunkX, int newChunkZ)
 {
     int viewDistance = world->GetViewDistance();
 
-    while (!chunkToSend.empty())
-    {
-        const ChunkToSendData& chunkToSendData = chunkToSend.top();
-        if (abs(newChunkX - chunkToSendData.x) <= viewDistance && abs(newChunkZ - chunkToSendData.z) <= viewDistance)
-        {
-            sortChunkToSend.push_back({chunkToSendData.x, chunkToSendData.z, abs(newChunkX - chunkToSendData.x) + abs(newChunkZ - chunkToSendData.z)});
-        }
-        chunkToSend.pop();
-    }
-
-    for (const ChunkToSendData& chunkToSendData : sortChunkToSend)
-    {
-        chunkToSend.push(chunkToSendData);
-    }
-    sortChunkToSend.clear();
-
     VirtualSmallChunk*oldVChunk = world->GetVirtualSmallChunk(chunkX, chunkZ);
     oldVChunk->RemovePlayer(this);
     VirtualSmallChunk *vChunk = world->GetVirtualSmallChunk(newChunkX, newChunkZ);
@@ -283,22 +282,6 @@ void EntityPlayer::teleportToVirtualChunk(int newVirtualChunkX, int newVirtualCh
 void EntityPlayer::teleportToChunk(int newChunkX, int newChunkZ)
 {
     int viewDistance = world->GetViewDistance();
-
-    while (!chunkToSend.empty())
-    {
-        const ChunkToSendData& chunkToSendData = chunkToSend.top();
-        if (abs(newChunkX - chunkToSendData.x) <= viewDistance && abs(newChunkZ - chunkToSendData.z) <= viewDistance)
-        {
-            sortChunkToSend.push_back({chunkToSendData.x, chunkToSendData.z, abs(newChunkX - chunkToSendData.x) + abs(newChunkZ - chunkToSendData.z)});
-        }
-        chunkToSend.pop();
-    }
-
-    for (const ChunkToSendData& chunkToSendData : sortChunkToSend)
-    {
-        chunkToSend.push(chunkToSendData);
-    }
-    sortChunkToSend.clear();
 
     VirtualSmallChunk*oldVChunk = world->GetVirtualSmallChunk(chunkX, chunkZ);
     oldVChunk->RemovePlayer(this);

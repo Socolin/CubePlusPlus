@@ -337,7 +337,6 @@ private:
     Network::NetworkSession* session;
     Chat::PlayerChat chat;
     boost::heap::binomial_heap<ChunkToSendData,boost::heap::compare<CompareChunkToSendData>> chunkToSend;
-    std::vector<ChunkToSendData> sortChunkToSend;
     Inventory::Inventory* mainInventory;
     Inventory::InventoryPlayer* handsInventory;
     Inventory::Inventory* enderChestInventory;
