@@ -11,6 +11,7 @@ class CommandSpeed: public ChatCommand
 public:
     CommandSpeed(const CommandSender& sender, const std::vector<std::string>& splitedCommand);
     virtual bool CheckSyntax() override;
+    virtual void BadSyntaxMessage() const override;
 protected:
     virtual void ExecuteCommandPlayer(World::EntityPlayer* plr) override;
 };
