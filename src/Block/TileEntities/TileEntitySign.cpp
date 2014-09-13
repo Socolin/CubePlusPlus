@@ -4,6 +4,7 @@
 
 #include "Network/OpcodeList.h"
 #include "Util/StringUtil.h"
+#include "Logging/Logger.h"
 
 namespace Block
 {
@@ -40,7 +41,14 @@ void TileEntitySign::GetDataPacket(Network::NetworkPacket& packet)
         cachePacket << (unsigned char)Network::OP_UPDATE_SIGN;
         cachePacket << blockX << (short)blockY << blockZ;
         for (int i = 0; i < 4; i++)
+        {
+            if (lines[i].length() > 15)
+            {
+                lines[i] = lines[i].substr(0, 15);
+                LOG_ERROR << "Sign at (" << blockX << ", " << blockY << ", " << blockZ << ") has more than 15 letters on line " << i << std::endl;
+            }
             cachePacket << lines[i];
+        }
     }
     packet << cachePacket;
 }
