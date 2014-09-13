@@ -683,6 +683,7 @@ Position World::GetValidSpawnPosition()
         i_block blockId = chunk->getBlockAt(spawnPosX & 0xf, y, spawnPosZ & 0xf);
         if (blockId == 0 && previousBlockId == 0)
         {
+            validPosition.y = y;
             break;
         }
         previousBlockId = blockId;
