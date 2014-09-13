@@ -821,6 +821,8 @@ private:
     int viewDistance;
 
     Position spawnPosition;
+    
+    int spawnDistance;
 
     bool hardcore;
 

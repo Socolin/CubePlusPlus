@@ -52,6 +52,9 @@ int main(int argc, char* argv[])
     {
         handleArgument(std::string(argv[i]));
     }
+    
+    // Init RNG
+    srand (time(nullptr));
 
     Config::Config::Instance().Init();
 

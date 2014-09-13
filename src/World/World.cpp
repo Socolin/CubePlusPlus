@@ -55,6 +55,12 @@ World::World(const std::string& worldName)
         LOG_ERROR << "Invalid viewDistance value: " << viewDistance << ", value must be between 7 and 15" << std::endl;
         viewDistance = 10;
     }
+    Config::Config::GetConfig().lookupValue("server.world.spawn-distance", spawnDistance);
+    if (spawnDistance <= 0)
+    {
+        LOG_ERROR << "Invalid spawnDistance value: " << spawnDistance << ", value must be greater than 0" << std::endl;
+        spawnDistance = 16;
+    }
     Config::Config::GetConfig().lookupValue("server.general.world-dir", worldPath);
     regionManager = RegionManager(worldPath + "/");
     load();
@@ -666,8 +672,8 @@ Position World::GetValidSpawnPosition()
     int spawnPosX = spawnPosition.x;
     int spawnPosY = spawnPosition.y;
     int spawnPosZ = spawnPosition.z;
-    spawnPosX += (rand() % 16) - 8;
-    spawnPosZ += (rand() % 16) - 8;
+    spawnPosX += (rand() % spawnDistance) - (spawnDistance / 2);
+    spawnPosZ += (rand() % spawnDistance) - (spawnDistance / 2);
 
     Chunk* chunk = GetChunk(spawnPosX >> 4, spawnPosZ >> 4);
     i_block previousBlockId = chunk->getBlockAt(spawnPosX & 0xf, spawnPosY, spawnPosZ & 0xf);
