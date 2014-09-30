@@ -1,0 +1,74 @@
+WITH_GCC=0
+WITH_DEBUG=0
+WITH_GPROF=0
+VERBOSE=1
+COLOR=0
+
+for arg in $@
+do
+    if test "$arg" = "--with-gcc"
+    then
+        WITH_GCC=1
+    elif test "$arg" = "--with-debug"
+    then
+        WITH_DEBUG=1
+    elif test "$arg" = "--with-gprof"
+    then
+        WITH_GPROF=1
+    elif test "$arg" = "--verbose"
+    then
+        VERBOSE=1
+    elif test "$arg" = "--no-verbose"
+    then
+        VERBOSE=0
+    elif test "$arg" = "--color"
+    then
+        COLOR=1
+    elif test "$arg" = "--help"
+    then
+        echo 'usage: '$0' [--with-gcc] [--with-debug] [--with-gprof] [--verbose] [--color]'
+        echo '        --with-gcc     use gcc instead of clang'
+        echo '        --with-debug   no optimization and with debug symbolr'
+        echo '        --with-gprof   use gprof, see gprof documentation'
+        echo '        --verbose      verbose output for make (can be override with V=1 or 0)'
+        echo '        --no-verbose   opposite of --verbose'
+        echo '        --color        color output for make (can be override with COLOR=1 or 0)'
+        exit 0;
+    else
+        echo "Unknow arg: $arg --help for display help"
+        exit 1
+    fi
+done
+
+if test $WITH_GCC -eq 1
+then
+    CXX=g++
+else
+    CXX=clang++
+fi
+
+if test $WITH_DEBUG -eq 1
+then
+    CXXFLAGS=-g3
+else
+    CXXFLAGS=-O2
+    CPPFLAGS=-DNDEBUG
+fi
+
+if test $WITH_GPROF -eq 1
+then
+    CXX=g++
+    LDFLAGS=-pg
+    CXXFLAGS="$CXXFLAGS -pg"
+fi
+
+echo CXX=$CXX > Makefile.mk
+echo CXXFLAGS+=$CXXFLAGS >> Makefile.mk
+echo LDFLAGS+=$LDFLAGS >> Makefile.mk
+echo CPPFLAGS+=$CPPFLAGS >> Makefile.mk
+echo V?=${VERBOSE} >> Makefile.mk
+echo COLOR?=${COLOR} >> Makefile.mk
+echo -n "SRCS=" > sources && find src/ -type f -name '*.cpp' -printf "     %-74p\\\\\n" | sort | sed '1s/     //'  >> sources 
+
+
+echo "If you changed some settings, don't forget to: make clean"

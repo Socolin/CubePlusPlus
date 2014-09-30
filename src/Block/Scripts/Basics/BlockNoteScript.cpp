@@ -11,7 +11,7 @@ namespace Scripting
 
 BlockNoteScript::BlockNoteScript():
                 BlockScript("block_note"),
-                soundName({L"note.bd",L"note.snare",L"note.hat",L"note.bassattack",L"note.harp"})
+                soundName{L"note.bd",L"note.snare",L"note.hat",L"note.bassattack",L"note.harp"}
 {
 }
 

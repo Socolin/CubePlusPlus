@@ -141,7 +141,7 @@ void NetworkSession::handlePlayer() throw (NetworkException)
 void NetworkSession::handlePlayerPosition() throw (NetworkException)
 {
     double newX = readDouble();
-    double newEyesY = readDouble();
+    readDouble(); //newEyesY
     double newY = readDouble();
     double newZ = readDouble();
     readByte();
@@ -172,7 +172,7 @@ void NetworkSession::handlePlayerPositionAndLook() throw (NetworkException)
 {
     double newX = readDouble();
     double newY = readDouble();
-    double newEyesY = readDouble();
+    readDouble(); //newEyesY
     double newZ = readDouble();
     double newYaw = readFloat();
     double newPitch = readFloat();

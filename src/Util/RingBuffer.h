@@ -2,6 +2,8 @@
 #define RINGBUFFER_H_
 
 #include <array>
+#include <cerrno>
+#include <cstdio>
 #include <sys/socket.h>
 
 namespace Util

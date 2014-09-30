@@ -1,0 +1,12 @@
+ifeq ($(COLOR),1)
+RST=\e[0;0m
+RED=\e[0;31m
+REB=\e[1;31m
+GRN=\e[0;32m
+GRB=\e[1;32m
+YLW=\e[0;33m
+BLU=\e[0;34m
+PUR=\e[0;35m
+CYN=\e[0;36m
+WHT=\e[0;37m
+endif

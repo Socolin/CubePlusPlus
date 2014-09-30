@@ -289,7 +289,7 @@ void BlockRedstoneWireScript::calculateCurrentChanges(World::World* world, int x
         const Block::Block* currentBlock = Block::BlockList::getBlock(currentBlockId);
         if ((sideBlock && sideBlock->IsNormalCube()) && (currentBlock == nullptr || !currentBlock->IsNormalCube()))
         {
-            if ((sideX != x || sideZ != z) && y >= y)
+            if ((sideX != x || sideZ != z))
             {
                 newBlockPower = getMaxCurrentStrength(world, sideX, y + 1, sideZ, newBlockPower);
             }

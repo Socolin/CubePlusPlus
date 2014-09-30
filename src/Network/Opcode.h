@@ -17,7 +17,7 @@ struct OpcodeHandler
         , packetSize(0)
     {
     }
-    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)())
+    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)() throw (NetworkException))
         : name(name)
         , state(state)
         , handler(handler)
@@ -25,7 +25,7 @@ struct OpcodeHandler
         , packetSize(0)
     {
     }
-    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)(), bool debug)
+    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)() throw (NetworkException), bool debug)
         : name(name)
         , state(state)
         , handler(handler)
@@ -33,7 +33,7 @@ struct OpcodeHandler
         , packetSize(0)
     {
     }
-    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)(), int size)
+    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)() throw (NetworkException), int size)
         : name(name)
         , state(state)
         , handler(handler)
@@ -41,7 +41,7 @@ struct OpcodeHandler
         , packetSize(size)
     {
     }
-    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)(), bool debug, int size)
+    OpcodeHandler(char const* name, int state, void (NetworkSession::*handler)() throw (NetworkException), bool debug, int size)
         : name(name)
         , state(state)
         , handler(handler)
