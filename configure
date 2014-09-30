@@ -51,7 +51,7 @@ if test $WITH_DEBUG -eq 1
 then
     CXXFLAGS=-g3
 else
-    CXXFLAGS=-O2
+    CXXFLAGS="-O3 -march=native"
     CPPFLAGS=-DNDEBUG
 fi
 
