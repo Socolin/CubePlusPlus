@@ -12,6 +12,10 @@ ToolMaterials::ToolMaterials()
 
 ToolMaterials::~ToolMaterials()
 {
+    for (auto materialItr : materialList) {
+        delete materialItr.second;
+    }
+    materialList.clear();
 }
 
 const ToolMaterial* ToolMaterials::GetMaterial(int id)
@@ -26,9 +30,9 @@ void ToolMaterials::InitInstance()
 
 void ToolMaterials::load()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
-    sql::ResultSet* result = db->querry("SELECT * FROM `tool_material`");
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
+    sql::ResultSet* result = db.querry("SELECT * FROM `tool_material`");
 
     if (result == nullptr)
     {

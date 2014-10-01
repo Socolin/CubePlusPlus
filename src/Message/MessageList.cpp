@@ -23,8 +23,8 @@ MessageList::~MessageList()
 
 void MessageList::InitInstance()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
     InitializeVector(db);
     InitializeMessageList(db);
     InitializeLang(db);
@@ -50,9 +50,9 @@ std::wstring MessageList::GetMessage(const std::string& key)
     return (L"");
 }
 
-void MessageList::InitializeVector(Database::DatabaseManager* db)
+void MessageList::InitializeVector(Database::DatabaseManager& db)
 {
-    sql::ResultSet* result = db->querry("SELECT MAX(`id`) FROM `message_lang`");
+    sql::ResultSet* result = db.querry("SELECT MAX(`id`) FROM `message_lang`");
 
     if(result == nullptr)
     {
@@ -66,9 +66,9 @@ void MessageList::InitializeVector(Database::DatabaseManager* db)
     delete result;
 }
 
-void MessageList::InitializeMessageList(Database::DatabaseManager* db)
+void MessageList::InitializeMessageList(Database::DatabaseManager& db)
 {
-    sql::ResultSet* result = db->querry("SELECT * FROM `message` ORDER BY `langId` ASC");
+    sql::ResultSet* result = db.querry("SELECT * FROM `message` ORDER BY `langId` ASC");
 
     if(result == nullptr)
     {
@@ -111,11 +111,11 @@ void MessageList::InitializeMessageList(Database::DatabaseManager* db)
     delete result;
 }
 
-void MessageList::InitializeLang(Database::DatabaseManager* db)
+void MessageList::InitializeLang(Database::DatabaseManager& db)
 {
     std::ostringstream querry;
     querry << "SELECT DISTINCT `id` FROM `message_lang` WHERE UPPER(`lang`) LIKE UPPER('%" << configLang << "%')";
-    sql::ResultSet* result = db->querry(querry.str());
+    sql::ResultSet* result = db.querry(querry.str());
 
     if(result == nullptr || !result->first())
     {

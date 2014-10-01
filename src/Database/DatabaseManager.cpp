@@ -6,12 +6,6 @@
 namespace Database
 {
 
-DatabaseManager* DatabaseManager::instance = nullptr;
-DatabaseManager* DatabaseManager::Instance()
-{
-    return instance;
-}
-
 DatabaseManager::DatabaseManager()
     : driver(nullptr)
     , con(nullptr)

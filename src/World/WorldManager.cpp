@@ -26,7 +26,6 @@ WorldManager::WorldManager()
     , whitelistFileName("whitelist")
     , mutedPlayersFileName("mutedPlayers")
     , useWhitelist(false)
-    , motdArraySize(0)
     , lateness(0)
 {
     Config::Config::GetConfig().lookupValue("server.general.maxplayers", maxPlayerCount);
@@ -100,12 +99,9 @@ EntityPlayer* WorldManager::LoadAndJoinWorld(const std::wstring& name, Network::
     playerByNameList[name] = player;
 
     Network::NetworkPacket packetChatMessage(Network::OP_CHAT_MESSAGE);
-    for(int i = 0; i < motdArraySize; i++)
+    for (auto message : serverMotd)
     {
-        std::wostringstream motdMessage;
-        std::wstring motdWS (serverMotd[i].begin(), serverMotd[i].end());
-        motdMessage << L"§a" << motdWS;
-        player->SendChatMessage(motdMessage.str());
+        player->GetChat() << Chat::GREEN << message << std::endl;
     }
     return player;
 }
@@ -513,11 +509,12 @@ void WorldManager::loadMotd()
     libconfig::Setting& setting = Config::Config::GetConfig().lookup("server.general");
     if(setting["motd"].isArray())
     {
-        motdArraySize = setting["motd"].getLength();
-        serverMotd = new std::string[motdArraySize];
-        for(int i = 0; i < motdArraySize; i++)
+        size_t size = setting["motd"].getLength();
+        for(size_t i = 0; i < size; i++)
         {
-            serverMotd[i] = setting["motd"][i].c_str();
+            std::wstring wMessage;
+            Util::StringToWString(wMessage, setting["motd"][i]);
+            serverMotd.push_back(wMessage);
         }
     }
 }

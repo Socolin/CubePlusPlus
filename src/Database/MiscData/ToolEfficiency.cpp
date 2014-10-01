@@ -36,9 +36,9 @@ void ToolEfficiency::InitInstance()
 
 void ToolEfficiency::load()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
-    sql::ResultSet* result = db->querry("SELECT * FROM `tool_efficiency`");
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
+    sql::ResultSet* result = db.querry("SELECT * FROM `tool_efficiency`");
 
     if (result == nullptr)
     {

@@ -87,6 +87,7 @@ void LoginManager::Stop()
     running = false;
     for (int i = 0; i < WORKER_THREAD_COUNT; ++i) {
         threadList[i]->join();
+        delete threadList[i];
     }
 }
 

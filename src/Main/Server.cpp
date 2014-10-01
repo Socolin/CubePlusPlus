@@ -58,8 +58,7 @@ int main(int argc, char* argv[])
 
     Config::Config::Instance().Init();
 
-    Database::DatabaseManager::InitInstance();
-    if(!Database::DatabaseManager::Instance()->connect())
+    if(!Database::DatabaseManager::Instance().connect())
     {
         LOG_ERROR << "Not started" << std::endl;
         return 1;

@@ -41,10 +41,10 @@ const std::vector<Craft*>& CraftManager::GetCraftList(int width, int height)
 
 void CraftManager::load()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
 
-    sql::ResultSet* result = db->querry("SELECT * FROM `craft` ORDER BY `id`");
+    sql::ResultSet* result = db.querry("SELECT * FROM `craft` ORDER BY `id`");
 
     if (result == nullptr)
     {
@@ -86,7 +86,7 @@ void CraftManager::load()
                         "INNER JOIN script_info ON `script_info`.`scriptId` = `script_data`.`scriptId` AND `script_info`.`paramId` = `script_data`.`param`"
                         "WHERE `script_info`.`scriptId` = " << scriptId << " AND `stuffId` = " << craftId;
 
-                sql::ResultSet* script_result = db->querry(request_construct.str());
+                sql::ResultSet* script_result = db.querry(request_construct.str());
                 //Load script data
                 while (script_result->next())
                 {
@@ -143,10 +143,10 @@ void CraftManager::loadCraftSlot(Craft* craft, int craftId)
     std::ostringstream request_construct;
     request_construct << "SELECT * FROM `craft_slot` WHERE `craftId` = " << craftId << " ORDER BY `id`";
 
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
 
-    sql::ResultSet* result = db->querry(request_construct.str());
+    sql::ResultSet* result = db.querry(request_construct.str());
 
     if (result == nullptr)
     {

@@ -25,10 +25,10 @@ ScriptedEntityList::~ScriptedEntityList()
 
 void ScriptedEntityList::Initialize()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
 
-    sql::ResultSet* result = db->querry("SELECT * FROM `entity_living` ORDER BY `id`");
+    sql::ResultSet* result = db.querry("SELECT * FROM `entity_living` ORDER BY `id`");
 
     if (result == nullptr)
     {
@@ -62,7 +62,7 @@ void ScriptedEntityList::Initialize()
                                   "INNER JOIN script_info ON `script_info`.`scriptId` = `script_data`.`scriptId` AND `script_info`.`paramId` = `script_data`.`param`"
                                   "WHERE `script_info`.`scriptId` = " << scriptId << " AND `stuffId` = " << id;
 
-                sql::ResultSet* script_result = db->querry(request_construct.str());
+                sql::ResultSet* script_result = db.querry(request_construct.str());
                 //Load script data
                 while (script_result->next())
                 {

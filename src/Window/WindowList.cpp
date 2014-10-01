@@ -34,10 +34,10 @@ void WindowList::InitInstance()
 
 void WindowList::Initialize()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
 
-    sql::ResultSet* result = db->querry("SELECT * FROM `windows` ORDER BY `id`");
+    sql::ResultSet* result = db.querry("SELECT * FROM `windows` ORDER BY `id`");
 
     if (result == nullptr)
     {
@@ -77,7 +77,7 @@ void WindowList::Initialize()
                                   "INNER JOIN script_info ON `script_info`.`scriptId` = `script_data`.`scriptId` AND `script_info`.`paramId` = `script_data`.`param`"
                                   "WHERE `script_info`.`scriptId` = " << scriptId << " AND `stuffId` = " << windowId;
 
-                sql::ResultSet* script_result = db->querry(request_construct.str());
+                sql::ResultSet* script_result = db.querry(request_construct.str());
                 //Load script data
                 while (script_result->next())
                 {

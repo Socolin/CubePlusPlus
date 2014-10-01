@@ -17,6 +17,7 @@ Craft::Craft(char width, char height, i_item resultId, i_damage resultData, int 
 Craft::~Craft()
 {
     delete result;
+    delete script;
 }
 
 const Inventory::ItemStack* Craft::GetResult() const

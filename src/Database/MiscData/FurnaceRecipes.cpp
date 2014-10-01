@@ -56,9 +56,9 @@ bool FurnaceRecipes::IsValidInput(const Inventory::ItemStack* itemStack) const
 
 void FurnaceRecipes::load()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
-    sql::ResultSet* result = db->querry("SELECT * FROM `furnace_recipe`");
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
+    sql::ResultSet* result = db.querry("SELECT * FROM `furnace_recipe`");
 
     if (result == nullptr)
     {

@@ -136,10 +136,10 @@ void ScriptManager::RegisterAllScripts()
 
 void ScriptManager::LoadScriptsIds()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
 
-    sql::ResultSet* result = db->querry("SELECT * FROM `script` ORDER BY `id`");
+    sql::ResultSet* result = db.querry("SELECT * FROM `script` ORDER BY `id`");
 
     if (result == nullptr)
     {
@@ -196,6 +196,12 @@ ScriptManager::~ScriptManager()
         delete itr.second;
     }
     craftScript.clear();
+
+    for (auto itr : livingEntityScript)
+    {
+        delete itr.second;
+    }
+    livingEntityScript.clear();
 }
 
 } /* namespace Scripting */

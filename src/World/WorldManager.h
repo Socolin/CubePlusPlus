@@ -6,6 +6,7 @@
 #include <string>
 #include <set>
 #include <map>
+#include <vector>
 
 #include "Chat/ChatManager.h"
 
@@ -182,13 +183,12 @@ private:
     int maxPlayerCount;
     std::string serverName;
     std::string serverDescription;
-    std::string* serverMotd;
+    std::vector<std::wstring> serverMotd;
     std::string banFileName;
     std::string adminFileName;
     std::string whitelistFileName;
     std::string mutedPlayersFileName;
     bool useWhitelist;
-    int motdArraySize;
     bool onlineMode;
     unsigned int difficulty;
     int lateness;

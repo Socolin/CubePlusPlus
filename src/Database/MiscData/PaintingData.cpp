@@ -23,9 +23,9 @@ void PaintingData::InitInstance()
 
 void PaintingData::load()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
-    sql::ResultSet* result = db->querry("SELECT * FROM `painting` ORDER BY `name`");
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
+    sql::ResultSet* result = db.querry("SELECT * FROM `painting` ORDER BY `name`");
 
     if (result == nullptr)
     {

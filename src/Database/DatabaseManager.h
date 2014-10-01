@@ -1,21 +1,20 @@
 #ifndef DATABASEMANAGER_H_
 #define DATABASEMANAGER_H_
 
+#include "Util/Singleton.h"
+
 #include "Database.h"
 
 #include <string>
 namespace Database
 {
 
-class DatabaseManager
+class DatabaseManager : public Util::Singleton<DatabaseManager>
 {
+    friend Util::Singleton<DatabaseManager>;
+    DatabaseManager();
 public:
-    static void InitInstance()
-    {
-        if (instance == nullptr)
-            instance = new DatabaseManager();
-    }
-    static DatabaseManager* Instance();
+    virtual ~DatabaseManager();
 
     /// Connexion a MySql
     bool connect();
@@ -32,9 +31,7 @@ public:
 
 
 private:
-    DatabaseManager();
     static DatabaseManager* instance;
-    virtual ~DatabaseManager();
 
     /// Driver MySql
     sql::Driver* driver;

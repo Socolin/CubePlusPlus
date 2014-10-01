@@ -35,12 +35,12 @@ void BlockList::InitInstance()
 
 void BlockList::Initialize()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
     LoadSounds();
     LoadMaterials();
 
-    sql::ResultSet* result = db->querry("SELECT * FROM `block` ORDER BY `blockId`");
+    sql::ResultSet* result = db.querry("SELECT * FROM `block` ORDER BY `blockId`");
 
     if (result == nullptr)
     {
@@ -119,7 +119,7 @@ void BlockList::Initialize()
                                   "INNER JOIN script_info ON `script_info`.`scriptId` = `script_data`.`scriptId` AND `script_info`.`paramId` = `script_data`.`param`"
                                   "WHERE `script_info`.`scriptId` = " << scriptId << " AND `stuffId` = " << blockId;
 
-                sql::ResultSet* script_result = db->querry(request_construct.str());
+                sql::ResultSet* script_result = db.querry(request_construct.str());
                 //Load script data
                 while (script_result->next())
                 {
@@ -207,9 +207,9 @@ void BlockList::Initialize()
 
 void BlockList::LoadSounds()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
-    sql::ResultSet* result = db->querry("SELECT * FROM `blocksound` ORDER BY `soundId`");
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
+    sql::ResultSet* result = db.querry("SELECT * FROM `blocksound` ORDER BY `soundId`");
 
     if (result == nullptr)
     {
@@ -261,9 +261,9 @@ void BlockList::LoadSounds()
 
 void BlockList::LoadMaterials()
 {
-    Database::DatabaseManager* db = Database::DatabaseManager::Instance();
-    db->connect();
-    sql::ResultSet* result = db->querry("SELECT * FROM `material` ORDER BY `materialId`");
+    Database::DatabaseManager& db = Database::DatabaseManager::Instance();
+    db.connect();
+    sql::ResultSet* result = db.querry("SELECT * FROM `material` ORDER BY `materialId`");
 
     if (result == nullptr)
     {
