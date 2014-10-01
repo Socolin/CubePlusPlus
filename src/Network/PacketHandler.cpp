@@ -141,8 +141,8 @@ void NetworkSession::handlePlayer() throw (NetworkException)
 void NetworkSession::handlePlayerPosition() throw (NetworkException)
 {
     double newX = readDouble();
-    readDouble(); //newEyesY
     double newY = readDouble();
+    readDouble(); //newEyesY
     double newZ = readDouble();
     readByte();
 
