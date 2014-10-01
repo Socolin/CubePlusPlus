@@ -358,8 +358,10 @@ void World::updateEntities()
         delete entityToDelete[i];
     }
     entityToDelete.clear();
-    for (EntityPlayer* player : playerToRemove)
+    for (EntityPlayer* player : playerToRemove) {
         removePlayer(player);
+        delete player;
+    }
     playerToRemove.clear();
 }
 

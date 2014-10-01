@@ -19,6 +19,11 @@ EntityMetadataManager::EntityMetadataManager()
 
 EntityMetadataManager::~EntityMetadataManager()
 {
+    for (auto metadata : metadataList)
+    {
+        delete metadata.second;
+    }
+    metadataList.clear();
 }
 
 void EntityMetadataManager::Write(Network::NetworkPacket& packet)
