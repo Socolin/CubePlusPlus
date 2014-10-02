@@ -19,6 +19,7 @@ namespace World
 Chunk::Chunk(int x, int z, World* world) :
     posX(x), posZ(z), loaded(false)
     , cachePacket(Network::OP_CHUNK_DATA)
+    , removeChunkPacket(Network::OP_CHUNK_DATA)
     , blockChangePacket(Network::OP_MULTI_BLOCK_CHANGE)
     , flagSectionExists(0)
     , flagSectionUseAdd(0)
@@ -37,6 +38,7 @@ Chunk::Chunk(int x, int z, World* world) :
         datas[i] = nullptr;
     for (int i = 0; i < CHUNK_SURFACE; i++)
         heightMap[i] = 0;
+    removeChunkPacket << posX << posZ << true << static_cast<unsigned short>(0) << static_cast<unsigned short>(0) << 0;
     ResetBlockChangePacket();
 }
 
@@ -427,6 +429,7 @@ void Chunk::AddPlayer(EntityPlayer* player)
 
 void Chunk::RemovePlayer(EntityPlayer* player)
 {
+    player->Send(removeChunkPacket);
     playerList.erase(player);
 }
 

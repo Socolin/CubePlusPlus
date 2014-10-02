@@ -226,6 +226,7 @@ private:
     int posZx16;
     bool loaded;
     Network::NetworkPacket cachePacket;
+    Network::NetworkPacket removeChunkPacket;
     Network::NetworkPacket blockChangePacket;
     unsigned short flagSectionExists;
     unsigned short flagSectionUseAdd;
