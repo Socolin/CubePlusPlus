@@ -21,6 +21,8 @@
 #include "Debug/CommandSpeed.h"
 #include "Debug/CommandSpawn.h"
 
+#include "Common/CommandTell.h"
+
 namespace Chat
 {
 void RegisterCoreCommands()
@@ -46,6 +48,8 @@ void RegisterCoreCommands()
 
     manager.RegisterChatCommand("speed",        &createChatCommand<CommandSpeed>,       PLAYER);
     manager.RegisterChatCommand("spawn",        &createChatCommand<CommandSpawn>,       PLAYER);
+    
+    manager.RegisterChatCommand("tell",         &createChatCommand<CommandTell>,        PLAYER);
 }
 
 } /* namespace Chat */
