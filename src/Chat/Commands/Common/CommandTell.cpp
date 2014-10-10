@@ -21,7 +21,7 @@ bool CommandTell::CheckSyntax()
     return syntax != SYNTAX_ERROR;
 }
 
-void CommandTell::ExecuteCommand()
+void CommandTell::ExecuteCommandPlayer(World::EntityPlayer* plr)
 {
     std::wstring destPlayerName;
     Util::StringToWString(destPlayerName, splitedCommand[1]);
@@ -29,11 +29,11 @@ void CommandTell::ExecuteCommand()
     World::EntityPlayer* destPlayer = World::WorldManager::Instance().GetPlayerByName(destPlayerName);
     if (destPlayer)
     {
-        if (destPlayer != sender.senderPtr.plr)
+        if (destPlayer != plr)
         {
             ChatStream& destStream = destPlayer->GetChat();
             sender.chatStream << LIGHT_PURPLE << "<to " << DARK_PURPLE << destPlayerName << LIGHT_PURPLE << "> ";
-            destStream << LIGHT_PURPLE << "<from " << DARK_PURPLE << sender.senderPtr.plr->GetUsername() << LIGHT_PURPLE << "> ";
+            destStream << LIGHT_PURPLE << "<from " << DARK_PURPLE << plr->GetUsername() << LIGHT_PURPLE << "> ";
             
             for (size_t i = 3; i < splitedCommand.size() - 1; i++)
             {

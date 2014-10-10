@@ -16,7 +16,7 @@ class CommandTell: public ChatCommand
 public:
     CommandTell(const CommandSender& sender, const std::vector<std::string>& splitedCommand);
     virtual bool CheckSyntax() override;
-    virtual void ExecuteCommand() override;
+    virtual void ExecuteCommandPlayer(World::EntityPlayer* plr) override;
     virtual bool CanUse() override;
     virtual void BadSyntaxMessage() const override;
 private:
