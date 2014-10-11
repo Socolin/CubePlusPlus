@@ -32,10 +32,10 @@ void CommandTell::ExecuteCommandPlayer(World::EntityPlayer* plr)
         if (destPlayer != plr)
         {
             ChatStream& destStream = destPlayer->GetChat();
-            sender.chatStream << LIGHT_PURPLE << "<to " << DARK_PURPLE << destPlayerName << LIGHT_PURPLE << "> ";
+            sender.chatStream << LIGHT_PURPLE << "<to " << DARK_PURPLE << destPlayer->GetUsername() << LIGHT_PURPLE << "> ";
             destStream << LIGHT_PURPLE << "<from " << DARK_PURPLE << plr->GetUsername() << LIGHT_PURPLE << "> ";
             
-            for (size_t i = 3; i < splitedCommand.size() - 1; i++)
+            for (size_t i = 2; i < splitedCommand.size() - 1; i++)
             {
                 sender.chatStream << splitedCommand[i] << " ";
                 destStream << splitedCommand[i] << " ";
