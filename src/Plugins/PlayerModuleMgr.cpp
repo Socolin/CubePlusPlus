@@ -12,6 +12,10 @@ PlayerModuleMgr::PlayerModuleMgr()
 
 PlayerModuleMgr::~PlayerModuleMgr()
 {
+    for (auto moduleItr : moduleIdMap) {
+        delete moduleItr.second;
+    }
+    moduleIdMap.clear();
 }
 
 void PlayerModuleMgr::RegistersModules()
