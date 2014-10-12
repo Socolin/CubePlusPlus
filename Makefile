@@ -1,6 +1,6 @@
 CXX?=clang++
 CPPFLAGS=-I src/ -MMD
-CXXFLAGS=-Wall -std=c++11
+CXXFLAGS=-Wall -Wextra -std=c++11
 TARGET=bin/server
 LDFLAGS=
 LDLIBS= -lconfig++             \
