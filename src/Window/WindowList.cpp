@@ -58,7 +58,6 @@ void WindowList::Initialize()
     {
         std::string name = result->getString(TableWindow::name);
         i_windowDataId windowId = result->getUInt(TableWindow::id);
-        int maxSlot = result->getInt(TableWindow::maxSlot);
         int networkMaxSlot = result->getInt(TableWindow::networkMaxSlot);
         int clientWindowId = result->getInt(TableWindow::clientWindowId);
         int scriptId = result->getInt(TableWindow::script);
@@ -120,9 +119,8 @@ void WindowList::Initialize()
 
         std::wstring wname;
         Util::StringToWString(wname, name);
-        WindowStaticData* data = new WindowStaticData(windowId, maxSlot, networkMaxSlot, wname, clientWindowId, script);
+        WindowStaticData* data = new WindowStaticData(windowId, networkMaxSlot, wname, clientWindowId, script);
         LOG_DEBUG << windowId << "\t"
-                  << maxSlot << "\t"
                   << networkMaxSlot << "\t"
                   << scriptId << "\t"
                   << clientWindowId << "\t"

@@ -23,7 +23,7 @@ void BlockFlowingScript::OnBlockAdded(World::World* world, int x, i_height y, in
     parent_type::OnBlockAdded(world, x, y, z, data);
 }
 
-void BlockFlowingScript::OnUpdateTick(World::World* world, int x, i_height y, int z, i_data data) const
+void BlockFlowingScript::OnUpdateTick(World::World* /*world*/, int /*x*/, i_height /*y*/, int /*z*/, i_data /*data*/) const
 {
 
 }
