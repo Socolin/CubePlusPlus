@@ -499,8 +499,16 @@ void NetworkSession::handleClientStatuses() throw (NetworkException)
             hashOutput << std::dec;
 
             std::string result = hashOutput.str();
-            while (result[0] == '0')
-                result = result.substr(1, result.size() - 1);
+            if (result[0] == '-')
+            {
+                while (result[1] == '0')
+                    result = result.substr(0,1) + result.substr(2, result.size() - 1);
+            }
+            else
+            {
+                while (result[0] == '0')
+                    result = result.substr(1, result.size() - 1);
+            }
             waitLoginId = LoginManager::Instance().AskCheckLogin(name, result);
             state = STATE_WAIT_LOGGIN;
         }
