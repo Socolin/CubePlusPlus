@@ -1,0 +1,78 @@
+CubePlusPlus
+============
+
+About
+-----
+
+This project is a minecraft server written in C++, which have in mind to handle a great number of player without lag.
+This project currently supports 1.5.2 minecraft client, 1.8 version is planned.
+
+There is only a Linux version available but BSD will be added, and maybe Windows if someone wants to port this.
+
+This project was originally made to improve our C++ skills, learn news things, test and improve others… and is now finally in use for huge Minecraft events like MonsterCharity and Race the Moon - https://racethemoon.net/.
+
+This is not the complete Race the Moon server but only the base of it, on which we have added some patches to handle the Race the Moon client as well as our plugins.
+
+
+License
+-----
+
+MIT
+
+Clone
+------
+
+Mercurial - http://mercurial.selenic.com/
+
+To clone the project
+
+    $ hg clone https://bitbucket.org/socolin/cubeplusplus
+
+Build
+-----
+
+###Dependencies
+
+- GCC 4.8 or clang++
+- GNU make
+- libconfig++ - http://www.hyperrealm.com/libconfig/
+- libcrypto++ - http://www.cryptopp.com/
+- zlib - http://www.zlib.net/
+- MySQL Connector/C++ - http://dev.mysql.com/downloads/connector/cpp/
+- NBTField - https://bitbucket.org/socolin/nbtfield/ also in subrepository
+
+###Compile
+
+    $ ./configure
+    $ make -j8
+
+To use gcc instead of clang
+
+    $ ./configure --with-gcc
+
+And because color is great, you can also add --color options
+
+    $ ./configure --color
+
+For more options, read `configure` script, it's  a pretty straightforward.
+
+Setup
+-----
+
+### Database
+A MySQL server is required. Create a user and a table and import database: `mcpp.sql`
+
+Don't forget to disable FOREIGN KEY before importing database.
+
+    SET foreign_key_checks = 0;
+    source mcpp.sql
+    SET foreign_key_checks = 1;
+
+### Configuration file
+
+After compiling is complete, go in `bin/` directory and copy `server.cfg` in it. Open the configuration file, do the needed changes.
+
+Run
+-----
+
+    $ ./server
