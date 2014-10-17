@@ -1,7 +1,8 @@
 CXX?=clang++
 CPPFLAGS=-I src/ -MMD
 CXXFLAGS=-Wall -Wextra -std=c++11
-TARGET=bin/server
+OUTPUT_DIR=bin/
+TARGET=$(OUTPUT_DIR)/server
 LDFLAGS=
 LDLIBS= -lconfig++             \
         -lcryptopp             \
@@ -9,8 +10,8 @@ LDLIBS= -lconfig++             \
         -lz                    \
         -lmysqlcppconn         \
 	-lpthread
-	
-ifeq ($(wildcard Makefile.mk),) 
+
+ifeq ($(wildcard Makefile.mk),)
 $(error Run ./configure before building project, use ./configure --help, for help.)
 endif
 
@@ -21,7 +22,7 @@ include sources
 OBJS=$(SRCS:%.cpp=%.o)
 DEPS=$(OBJS:.o=.d)
 
-all: $(TARGET)
+all: $(OUTPUT_DIR) $(TARGET)
 $(TARGET): $(OBJS)
 ifeq ($(V),0)
 	@/bin/echo -e "$(REB)Linking... "$(@:src/%=%)"$(RST)"
@@ -38,6 +39,8 @@ else
 endif
 	@$(CXX) $(CPPFLAGS) $(CXXFLAGS) -c -o $@ $<
 
+$(OUTPUT_DIR):
+	mkdir $(OUTPUT_DIR)
 
 clean:
 	${RM} ${OBJS} ${DEPS} $(TARGET)
