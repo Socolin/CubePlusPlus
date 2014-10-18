@@ -428,8 +428,8 @@ void World::removePlayer(EntityPlayer* player)
 
     VirtualChunk* virtualChunk = GetVirtualChunk(((int) player->x) >> 7, ((int) player->z) >> 7);
     virtualChunk->RemovePlayer(player);
-    player->SetWorld(nullptr, 0);
     entityById[player->GetEntityId()] = nullptr;
+    player->SetWorld(nullptr, 0);
 }
 
 void World::markEntityForDelete(Entity* entity)
