@@ -32,7 +32,7 @@ void ScriptedEntityList::Initialize()
 
     if (result == nullptr)
     {
-        LOG_ERROR << "ERROR: no living entities found in database";
+        LOG_ERROR << "ERROR: no living entities found in database" << std::endl;
         return;
     }
 

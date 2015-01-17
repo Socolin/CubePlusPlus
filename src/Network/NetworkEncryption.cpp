@@ -23,7 +23,7 @@ NetworkEncryption::NetworkEncryption()
     std::string rStr = ss.str();
     if (rStr.length() == 0)
     {
-        LOG_ERROR << "Error while generating RSA";
+        LOG_ERROR << "Error while generating RSA" << std::endl;
     }
 
     char *pBuffer = new char[rStr.length()];

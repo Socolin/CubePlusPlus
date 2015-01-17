@@ -44,7 +44,7 @@ void BlockList::Initialize()
 
     if (result == nullptr)
     {
-        LOG_ERROR << "ERROR: no block found in database";
+        LOG_ERROR << "ERROR: no block found in database" << std::endl;
         return;
     }
 
@@ -267,7 +267,7 @@ void BlockList::LoadMaterials()
 
     if (result == nullptr)
     {
-        LOG_ERROR << "ERROR: no material found in database";
+        LOG_ERROR << "ERROR: no material found in database" << std::endl;
         return;
     }
 

@@ -41,7 +41,7 @@ void WindowList::Initialize()
 
     if (result == nullptr)
     {
-        LOG_ERROR << "ERROR: no window found in database";
+        LOG_ERROR << "ERROR: no window found in database" << std::endl;
         return;
     }
 

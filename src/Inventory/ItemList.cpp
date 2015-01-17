@@ -46,7 +46,7 @@ void ItemList::Initialize()
 
     if (result == nullptr)
     {
-        LOG_ERROR << "ERROR: no items found in database";
+        LOG_ERROR << "ERROR: no items found in database" << std::endl;
         return;
     }
 

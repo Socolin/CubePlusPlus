@@ -48,7 +48,7 @@ void CraftManager::load()
 
     if (result == nullptr)
     {
-        LOG_ERROR << "ERROR: no craft found in database";
+        LOG_ERROR << "ERROR: no craft found in database" << std::endl;
         return;
     }
 

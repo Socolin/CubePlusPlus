@@ -143,7 +143,7 @@ void ScriptManager::LoadScriptsIds()
 
     if (result == nullptr)
     {
-        LOG_ERROR << "ERROR: no scripts found in database";
+        LOG_ERROR << "ERROR: no scripts found in database" << std::endl;
         return;
     }
 
