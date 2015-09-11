@@ -38,9 +38,18 @@ sub select_type() {
 }
 
 sub select_methods {
-    my $win               = $cui->add( 'win_methods', 'Window' );
-    my $data              = LoadFile("generate_templates/$_[0]/data.yml");
-    my $methods_data      = LoadFile("generate_templates/$_[0]/MethodList.yml");
+    my $selected_type = shift;
+    my $win           = $cui->add( 'win_methods', 'Window' );
+
+    my ( $data, $methods_data );
+
+    local $@;
+    eval {
+        $data         = LoadFile("generate_templates/$selected_type/data.yml");
+        $methods_data = LoadFile("generate_templates/$selected_type/MethodList.yml");
+    };
+    $@ and $cui->error($@);
+
     my $methods_list_data = $methods_data->{'methods'};
     my @methods           = ();
     my $methods_labesl;
