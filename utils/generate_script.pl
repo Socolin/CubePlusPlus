@@ -367,7 +367,7 @@ sub select_methods {
     for (@selected_methods) {
         my $code        = $methods_list_data->[$_]->{'code'};
         my @code_split  = split( ' ', $code );
-        my $return_type = @code_split->[0];
+        my $return_type = $code_split[0];
         print CPP_FILE $return_type . " " . $class_name . "::";
         shift @code_split;
         my $first = 0;
